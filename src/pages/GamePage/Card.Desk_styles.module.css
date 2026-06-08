@@ -1,0 +1,398 @@
+.bg-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(30px);
+}
+
+/* Общие стили для магических искр на фоне */
+.sparkle {
+    position: absolute;
+    background: radial-gradient(circle, rgba(0, 255, 204, 0.6) 0%, transparent 80%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(1px);
+}
+
+/* Настройка и траектория искр */
+.sp-1 { width: 120px; height: 120px; top: 10%; left: 15%; animation: floatAround 12s infinite ease-in-out; }
+.sp-2 { width: 180px; height: 180px; bottom: 15%; right: 10%; background: radial-gradient(circle, rgba(255, 0, 127, 0.4) 0%, transparent 80%); animation: floatAround 18s infinite ease-in-out reverse; }
+.sp-3 { width: 90px; height: 90px; top: 60%; left: 8%; animation: floatAround 15s infinite ease-in-out 2s; }
+
+/* Чтобы сама доска была поверх эффектов */
+.game-container {
+    background: transparent;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1200px;
+    position: relative;
+    z-index: 2;
+}
+
+/* АНИМАЦИЯ: Плавное хаотичное движение частиц на заднем плане */
+@keyframes floatAround {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+    33% { transform: translate(40px, -60px) scale(1.2); opacity: 0.6; }
+    66% { transform: translate(-30px, 40px) scale(0.8); opacity: 0.4; }
+    100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+}
+
+/* Игровой стол */
+.game-board {
+    width: 90vw;
+    height: 92vh;
+    background: rgba(22, 16, 38, 0.7);
+    border: 3px solid #3d1e6d;
+    border-radius: 24px;
+    box-shadow: 0 0 60px rgba(106, 27, 154, 0.4), inset 0 0 40px rgba(0,0,0,0.9);
+    transform: rotateX(10deg);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 20px;
+    box-sizing: border-box;
+    gap: 10px;
+}
+
+/* Строки доски */
+.board-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: relative;
+}
+.top-row { justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid rgba(106, 27, 154, 0.2); }
+.bottom-row { justify-content: space-between; padding-top: 10px; border-top: 1px solid rgba(106, 27, 154, 0.2); }
+
+/* Зоны для колод (Руки игроков) */
+
+
+
+/* Боевая арена (центр) */
+.battle-arena {
+    border: 2px dashed rgba(106, 27, 154, 0.3);
+    border-radius: 16px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between; /* Изменили, чтобы карта была слева/центре, а слоты справа */
+    align-items: center;
+    padding: 0 40px;
+    box-sizing: border-box;
+    position: relative;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.vs-light {
+    position: absolute;
+    left: 40%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(142, 68, 173, 0.15) 0%, transparent 70%);
+    animation: pulse 2.5s infinite alternate;
+}
+
+/* Центрируем демонстрационную карту на основном поле */
+.arena-center {
+    flex-grow: 1;
+    display: flex;
+    gap: 100px;
+    justify-content: center;
+    padding-right: 50px; /* Чтобы не прижималась к правой зоне */
+}
+
+/* ========================================================
+   НОВАЯ ПАНЕЛЬ СЛЕПЫХ УДАРОВ (Правый угол)
+======================================================== */
+.blind-strike-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-left: 2px dashed rgba(0, 204, 255, 0.2);
+    padding-left: 30px;
+    height: 90%;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+}
+
+/* Общие контейнеры для скрытых ячеек */
+.strike-slot {
+    width: 85px;
+    height: 120px;
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* Лейблы подсказок внутри пустых слотов */
+.strike-slot::before {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: absolute;
+}
+.enemy-strike-slot::before { content: 'Враг'; top: -20px; color: #ff3366; }
+.player-strike-slot::before { content: 'Вы'; bottom: -20px; color: #00ccff; }
+
+/* Подсветка слотов при активации (когда туда "падает" карта) */
+.strike-slot.active {
+    border-color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+}
+
+/* Карта рубашкой вверх, лежащая в слоте удара */
+.blind-card {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1f0b47, #0b031a);
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: cardPlace 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.enemy-strike-slot .blind-card { border: 2px solid #ff3366; }
+.player-strike-slot .blind-card { border: 2px solid #00ccff; }
+
+/* Иконка скрытого действия по центру карты */
+.blind-card::after {
+    content: '❓';
+    font-size: 24px;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+}
+
+@keyframes cardPlace {
+    0% { transform: scale(1.3); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ========================================================
+   БЛОКИ СТАТУСОВ И ПРОФИЛЕЙ
+======================================================== */
+.player-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 16px;
+    border: 2px solid transparent;
+    min-width: 260px;
+    box-sizing: border-box;
+}
+
+.enemy-profile { border-color: #ff3366; box-shadow: 0 0 20px rgba(255, 51, 102, 0.2); }
+.user-profile { border-color: #00ccff; box-shadow: 0 0 20px rgba(0, 204, 255, 0.2); }
+
+.avatar-wrapper { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
+.avatar-image {
+    width: 100%; height: 100%;
+    background: #25183a;
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 30px; border: 3px solid #fff;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+.enemy-profile .avatar-image { border-color: #ff3366; }
+.user-profile .avatar-image { border-color: #00ccff; }
+
+.player-level {
+    position: absolute; bottom: -2px; right: -2px;
+    background: #ffd700; color: #000;
+    font-size: 10px; font-weight: bold;
+    padding: 2px 5px; border-radius: 10px;
+    border: 1px solid #160c28;
+}
+
+.player-status { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
+.player-name { color: #fff; font-weight: bold; font-size: 14px; letter-spacing: 0.5px; }
+
+.status-bar { width: 100%; height: 14px; background: #1a1a1a; border-radius: 7px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1); }
+.status-bar::before { content: ''; display: block; height: 100%; width: var(--progress); transition: width 0.4s ease; }
+.status-bar span { position: absolute; width: 100%; text-align: center; font-size: 9px; font-weight: bold; color: #fff; line-height: 12px; text-shadow: 1px 1px 2px #000; z-index: 2; }
+.hp-bar::before { background: linear-gradient(90deg, #ff3333, #ff6666); box-shadow: 0 0 10px #ff3333; }
+.mana-bar::before { background: linear-gradient(90deg, #0066ff, #00ccff); box-shadow: 0 0 10px #0066ff; }
+
+/* РУБАШКИ КАРТ ПРОТИВНИКА */
+.enemy-hand { display: flex; justify-content: center; gap: -25px; }
+.card-back {
+    width: 75px; height: 110px; background: linear-gradient(135deg, #4a154b, #2b0c2c); border: 2px solid #ff3366; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); position: relative; overflow: hidden; margin-left: -20px; transition: transform 0.2s ease;
+}
+.card-back::after { content: '👁️‍🗨️'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; filter: drop-shadow(0 0 5px #ff3366); }
+.card-back:hover { transform: translateY(5px); z-index: 10; }
+
+/* КАРТЫ ИГРОКА */
+.player-hand {
+    display: flex;
+    justify-content: center;
+    height: 140px;
+    align-items: flex-end;
+}
+.hand-card {
+    width: 95px;
+    height: 135px;
+    background: linear-gradient(135deg, #1c0c36 0%, #0d061c 100%);
+    /*border: 1.5px solid #00ccff;*/
+    border-radius: 8px;
+    margin-left: -25px;
+    /*box-shadow: 0 8px 20px rgba(0,0,0,0.6);*/
+    /*box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 10px rgba(255, 215, 0, 0.15);*/
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6px;
+    box-sizing: border-box;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    z-index: 1;
+}
+.hand-card.legendary {
+    color: #ffd700;
+    border: 1.5px solid #ffd700;
+}
+.hand-card.legendary:hover {
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.2), 0 15px 35px rgba(0, 0, 0, 0.7);;
+}
+.h-rarity.legendary::before { content: "⭐ "; }
+
+.hand-card.default {
+    border: 1.5px solid #6c757d;
+}
+.hand-card.default:hover {
+    box-shadow: 0 0 25px rgba(108, 117, 125, 0.2), 0 15px 35px rgba(0, 0, 0, 0.7);;
+}
+.hand-card.rare-c {
+    border: 1.5px solid #00ccff;
+}
+.hand-card.rare-c:hover {
+    /*border: 1.5px solid #00ccff;*/
+    box-shadow: 0 20px 35px rgba(0, 204, 255, 0.5);
+}
+
+.hand-card:hover {
+    transform: translateY(-45px) scale(1.4) rotate(1deg);
+    /*box-shadow: 0 20px 35px rgba(0, 204, 255, 0.5);*/
+    /*border-color: #fff;*/
+    z-index: 100;
+}
+.hand-card svg {
+    width: 15px;
+    height: auto;
+}
+.h-cost { background: #0066ff; width: 16px; height: 16px; border-radius: 50%; font-size: 9px; font-weight: bold; display: flex; justify-content: center; align-items: center; border: 1px solid #fff; box-shadow: 0 0 5px #0066ff; }
+/*.h-art { font-size: 30px; text-align: center; margin: 5px 0; }*/
+.h-avatar img {
+    height: 50px;
+    margin-top: 4.5px;
+}
+.h-rarity { font-size: 10px; text-transform: uppercase; text-align: right; margin-top: -20px; }
+.hand-card img { width: 100%; }
+.h-title { font-size: 9px; font-weight: bold; text-align: center; color: #00ccff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.h-stats { display: flex; justify-content: space-between; font-size: 9px; background: rgba(0,0,0,0.4); padding: 2px 4px; border-radius: 4px; }
+.h-atk { color: #ff3366; font-weight: bold; font-size: 12px; }
+.h-protection { color: #00ffcc; font-weight: bold; font-size: 12px; }
+/* ДЕМО-КАРТА ПО ЦЕНТРУ */
+.game-card, .dem-card {
+    width: 200px; height: 290px; background: linear-gradient(135deg, rgba(28, 12, 54, 0.9) 0%, rgba(13, 6, 28, 0.95) 100%); border-radius: 16px; position: relative; display: flex; flex-direction: column; padding: 12px; box-sizing: border-box; color: #fff; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); user-select: none; z-index: 5;
+}
+.dem-card {
+    cursor: pointer;
+}
+.dem-card:hover {
+    box-shadow: 0 25px 50px red, 0 0 30px red;
+    background-color: red;
+}
+.game-card.legendary, .dem-card.legendary {
+    border: 2px solid #ffd700;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.2), 0 15px 35px rgba(0, 0, 0, 0.7);
+}
+.game-card.default, .dem-card.default {
+    /*border: 2px solid #4a4e69;*/
+    border: 2px solid #6c757d;
+    box-shadow: 0 0 25px rgba(108, 117, 125, 0.2), 0 15px 35px rgba(0, 0, 0, 0.7);
+}
+.card-shine { position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 40%, transparent 100%); pointer-events: none; transition: all 0.4s ease; }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.card-cost { background: radial-gradient(circle, #00ccff 0%, #0066ff 100%); width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; border: 2px solid #fff; box-shadow: 0 0 10px #0066ff; }
+.card-rarity {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+/*.card-rarity.default { color: #CB9ACA }*/
+.card-rarity.legendary { color: #ffd700; }
+.card-rarity.legendary::before { content: "⭐ "; }
+
+.card-artwork { height: 110px; background: rgba(0, 0, 0, 0.4); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: center; align-items: center; font-size: 55px; margin-bottom: 10px; box-shadow: inset 0 0 15px rgba(0,0,0,0.6); }
+.card-artwork img {
+    width: 100%;
+}
+.card-body { flex-grow: 1; background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 8px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; gap: 4px; }
+.card-title { font-weight: bold; font-size: 13px; text-align: center; color: #ffd700; letter-spacing: 0.5px; }
+.card-description {
+    width: 150px;
+    /*display: -webkit-box;*/
+    /*-webkit-box-orient: vertical;*/
+    /*-webkit-line-clamp: 3;*/
+    /*overflow: hidden;*/
+    /*overflow-wrap: break-word;*/
+    word-break: break-word;
+    /*white-space: pre-wrap;*/
+    font-size: 10px; color: #cccccc; line-height: 1.3; text-align: center;
+}
+.card-footer { position: absolute; bottom: -15px; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 15px; }
+.stat-badge { width: 34px; height: 34px; background: #110822; border: 2px solid #fff; transform: rotate(45deg); display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+.stat-badge * { transform: rotate(-45deg); }
+.attack-badge { border-color: #ff3366; box-shadow: 0 0 10px rgba(255, 51, 102, 0.3); }
+.protection-badge { border-color: #00ffcc; box-shadow: 0 0 10px rgba(0, 255, 204, 0.3); }
+
+.h-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute; bottom: -15px; left: 0; right: 0;
+}
+.h-card-footer .stat-badge {
+    width: 25px;
+    height: 25px;
+}
+.h-card-footer .stat-icon {
+    width: 5px;
+    height: auto;
+}
+.h-card-footer .stat-value {
+    font-weight: bold; font-size: 10px;
+}
+
+/*.stat-icon { font-size: 9px; margin-bottom: -2px; }*/
+.stat-icon {
+    width: 15px;
+    height: auto;
+}
+.stat-value { font-weight: bold; font-size: 11px; }
+.game-card:hover { transform: translateY(-15px) scale(1.05) rotateZ(1deg); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 215, 0, 0.4); cursor: pointer; }
+.game-card:hover .card-shine { background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 60%, transparent 100%); }
+
+@keyframes pulse {
+    0% { transform: scale(0.95); opacity: 0.4; }
+    100% { transform: scale(1.1); opacity: 0.8; }
+}

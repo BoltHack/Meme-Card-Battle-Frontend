@@ -1,0 +1,230 @@
+.menu-wrapper {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    width: 100%;
+    /*justify-content: center;*/
+    align-items: center;
+    /*background-color: #0f172a;*/
+    /*background-color: black;*/
+    overflow: hidden;
+    /*opacity: 0.6;*/
+    z-index: 1000;
+    background-color: rgba(15, 23, 42, 0.6);
+    user-select: none;
+}
+
+/*.bg-glow {*/
+/*    position: absolute;*/
+/*    width: 400px;*/
+/*    height: 400px;*/
+/*    background: #6366f1;*/
+/*    filter: blur(100px);*/
+/*    opacity: 0.15;*/
+/*    z-index: -1;*/
+/*}*/
+
+.menu-card {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    /*padding: 2.5rem;*/
+    /*border-radius: 24px;*/
+    /*width: 320px;*/
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    opacity: 1;
+    animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.menu-card.closing, .player-cards-menu.closing {
+    animation: scaleOut 0.4s ease forwards;
+}
+.actions-menu-card {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    padding: 0 2.5rem 2.5rem 2.5rem;
+    border-radius: 24px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    opacity: 1;
+    animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.actions-menu-card.closing {
+    animation: scaleOut 0.4s ease forwards;
+}
+.actions-options {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    /*gap: 15px;*/
+}
+.actions-options .menu-btn {
+    width: 100px;
+}
+
+.actions-card-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+}
+.actions-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.player-cards-menu {
+    overflow-y: scroll;
+    max-width: 600px;
+    width: 100%;
+    height: 100dvh;
+    box-sizing: border-box;
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    padding: 2.5rem;
+    /*border-radius: 24px;*/
+    /*width: 320px;*/
+    margin-left: auto;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    opacity: 1;
+    animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.player-cards-menu::-webkit-scrollbar {
+    width: 8px;
+}
+.player-cards-menu::-webkit-scrollbar-track {
+    background: #181b20;
+}
+.player-cards-menu::-webkit-scrollbar-thumb {
+    background: #5bbfbaaa;
+    border-radius: 10px;
+}
+
+.hand-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    height: 120px;
+    position: relative;
+}
+.choosing-cards .hand-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    place-items: center;
+}
+.choosing-cards .hand-container .hand-card:hover {
+    transform: scale(1);
+}
+
+
+h2 {
+    color: #f8fafc;
+    margin: 2rem 0 2rem 0;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+
+.options {
+    display: flex;
+    gap: 12px;
+    width: 1000px;
+    /*height: 100dvh;*/
+    height: 450px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.options .hand-container {
+    padding: 50px;
+    display: flex;
+    gap: 30px;
+    margin-top: 100px;
+}
+.options::-webkit-scrollbar {
+    width: 8px;
+}
+.options::-webkit-scrollbar-track {
+    background: #181b20;
+}
+.options::-webkit-scrollbar-thumb {
+    background: #5bbfbaaa;
+    border-radius: 10px;
+}
+
+/*.options .hand-container .game-card {*/
+/*    width: 100px;*/
+/*    height: 120px;*/
+/*}*/
+/*.options .hand-container .game-card .card-title {*/
+/*    font-size: 8px;*/
+/*}*/
+
+.btn-options {
+    position: absolute;
+    top: 105%;
+    left: 50%;
+    transform: translateX(-50%);
+    /*margin-top: 50px;*/
+    display: flex;
+    /*margin-top: 30px;*/
+    /*margin-left: auto;*/
+    /*flex-direction: column;*/
+    justify-content: center;
+    align-items: center;
+    /*width: 200px;*/
+}
+
+.menu-btn {
+    all: unset;
+    display: flex;
+    gap: 1px;
+    /*align-items: center;*/
+    justify-content: center;
+    text-align: center;
+    padding: 8px 8px;
+    background-color: #334155;
+    border: 1px solid #475569;
+    border-radius: 16px;
+    color: #f1f5f9;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    /*justify-content: center;*/
+}
+
+.menu-btn:hover {
+    background-color: #3b82f6;
+    border-color: #60a5fa;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.menu-btn svg {
+    /*margin-right: 14px;*/
+    stroke: #60a5fa;
+    transition: stroke 0.2s ease;
+}
+
+.menu-btn:hover svg {
+    stroke: #ffffff;
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes scaleOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.9) translateY(-10px); }
+}
