@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../api/api.ts";
+import api from "../../api/api.ts";
 
 export const LoginPage = ({ toggleModal, toggleVisible, passwordVisible }) => {
     const navigate = useNavigate();
@@ -89,7 +89,7 @@ export const LoginPage = ({ toggleModal, toggleVisible, passwordVisible }) => {
                             <div className={styles["input"]}>
                                 <p>Пароль</p>
                                 <input
-                                    type={!passwordVisible ? "password" : "text"} name="password" placeholder="Введите пароль" autoComplete="off"
+                                    type={!passwordVisible ? "password" : "text"} name="password" placeholder="Введите пароль" autoComplete="current-password"
                                     onChange={handleChange} value={formData.password}
                                     required
                                 />
@@ -126,7 +126,7 @@ export const LoginPage = ({ toggleModal, toggleVisible, passwordVisible }) => {
                     </button>
                     <hr/>
                     {/*<a href="#" className={styles["more-options"]}>Я забыл пароль</a>*/}
-                    <a className={styles["btn-business"]}>Я забыл пароль</a>
+                    <a className={styles["btn-other"]} onClick={() => toast.error("Функция находится в разработке.")}>Я забыл пароль от аккаунта</a>
 
                 </div>
             </form>

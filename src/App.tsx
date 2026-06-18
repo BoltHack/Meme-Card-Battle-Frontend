@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { MainPage } from './pages/MainPage/Main';
 import { HowToPlayPage } from "./pages/HowToPlayPage/HowToPlay.tsx";
 import { BotSettingsPage } from "./pages/BotSettingsPage/BotSettings.tsx";
+import { GameSettingsPage } from "./pages/GameSettingsPage/GameSettings.tsx";
 import { GamePage } from "./pages/GamePage/Game.tsx";
 
 import { CreateCardsPage } from "./pages/AdminPages/CreateCards.tsx";
@@ -41,6 +42,7 @@ function App() {
                     <Route path="/" element={<MainPage title="MCB | Главная" />} />
                     <Route path="/how-to-play" element={<HowToPlayPage title="MCB | Как играть" />} />
                     <Route path="/bot-settings" element={<BotSettingsPage title="MCB | Настройки бота" />} />
+                    <Route path="/game-settings" element={<GameSettingsPage title="MCB | Настройки игры" />} />
                     <Route path="/game/:game_type/:game_key" element={<GamePage title="MCB | Бот" />} />
 
                     <Route path="/auth/sign-in" element={<SignInPage title="MCB | Аккаунт" /> } />

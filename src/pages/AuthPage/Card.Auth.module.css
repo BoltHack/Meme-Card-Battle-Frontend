@@ -263,7 +263,7 @@
     margin: 20px 0;
 }
 
-.btn-business {
+.btn-other {
     background: transparent;
     border: none;
     color: #b9bbbe;
@@ -275,7 +275,7 @@
     border-radius: 5px;
 }
 
-.btn-business:hover {
+.btn-other:hover {
     color: white;
     /*text-decoration: underline;*/
     /*background-color: #4f545c;*/

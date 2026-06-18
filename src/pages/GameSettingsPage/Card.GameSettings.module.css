@@ -1,0 +1,61 @@
+.body-wrapper {
+    display: flex;
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    min-height: 100dvh;
+    overflow-y: auto;
+
+    /*background-image: url("../../assets/Default_background.png");*/
+    /*background-size: cover;*/
+    /*background-position: center;*/
+    /*background-repeat: no-repeat;*/
+    background: #05000d;
+
+    user-select: none;
+}
+
+.buttons-container {
+    /*padding: 300px 100px;*/
+    margin: 250px 200px;
+}
+
+.btn {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    /*background: #ad5389;*/
+    background: rgba(0, 0, 0, 0.25);
+    /*background: rgba(132, 116, 254, 0.25);*/
+    border: none;
+    letter-spacing: 0.05em;
+    /*border: none;*/
+    /*box-shadow: 0 0.7em 1.5em -0.5em #4d36d0be;*/
+    color: #ECF1FD;
+    font-size: 20px;
+    padding: 15px;
+    /*border: none;*/
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);*/
+    /*display: block;*/
+    margin-top: 20px;
+    max-width: 250px;
+    width: 100%;
+    text-decoration: none;
+}
+.btn svg {
+    /*color: #6B7280;*/
+    color: #adb5bd;
+}
+.btn:hover {
+    background: rgba(132, 116, 254, 0.7);
+    transform: translateX(10px);
+}
+
+.btn:active {
+    background: rgba(132, 116, 254, 1);
+    transform: translateX(10px) translateY(2px);
+}

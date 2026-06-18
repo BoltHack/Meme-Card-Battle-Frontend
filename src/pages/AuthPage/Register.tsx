@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../api/api.ts";
+import api from "../../api/api.ts";
 
 export const RegisterPage = ({ toggleModal, toggleVisible, passwordVisible }) => {
     const navigate = useNavigate()
@@ -105,7 +105,7 @@ export const RegisterPage = ({ toggleModal, toggleVisible, passwordVisible }) =>
                             <div className={styles["input"]}>
                                 <p>Пароль</p>
                                 <input
-                                    type={!passwordVisible ? "password" : "text"} name="password" placeholder="Придумайте пароль" autoComplete="off"
+                                    type={!passwordVisible ? "password" : "text"} name="password" placeholder="Придумайте пароль" autoComplete="new-password"
                                     onChange={handleChange} value={formData.password}
                                 />
 
@@ -125,7 +125,7 @@ export const RegisterPage = ({ toggleModal, toggleVisible, passwordVisible }) =>
                             <div className={styles["input"]}>
                                 <p>Повтор пароля</p>
                                 <input
-                                    type={!passwordVisible ? "password" : "text"} name="confirmPassword" placeholder="Повторите пароль" autoComplete="off"
+                                    type={!passwordVisible ? "password" : "text"} name="confirmPassword" placeholder="Повторите пароль" autoComplete="new-password"
                                     onChange={handleChange} value={formData.confirmPassword}
                                 />
                             </div>

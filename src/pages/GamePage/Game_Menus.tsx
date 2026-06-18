@@ -1,22 +1,25 @@
 import { useEffect, useRef, useState } from "react";
+import { Simulate } from "react-dom/test-utils";
+
+import { Game_CardDesk } from "./Game_CardDesk.tsx";
 
 import Menus_styles from "./Card.Menu_styles.module.css";
 import CardDesk_styles from "./Card.Desk_styles.module.css";
 
-import { Game_CardDesk } from "./Game_CardDesk.tsx";
-
-import api from "../api/api.ts";
-import {Simulate} from "react-dom/test-utils";
-import play = Simulate.play;
+import api from "../../api/api.ts";
+// import play = Simulate.play;
 import toast from "react-hot-toast";
 
 export const Game_Menus = ({
                                playerCard,
-                               socket, game_key, player_id,
+                               socket,
+                               player_id, game_key,
+                               my_nickname, enemy_nickname,
                                list, setList,
                                handList, setHandList,
                                loading,
-                               setBodyLoader
+                               setBodyLoader,
+                               playersInfo,
                             }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [isClosing, setIsClosing] = useState(false);
@@ -100,9 +103,6 @@ export const Game_Menus = ({
             setIsOpenCardActions(false);
 
             // const updatedHandList = handList.filter(item => item.menu_id !== useCardId);
-
-            // console.log('updatedHandList', updatedHandList);
-
             // setHandList(updatedHandList);
 
             setActivePlayerCard(useCardId);
@@ -114,10 +114,11 @@ export const Game_Menus = ({
             });
             setSelectCard([]);
 
-            // setTimeout(() => {
-            //     setActivePlayerCard(null);
-            //     useCardIdRef.current = undefined;
-            // }, 1000);
+            if (activePlayerCard) return;
+
+            const updatedHandList = handList.filter(item => item.menu_id !== useCardId);
+
+            setHandList(updatedHandList);
         } else if (type === 'close') {
             setSelectCard([]);
             setIsOpenCardActions(false);
@@ -139,6 +140,8 @@ export const Game_Menus = ({
                 setIsCardSelectAnimationEnemy={setIsCardSelectAnimationEnemy}
                 handList={handList} setHandList={setHandList}
                 activeAnimationCardId={activeAnimationCardId} setActiveAnimationCardId={setActiveAnimationCardId}
+                my_nickname={my_nickname} enemy_nickname={enemy_nickname}
+                playersInfo={playersInfo}
             />
 
             {isOpenCardActions && (

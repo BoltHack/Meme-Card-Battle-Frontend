@@ -10,7 +10,7 @@ import styles from "../AuthPage/Card.Auth.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../api/api.ts";
+import api from "../../api/api.ts";
 import toast from "react-hot-toast";
 
 export const SignInPage = ({ title }) => {
@@ -120,7 +120,7 @@ export const SignInPage = ({ title }) => {
 
                         <div style={{ marginTop: '20px' }}></div>
 
-                        <button className={styles["btn-business"]} onClick={() => toast.error("Функция находится в разработке.")}>Регистрация для команд / клубов</button>
+                        <button className={styles["btn-other"]} onClick={() => toast.error("Функция находится в разработке.")}>Регистрация для команд / клубов</button>
 
                     </div>
                 ) : modalType === "login" ? (

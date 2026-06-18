@@ -1,5 +1,4 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 
 import styles from './Card.BotSettings.module.css';
@@ -7,8 +6,9 @@ import styles from './Card.BotSettings.module.css';
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../api/api.ts";
+import api from "../../api/api.ts";
 import toast from "react-hot-toast";
+import usePageRender from "../../tools/PageRender.ts";
 
 interface PlayerData {
     name: string;
@@ -16,36 +16,10 @@ interface PlayerData {
 
 export const BotSettingsPage = ({ title }) => {
     const navigate = useNavigate();
-    const [data, setData] = useState<PlayerData | null>(null);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const controller = new AbortController();
-
-        axios.get<PlayerData>(`${api.API_BASE_URL}/api/bot-settings`, {
-            signal: controller.signal
-        })
-            .then((response) => {
-                setData(response.data);
-                setLoading(false);
-                console.log('data', response.data);
-            })
-            .catch((err) => {
-                if (axios.isCancel(err) || err.name === "") return;
-
-                if (err.response && err.response.status === 401) {
-                    navigate("/auth/sign-in");
-                    return;
-                }
-
-                console.error("Ошибка загрузки профиля:", err);
-                setLoading(false);
-            });
-
-        return () => {
-            controller.abort();
-        }
-    }, []);
+    const { data, loading, error } = usePageRender<PlayerData>(
+        `${api.API_BASE_URL}/api/bot-settings`
+    );
 
     const playGame = async (game_type) => {
         try {
@@ -53,7 +27,7 @@ export const BotSettingsPage = ({ title }) => {
 
             const data = response.data;
 
-            navigate(`/game/${data.game_type}/${data.game_id}`)
+            navigate(`/game/${data.game_type}/${data.game_key}`);
 
             return data;
         } catch (err) {

@@ -1,11 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { ChangeEvent, useEffect, useState } from "react";
+import {Helmet} from "react-helmet-async";
+
+import styles from "./stylesheets/Card.CreateCards.module.css";
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import styles from "./stylesheets/Card.CreateCards.module.css";
-import {Helmet} from "react-helmet-async";
+import api from "../../api/api.ts";
+import {LoadingPage} from "../LoadingPage/Loading.tsx";
 
 interface PlayerData {
     name: string;
@@ -44,7 +47,7 @@ export const CreateCardsPage = ({ title }) => {
     useEffect(() => {
         const controller = new AbortController();
 
-        axios.get<PlayerData>('http://localhost:3000/admin/create-cards', {
+        axios.get<PlayerData>(`${api.API_BASE_URL}/admin/create-cards`, {
             signal: controller.signal
         })
             .then((response) => {
@@ -112,7 +115,7 @@ export const CreateCardsPage = ({ title }) => {
         }
     }
 
-    if (loading) return <div>Загрузка...</div>;
+    if (loading) return <LoadingPage/>
 
     return (
         <div className={styles['body-wrapper']}>
