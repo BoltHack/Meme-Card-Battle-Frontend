@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useRef, useState } from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 
@@ -10,7 +10,8 @@ axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
 import usePageRender from "../../tools/PageRender.ts";
-import {LoadingPage} from "../LoadingPage/Loading.tsx";
+import { LoadingPage } from "../LoadingPage/Loading.tsx";
+import { ErrorPage } from "../ErrorPage/Error.tsx";
 
 interface PlayerData {
     name: string;
@@ -31,44 +32,14 @@ export const MainPage = ({ title }) => {
     // const timeoutRef = useRef<number | null>(null);
     const [isToolsOpen, setIsToolsOpen] = useState(false);
 
-    const { data, loading, error } = usePageRender<PlayerData>(
+    const [isGameFound, setIsGameFound] = useState(false);
+    const [seconds, setSeconds] = useState(0);
+    const [isRunning, setIsRunning] = useState(false);
+    const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const { data, loading, error, socket } = usePageRender<PlayerData>(
         `${api.API_BASE_URL}/api/`
     );
-
-    // if (!data.id) {
-    //     localStorage.removeItem("token");
-    // }
-
-    // useEffect(() => {
-    //     const controller = new AbortController();
-    //
-    //     axios.get<PlayerData>(`${api.API_BASE_URL}/api/`, {
-    //         signal: controller.signal
-    //     })
-    //         .then((response) => {
-    //             setData(response.data);
-    //             setLoading(false);
-    //             console.log('data', response.data);
-    //             if (!response.data.id) {
-    //                 localStorage.removeItem("token");
-    //             }
-    //         })
-    //         .catch((err) => {
-    //             if (axios.isCancel(err) || err.name === "" || err.name === "CanceledError") return;
-    //
-    //             if (err.response?.status === 401) {
-    //                 navigate("/auth/sign-in");
-    //                 return;
-    //             }
-    //
-    //             console.error("Ошибка загрузки профиля:", err);
-    //             setLoading(false);
-    //         });
-    //
-    //     return () => {
-    //         controller.abort();
-    //     }
-    // }, []);
 
     const toggleMenu = () => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -88,6 +59,72 @@ export const MainPage = ({ title }) => {
 
     const toggleToolsMenu = () => {
         setIsToolsOpen(!isToolsOpen);
+    }
+
+    const gameFoundTimerReset = useCallback(() => {
+        if (timerId.current) {
+            clearInterval(timerId.current);
+            timerId.current = null;
+        }
+        setIsRunning(false);
+        setSeconds(0);
+
+        socket.emit("search_game", {
+            type: false,
+            player_id: data.id
+        });
+    }, [data]);
+
+    const gameFoundTimerStart = useCallback(() => {
+        if (isRunning) return;
+
+        if (timerId.current) {
+            gameFoundTimerReset();
+        }
+
+        setIsRunning(true);
+
+        timerId.current = setInterval(() => {
+            setSeconds((prev) => prev + 1);
+        }, 1000);
+    }, [isRunning, gameFoundTimerReset]);
+
+    const gameFountTimerFormat = (time) => {
+        const totalSeconds = Number(time) || 0;
+        if (totalSeconds <= 0) return "0 с";
+
+        const getMinutes = Math.floor(totalSeconds / 60);
+        const getSeconds = totalSeconds % 60;
+
+        const minutesStr = getMinutes > 0 ? `${getMinutes} м ` : "";
+        const secondsStr = getSeconds > 0 || getMinutes === 0 ? `${getSeconds} с` : " 0 с";
+
+        return (minutesStr + secondsStr).trim();
+    }
+
+    const foundGame = (type) => {
+        if (!isAuth) {
+            navigate("/auth/sign-in");
+            return;
+        }
+        if (type === "search") {
+            setIsGameFound(true);
+            setIsOpen(false);
+            console.log('search game...', data.id);
+            socket.emit("search_game", {
+                type: true,
+                player_id: data.id
+            });
+            gameFoundTimerStart();
+        } else if (type === "cancel") {
+            setIsGameFound(false);
+            setIsOpen(false);
+            gameFoundTimerReset();
+        } else {
+            setIsGameFound(false);
+            setIsOpen(false);
+            gameFoundTimerReset();
+        }
     }
 
     const logout = async (e: React.MouseEvent) => {
@@ -114,15 +151,53 @@ export const MainPage = ({ title }) => {
         }
     }
 
-    // console.log('data', data.id);
-
     useEffect(() => {
+        if (!data || !data.id) return;
+
+        const sendInitialData = () => {
+            socket.emit("search_game", {
+                type: false,
+                player_id: data.id
+            });
+        }
+
+        if (!socket.connected) {
+            socket.connect();
+        } else {
+            sendInitialData();
+        }
+
+        socket.on("connect", sendInitialData);
+
+        socket.on("found_game", (data) => {
+            const { game_key } = data;
+            console.log('data', data);
+            setTimeout(() => {
+                navigate(`/game/player_player/${game_key}`);
+            }, 1000);
+        });
+
+        socket.on("error", (type) => {
+            if (type === "game_not_found") {
+                foundGame("cancel");
+                toast.error("В результате поиска никого не было найдено.");
+            }
+        });
+
         return () => {
+            foundGame("cancel");
+            socket.off("connect", sendInitialData);
+            socket.off("search_game");
+            socket.off("found_game");
+            socket.disconnect();
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
-        };
-    }, []);
+            if (timerId.current) clearInterval(timerId.current);
+            console.log('Сокет отключен, подписки сняты');
+        }
+    }, [data?.id]);
 
     if (loading) return <LoadingPage />
+    if (error) return <ErrorPage error={error} />
 
     return (
         <div className={styles['body-wrapper']}>
@@ -180,12 +255,26 @@ export const MainPage = ({ title }) => {
                     {/*<p>Meme card battle</p>*/}
                 </div>
 
-                <div className={styles["btn"]} onClick={toggleMenu}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-play-icon lucide-play">
-                        <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/>
-                    </svg>
-                    <span>Начать играть</span>
-                </div>
+                <br/>
+
+                {!isGameFound ? (
+                    <div className={styles["btn"]} onClick={toggleMenu}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-play-icon lucide-play">
+                            <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/>
+                        </svg>
+
+                        <span>Начать играть</span>
+                    </div>
+                ) :
+                    <div className={`${styles["btn"]} ${styles["btn-disable"]}`}>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-play-off-icon lucide-play-off">
+                            <path d="m10.215 4.56 9.79 5.71a2 2 0 0 1 .003 3.458l-.393.23"/><path d="m16.042 16.042-8.034 4.686A2 2 0 0 1 5 19V5"/><path d="m2 2 20 20"/>
+                        </svg>
+
+                        <span>Начать играть</span>
+                    </div>
+                }
 
                 <div className={styles["btn"]} onClick={() => navigate("/")}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-layout-grid-icon lucide-layout-grid">
@@ -225,18 +314,18 @@ export const MainPage = ({ title }) => {
                             </div>
                             <ul className={styles["menu-list"]}>
                                 <li>
-                                    <div className={styles["tools-menu-btn"]} onClick={() => navigate("/")}>
+                                    <Link to="/privacy-policy" className={styles["tools-menu-btn"]} onClick={() => navigate("/")}>
                                         <span>
                                             Политика конфиденциальности
                                         </span>
-                                    </div>
+                                    </Link>
                                 </li>
                                 <li>
-                                    <div className={styles["tools-menu-btn"]} onClick={() => navigate("/")}>
+                                    <Link to="/terms-of-use" className={styles["tools-menu-btn"]}>
                                         <span>
                                             Условия использования
                                         </span>
-                                    </div>
+                                    </Link>
                                 </li>
 
                                 <div className={styles["menu-main-tools"]}>
@@ -286,7 +375,7 @@ export const MainPage = ({ title }) => {
                         <h2>Выберите режим</h2>
                         <div className={styles["options"]}>
 
-                            <div className={styles["menu-btn"]} onClick={() => navigate("/game-settings")}>
+                            <div className={styles["menu-btn"]} onClick={() => foundGame("search")}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-user-icon lucide-square-user"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="12" cy="10" r="3"/>
                                     <path d="M7 21v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>
                                 </svg>
@@ -305,6 +394,33 @@ export const MainPage = ({ title }) => {
                     </div>
                 </div>
                 )}
+
+            {isGameFound && (
+                <div className={styles["game-search-container"]}>
+                    <div className={styles["game-search-content"]}>
+                        <div className={styles["game-search-info"]}>
+                            <div className={styles["game-search-info-content"]}>
+
+                                <div className={`${styles["game-search-info-text"]} ${styles["waiting-time"]}`}>
+                                    <span className={styles["search-text"]}>Среднее время ожидания</span>
+                                    <span className={styles["search-timer"]}>50 с</span>
+                                </div>
+
+                                <div className={`${styles["game-search-info-text"]} ${styles["current-waiting-time"]}`}>
+                                    <span className={styles["search-text"]}>Текущее время ожидания</span>
+                                    <span className={styles["search-timer"]}>{gameFountTimerFormat(seconds)}</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div className={styles["game-search-actions"]}>
+                            <button onClick={() => foundGame("cancel")}>Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };

@@ -9,18 +9,30 @@ axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
 import {LoadingPage} from "../LoadingPage/Loading.tsx";
+import usePageRender from "../../tools/PageRender.ts";
+import {ErrorPage} from "../ErrorPage/Error.tsx";
 
 interface PlayerData {
     name: string;
 }
 
+interface CardData {
+    card_name: string,
+    card_description: string,
+    card_damage: string,
+    card_protection: string,
+    lvl_number: string,
+    lvl_name: string
+}
+
 export const CreateCardsPage = ({ title }) => {
     const navigate = useNavigate();
 
-    const [data, setData] = useState<PlayerData | null>(null);
-    const [loading, setLoading] = useState(true);
+    const { data, loading, error, socket } = usePageRender<PlayerData>(
+        `${api.API_BASE_URL}/admin/create-cards`
+    );
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<CardData>({
         card_name: '',
         card_description: '',
         card_damage: '',
@@ -44,34 +56,6 @@ export const CreateCardsPage = ({ title }) => {
         }
     };
 
-    useEffect(() => {
-        const controller = new AbortController();
-
-        axios.get<PlayerData>(`${api.API_BASE_URL}/admin/create-cards`, {
-            signal: controller.signal
-        })
-            .then((response) => {
-                setData(response.data);
-                setLoading(false);
-                console.log('data', response.data);
-            })
-            .catch((err) => {
-                if (axios.isCancel(err) || err.name === "") return;
-
-                if (err.response && err.response.status === 401) {
-                    navigate("/auth/sign-in");
-                    return;
-                }
-
-                console.error("Ошибка загрузки профиля:", err);
-                setLoading(false);
-            });
-
-        return () => {
-            controller.abort();
-        }
-    }, []);
-
     const addNewCard = async (e) => {
         e.preventDefault();
 
@@ -88,7 +72,7 @@ export const CreateCardsPage = ({ title }) => {
             dataToSend.append("card_avatar", file);
         }
         try {
-            const response = await axios.post('http://localhost:3000/admin/add-card', dataToSend, {
+            const response = await axios.post(`${api.API_BASE_URL}/admin/add-card`, dataToSend, {
                 withCredentials: true
                 // headers: {
                 //     'Content-Type': 'multipart/form-data'
@@ -97,12 +81,13 @@ export const CreateCardsPage = ({ title }) => {
 
             console.log('Карта успешно создана:', response.data);
 
-            setFormData({
+            setFormData<CardData>({
                 card_name: '',
                 card_description: '',
                 card_damage: '',
                 card_protection: '',
-                lvl_number: ''
+                lvl_number: '',
+                lvl_name: 'DEFAULT'
             });
             setFile(null);
 
@@ -115,7 +100,8 @@ export const CreateCardsPage = ({ title }) => {
         }
     }
 
-    if (loading) return <LoadingPage/>
+    if (loading) return <LoadingPage />
+    if (error) return <ErrorPage error={error} />
 
     return (
         <div className={styles['body-wrapper']}>

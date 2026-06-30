@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import {useBlocker, useParams} from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { Helmet } from 'react-helmet-async';
 import { io, Socket } from "socket.io-client";
@@ -44,11 +44,34 @@ export const GamePage = ({ title }) => {
         `${api.API_BASE_URL}/api/game/${game_type}/${game_key}`
     );
 
+    const [isDirty, setIsDirty] = useState(true);
+
+    const blocker = useBlocker(
+        ({ currentLocation, nextLocation }) =>
+            isDirty &&
+            currentLocation.pathname !== nextLocation.pathname &&
+            currentLocation.search === nextLocation.search
+    );
+
+    useEffect(() => {
+        if (blocker.state === "blocked") {
+            toast.error("Вы не можете покинуть игру, пока она активна.");
+        }
+    }, [blocker]);
+
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            event.preventDefault();
+            event.returnValue = '';
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, []);
+
     useEffect(() => {
 
         if (!data || !data.id) return;
-
-        // socket.connect();
 
         const sendInitialData = () => {
             console.log('Приняты данные из бэка:', data);
@@ -93,9 +116,7 @@ export const GamePage = ({ title }) => {
 
         if (!socket.connected) {
             socket.connect();
-        }
-
-        if (socket.connected) {
+        } else {
             sendInitialData();
         }
 
@@ -184,7 +205,7 @@ export const GamePage = ({ title }) => {
         }
     }, [data]);
 
-    if (error) return <ErrorPage error="404" />
+    if (error) return <ErrorPage error={error} />
     if (loading || !data || !data.id) return <LoadingPage />
 
     return (

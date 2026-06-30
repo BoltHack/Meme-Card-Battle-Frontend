@@ -17,7 +17,7 @@ export default function usePageRender<T>(url: string) {
 
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
 
     useEffect(() => {
         const controller = new AbortController();
@@ -32,18 +32,27 @@ export default function usePageRender<T>(url: string) {
             })
             .catch((err) => {
                 if (axios.isCancel(err) || err.name === "") return;
+                const errorMessage = err.response.data.error;
 
-                if (err.response && err.response.status === 401) {
+                if (err.response?.status === 401) {
                     navigate("/auth/sign-in");
+                    // if (localStorage.getItem("token")) localStorage.removeItem("token");
+                    return;
+                }
+                if (err.response?.status === 403) {
+                    setLoading(false);
+                    setError(errorMessage);
                     return;
                 }
                 if (err.response?.status === 404) {
-                    setError(true);
+                    console.log('err.response', );
+                    setLoading(false);
+                    setError(errorMessage);
                     console.log('404');
-                    // <ErrorPage error="page is not found" />
                     return;
                 }
 
+                setError(errorMessage);
                 console.error("Ошибка загрузки профиля:", err);
                 setLoading(false);
             });

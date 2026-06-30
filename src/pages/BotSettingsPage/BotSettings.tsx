@@ -9,6 +9,7 @@ axios.defaults.withCredentials = true;
 import api from "../../api/api.ts";
 import toast from "react-hot-toast";
 import usePageRender from "../../tools/PageRender.ts";
+import {ErrorPage} from "../ErrorPage/Error.tsx";
 
 interface PlayerData {
     name: string;
@@ -39,6 +40,8 @@ export const BotSettingsPage = ({ title }) => {
             }
         }
     }
+
+    if (error) return <ErrorPage error={error} />
 
     return (
         <div className={styles["body-wrapper"]}>

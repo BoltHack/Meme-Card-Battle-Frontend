@@ -1,5 +1,11 @@
-/**, *::before, *::after {*/
-/*    box-sizing: border-box;*/
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/**::before, *::after, *:hover {*/
+/*    cursor: url('../src/assets/cursor/Mouse_Cursor_Resize.png') 4 4, default !important;*/
 /*}*/
 
 html, body {
@@ -10,21 +16,46 @@ html, body {
     overflow: hidden;
 }
 
-/*html {*/
-/*    scrollbar-color: #4a5568 #edf2f7;*/
-/*    scrollbar-width: auto;*/
+/*main {*/
+/*    position: relative;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+
+/*    align-items: center;*/
+
+/*    width: 100%;*/
+/*    height: 100dvh;*/
+
+/*    overflow-y: auto;*/
+/*    overflow-x: hidden;*/
+
+/*    background-image: url("./assets/Default_background.png");*/
+/*    background-size: cover;*/
+/*    background-position: center;*/
+/*    background-repeat: no-repeat;*/
 /*}*/
 
-/*html::-webkit-scrollbar {*/
-/*    width: 4px;*/
-/*}*/
-/*html::-webkit-scrollbar-track {*/
-/*    background: #181b20;*/
-/*}*/
-/*html::-webkit-scrollbar-thumb {*/
-/*    background: #313338;*/
-/*    border-radius: 10px;*/
-/*}*/
+html::-webkit-scrollbar {
+    width: 12px;
+}
+
+html::-webkit-scrollbar-thumb {
+    background-color: #3498db;
+    border-radius: 6px;
+    border: 3px solid #f0f8ff;
+}
+
+html::-webkit-scrollbar-track {
+    background-color: #f0f8ff;
+    border-radius: 6px;
+}
+
+html {
+    scrollbar-width: thin;
+    /*scrollbar-color: #212121 #16171d;*/
+    scrollbar-color: grey #313338;
+    scroll-behavior: smooth;
+}
 
 .custom-toast {
     user-select: none;

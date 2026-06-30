@@ -45,7 +45,7 @@ export const Game_CardDesk = ({
                 <div className={CardDesk_styles["game-board"]}>
 
                     <div className={`${CardDesk_styles["board-row"]} ${CardDesk_styles["top-row"]}`}>
-                        {playersInfo && playersInfo.length > 0 ? (
+                        {playersInfo && playersInfo.length > 0 && (
                             playersInfo.map((player, index) => (
                                 <div key={index} className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["enemy-profile"]}`}>
                                     <div className={CardDesk_styles["avatar-wrapper"]}>
@@ -63,7 +63,7 @@ export const Game_CardDesk = ({
                                     </div>
                                 </div>
                             ))
-                        ) : null}
+                        )}
 
                         <div className={`${Menus_styles["hand-container"]} ${CardDesk_styles["enemy-hand"]}`}>
                             <div className={CardDesk_styles["card-back"]}></div>
@@ -217,7 +217,7 @@ export const Game_CardDesk = ({
 
                         </div>
 
-                        {playersInfo && playersInfo.length ? (
+                        {playersInfo && playersInfo.length && (
                             playersInfo.map((player, index) => (
                                 <div key={index}
                                     className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["user-profile"]}`} style={ !isGameStart ? {cursor: 'pointer'} : {}}
@@ -238,7 +238,7 @@ export const Game_CardDesk = ({
                                     </div>
                                 </div>
                             ))
-                        ): null}
+                        )}
                     </div>
 
                 </div>

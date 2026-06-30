@@ -1,18 +1,60 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
 import { MainPage } from './pages/MainPage/Main';
 import { HowToPlayPage } from "./pages/HowToPlayPage/HowToPlay.tsx";
 import { BotSettingsPage } from "./pages/BotSettingsPage/BotSettings.tsx";
 import { GameSettingsPage } from "./pages/GameSettingsPage/GameSettings.tsx";
+import { TermsOfUsePage } from "./pages/RulePages/TermsOfUse.tsx";
 import { GamePage } from "./pages/GamePage/Game.tsx";
 
 import { CreateCardsPage } from "./pages/AdminPages/CreateCards.tsx";
 
 import { SignInPage } from "./pages/AuthPage/SignIn.tsx";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <MainPage title="MCB | Главная" />
+    },
+    {
+        path: "/how-to-play",
+        element: <HowToPlayPage title="MCB | Как играть" />
+    },
+    {
+        path: "/bot-settings",
+        element: <BotSettingsPage title="MCB | Настройки бота" />
+    },
+    {
+        path: "/game-settings",
+        element: <GameSettingsPage title="MCB | Настройки игры" />
+    },
+    {
+        path: "/terms-of-use",
+        element: <TermsOfUsePage title="MCB | Условия использования" />
+    },
+    {
+        path: "/game/:game_type/:game_key",
+        element: <GamePage title="MCB | Бот" />
+    },
+    {
+        path: "/auth/sign-in",
+        element: <SignInPage title="MCB | Аккаунт" />
+    },
+    {
+        path: "/admin/create-cards",
+        element: <CreateCardsPage title="Админка | Редактор" />
+    },
+    {
+        path: "*",
+        element: <Navigate to="/" replace />
+    }
+]);
+
 function App() {
     return (
-        <Router>
+        <>
             <Toaster
                 position="top-right"
                 containerStyle={{
@@ -38,20 +80,9 @@ function App() {
                 }}
             />
             <main>
-                <Routes>
-                    <Route path="/" element={<MainPage title="MCB | Главная" />} />
-                    <Route path="/how-to-play" element={<HowToPlayPage title="MCB | Как играть" />} />
-                    <Route path="/bot-settings" element={<BotSettingsPage title="MCB | Настройки бота" />} />
-                    <Route path="/game-settings" element={<GameSettingsPage title="MCB | Настройки игры" />} />
-                    <Route path="/game/:game_type/:game_key" element={<GamePage title="MCB | Бот" />} />
-
-                    <Route path="/auth/sign-in" element={<SignInPage title="MCB | Аккаунт" /> } />
-
-                    <Route path="/admin/create-cards" element={<CreateCardsPage title="Админка | Редактор" />} />
-                </Routes>
+                <RouterProvider router={router} />
             </main>
-        </Router>
+        </>
     );
 }
-
 export default App;
