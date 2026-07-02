@@ -1,4 +1,4 @@
-import {useBlocker, useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { Helmet } from 'react-helmet-async';
 import { io, Socket } from "socket.io-client";
@@ -43,21 +43,6 @@ export const GamePage = ({ title }) => {
     const { data, loading, error } = usePageRender<PlayerData>(
         `${api.API_BASE_URL}/api/game/${game_type}/${game_key}`
     );
-
-    const [isDirty, setIsDirty] = useState(true);
-
-    const blocker = useBlocker(
-        ({ currentLocation, nextLocation }) =>
-            isDirty &&
-            currentLocation.pathname !== nextLocation.pathname &&
-            currentLocation.search === nextLocation.search
-    );
-
-    useEffect(() => {
-        if (blocker.state === "blocked") {
-            toast.error("Вы не можете покинуть игру, пока она активна.");
-        }
-    }, [blocker]);
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
@@ -205,8 +190,8 @@ export const GamePage = ({ title }) => {
         }
     }, [data]);
 
-    if (error) return <ErrorPage error={error} />
     if (loading || !data || !data.id) return <LoadingPage />
+    if (error) return <ErrorPage error={error} />
 
     return (
         <div className={styles['body-wrapper']}>
@@ -223,6 +208,7 @@ export const GamePage = ({ title }) => {
                     <div className={styles["loader"]}></div>
                 </div>
             )}
+            {/*<Game_Tools />*/}
             <Game_Menus
                 playerCard={playerCard} setPlayerCard={setPlayerCard}
                 socket={socket}

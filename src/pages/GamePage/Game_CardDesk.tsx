@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate, useBlocker } from "react-router-dom";
 
 import CardDesk_styles from "./Card.Desk_styles.module.css";
 import Menus_styles from "./Card.Menu_styles.module.css";
 
 import api from "../../api/api.ts";
+import toast from "react-hot-toast";
 
 export const Game_CardDesk = ({
                                   onToggleMenu, useCard,
@@ -13,25 +15,80 @@ export const Game_CardDesk = ({
                                   playerCard, setPlayerCard,
                                   handList,
                                   activeAnimationCardId,
-                                  playersInfo
+                                  playersInfo,
                              }) => {
+    const navigate = useNavigate();
+
     const [isGameStart, setIsGameStart] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
-    const enemyHpStyle: React.CSSProperties & { [key: string]: string } = { "--progress": "80%" };
-    const enemyManaStyle: React.CSSProperties & { [key: string]: string } = { "--progress": "40%" };
+    const [isBlock, setIsBlock] = useState(true);
 
-    const playerHpStyle: React.CSSProperties & { [key: string]: string } = { "--progress": "100%" };
-    const playerManaStyle: React.CSSProperties & { [key: string]: string } = { "--progress": "70%" };
+    const blocker = useBlocker(
+        ({ currentLocation, nextLocation }) =>
+            isBlock &&
+            currentLocation.pathname !== nextLocation.pathname &&
+            currentLocation.search === nextLocation.search
+    );
 
-    // const test = () => {
-    //     setIsCardSelectAnimationPlayer("desk-playerCard");
-    // }
-    // const test2 = () => {
-    //     setIsCardSelectAnimationPlayer(null);
-    // }
+    useEffect(() => {
+        if (blocker.state === "blocked") {
+            toast.error("Вы не можете покинуть игру, пока она активна.");
+        }
+    }, [blocker]);
 
     const testEnemu = () => {
         setIsCardSelectAnimationEnemy(null);
+    }
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'F11') {
+                e.preventDefault();
+
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen()
+                        .catch((err) => console.log("Ошибка перехода:", err));
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+        };
+
+        const handleResize = () => {
+            const isNowFull = document.fullscreenElement !== null;
+            if (isNowFull) {
+                setIsFullScreen(true);
+            } else {
+                setIsFullScreen(false);
+            }
+        }
+
+        window.addEventListener("keydown", handleKeyDown);
+        document.addEventListener("fullscreenchange", handleResize);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+            document.addEventListener("fullscreenchange", handleResize);
+        }
+
+    }, []);
+
+    const toggleFullscreen = () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch((err) => {
+                console.error(`Ошибка при попытке полноэкранного режима: ${err.message}`);
+            });
+            setIsFullScreen(true);
+        } else {
+            document.exitFullscreen();
+            setIsFullScreen(false);
+        }
+    }
+
+    const leaveGame = () => {
+        setIsBlock(false);
+        setTimeout(() => navigate("/"), 500);
     }
 
     return (
@@ -42,6 +99,37 @@ export const Game_CardDesk = ({
             <div className={`${CardDesk_styles["sparkle"]} ${CardDesk_styles["sp-3"]}`}></div>
 
             <div className={CardDesk_styles["game-container"]}>
+
+                <div className={CardDesk_styles["game-tools-container"]}>
+                    <div className={CardDesk_styles["game-tools-content"]}>
+
+                        <div className={CardDesk_styles["game-tools-action"]} onClick={toggleFullscreen}>
+                            {isFullScreen ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-minimize-icon lucide-minimize">
+                                    <path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>
+                                </svg>
+                            ) :
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-maximize-icon lucide-maximize">
+                                    <path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+                                </svg>
+                            }
+                        </div>
+
+                        <div className={CardDesk_styles["game-tools-action"]}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-settings-icon lucide-settings">
+                                <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </div>
+
+                        <div className={CardDesk_styles["game-tools-action"]} onClick={leaveGame}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-out-icon lucide-log-out">
+                                <path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            </svg>
+                        </div>
+
+                    </div>
+                </div>
+
                 <div className={CardDesk_styles["game-board"]}>
 
                     <div className={`${CardDesk_styles["board-row"]} ${CardDesk_styles["top-row"]}`}>
@@ -57,7 +145,7 @@ export const Game_CardDesk = ({
                                         <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}
                                                min="0" max="100" value={player.enemyInfo.health}
                                         ></meter>
-                                        <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`} style={playerManaStyle}
+                                        <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`}
                                                min="0" max="100" value={player.enemyInfo.ult}
                                         ></meter>
                                     </div>
@@ -228,7 +316,7 @@ export const Game_CardDesk = ({
                                         <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}
                                                min="0" max="100" value={player.playerInfo.health}
                                         ></meter>
-                                        <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`} style={playerManaStyle}
+                                        <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`}
                                                min="0" max="100" value={player.playerInfo.ult}>
                                         </meter>
                                     </div>

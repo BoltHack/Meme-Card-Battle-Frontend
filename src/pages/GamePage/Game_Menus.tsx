@@ -20,6 +20,7 @@ export const Game_Menus = ({
                                loading,
                                setBodyLoader,
                                playersInfo,
+                               blocker
                             }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [isClosing, setIsClosing] = useState(false);

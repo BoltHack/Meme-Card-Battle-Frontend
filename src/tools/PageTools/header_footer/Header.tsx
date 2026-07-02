@@ -1,7 +1,7 @@
 import styles from "../stylesheets/Card.HeaderFooter.module.css";
 import {Link} from "react-router-dom";
 
-export const Header = ({ name }) => {
+export const Header = () => {
     return (
         <>
             <header className={styles['site-header']}>

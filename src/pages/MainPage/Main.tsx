@@ -172,6 +172,7 @@ export const MainPage = ({ title }) => {
         socket.on("found_game", (data) => {
             const { game_key } = data;
             console.log('data', data);
+            toast.success("Противник найден! Удачной игры!");
             setTimeout(() => {
                 navigate(`/game/player_player/${game_key}`);
             }, 1000);
@@ -181,6 +182,12 @@ export const MainPage = ({ title }) => {
             if (type === "game_not_found") {
                 foundGame("cancel");
                 toast.error("В результате поиска никого не было найдено.");
+                return;
+            }
+            if (type = "InGame_error") {
+                foundGame("cancel");
+                toast.error("Вы уже находитесь в игре.");
+                return;
             }
         });
 

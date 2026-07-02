@@ -48,7 +48,7 @@ export const Footer = () => {
                                 <ul>
                                     <li><Link to="/">Главная</Link></li>
                                     <li><Link to="#">Документация</Link></li>
-                                    <li><Link to="#">Магазин</Link></li>
+                                    <li><Link to="/shop">Магазин</Link></li>
                                     <li><Link to="#">Сундуки</Link></li>
                                 </ul>
                             </div>
@@ -56,17 +56,17 @@ export const Footer = () => {
                             <div className={`${styles["footer-col"]} ${styles["links"]}`}>
                                 <h3>Компания</h3>
                                 <ul>
-                                    <li><Link to="#">Информация о компании</Link></li>
-                                    <li><Link to="#">О нас</Link></li>
-                                    <li><Link to="#">Новости</Link></li>
+                                    <li><Link to="/company-information">Информация о компании</Link></li>
+                                    <li><Link to="/about-us">О нас</Link></li>
+                                    <li><Link to="/news">Новости</Link></li>
                                 </ul>
                             </div>
 
                             <div className={`${styles["footer-col"]} ${styles["links"]}`}>
                                 <h3>Информация</h3>
                                 <ul>
-                                    <li><Link to="#">Поддержка</Link></li>
-                                    <li><Link to="#">Блог</Link></li>
+                                    <li><Link to="/support">Поддержка</Link></li>
+                                    <li><Link to="/blog">Блог</Link></li>
                                 </ul>
                             </div>
 
@@ -75,8 +75,8 @@ export const Footer = () => {
                                 <ul>
                                     <li><Link to="/privacy-policy">Политика конфиденциальности</Link></li>
                                     <li><Link to="/terms-of-use">Условия использования</Link></li>
-                                    <li><Link to="#">Политика Cookie файлов</Link></li>
-                                    <li><Link to="#">Правила</Link></li>
+                                    <li><Link to="/cookie-policy">Политика Cookie файлов</Link></li>
+                                    <li><Link to="/rules">Правила</Link></li>
                                 </ul>
                             </div>
 

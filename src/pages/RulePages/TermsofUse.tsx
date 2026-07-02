@@ -10,6 +10,7 @@ import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
 import {useEffect, useRef, useState} from "react";
+import {ErrorPage} from "../ErrorPage/Error.tsx";
 
 interface PlayerData {
     name: string;
@@ -51,6 +52,7 @@ export const TermsOfUsePage = ({ title }) => {
     }, [loading]);
 
     if (loading) return <LoadingPage />
+    if (error) return <ErrorPage error={error} />
 
     return (
         <div className={styles["body-wrapper"]}>
@@ -59,7 +61,7 @@ export const TermsOfUsePage = ({ title }) => {
                 <title>{title}</title>
             </Helmet>
 
-            <Header name={data.name} />
+            <Header />
 
             {/*<div className={styles["parallax-body"]}></div>*/}
 
@@ -109,22 +111,6 @@ export const TermsOfUsePage = ({ title }) => {
                             </section>
                         ))
                     ): null}
-
-                    {/*<section>*/}
-                    {/*    <a href="#1">Общие положения</a>*/}
-                    {/*</section>*/}
-
-                    {/*<section>*/}
-                    {/*    <a href="#2">Интеллектуальная собственность</a>*/}
-                    {/*</section>*/}
-
-                    {/*<section>*/}
-                    {/*    <a href="#3">Ограничение ответственности</a>*/}
-                    {/*</section>*/}
-
-                    {/*<section>*/}
-                    {/*    <a href="#4">Изменение условий</a>*/}
-                    {/*</section>*/}
 
                 </article>
 

@@ -10,6 +10,7 @@ import api from "../../api/api.ts";
 import toast from "react-hot-toast";
 import usePageRender from "../../tools/PageRender.ts";
 import {ErrorPage} from "../ErrorPage/Error.tsx";
+import {LoadingPage} from "../LoadingPage/Loading.tsx";
 
 interface PlayerData {
     name: string;
@@ -41,6 +42,7 @@ export const BotSettingsPage = ({ title }) => {
         }
     }
 
+    if (loading) return <LoadingPage />
     if (error) return <ErrorPage error={error} />
 
     return (

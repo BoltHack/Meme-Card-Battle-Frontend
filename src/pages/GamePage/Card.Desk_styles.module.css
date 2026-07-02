@@ -10,7 +10,6 @@
     filter: blur(30px);
 }
 
-/* Общие стили для магических искр на фоне */
 .sparkle {
     position: absolute;
     background: radial-gradient(circle, rgba(0, 255, 204, 0.6) 0%, transparent 80%);
@@ -20,12 +19,10 @@
     filter: blur(1px);
 }
 
-/* Настройка и траектория искр */
 .sp-1 { width: 120px; height: 120px; top: 10%; left: 15%; animation: floatAround 12s infinite ease-in-out; }
 .sp-2 { width: 180px; height: 180px; bottom: 15%; right: 10%; background: radial-gradient(circle, rgba(255, 0, 127, 0.4) 0%, transparent 80%); animation: floatAround 18s infinite ease-in-out reverse; }
 .sp-3 { width: 90px; height: 90px; top: 60%; left: 8%; animation: floatAround 15s infinite ease-in-out 2s; }
 
-/* Чтобы сама доска была поверх эффектов */
 .game-container {
     background: transparent;
     height: 100vh;
@@ -37,7 +34,26 @@
     z-index: 2;
 }
 
-/* АНИМАЦИЯ: Плавное хаотичное движение частиц на заднем плане */
+.game-tools-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+}
+.game-tools-content {
+    display: block;
+    padding: 20px 10px;
+}
+.game-tools-action {
+    width: 30px;
+    height: auto;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+.game-tools-action svg {
+    color: grey;
+}
+
 @keyframes floatAround {
     0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
     33% { transform: translate(40px, -60px) scale(1.2); opacity: 0.6; }
@@ -45,7 +61,6 @@
     100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
 }
 
-/* Игровой стол */
 .game-board {
     width: 90vw;
     height: 92vh;
@@ -61,7 +76,6 @@
     gap: 10px;
 }
 
-/* Строки доски */
 .board-row {
     display: flex;
     align-items: center;
@@ -71,17 +85,13 @@
 .top-row { justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid rgba(106, 27, 154, 0.2); }
 .bottom-row { justify-content: space-between; padding-top: 10px; border-top: 1px solid rgba(106, 27, 154, 0.2); }
 
-/* Зоны для колод (Руки игроков) */
 
-
-
-/* Боевая арена (центр) */
 .battle-arena {
     border: 2px dashed rgba(106, 27, 154, 0.3);
     border-radius: 16px;
     margin: 10px 0;
     display: flex;
-    justify-content: space-between; /* Изменили, чтобы карта была слева/центре, а слоты справа */
+    justify-content: space-between;
     align-items: center;
     padding: 0 40px;
     box-sizing: border-box;
@@ -98,18 +108,14 @@
     animation: pulse 2.5s infinite alternate;
 }
 
-/* Центрируем демонстрационную карту на основном поле */
 .arena-center {
     flex-grow: 1;
     display: flex;
     gap: 100px;
     justify-content: center;
-    padding-right: 50px; /* Чтобы не прижималась к правой зоне */
+    padding-right: 50px;
 }
 
-/* ========================================================
-   НОВАЯ ПАНЕЛЬ СЛЕПЫХ УДАРОВ (Правый угол)
-======================================================== */
 .blind-strike-zone {
     display: flex;
     flex-direction: column;
@@ -122,10 +128,9 @@
     margin-left: auto;
 }
 
-/* Общие контейнеры для скрытых ячеек */
 .strike-slot {
-    width: 85px;
-    height: 120px;
+    width: 90px;
+    height: 125px;
     border: 2px dashed rgba(255, 255, 255, 0.15);
     border-radius: 10px;
     display: flex;
@@ -136,7 +141,6 @@
     transition: all 0.3s ease;
 }
 
-/* Лейблы подсказок внутри пустых слотов */
 .strike-slot::before {
     font-size: 10px;
     color: rgba(255, 255, 255, 0.2);
@@ -147,13 +151,11 @@
 .enemy-strike-slot::before { content: 'Враг'; top: -20px; color: #ff3366; }
 .player-strike-slot::before { content: 'Вы'; bottom: -20px; color: #00ccff; }
 
-/* Подсветка слотов при активации (когда туда "падает" карта) */
 .strike-slot.active {
     border-color: #ffd700;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
 }
 
-/* Карта рубашкой вверх, лежащая в слоте удара */
 .blind-card {
     width: 100%;
     height: 100%;
@@ -170,7 +172,6 @@
 .enemy-strike-slot .blind-card { border: 2px solid #ff3366; }
 .player-strike-slot .blind-card { border: 2px solid #00ccff; }
 
-/* Иконка скрытого действия по центру карты */
 .blind-card::after {
     content: '❓';
     font-size: 24px;
@@ -182,9 +183,6 @@
     100% { transform: scale(1); opacity: 1; }
 }
 
-/* ========================================================
-   БЛОКИ СТАТУСОВ И ПРОФИЛЕЙ
-======================================================== */
 .player-profile {
     display: flex;
     align-items: center;
@@ -249,15 +247,13 @@ meter {
     background: linear-gradient(90deg, #0066ff, #00ccff); box-shadow: 0 0 10px #0066ff;
 }
 
-/* РУБАШКИ КАРТ ПРОТИВНИКА */
 .enemy-hand { display: flex; justify-content: center; gap: -25px; }
 .card-back {
-    width: 75px; height: 110px; background: linear-gradient(135deg, #4a154b, #2b0c2c); border: 2px solid #ff3366; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); position: relative; overflow: hidden; margin-left: -20px; transition: transform 0.2s ease;
+    width: 85px; height: 120px; background: linear-gradient(135deg, #4a154b, #2b0c2c); border: 2px solid #ff3366; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); position: relative; overflow: hidden; margin-left: -20px; transition: transform 0.2s ease;
 }
 .card-back::after { content: '👁️‍🗨️'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; filter: drop-shadow(0 0 5px #ff3366); }
 .card-back:hover { transform: translateY(5px); z-index: 10; }
 
-/* КАРТЫ ИГРОКА */
 .player-hand {
     display: flex;
     justify-content: center;
@@ -265,8 +261,8 @@ meter {
     align-items: flex-end;
 }
 .hand-card {
-    width: 95px;
-    height: 135px;
+    width: 100px;
+    height: 140px;
     background: linear-gradient(135deg, #1c0c36 0%, #0d061c 100%);
     /*border: 1.5px solid #00ccff;*/
     border-radius: 8px;
@@ -329,9 +325,9 @@ meter {
 .h-stats { display: flex; justify-content: space-between; font-size: 9px; background: rgba(0,0,0,0.4); padding: 2px 4px; border-radius: 4px; }
 .h-atk { color: #ff3366; font-weight: bold; font-size: 12px; }
 .h-protection { color: #00ffcc; font-weight: bold; font-size: 12px; }
-/* ДЕМО-КАРТА ПО ЦЕНТРУ */
+
 .game-card, .dem-card {
-    width: 200px; height: 290px; background: linear-gradient(135deg, rgba(28, 12, 54, 0.9) 0%, rgba(13, 6, 28, 0.95) 100%); border-radius: 16px; position: relative; display: flex; flex-direction: column; padding: 12px; box-sizing: border-box; color: #fff; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); user-select: none; z-index: 5;
+    width: 210px; height: 300px; background: linear-gradient(135deg, rgba(28, 12, 54, 0.9) 0%, rgba(13, 6, 28, 0.95) 100%); border-radius: 16px; position: relative; display: flex; flex-direction: column; padding: 12px; box-sizing: border-box; color: #fff; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); user-select: none; z-index: 5;
 }
 .dem-card {
     cursor: pointer;

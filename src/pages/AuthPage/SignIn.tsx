@@ -12,44 +12,20 @@ axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
 import toast from "react-hot-toast";
+import {LoadingPage} from "../LoadingPage/Loading.tsx";
+import {ErrorPage} from "../ErrorPage/Error.tsx";
+import usePageRender from "../../tools/PageRender.ts";
 
 export const SignInPage = ({ title }) => {
     const navigate = useNavigate();
 
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-
     const [passwordVisible, setPasswordVisible] = useState(false);
 
-    useEffect(() => {
-        const controller = new AbortController();
-
-        axios.get(`${api.API_BASE_URL}/auth/sign-in`, {
-            signal: controller.signal
-        })
-            .then((response) => {
-                setData(response.data);
-                setLoading(false);
-                console.log('data', response.data);
-            })
-            .catch((err) => {
-                if (axios.isCancel(err) || err.name === "") return;
-
-                if (err.response && err.response.status === 403) {
-                    navigate("/");
-                    return;
-                }
-
-                console.error("Ошибка загрузки профиля:", err);
-                setLoading(false);
-            });
-
-        return () => {
-            controller.abort();
-        }
-    }, []);
-
     const [modalType, setModalType] = useState("main");
+
+    const { data, loading, error, socket } = usePageRender<PlayerData>(
+        `${api.API_BASE_URL}/auth/sign-in`
+    );
 
     const toggleModal = (type) => {
         setModalType(type);
@@ -57,6 +33,9 @@ export const SignInPage = ({ title }) => {
     const toggleVisible = () => {
         setPasswordVisible(!passwordVisible);
     }
+
+    if (loading) return <LoadingPage />
+    if (error) return <ErrorPage error={error} />
 
     return (
         <div className={styles["body-wrapper"]}>

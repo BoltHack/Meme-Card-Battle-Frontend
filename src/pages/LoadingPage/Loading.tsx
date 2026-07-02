@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.Loading.module.css";
 
-export const LoadingPage = ({ title }) => {
+export const LoadingPage = () => {
 
     return (
         <div className={styles["body-wrapper"]}>

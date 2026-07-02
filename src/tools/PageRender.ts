@@ -12,12 +12,17 @@ const socket: Socket = io(api.API_BASE_URL, {
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
+interface ErrorState {
+    code: number;
+    message: string;
+}
+
 export default function usePageRender<T>(url: string) {
     const navigate = useNavigate();
 
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string>("");
+    const [error, setError] = useState<ErrorState | null>(null);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -41,18 +46,16 @@ export default function usePageRender<T>(url: string) {
                 }
                 if (err.response?.status === 403) {
                     setLoading(false);
-                    setError(errorMessage);
+                    setError({ code: 403, message: errorMessage });
                     return;
                 }
                 if (err.response?.status === 404) {
-                    console.log('err.response', );
                     setLoading(false);
-                    setError(errorMessage);
+                    setError({ code: 404, message: errorMessage });
                     console.log('404');
                     return;
                 }
-
-                setError(errorMessage);
+                setError({ code: 505, message: errorMessage });
                 console.error("Ошибка загрузки профиля:", err);
                 setLoading(false);
             });
