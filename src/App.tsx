@@ -12,6 +12,7 @@ import { GamePage } from "./pages/GamePage/Game.tsx";
 import { CreateCardsPage } from "./pages/AdminPages/CreateCards.tsx";
 
 import { SignInPage } from "./pages/AuthPage/SignIn.tsx";
+import {ErrorPage} from "./pages/ErrorPage/Error.tsx";
 
 const router = createBrowserRouter([
     {
@@ -48,7 +49,7 @@ const router = createBrowserRouter([
     },
     {
         path: "*",
-        element: <Navigate to="/" replace />
+        element: <ErrorPage error={{ code: 404, message: "not found" }} />
     }
 ]);
 
