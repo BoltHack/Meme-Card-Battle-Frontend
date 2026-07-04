@@ -151,6 +151,21 @@ export const MainPage = ({ title }) => {
         }
     }
 
+    const getRandomCards = async () => {
+        try {
+            const response = await axios.post(`${api.API_BASE_URL}/admin/get-random-card`);
+
+            const data = response.data;
+
+            toast.success(data.success);
+
+            return response.data;
+        } catch (error) {
+            const errorMessage = error.response?.data?.error || 'Произошла ошибка при выходе';
+            console.log('Ошибка:', errorMessage);
+        }
+    }
+
     useEffect(() => {
         if (!data || !data.id) return;
 
@@ -337,11 +352,18 @@ export const MainPage = ({ title }) => {
 
                                 <div className={styles["menu-main-tools"]}>
                                     {data?.role === "Admin" && (
-                                        <li>
-                                            <div className={styles["tools-menu-btn"]} onClick={() => navigate("/admin/create-cards")}>
-                                                <span>Админка</span>
-                                            </div>
-                                        </li>
+                                        <div>
+                                            <li>
+                                                <div className={styles["tools-menu-btn"]} onClick={() => navigate("/admin/create-cards")}>
+                                                    <span>Админка</span>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div className={styles["tools-menu-btn"]} onClick={() => getRandomCards()}>
+                                                    <span>Получить случайную карту</span>
+                                                </div>
+                                            </li>
+                                        </div>
                                     )}
 
                                     {!isAuth ? (

@@ -76,12 +76,14 @@ export const Game_Menus = ({
     }
 
     const removeCard = (idToRemove) => {
-        const removeId = list.filter(item => item.id !== idToRemove);
+        console.log('idToRemove', idToRemove);
+        console.log('list', list);
+        const removeId = list.filter(item => item.menu_id !== idToRemove);
         if (!removeId) return;
         setList(removeId);
         setHandList(removeId);
         socket.emit("remove_battle_card", {
-            game_key: game_key, player_id: player_id, card_id: idToRemove
+            game_key: game_key, player_id: player_id, remove_id: idToRemove
         });
     }
 
@@ -211,7 +213,7 @@ export const Game_Menus = ({
                                 {list && list.length > 0 ? (
                                     list.map((card, index) => (
                                         <div key={`${card.menu_id || index}`} className={`${CardDesk_styles["dem-card"]} ${CardDesk_styles[`${card.rarity?.toLowerCase()}`]}`}
-                                             onClick={() => removeCard(card.id)} id={card.menu_id}
+                                             onClick={() => removeCard(card.menu_id)} id={card.menu_id}
                                         >
                                             <div className={CardDesk_styles["card-shine"]}></div>
                                             <div className={CardDesk_styles["card-header"]}>
@@ -261,10 +263,10 @@ export const Game_Menus = ({
                         <div className={Menus_styles["choosing-cards"]}>
                             <div className={`${Menus_styles["hand-container"]} ${CardDesk_styles["player-hand"]}`}>
                                 {playerCard && playerCard.length > 0 ? (
-                                    playerCard.map((card, index) => (
-                                        <div key={card.menu_id.toString()} className={`${CardDesk_styles["dem-card"]} ${CardDesk_styles[card.rarity?.toLowerCase()]}`}
+                                    playerCard.map((card) => (
+                                        <div key={card.menu_id} className={`${CardDesk_styles["dem-card"]} ${Menus_styles["menu-card"]} ${CardDesk_styles[card.rarity?.toLowerCase()]}`}
                                              onClick={() => checkBattleCard( card.id, card.menu_id )}
-                                             id={card.menu_id.toString()}
+                                             id={card.menu_id}
                                         >
                                             <div className={CardDesk_styles["card-shine"]}></div>
                                             <div className={CardDesk_styles["card-header"]}>

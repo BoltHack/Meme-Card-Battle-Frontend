@@ -84,7 +84,8 @@ export const GamePage = ({ title }) => {
             setTimeout(() => {
                 // if (!data.id) return;
                 socket.emit("get_user_cards", { player_id: data.id });
-                socket.emit("check_battle_cards", { game_key: data.game_key, player_id: data.id });
+                // socket.emit("check_battle_cards", { game_key: data.game_key, player_id: data.id });
+                socket.emit("clear_battle_cards", { game_key: data.game_key, player_id: data.id });
             }, 1000);
             // setInterval(() => {
             //     if (data.id) return;
@@ -109,8 +110,20 @@ export const GamePage = ({ title }) => {
 
         const handlePlayerCards = (data) => {
             const { cards_data } = data;
-            console.log('cards_data', cards_data);
             if (!cards_data) return;
+
+            // const duplicatedCards = cards_data.flatMap(card => {
+            //     const count = card.quantity || 1;
+            //
+            //     return Array.from({ length: count }, (_, index) => ({
+            //         ...card,
+            //         ui_key: `${card.card_id}_duplicate_${index}`
+            //         // ui_key: `${crypto.randomUUID()}_duplicate_${index}`
+            //         // ui_key: crypto.randomUUID()
+            //     }));
+            // });
+            //
+            // setPlayerCard(duplicatedCards);
 
             setPlayerCard(prevCards => {
                 if (Array.isArray(cards_data)) {
@@ -129,6 +142,8 @@ export const GamePage = ({ title }) => {
         socket.on("get_player_cards", handlePlayerCards);
         socket.on("select_battle_card", (data) => {
             const { card, menu_id } = data;
+
+            console.log('menu_id', menu_id);
 
             if (card.length < 1) return;
 
@@ -151,31 +166,32 @@ export const GamePage = ({ title }) => {
             setBodyLoader(false);
         });
 
-        socket.on("select_battle_card_list", (data) => {
-            const { card } = data;
-
-            if (!card || card.length < 1) return;
-
-            console.log('Уникальные карты для рендера:', card);
-
-            setList(prevList => {
-                const combined = [...prevList, ...card];
-
-                return combined.filter((item, index, self) =>
-                    index === self.findIndex((c) => c.id === item.id)
-                );
-            });
-            setHandList(prevList => {
-                const combined = [...prevList, ...card];
-
-                return combined.filter((item, index, self) =>
-                    index === self.findIndex((c) => c.id === item.id)
-                );
-            });
-        });
+        // socket.on("select_battle_card_list", (data) => {
+        //     const { card } = data;
+        //
+        //     if (!card || card.length < 1) return;
+        //
+        //     console.log('Уникальные карты для рендера:', card);
+        //
+        //     setList(prevList => {
+        //         const combined = [...prevList, ...card];
+        //
+        //         return combined.filter((item, index, self) =>
+        //             index === self.findIndex((c) => c.id === item.id)
+        //         );
+        //     });
+        //     setHandList(prevList => {
+        //         const combined = [...prevList, ...card];
+        //
+        //         return combined.filter((item, index, self) =>
+        //             index === self.findIndex((c) => c.id === item.id)
+        //         );
+        //     });
+        // });
 
         socket.on("error_handler", (message) => {
             toast.error(message);
+            setBodyLoader(false);
         });
 
         return () => {
@@ -183,14 +199,14 @@ export const GamePage = ({ title }) => {
             socket.off("join_game");
             socket.off("get_user_cards");
             socket.off("select_battle_card");
-            socket.off("select_battle_card_list");
-            socket.off("check_battle_cards");
+            // socket.off("select_battle_card_list");
+            // socket.off("check_battle_cards");
             socket.disconnect();
             console.log('Сокет отключен, подписки сняты');
         }
     }, [data]);
 
-    if (loading || !data || !data.id) return <LoadingPage />
+    if (loading) return <LoadingPage />
     if (error) return <ErrorPage error={error} />
 
     return (
