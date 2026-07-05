@@ -37,6 +37,9 @@ export const GamePage = ({ title }) => {
     const [list, setList] = useState([]);
 
     const [handList, setHandList] = useState([]);
+    const [enemyHandList, setEnemyHandList] = useState([0, 1, 2, 3, 4, 5, 6, 7]);
+
+    const [isEnemyCardSelected, setIsEnemyCardSelected] = useState(false);
 
     const [playersInfo, setPlayersInfo] = useState([]);
 
@@ -194,6 +197,11 @@ export const GamePage = ({ title }) => {
             setBodyLoader(false);
         });
 
+        socket.on("enemy_card_selected", () => {
+            setIsEnemyCardSelected(true);
+            setEnemyHandList(enemyHandList.filter(num => num - 1))
+        });
+
         return () => {
             socket.off("connect");
             socket.off("join_game");
@@ -231,6 +239,8 @@ export const GamePage = ({ title }) => {
                 player_id={data.id} game_key={data.game_key}
                 list={list} setList={setList}
                 handList={handList} setHandList={setHandList}
+                enemyHandList={enemyHandList} setEnemyHandList={setEnemyHandList}
+                isEnemyCardSelected={isEnemyCardSelected}
                 loading={loading}
                 setBodyLoader={setBodyLoader}
                 playersInfo={playersInfo}

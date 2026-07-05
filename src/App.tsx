@@ -13,6 +13,7 @@ import { CreateCardsPage } from "./pages/AdminPages/CreateCards.tsx";
 
 import { SignInPage } from "./pages/AuthPage/SignIn.tsx";
 import {ErrorPage} from "./pages/ErrorPage/Error.tsx";
+import {PrivacyPolicy} from "./pages/RulePages/PrivacyPolicy.tsx";
 
 const router = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
     {
         path: "/terms-of-use",
         element: <TermsOfUsePage title="MCB | Условия использования" />
+    },
+    {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy title="MCB | Политика конфиденциальности" />
     },
     {
         path: "/game/:game_type/:game_key",

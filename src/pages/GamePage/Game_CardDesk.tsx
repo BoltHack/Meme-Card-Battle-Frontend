@@ -12,8 +12,9 @@ export const Game_CardDesk = ({
                                   onToggleMenu, useCard,
                                   activePlayerCard,
                                   isCardSelectAnimationEnemy, setIsCardSelectAnimationEnemy,
-                                  playerCard, setPlayerCard,
                                   handList,
+                                  enemyHandList,
+                                  isEnemyCardSelected,
                                   activeAnimationCardId,
                                   playersInfo,
                              }) => {
@@ -154,19 +155,32 @@ export const Game_CardDesk = ({
                         )}
 
                         <div className={`${Menus_styles["hand-container"]} ${CardDesk_styles["enemy-hand"]}`}>
-                            <div className={CardDesk_styles["card-back"]}></div>
-                            <div className={CardDesk_styles["card-back"]}></div>
-                            <div className={CardDesk_styles["card-back"]}></div>
-                            <div className={CardDesk_styles["card-back"]}></div>
-                            <div className={CardDesk_styles["card-back"]}></div>
-                            <div className={CardDesk_styles["card-back"]}></div>
-                            <div className={CardDesk_styles["card-back"]}></div>
-                            {isCardSelectAnimationEnemy === "" && (
-                                <motion.div
-                                    layoutId="shared-EnemyCard">
-                                    <div className={CardDesk_styles["card-back"]} onClick={() => setIsCardSelectAnimationEnemy("use-enemyCard")}></div>
-                                </motion.div>
-                            )}
+                            <AnimatePresence>
+                                {enemyHandList && enemyHandList.length > 0 ? (
+                                    enemyHandList.map((item, index) => {
+
+                                        return (
+                                            <motion.div
+                                                key={`card-back-wrapper-${item}-${index}`}
+                                                layoutId={`card-back-shared-${item}-${index}`}
+                                                layout
+                                                exit={{ opacity: 0, scale: 0.8 }}
+                                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                            >
+                                                <div id={`card-back-${item}`} className={CardDesk_styles["card-back"]}></div>
+                                            </motion.div>
+                                        )
+
+                                    })
+                                ) : null}
+                            </AnimatePresence>
+                            {/*<div className={CardDesk_styles["card-back"]}></div>*/}
+                            {/*// {isCardSelectAnimationEnemy === "" && (*/}
+                            {/*//     <motion.div*/}
+                            {/*//         layoutId="shared-EnemyCard">*/}
+                            {/*//         <div className={CardDesk_styles["card-back"]} onClick={() => setIsCardSelectAnimationEnemy("use-enemyCard")}></div>*/}
+                            {/*//     </motion.div>*/}
+                            {/*// )}*/}
                         </div>
                     </div>
 
@@ -211,14 +225,19 @@ export const Game_CardDesk = ({
                         <div className={CardDesk_styles["blind-strike-zone"]}>
 
                             <div className={`${CardDesk_styles["strike-slot"]} ${CardDesk_styles["enemy-strike-slot"]} ${CardDesk_styles["active"]}`}>
-                            {isCardSelectAnimationEnemy === "use-enemyCard" && (
-                                <motion.div
-                                    layoutId="shared-EnemyCard">
-                                    <div className={`${CardDesk_styles["strike-slot"]} ${CardDesk_styles["enemy-strike-slot"]}`}>
-                                        <div className={CardDesk_styles["blind-card"]} onClick={() => setIsCardSelectAnimationEnemy('desk-enemyCard')}></div>
-                                    </div>
-                                </motion.div>
-                            )}
+                                <AnimatePresence>
+                                    {isEnemyCardSelected && (
+                                        (() => {
+
+                                            return (
+                                                <div className={`${CardDesk_styles["strike-slot"]} ${CardDesk_styles["enemy-strike-slot"]}`}>
+                                                    <div className={CardDesk_styles["blind-card"]} onClick={() => setIsCardSelectAnimationEnemy('desk-enemyCard')}></div>
+                                                </div>
+                                            );
+
+                                        })()
+                                    )}
+                                </AnimatePresence>
                             </div>
 
 
@@ -243,6 +262,7 @@ export const Game_CardDesk = ({
                                                 <div className={CardDesk_styles["blind-card"]}></div>
                                             </div>
                                         );
+
                                         })()
                                     )}
                                 </AnimatePresence>

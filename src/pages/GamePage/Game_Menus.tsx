@@ -17,10 +17,11 @@ export const Game_Menus = ({
                                my_nickname, enemy_nickname,
                                list, setList,
                                handList, setHandList,
+                               enemyHandList,
+                               isEnemyCardSelected,
                                loading,
                                setBodyLoader,
                                playersInfo,
-                               blocker
                             }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [isClosing, setIsClosing] = useState(false);
@@ -113,6 +114,7 @@ export const Game_Menus = ({
             socket.emit("select_card", {
                 game_key: game_key,
                 player_id: player_id,
+                enemy_name: playersInfo[0].enemyInfo.name,
                 card_id: useCardId
             });
             setSelectCard([]);
@@ -141,7 +143,12 @@ export const Game_Menus = ({
 
                 isCardSelectAnimationEnemy={isCardSelectAnimationEnemy}
                 setIsCardSelectAnimationEnemy={setIsCardSelectAnimationEnemy}
+
                 handList={handList} setHandList={setHandList}
+                enemyHandList={enemyHandList}
+
+                isEnemyCardSelected={isEnemyCardSelected}
+
                 activeAnimationCardId={activeAnimationCardId} setActiveAnimationCardId={setActiveAnimationCardId}
                 my_nickname={my_nickname} enemy_nickname={enemy_nickname}
                 playersInfo={playersInfo}

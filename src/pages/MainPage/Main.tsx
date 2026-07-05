@@ -127,6 +127,44 @@ export const MainPage = ({ title }) => {
         }
     }
 
+    // (function() {
+    //     const fpsDiv = document.createElement('div');
+    //     fpsDiv.style.position = 'fixed';
+    //     fpsDiv.style.top = '10px';
+    //     fpsDiv.style.left = '10px';
+    //     fpsDiv.style.zIndex = '999999';
+    //     fpsDiv.style.background = 'rgba(0, 0, 0, 0.8)';
+    //     fpsDiv.style.color = '#00ff00';
+    //     fpsDiv.style.padding = '5px 10px';
+    //     fpsDiv.style.fontFamily = 'monospace';
+    //     fpsDiv.style.fontSize = '16px';
+    //     fpsDiv.style.borderRadius = '5px';
+    //     fpsDiv.innerText = 'FPS: ...';
+    //     document.body.appendChild(fpsDiv);
+    //
+    //     let lastTime = performance.now();
+    //     let frames = 0;
+    //
+    //     function calculateFps() {
+    //         const now = performance.now();
+    //         frames++;
+    //
+    //         if (now >= lastTime + 1000) {
+    //             const fps = Math.round((frames * 1000) / (now - lastTime));
+    //             fpsDiv.innerText = `FPS: ${fps}`;
+    //
+    //             fpsDiv.style.color = fps < 45 ? '#ff0000' : '#00ff00';
+    //
+    //             frames = 0;
+    //             lastTime = now;
+    //         }
+    //
+    //         requestAnimationFrame(calculateFps);
+    //     }
+    //
+    //     requestAnimationFrame(calculateFps);
+    // })();
+
     const logout = async (e: React.MouseEvent) => {
         e.preventDefault();
         try {

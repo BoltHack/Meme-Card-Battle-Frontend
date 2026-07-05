@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import ReactMarkdown from 'react-markdown';
 
 import styles from './Card.Rules.module.css';
 
@@ -27,29 +28,33 @@ export const TermsOfUsePage = ({ title }) => {
     );
 
     useEffect(() => {
-        if (articleSectionsContainer.current) {
-            const sections = articleSectionsContainer.current.querySelectorAll("section");
+        if (!loading && data?.content && articleSectionsContainer.current) {
 
-            const tempArticles = [];
+            setTimeout(() => {
+                if (!articleSectionsContainer.current) return;
 
-            sections.forEach((s, index) => {
-                const h2Element = s.querySelector("h2");
+                const h2Elements = articleSectionsContainer.current.querySelectorAll("h2");
 
-                if (h2Element) {
-                    const headingText = h2Element.textContent;
+                const tempArticles: Array<{ id: string; article: string | null }> = [];
+
+                h2Elements.forEach((h2, index) => {
+                    const headingText = h2.textContent;
                     const sectionId = (index + 1).toString();
 
-                    s.id = sectionId;
+                    h2.id = sectionId;
 
                     tempArticles.push({
                         id: sectionId,
                         article: headingText
-                    })
-                }
-            });
-            setArticleList(tempArticles);
+                    });
+                });
+
+                setArticleList(tempArticles);
+
+            }, 0)
+
         }
-    }, [loading]);
+    }, [loading, data?.content]);
 
     if (loading) return <LoadingPage />
     if (error) return <ErrorPage error={error} />
@@ -74,25 +79,11 @@ export const TermsOfUsePage = ({ title }) => {
                         <p className={styles["subtitle"]}>Последнее обновление: 22 июня 2026 г.</p>
                     </header>
 
-                    <section className={styles["article-section"]}>
-                        <h2>1. Общие положения</h2>
-                        <p>Добро пожаловать на наш ресурс. Получая доступ к данному сайту или используя его функции, вы автоматически соглашаетесь с настоящими Условиями использования. Если вы не согласны с какими-либо пунктами, пожалуйста, прекратите использование сайта.</p>
-                    </section>
-
-                    <section className={styles["article-section"]}>
-                        <h2>2. Интеллектуальная собственность</h2>
-                        <p>Весь контент, представленный на страницах проекта, включая текстовые материалы, элементы графического дизайна, логотипы и программный код, является собственностью правообладателей и защищен законами об авторском праве.</p>
-                    </section>
-
-                    <section className={styles["article-section"]}>
-                        <h2>3. Ограничение ответственности</h2>
-                        <p>Мы стремимся обеспечивать бесперебойную работу платформы, однако сервис предоставляется по принципу «как есть». Администрация не несёт ответственности за временные технические сбои, утерю данных или любые косвенные убытки, возникшие в процессе использования ресурса.</p>
-                    </section>
-
-                    <section className={styles["article-section"]}>
-                        <h2>4. Изменение условий</h2>
-                        <p>Мы оставляем за собой право обновлять и изменять данные правила в любое время без предварительного уведомления пользователей. Актуальная версия документа всегда доступна на этой странице.</p>
-                    </section>
+                    {data.content && data.content.length > 0 ? (
+                        <section className={styles["article-section"]}>
+                            <ReactMarkdown>{data.content}</ReactMarkdown>
+                        </section>
+                    ) : null}
 
                 </article>
 
