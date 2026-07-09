@@ -29,6 +29,8 @@ export const BotSettingsPage = ({ title }) => {
 
             const data = response.data;
 
+            console.log('data', data);
+
             navigate(`/game/${data.game_type}/${data.game_key}`);
 
             return data;

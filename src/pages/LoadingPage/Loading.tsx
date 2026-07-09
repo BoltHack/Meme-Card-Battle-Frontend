@@ -1,10 +1,35 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.Loading.module.css";
 
+import usePageRender from "../../tools/PageRender.ts";
+import api from "../../api/api.ts";
+
+interface PlayerData {
+    name: string;
+    id: string;
+}
+
 export const LoadingPage = () => {
+
+    // console.log('setLoading', setLoading);
+    // const location = useLocation();
+    // const pageLocation = `${api.API_BASE_URL}/api${location.pathname}`;
+    //
+    // const { refetch } = usePageRender<PlayerData>(pageLocation);
+    // console.log('setLoading', setLoading);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         console.log('Запрашиваем новые данные...');
+    //         refetch()
+    //     }, 5000);
+    //
+    //     return () => {
+    //         clearInterval(interval);
+    //     }
+    // }, [loading, refetch]);
 
     return (
         <div className={styles["body-wrapper"]}>
@@ -31,21 +56,21 @@ export const LoadingPage = () => {
                 <div className={styles["card-layer"]}>
 
                     <div className={`${styles["premium-card"]} ${styles["card-king"]}`}>
-                        <div>K</div>
-                        <div className={styles["card-suit-center"]}>♥</div>
-                        <div className={styles["card-suit-bottom"]}>K</div>
+                        <div></div>
+                        <div className={styles["card-suit-center"]}>?</div>
+                        <div className={styles["card-suit-bottom"]}></div>
                     </div>
 
                     <div className={`${styles["premium-card"]} ${styles["card-ace-spades"]}`}>
-                        <div>A</div>
-                        <div className={styles["card-suit-center"]}>♠</div>
-                        <div className={styles["card-suit-bottom"]}>A</div>
+                        <div></div>
+                        <div className={styles["card-suit-center"]}>?</div>
+                        <div className={styles["card-suit-bottom"]}></div>
                     </div>
                     <div className={`${styles["premium-card"]} ${styles["card-ace-diamonds"]}`}>
 
-                        <div>A</div>
-                        <div className={styles["card-suit-center"]}>♦</div>
-                        <div className={styles["card-suit-bottom"]}>A</div>
+                        <div></div>
+                        <div className={styles["card-suit-center"]}>?</div>
+                        <div className={styles["card-suit-bottom"]}></div>
                     </div>
 
                 </div>

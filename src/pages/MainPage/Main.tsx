@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import {useCallback, useEffect, useRef, useState} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 
@@ -127,43 +127,48 @@ export const MainPage = ({ title }) => {
         }
     }
 
-    // (function() {
-    //     const fpsDiv = document.createElement('div');
-    //     fpsDiv.style.position = 'fixed';
-    //     fpsDiv.style.top = '10px';
-    //     fpsDiv.style.left = '10px';
-    //     fpsDiv.style.zIndex = '999999';
-    //     fpsDiv.style.background = 'rgba(0, 0, 0, 0.8)';
-    //     fpsDiv.style.color = '#00ff00';
-    //     fpsDiv.style.padding = '5px 10px';
-    //     fpsDiv.style.fontFamily = 'monospace';
-    //     fpsDiv.style.fontSize = '16px';
-    //     fpsDiv.style.borderRadius = '5px';
-    //     fpsDiv.innerText = 'FPS: ...';
-    //     document.body.appendChild(fpsDiv);
-    //
-    //     let lastTime = performance.now();
-    //     let frames = 0;
-    //
-    //     function calculateFps() {
-    //         const now = performance.now();
-    //         frames++;
-    //
-    //         if (now >= lastTime + 1000) {
-    //             const fps = Math.round((frames * 1000) / (now - lastTime));
-    //             fpsDiv.innerText = `FPS: ${fps}`;
-    //
-    //             fpsDiv.style.color = fps < 45 ? '#ff0000' : '#00ff00';
-    //
-    //             frames = 0;
-    //             lastTime = now;
-    //         }
-    //
-    //         requestAnimationFrame(calculateFps);
-    //     }
-    //
-    //     requestAnimationFrame(calculateFps);
-    // })();
+    (function() {
+        const fpsDiv = document.createElement('div');
+
+        fpsDiv.style.position = 'fixed';
+        fpsDiv.style.top = '10px';
+        fpsDiv.style.left = '10px';
+        fpsDiv.style.zIndex = '999999';
+        fpsDiv.style.background = 'rgba(0, 0, 0, 0.8)';
+        fpsDiv.style.color = '#00ff00';
+        fpsDiv.style.padding = '5px 10px';
+        fpsDiv.style.fontFamily = 'monospace';
+        fpsDiv.style.fontSize = '16px';
+        fpsDiv.style.borderRadius = '5px';
+        fpsDiv.innerText = 'FPS: ...';
+        document.body.appendChild(fpsDiv);
+
+        let lastTime = performance.now();
+        let frames = 0;
+
+        function calculateFps() {
+            const now = performance.now();
+            frames++;
+
+            if (now >= lastTime + 1000) {
+                const fps = Math.round((frames * 1000) / (now - lastTime));
+                fpsDiv.innerText = `FPS: ${fps}`;
+
+                fpsDiv.style.color = fps < 45 ? '#ff0000' : '#00ff00';
+
+                frames = 0;
+                lastTime = now;
+            }
+
+            if (window.location.pathname !== "/") {
+                document.body.removeChild(fpsDiv);
+                return;
+            }
+            requestAnimationFrame(calculateFps);
+        }
+
+        requestAnimationFrame(calculateFps);
+    })();
 
     const logout = async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -231,17 +236,9 @@ export const MainPage = ({ title }) => {
             }, 1000);
         });
 
-        socket.on("error", (type) => {
-            if (type === "game_not_found") {
-                foundGame("cancel");
-                toast.error("В результате поиска никого не было найдено.");
-                return;
-            }
-            if (type = "InGame_error") {
-                foundGame("cancel");
-                toast.error("Вы уже находитесь в игре.");
-                return;
-            }
+        socket.on("game_error_handler", (message) => {
+            foundGame("cancel");
+            toast.error(message);
         });
 
         return () => {

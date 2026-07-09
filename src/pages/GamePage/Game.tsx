@@ -88,7 +88,7 @@ export const GamePage = ({ title }) => {
                 // if (!data.id) return;
                 socket.emit("get_user_cards", { player_id: data.id });
                 // socket.emit("check_battle_cards", { game_key: data.game_key, player_id: data.id });
-                socket.emit("clear_battle_cards", { game_key: data.game_key, player_id: data.id });
+                socket.emit("clear_game_cards", { game_key: data.game_key, player_id: data.id });
             }, 1000);
             // setInterval(() => {
             //     if (data.id) return;

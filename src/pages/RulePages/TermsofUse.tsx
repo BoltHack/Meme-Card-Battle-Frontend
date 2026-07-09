@@ -72,38 +72,44 @@ export const TermsOfUsePage = ({ title }) => {
 
             <div className={styles["container"]}>
 
-                <article className={styles["article-main"]} ref={articleSectionsContainer}>
+                {/*<article className={styles["article-header"]}>*/}
+                {/*    <h1>Условия использования</h1>*/}
+                {/*</article>*/}
 
-                    <header>
-                        <h1>Условия использования</h1>
-                        <p className={styles["subtitle"]}>Последнее обновление: 22 июня 2026 г.</p>
-                    </header>
+                <div className={styles["content-container"]}>
+                    <article className={styles["article-main"]} ref={articleSectionsContainer}>
 
-                    {data.content && data.content.length > 0 ? (
-                        <section className={styles["article-section"]}>
-                            <ReactMarkdown>{data.content}</ReactMarkdown>
-                        </section>
-                    ) : null}
+                        <header>
+                            <h1>Условия использования</h1>
+                            <p className={styles["subtitle"]}>Последнее обновление: 22 июня 2026 г.</p>
+                        </header>
 
-                </article>
-
-                <article className={styles["article-tools"]}>
-
-                    <header>
-                        <h3>В этой статье</h3>
-                    </header>
-
-                    <br/>
-
-                    {articleList && articleList.length > 0 ? (
-                        articleList.map((item) => (
-                            <section key={item.id}>
-                                <a href={`#${item.id}`}>{item.article}</a>
+                        {data.content && data.content.length > 0 ? (
+                            <section className={styles["article-section"]}>
+                                <ReactMarkdown>{data.content}</ReactMarkdown>
                             </section>
-                        ))
-                    ): null}
+                        ) : null}
 
-                </article>
+                    </article>
+
+                    <article className={styles["article-tools"]}>
+
+                        <header>
+                            <h3>В этой статье</h3>
+                        </header>
+
+                        <br/>
+
+                        {articleList && articleList.length > 0 ? (
+                            articleList.map((item) => (
+                                <section key={item.id}>
+                                    <a href={`#${item.id}`}>{item.article}</a>
+                                </section>
+                            ))
+                        ): null}
+
+                    </article>
+                </div>
 
             </div>
 

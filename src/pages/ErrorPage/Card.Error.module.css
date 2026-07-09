@@ -93,6 +93,14 @@
     box-shadow: 0 8px 25px rgba(255, 0, 127, 0.6), 0 0 15px rgba(127, 0, 255, 0.4);
 }
 
+.btn-container {
+    /*width: 500px;*/
+    justify-content: center;
+    /*align-items: center;*/
+    display: grid;
+    grid-gap: 10px;
+}
+
 @keyframes pulse {
     0%, 100% { filter: drop-shadow(0 4px 12px rgba(255, 0, 127, 0.4)); }
     50% { filter: drop-shadow(0 6px 20px rgba(0, 210, 255, 0.6)); }

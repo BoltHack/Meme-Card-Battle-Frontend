@@ -1,19 +1,23 @@
-// import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
+import { SignInPage } from "./pages/AuthPage/SignIn.tsx";
+
 import { MainPage } from './pages/MainPage/Main';
-import { HowToPlayPage } from "./pages/HowToPlayPage/HowToPlay.tsx";
+
 import { BotSettingsPage } from "./pages/BotSettingsPage/BotSettings.tsx";
+
 import { GameSettingsPage } from "./pages/GameSettingsPage/GameSettings.tsx";
-import { TermsOfUsePage } from "./pages/RulePages/TermsOfUse.tsx";
 import { GamePage } from "./pages/GamePage/Game.tsx";
+
+import { HowToPlayPage } from "./pages/RulePages/HowToPlay.tsx";
+import { TermsOfUsePage } from "./pages/RulePages/TermsOfUse.tsx";
+import { PrivacyPolicy } from "./pages/RulePages/PrivacyPolicy.tsx";
 
 import { CreateCardsPage } from "./pages/AdminPages/CreateCards.tsx";
 
-import { SignInPage } from "./pages/AuthPage/SignIn.tsx";
-import {ErrorPage} from "./pages/ErrorPage/Error.tsx";
-import {PrivacyPolicy} from "./pages/RulePages/PrivacyPolicy.tsx";
+import { ErrorPage } from "./pages/ErrorPage/Error.tsx";
+
 
 const router = createBrowserRouter([
     {

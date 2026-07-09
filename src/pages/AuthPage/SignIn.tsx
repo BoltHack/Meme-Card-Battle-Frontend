@@ -70,6 +70,7 @@ export const SignInPage = ({ title }) => {
                                 </div>
                                 <span>Войти в аккаунт</span>
                             </div>
+
                             <div className={styles["btn"]} onClick={() => toggleModal("register")}>
                                 <div className={styles["icon-container"]}>
                                     <div className={styles["icon-svg"]}>
@@ -78,6 +79,11 @@ export const SignInPage = ({ title }) => {
                                 </div>
                                 <span className={styles["icon-content"]}>Зарегистрироваться</span>
                             </div>
+
+                            {/*<div className={`${styles["btn"]} ${styles["more-options-btn"]}`}>*/}
+                            {/*    <span className={styles["icon-content"]}>Просмотреть другие варианты</span>*/}
+                            {/*</div>*/}
+
                             {/*<div className={styles["btn"]}>*/}
                             {/*    <div className={styles["icon-svg"]}>*/}
                             {/*        <div className={styles["icon-svg"]}>*/}
@@ -113,12 +119,12 @@ export const SignInPage = ({ title }) => {
                     <div className={styles["footer-content"]}>
                         <div className={styles["footer-item"]}>
                             <span>
-                                <Link to="/">Политика конфиденциальности</Link>
+                                <a href="/privacy-policy" target="_blank">Политика конфиденциальности</a>
                             </span>
                         </div>
                         <div className={styles["footer-item"]}>
                             <span>
-                                <Link to="/">Условия использования</Link>
+                                <a href="/terms-of-use" target="_blank">Условия использования</a>
                             </span>
                         </div>
                     </div>

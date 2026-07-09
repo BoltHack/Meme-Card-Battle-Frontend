@@ -24,6 +24,10 @@ export default function usePageRender<T>(url: string) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ErrorState | null>(null);
 
+    const [trigger, setTrigger] = useState(0);
+
+    const refetch = () => setTrigger(prev => prev + 1);
+
     useEffect(() => {
         const controller = new AbortController();
 
@@ -31,9 +35,12 @@ export default function usePageRender<T>(url: string) {
             signal: controller.signal
         })
             .then((response) => {
+                // if (trigger === 0) return;
                 setData(response.data);
                 setLoading(false);
                 console.log('data', response.data);
+                console.log('socket', socket.connected);
+                console.log('loading', loading);
             })
             .catch((err) => {
                 if (axios.isCancel(err) || err.name === "") return;
@@ -63,7 +70,7 @@ export default function usePageRender<T>(url: string) {
         return () => {
             controller.abort();
         }
-    }, [url, navigate]);
+    }, [url, navigate, trigger]);
 
     useEffect(() => {
 
@@ -99,5 +106,5 @@ export default function usePageRender<T>(url: string) {
         }
     }, [data]);
 
-    return { data, loading, error, socket };
+    return { data, loading, error, socket, refetch };
 }
