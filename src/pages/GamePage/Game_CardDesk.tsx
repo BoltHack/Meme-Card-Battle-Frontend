@@ -17,13 +17,12 @@ export const Game_CardDesk = ({
                                   isEnemyCardSelected,
                                   activeAnimationCardId,
                                   playersInfo,
+                                  isBlock, setIsBlock
                              }) => {
     const navigate = useNavigate();
 
     const [isGameStart, setIsGameStart] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
-
-    const [isBlock, setIsBlock] = useState(true);
 
     const blocker = useBlocker(
         ({ currentLocation, nextLocation }) =>

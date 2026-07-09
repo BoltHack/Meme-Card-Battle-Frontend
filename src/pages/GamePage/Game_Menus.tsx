@@ -22,6 +22,7 @@ export const Game_Menus = ({
                                loading,
                                setBodyLoader,
                                playersInfo,
+                               isBlock, setIsBlock
                             }) => {
     const [isOpen, setIsOpen] = useState(true);
     const [isClosing, setIsClosing] = useState(false);
@@ -152,6 +153,7 @@ export const Game_Menus = ({
                 activeAnimationCardId={activeAnimationCardId} setActiveAnimationCardId={setActiveAnimationCardId}
                 my_nickname={my_nickname} enemy_nickname={enemy_nickname}
                 playersInfo={playersInfo}
+                isBlock={isBlock} setIsBlock={setIsBlock}
             />
 
             {isOpenCardActions && (

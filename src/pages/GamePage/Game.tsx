@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { Helmet } from 'react-helmet-async';
 import { io, Socket } from "socket.io-client";
@@ -29,6 +29,8 @@ interface PlayerData {
 }
 
 export const GamePage = ({ title }) => {
+    const navigate = useNavigate();
+
     const [bodyLoader, setBodyLoader] = useState(false);
 
     const { game_type, game_key } = useParams<{ type: string }>();
@@ -43,9 +45,16 @@ export const GamePage = ({ title }) => {
 
     const [playersInfo, setPlayersInfo] = useState([]);
 
+    const [isBlock, setIsBlock] = useState(true);
+
     const { data, loading, error } = usePageRender<PlayerData>(
         `${api.API_BASE_URL}/api/game/${game_type}/${game_key}`
     );
+
+    const leaveGame = () => {
+        setIsBlock(false);
+        setTimeout(() => navigate("/"), 500);
+    }
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
@@ -196,6 +205,15 @@ export const GamePage = ({ title }) => {
             toast.error(message);
             setBodyLoader(false);
         });
+        socket.on("game_error", (type) => {
+            if (type.toString() === "already_InGame") {
+                leaveGame();
+                toast.error("Вы уже находитесь в игре.");
+                navigate("/");
+                return;
+            }
+        });
+
 
         socket.on("enemy_card_selected", () => {
             setIsEnemyCardSelected(true);
@@ -244,6 +262,7 @@ export const GamePage = ({ title }) => {
                 loading={loading}
                 setBodyLoader={setBodyLoader}
                 playersInfo={playersInfo}
+                isBlock={isBlock} setIsBlock={setIsBlock}
             />
         </div>
     );

@@ -242,7 +242,7 @@ export const MainPage = ({ title }) => {
         });
 
         return () => {
-            foundGame("cancel");
+            // foundGame("cancel");
             socket.off("connect", sendInitialData);
             socket.off("search_game");
             socket.off("found_game");
