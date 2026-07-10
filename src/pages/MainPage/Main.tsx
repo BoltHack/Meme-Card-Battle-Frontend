@@ -179,6 +179,7 @@ export const MainPage = ({ title }) => {
             const data = response.data;
 
             console.log('Успешный logout!');
+            toast.dismiss();
             toast.success(data.success || 'Вы вышли из системы');
 
             localStorage.removeItem("token");
@@ -200,6 +201,7 @@ export const MainPage = ({ title }) => {
 
             const data = response.data;
 
+            toast.dismiss();
             toast.success(data.success);
 
             return response.data;
@@ -230,7 +232,10 @@ export const MainPage = ({ title }) => {
         socket.on("found_game", (data) => {
             const { game_key } = data;
             console.log('data', data);
+
+            toast.dismiss();
             toast.success("Противник найден! Удачной игры!");
+
             setTimeout(() => {
                 navigate(`/game/player_player/${game_key}`);
             }, 1000);
@@ -238,6 +243,8 @@ export const MainPage = ({ title }) => {
 
         socket.on("game_error_handler", (message) => {
             foundGame("cancel");
+
+            toast.dismiss();
             toast.error(message);
         });
 

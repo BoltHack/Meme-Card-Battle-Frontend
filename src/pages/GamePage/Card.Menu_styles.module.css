@@ -86,7 +86,7 @@
     /*align-items: center;*/
     background-color: #1e293b;
     border: 2px solid #334155;
-    padding: 2.5rem;
+    padding: 0 2.5rem;
     /*border-radius: 24px;*/
     /*width: 320px;*/
     margin-left: auto;
@@ -118,7 +118,7 @@
 .choosing-cards .hand-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    grid-gap: 20px;
     place-items: center;
 }
 .choosing-cards .hand-container .hand-card:hover {

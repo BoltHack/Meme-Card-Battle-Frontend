@@ -63,6 +63,7 @@ export const Game_Menus = ({
         const cardsList = list.map(c => c.menu_id);
 
         if ([...cardsList].includes(menu_id)) {
+            toast.dismiss();
             toast.error("Вы уже выбрали эту карту.");
             return;
         }

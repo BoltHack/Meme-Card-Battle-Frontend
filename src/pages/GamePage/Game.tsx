@@ -202,14 +202,18 @@ export const GamePage = ({ title }) => {
         // });
 
         socket.on("error_handler", (message) => {
+            toast.dismiss();
             toast.error(message);
+
             setBodyLoader(false);
         });
         socket.on("game_error", (type) => {
             if (type.toString() === "already_InGame") {
                 leaveGame();
+
+                toast.dismiss();
                 toast.error("Вы уже находитесь в игре.");
-                navigate("/");
+
                 return;
             }
         });
@@ -218,6 +222,11 @@ export const GamePage = ({ title }) => {
         socket.on("enemy_card_selected", () => {
             setIsEnemyCardSelected(true);
             setEnemyHandList(enemyHandList.filter(num => num - 1))
+        });
+
+        socket.on("game_cards_selected", () => {
+            toast.dismiss();
+            toast.success("Игроки выбрали свои карты!");
         });
 
         return () => {

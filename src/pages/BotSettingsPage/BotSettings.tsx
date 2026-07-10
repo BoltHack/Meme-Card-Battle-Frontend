@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
 
@@ -8,9 +9,10 @@ axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
 import toast from "react-hot-toast";
+
 import usePageRender from "../../tools/PageRender.ts";
-import {ErrorPage} from "../ErrorPage/Error.tsx";
-import {LoadingPage} from "../LoadingPage/Loading.tsx";
+import { ErrorPage } from "../ErrorPage/Error.tsx";
+import { LoadingPage } from "../LoadingPage/Loading.tsx";
 
 interface PlayerData {
     name: string;
@@ -19,30 +21,52 @@ interface PlayerData {
 export const BotSettingsPage = ({ title }) => {
     const navigate = useNavigate();
 
-    const { data, loading, error } = usePageRender<PlayerData>(
+    const { data, loading, error, socket } = usePageRender<PlayerData>(
         `${api.API_BASE_URL}/api/bot-settings`
     );
 
-    const playGame = async (game_type) => {
-        try {
-            const response = await axios.post(`${api.API_BASE_URL}/api/play-game/${game_type}`);
+    // const playGame = async (game_type) => {
+    //     try {
+    //         const response = await axios.post(`${api.API_BASE_URL}/api/play-game/${game_type}`);
+    //
+    //         const data = response.data;
+    //
+    //         console.log('data', data);
+    //
+    //         navigate(`/game/${data.game_type}/${data.game_key}`);
+    //
+    //         return data;
+    //     } catch (err) {
+    //         console.log('err', err);
+    //
+    //         if (err.response && err.response.data) {
+    //             const serverError = err.response.data.error;
+    //             toast.error(serverError);
+    //         }
+    //     }
+    // }
 
-            const data = response.data;
+    useEffect(() => {
 
-            console.log('data', data);
+        const handleError = (message) => {
+            toast.dismiss();
+            toast.error(message);
+        };
 
-            navigate(`/game/${data.game_type}/${data.game_key}`);
+        const handleSuccess = (data) => {
+            const { game_key } = data;
+            navigate(`/game/player_bot/${game_key}`);
+        };
 
-            return data;
-        } catch (err) {
-            console.log('err', err);
+        socket.on("error", handleError);
+        socket.on("success_handler", handleSuccess);
 
-            if (err.response && err.response.data) {
-                const serverError = err.response.data.error;
-                toast.error(serverError);
-            }
-        }
-    }
+        return () => {
+            socket.off("error_handler", handleError);
+            socket.off("success_handler", handleSuccess);
+        };
+
+    }, [navigate]);
 
     if (loading) return <LoadingPage />
     if (error) return <ErrorPage error={error} />
@@ -56,7 +80,7 @@ export const BotSettingsPage = ({ title }) => {
             <div className={styles['buttons-container']}>
 
                 <div>
-                    <div onClick={() => {playGame("player_bot")}} className={styles["btn"]}>
+                    <div onClick={() => {socket.emit("start_game_bot")}} className={styles["btn"]}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-play-icon lucide-play">
                             <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/>
                         </svg>

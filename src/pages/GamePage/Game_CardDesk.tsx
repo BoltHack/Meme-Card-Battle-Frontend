@@ -33,6 +33,7 @@ export const Game_CardDesk = ({
 
     useEffect(() => {
         if (blocker.state === "blocked") {
+            toast.dismiss();
             toast.error("Вы не можете покинуть игру, пока она активна.");
         }
     }, [blocker]);

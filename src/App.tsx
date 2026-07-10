@@ -18,7 +18,6 @@ import { CreateCardsPage } from "./pages/AdminPages/CreateCards.tsx";
 
 import { ErrorPage } from "./pages/ErrorPage/Error.tsx";
 
-
 const router = createBrowserRouter([
     {
         path: "/",
@@ -67,6 +66,7 @@ function App() {
         <>
             <Toaster
                 position="top-right"
+                // limit={1}
                 containerStyle={{
                     top: 20,
                     right: 20,
