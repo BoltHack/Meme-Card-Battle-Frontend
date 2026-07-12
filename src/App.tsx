@@ -5,6 +5,8 @@ import { SignInPage } from "./pages/AuthPage/SignIn.tsx";
 
 import { MainPage } from './pages/MainPage/Main';
 
+import { HelpCenterPage } from "./pages/HelpCenterPage/HelpCenter.tsx";
+
 import { BotSettingsPage } from "./pages/BotSettingsPage/BotSettings.tsx";
 
 import { GameSettingsPage } from "./pages/GameSettingsPage/GameSettings.tsx";
@@ -22,6 +24,10 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <MainPage title="MCB | Главная" />
+    },
+    {
+        path: "/help-center",
+        element: <HelpCenterPage title="MCB | Справочный центр" />
     },
     {
         path: "/how-to-play",

@@ -391,6 +391,13 @@ export const MainPage = ({ title }) => {
                                         </span>
                                     </Link>
                                 </li>
+                                <li>
+                                    <Link to="/help-center" className={styles["tools-menu-btn"]}>
+                                        <span>
+                                            Справочный центр
+                                        </span>
+                                    </Link>
+                                </li>
 
                                 <div className={styles["menu-main-tools"]}>
                                     {data?.role === "Admin" && (
