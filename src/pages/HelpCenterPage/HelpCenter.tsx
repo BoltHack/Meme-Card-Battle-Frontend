@@ -33,6 +33,7 @@ export const HelpCenterPage = ({ title }) => {
     const [searchURL, setSearchURL] = useState("");
 
     const categoryFound = useRef<Boolean | false>(false);
+    const anotherCategoryFound = useRef<Boolean | false>(false);
 
     // const searchSettings = JSON.parse(sessionStorage.getItem('searchSettings') || '{}');
     const searchSettings = sessionStorage.getItem('searchSettings');
@@ -46,8 +47,17 @@ export const HelpCenterPage = ({ title }) => {
         setSearchInput(value);
     }
 
+    const handleSearchCategoryKeyDown = (e, value) => {
+        if (e.key === "Enter" && value.length > 0) {
+            searchCategory(value);
+        }
+    }
+
     const searchCategory = (value) => {
+        if (value.length < 1) return;
+
         categoryFound.current = false;
+        anotherCategoryFound.current = false;
 
         const searchValue = value.toLowerCase();
 
@@ -65,10 +75,25 @@ export const HelpCenterPage = ({ title }) => {
 
             if (searchTitle.includes(searchValue)) {
                 categoryFound.current = true;
+                anotherCategoryFound.current = false;
                 category.style.display = "block";
             } else {
                 category.style.display = "none";
             }
+
+            const regex = new RegExp(searchTitle, 'i');
+            // const regex = new RegExp(searchTitle, 'g');
+
+            if (!categoryFound.current && regex.test(searchValue)) {
+                categoryFound.current = true;
+                anotherCategoryFound.current = true;
+
+                category.style.display = "block";
+            }
+            // else {
+            //     category.style.display = "none";
+            // }
+
         });
 
         sessionStorage.setItem("searchSettings", searchValue);
@@ -80,7 +105,9 @@ export const HelpCenterPage = ({ title }) => {
         setSearchInput("");
         setSearchURL("");
         sessionStorage.removeItem("searchSettings")
+
         categoryFound.current = false;
+        anotherCategoryFound.current = false;
 
         document.querySelectorAll('#categoriesGrid section').forEach((cs: HTMLElement) => {
             cs.style.display = "block";
@@ -91,7 +118,6 @@ export const HelpCenterPage = ({ title }) => {
 
     useEffect(() => {
         const searchSettingsCheck = setTimeout(() => {
-            console.log('categoryFound', categoryFound.current);
             if (searchSettings) {
                 searchCategory(searchSettings);
             }
@@ -144,6 +170,7 @@ export const HelpCenterPage = ({ title }) => {
                         <input
                             type="text" placeholder="Поиск статей, инструкций и ответов..."
                             onChange={handleSearchCategory} value={searchInput}
+                            onKeyDown={(e) => searchInput.length > 0 ? handleSearchCategoryKeyDown(e, searchInput) : null}
                         />
                         <button type="button" onClick={() => searchInput.length > 0 ? searchCategory(searchInput) : null}>Найти</button>
                     </div>
@@ -161,6 +188,13 @@ export const HelpCenterPage = ({ title }) => {
                         </div>
                         <p className={styles["search-result"]}>{searchURL}</p>
 
+                    </div>
+                ): null}
+
+                {anotherCategoryFound.current ? (
+                    <div className={styles["another-category-found"]}>
+                        <p>По запросу <strong>"{searchURL}"</strong> ничего не было найдено, но эти разделы могут помочь найти альтернативу:</p>
+                        {/*<span>Мы не нашли точного совпадения, но эти разделы могут помочь найти альтернативу:</span>*/}
                     </div>
                 ): null}
 

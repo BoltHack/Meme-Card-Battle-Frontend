@@ -65,6 +65,7 @@ export const Footer = () => {
                             <div className={`${styles["footer-col"]} ${styles["links"]}`}>
                                 <h3>Информация</h3>
                                 <ul>
+                                    <li><Link to="/help-center">Справочный центр</Link></li>
                                     <li><Link to="/support">Поддержка</Link></li>
                                     <li><Link to="/blog">Блог</Link></li>
                                 </ul>
