@@ -1,5 +1,5 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from "react";
+import { useParams, useNavigate, useBlocker } from 'react-router-dom';
+import {useEffect, useRef, useState} from "react";
 import { Helmet } from 'react-helmet-async';
 import { io, Socket } from "socket.io-client";
 
@@ -20,16 +20,26 @@ import toast from "react-hot-toast";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import usePageRender from "../../tools/PageRender.ts";
 
+// interface PlayerData {
+//     name: string;
+//     id: string;
+//     game_key: string;
+//     my_nickname: string
+//     enemy_nickname: string
+// }
+
 interface PlayerData {
+    id: string | number;
     name: string;
-    id: string;
-    game_key: string;
-    my_nickname: string
-    enemy_nickname: string
+    health: number;
+    lvl: number;
+    ult: number;
 }
 
-export const GamePage = ({ title }) => {
+export const GamePage = () => {
     const navigate = useNavigate();
+
+    const [title, setTitle] = useState("");
 
     const [bodyLoader, setBodyLoader] = useState(false);
 
@@ -41,15 +51,35 @@ export const GamePage = ({ title }) => {
     const [handList, setHandList] = useState([]);
     const [enemyHandList, setEnemyHandList] = useState([0, 1, 2, 3, 4, 5, 6, 7]);
 
-    const [isEnemyCardSelected, setIsEnemyCardSelected] = useState(false);
+    // const [isEnemyCardSelected, setIsEnemyCardSelected] = useState(false);
+    const [activePlayerCard, setActivePlayerCard] = useState<string | null>(null);
+    const [activeEnemyCard, setActiveEnemyCard] = useState(false);
 
-    const [playersInfo, setPlayersInfo] = useState([]);
+    // const [playersInfo, setPlayersInfo] = useState<PlayerData | null>(null);
+    // const [playersInfo, setPlayersInfo] = useState([]);
+    const [playersInfo, setPlayersInfo] = useState<any>(null);
+
+    const useCardIdRef = useRef<string | undefined>(undefined);
 
     const [isBlock, setIsBlock] = useState(true);
 
     const { data, loading, error } = usePageRender<PlayerData>(
         `${api.API_BASE_URL}/api/game/${game_type}/${game_key}`
     );
+
+    const blocker = useBlocker(
+        ({ currentLocation, nextLocation }) =>
+            isBlock &&
+            currentLocation.pathname !== nextLocation.pathname &&
+            currentLocation.search === nextLocation.search
+    );
+
+    useEffect(() => {
+        if (blocker.state === "blocked") {
+            toast.dismiss();
+            toast.error("Вы не можете покинуть игру, пока она активна.");
+        }
+    }, [blocker]);
 
     const leaveGame = () => {
         setIsBlock(false);
@@ -73,25 +103,9 @@ export const GamePage = ({ title }) => {
         const sendInitialData = () => {
             console.log('Приняты данные из бэка:', data);
 
-            const formattedPlayersInfo = {
-                playerInfo: {
-                    name: data.player_info.name,
-                    lvl: data.player_info.lvl,
-                    health: data.player_info.health,
-                    ult: data.player_info.ult
-                },
-                enemyInfo: {
-                    name: data.enemy_info.name,
-                    lvl: data.enemy_info.lvl,
-                    health: data.enemy_info.health,
-                    ult: data.enemy_info.ult
-                }
-            }
-            console.log('formattedPlayerInfo', formattedPlayersInfo);
-            setPlayersInfo(prevData => [...prevData, formattedPlayersInfo]);
-
             setTimeout(() => {
                 socket.emit("join_game", { game_key: data.game_key, player_id: data.id });
+                // socket.emit("get_players_info", { game_key: data.game_key });
             }, 500);
             setTimeout(() => {
                 // if (!data.id) return;
@@ -150,6 +164,43 @@ export const GamePage = ({ title }) => {
                 return [...prevCards, cards_data];
             });
         };
+
+        const id= data?.id;
+
+        socket.on("players_info", (data) => {
+            const updatedPlayer = data.data;
+
+            const playerInfo_index = data.data.findIndex(up => up.id === id);
+            const enemyInfo_index = data.data.findIndex(up => up.id !== id);
+
+            const player_info = updatedPlayer[playerInfo_index];
+            const enemy_info = updatedPlayer[enemyInfo_index];
+
+            const formattedPlayersInfo = {
+                playerInfo: {
+                    id: player_info.id,
+                    name: player_info.name,
+                    health: player_info.health,
+                    lvl: player_info.lvl,
+                    ult: player_info.ult,
+                },
+                enemyInfo: {
+                    id: enemy_info.id,
+                    name: enemy_info.name,
+                    health: enemy_info.health,
+                    lvl: enemy_info.lvl,
+                    ult: enemy_info.ult,
+                }
+            }
+
+            setPlayersInfo(formattedPlayersInfo);
+
+            console.log('formattedPlayersInfo', formattedPlayersInfo.playerInfo);
+
+            const title = formattedPlayersInfo.playerInfo.name + " против " + formattedPlayersInfo.enemyInfo.name;
+
+            setTitle(title);
+        });
 
         socket.on("get_player_cards", handlePlayerCards);
         socket.on("select_battle_card", (data) => {
@@ -218,15 +269,37 @@ export const GamePage = ({ title }) => {
             }
         });
 
-
         socket.on("enemy_card_selected", () => {
-            setIsEnemyCardSelected(true);
+            setActiveEnemyCard(true);
             setEnemyHandList(enemyHandList.filter(num => num - 1))
         });
 
         socket.on("game_cards_selected", () => {
             toast.dismiss();
             toast.success("Игроки выбрали свои карты!");
+        });
+
+        socket.on("game_cards_selected_result", (data) => {
+            const { type, gameData } = data;
+
+            if (type === "timer") {
+                if (gameData.timer === 0) {
+                    console.log('Время вскрываться!');
+                }
+                return;
+            }
+            if (type === "result") {
+                console.log("damage", gameData.damage);
+                if (gameData.winnerId === data.id) {
+                }
+                return
+            }
+            if (type === "clear") {
+                // setHandList(handList.filter(item => item.menu_id !== useCardIdRef));
+                setActiveEnemyCard(false);
+                setActivePlayerCard(null);
+                return;
+            }
         });
 
         return () => {
@@ -241,6 +314,49 @@ export const GamePage = ({ title }) => {
         }
     }, [data]);
 
+    (function() {
+        const fpsDiv = document.createElement('div');
+
+        fpsDiv.style.position = 'fixed';
+        fpsDiv.style.top = '10px';
+        fpsDiv.style.left = '10px';
+        fpsDiv.style.zIndex = '999999';
+        fpsDiv.style.background = 'rgba(0, 0, 0, 0.8)';
+        fpsDiv.style.color = '#00ff00';
+        fpsDiv.style.padding = '5px 10px';
+        fpsDiv.style.fontFamily = 'monospace';
+        fpsDiv.style.fontSize = '16px';
+        fpsDiv.style.borderRadius = '5px';
+        fpsDiv.innerText = 'FPS: ...';
+        document.body.appendChild(fpsDiv);
+
+        let lastTime = performance.now();
+        let frames = 0;
+
+        function calculateFps() {
+            const now = performance.now();
+            frames++;
+
+            if (now >= lastTime + 1000) {
+                const fps = Math.round((frames * 1000) / (now - lastTime));
+                fpsDiv.innerText = `FPS: ${fps}`;
+
+                fpsDiv.style.color = fps < 45 ? '#ff0000' : '#00ff00';
+
+                frames = 0;
+                lastTime = now;
+            }
+
+            if (!window.location.pathname.startsWith("/game")) {
+                document.body.removeChild(fpsDiv);
+                return;
+            }
+            requestAnimationFrame(calculateFps);
+        }
+
+        requestAnimationFrame(calculateFps);
+    })();
+
     if (loading) return <LoadingPage />
     if (error) return <ErrorPage error={error} />
 
@@ -248,11 +364,6 @@ export const GamePage = ({ title }) => {
         <div className={styles['body-wrapper']}>
             <Helmet>
                 <title>{title}</title>
-                {/*    <script type="text/javascript">*/}
-                {/*        {`*/}
-                {/*  const id = '${data?.id || ""}';*/}
-                {/*`}*/}
-                {/*    </script>*/}
             </Helmet>
             {bodyLoader && (
                 <div className={styles["loader-wrapper"]}>
@@ -267,11 +378,12 @@ export const GamePage = ({ title }) => {
                 list={list} setList={setList}
                 handList={handList} setHandList={setHandList}
                 enemyHandList={enemyHandList} setEnemyHandList={setEnemyHandList}
-                isEnemyCardSelected={isEnemyCardSelected}
+                activePlayerCard={activePlayerCard} activeEnemyCard={activeEnemyCard} setActivePlayerCard={setActivePlayerCard}
                 loading={loading}
                 setBodyLoader={setBodyLoader}
                 playersInfo={playersInfo}
                 isBlock={isBlock} setIsBlock={setIsBlock}
+                useCardIdRef={useCardIdRef}
             />
         </div>
     );

@@ -51,7 +51,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/game/:game_type/:game_key",
-        element: <GamePage title="MCB | Бот" />
+        element: <GamePage title="" />
     },
     {
         path: "/auth/sign-in",

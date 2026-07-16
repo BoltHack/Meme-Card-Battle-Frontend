@@ -151,8 +151,9 @@
     max-width: 300px;
     max-height: 400px;
     overflow-y: auto;
+    scrollbar-width: thin;
     /*scroll-behavior: smooth;*/
-    overscroll-behavior: contain;
+    /*overscroll-behavior: contain;*/
     background: rgba(15, 12, 28, 1);
     color: #e2e8f0;
     /*backdrop-filter: blur(12px);*/

@@ -14,6 +14,9 @@ import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 
+import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
+import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
+
 interface PlayerData {
     name: string;
 }
@@ -77,6 +80,8 @@ export const BotSettingsPage = ({ title }) => {
                 <title>{title}</title>
             </Helmet>
 
+            <Header />
+
             <div className={styles['buttons-container']}>
 
                 <div>
@@ -98,6 +103,8 @@ export const BotSettingsPage = ({ title }) => {
                 </div>
 
             </div>
+
+            <Footer />
         </div>
     );
 };

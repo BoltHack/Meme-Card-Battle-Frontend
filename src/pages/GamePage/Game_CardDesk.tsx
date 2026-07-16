@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useNavigate, useBlocker } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import CardDesk_styles from "./Card.Desk_styles.module.css";
 import Menus_styles from "./Card.Menu_styles.module.css";
@@ -9,34 +9,18 @@ import api from "../../api/api.ts";
 import toast from "react-hot-toast";
 
 export const Game_CardDesk = ({
-                                  onToggleMenu, useCard,
-                                  activePlayerCard,
+                                  onToggleMenu, onActionsMenu, useCard,
                                   isCardSelectAnimationEnemy, setIsCardSelectAnimationEnemy,
                                   handList,
                                   enemyHandList,
-                                  isEnemyCardSelected,
+                                  activePlayerCard, activeEnemyCard,
                                   activeAnimationCardId,
                                   playersInfo,
-                                  isBlock, setIsBlock
                              }) => {
     const navigate = useNavigate();
 
     const [isGameStart, setIsGameStart] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
-
-    const blocker = useBlocker(
-        ({ currentLocation, nextLocation }) =>
-            isBlock &&
-            currentLocation.pathname !== nextLocation.pathname &&
-            currentLocation.search === nextLocation.search
-    );
-
-    useEffect(() => {
-        if (blocker.state === "blocked") {
-            toast.dismiss();
-            toast.error("Вы не можете покинуть игру, пока она активна.");
-        }
-    }, [blocker]);
 
     const testEnemu = () => {
         setIsCardSelectAnimationEnemy(null);
@@ -87,11 +71,6 @@ export const Game_CardDesk = ({
         }
     }
 
-    const leaveGame = () => {
-        setIsBlock(false);
-        setTimeout(() => navigate("/"), 500);
-    }
-
     return (
         <>
             <div className={CardDesk_styles["bg-glow"]}></div>
@@ -122,7 +101,7 @@ export const Game_CardDesk = ({
                             </svg>
                         </div>
 
-                        <div className={CardDesk_styles["game-tools-action"]} onClick={leaveGame}>
+                        <div className={CardDesk_styles["game-tools-action"]} onClick={onActionsMenu}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-out-icon lucide-log-out">
                                 <path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                             </svg>
@@ -134,24 +113,42 @@ export const Game_CardDesk = ({
                 <div className={CardDesk_styles["game-board"]}>
 
                     <div className={`${CardDesk_styles["board-row"]} ${CardDesk_styles["top-row"]}`}>
-                        {playersInfo && playersInfo.length > 0 && (
-                            playersInfo.map((player, index) => (
-                                <div key={index} className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["enemy-profile"]}`}>
-                                    <div className={CardDesk_styles["avatar-wrapper"]}>
-                                        <div className={CardDesk_styles["avatar-image"]}>😈</div>
-                                        <div className={CardDesk_styles["player-level"]}>Lv.{player.enemyInfo.lvl}</div>
-                                    </div>
-                                    <div className={CardDesk_styles["player-status"]}>
-                                        <div className={CardDesk_styles["player-name"]}>{player.enemyInfo.name}</div>
-                                        <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}
-                                               min="0" max="100" value={player.enemyInfo.health}
-                                        ></meter>
-                                        <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`}
-                                               min="0" max="100" value={player.enemyInfo.ult}
-                                        ></meter>
-                                    </div>
+                        {/*{playersInfo && playersInfo.length > 0 && (*/}
+                        {/*    playersInfo.map((player, index) => (*/}
+                        {/*        <div key={player.id || index} className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["enemy-profile"]}`}>*/}
+                        {/*            <div className={CardDesk_styles["avatar-wrapper"]}>*/}
+                        {/*                <div className={CardDesk_styles["avatar-image"]}>😈</div>*/}
+                        {/*                <div className={CardDesk_styles["player-level"]}>Lv.{player.enemyInfo.lvl}</div>*/}
+                        {/*            </div>*/}
+                        {/*            <div className={CardDesk_styles["player-status"]}>*/}
+                        {/*                <div className={CardDesk_styles["player-name"]}>{player.enemyInfo.name}</div>*/}
+                        {/*                <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}*/}
+                        {/*                       min="0" max="100" value={player.enemyInfo.health}*/}
+                        {/*                ></meter>*/}
+                        {/*                <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`}*/}
+                        {/*                       min="0" max="100" value={player.enemyInfo.ult}*/}
+                        {/*                ></meter>*/}
+                        {/*            </div>*/}
+                        {/*        </div>*/}
+                        {/*    ))*/}
+                        {/*)}*/}
+
+                        {playersInfo && playersInfo.enemyInfo && (
+                            <div className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["enemy-profile"]}`}>
+                                <div className={CardDesk_styles["avatar-wrapper"]}>
+                                    <div className={CardDesk_styles["avatar-image"]}>😈</div>
+                                    <div className={CardDesk_styles["player-level"]}>Lv.{playersInfo.enemyInfo.lvl}</div>
                                 </div>
-                            ))
+                                <div className={CardDesk_styles["player-status"]}>
+                                    <div className={CardDesk_styles["player-name"]}>{playersInfo.enemyInfo.name}</div>
+                                    <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}
+                                           min="0" max="100" value={playersInfo.enemyInfo.health}
+                                    ></meter>
+                                    <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`}
+                                           min="0" max="100" value={playersInfo.enemyInfo.ult}
+                                    ></meter>
+                                </div>
+                            </div>
                         )}
 
                         <div className={`${Menus_styles["hand-container"]} ${CardDesk_styles["enemy-hand"]}`}>
@@ -226,7 +223,8 @@ export const Game_CardDesk = ({
 
                             <div className={`${CardDesk_styles["strike-slot"]} ${CardDesk_styles["enemy-strike-slot"]} ${CardDesk_styles["active"]}`}>
                                 <AnimatePresence>
-                                    {isEnemyCardSelected && (
+                                    {/*{isEnemyCardSelected && (*/}
+                                    {activeEnemyCard && (
                                         (() => {
 
                                             return (
@@ -291,7 +289,7 @@ export const Game_CardDesk = ({
                                             >
                                                 <div id={cardId} className={`${CardDesk_styles["hand-card"]} ${CardDesk_styles[`${card.rarity?.toLowerCase()}`]}`}
                                                      onClick={() => {
-                                                         if (activeAnimationCardId) return;
+                                                         if (activeAnimationCardId || activePlayerCard !== null) return;
                                                          useCard('open', {
                                                              cardInfo: {
                                                                  id: cardId,
@@ -325,27 +323,48 @@ export const Game_CardDesk = ({
 
                         </div>
 
-                        {playersInfo && playersInfo.length && (
-                            playersInfo.map((player, index) => (
-                                <div key={index}
-                                    className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["user-profile"]}`} style={ !isGameStart ? {cursor: 'pointer'} : {}}
-                                    onClick={onToggleMenu}
-                                >
-                                    <div className={CardDesk_styles["player-status"]}>
-                                        <div className={CardDesk_styles["player-name"]}>Вы ({player.playerInfo.name})</div>
-                                        <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}
-                                               min="0" max="100" value={player.playerInfo.health}
-                                        ></meter>
-                                        <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`}
-                                               min="0" max="100" value={player.playerInfo.ult}>
-                                        </meter>
-                                    </div>
-                                    <div className={CardDesk_styles["avatar-wrapper"]}>
-                                        <div className={CardDesk_styles["avatar-image"]}>🛡️</div>
-                                        <div className={CardDesk_styles["player-level"]}>Lv.{player.playerInfo.lvl}</div>
-                                    </div>
+                        {/*{playersInfo && playersInfo.length && (*/}
+                        {/*    playersInfo.map((player) => (*/}
+                        {/*        <div key={player.id || player.playerInfo.name}*/}
+                        {/*            className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["user-profile"]}`} style={ !isGameStart ? {cursor: 'pointer'} : {}}*/}
+                        {/*            onClick={onToggleMenu}*/}
+                        {/*        >*/}
+                        {/*            <div className={CardDesk_styles["player-status"]}>*/}
+                        {/*                <div className={CardDesk_styles["player-name"]}>Вы ({player.playerInfo.name})</div>*/}
+                        {/*                <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}*/}
+                        {/*                       min="0" max="100" value={player.playerInfo.health}*/}
+                        {/*                ></meter>*/}
+                        {/*                <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`}*/}
+                        {/*                       min="0" max="100" value={player.playerInfo.ult}>*/}
+                        {/*                </meter>*/}
+                        {/*            </div>*/}
+                        {/*            <div className={CardDesk_styles["avatar-wrapper"]}>*/}
+                        {/*                <div className={CardDesk_styles["avatar-image"]}>🛡️</div>*/}
+                        {/*                <div className={CardDesk_styles["player-level"]}>Lv.{player.playerInfo.lvl}</div>*/}
+                        {/*            </div>*/}
+                        {/*        </div>*/}
+                        {/*    ))*/}
+                        {/*)}*/}
+
+                        {playersInfo && playersInfo.playerInfo && (
+                            <div
+                                 className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["user-profile"]}`} style={ !isGameStart ? {cursor: 'pointer'} : {}}
+                                 onClick={onToggleMenu}
+                            >
+                                <div className={CardDesk_styles["player-status"]}>
+                                    <div className={CardDesk_styles["player-name"]}>Вы ({playersInfo.playerInfo.name})</div>
+                                    <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}
+                                           min="0" max="100" value={playersInfo.playerInfo.health}
+                                    ></meter>
+                                    <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`}
+                                           min="0" max="100" value={playersInfo.playerInfo.ult}>
+                                    </meter>
                                 </div>
-                            ))
+                                <div className={CardDesk_styles["avatar-wrapper"]}>
+                                    <div className={CardDesk_styles["avatar-image"]}>🛡️</div>
+                                    <div className={CardDesk_styles["player-level"]}>Lv.{playersInfo.playerInfo.lvl}</div>
+                                </div>
+                            </div>
                         )}
                     </div>
 

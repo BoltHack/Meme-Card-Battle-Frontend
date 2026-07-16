@@ -107,26 +107,56 @@ export const Header = () => {
                             </li>
 
                             <li className={styles["dropdown"]}>
-                                <a href="#" className={`${styles["nav-link"]} ${styles["dropdown-toggle"]}`}>
+                                <Link to="/blog" className={`${styles["nav-link"]} ${styles["dropdown-toggle"]}`}>
                                     Блог<span className={styles["arrow"]}>
                                     {/*▼*/}
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M12 6L8 10L4 6" stroke="white" strokeOpacity="0.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                                     </svg>
                                 </span>
-                                </a>
+                                </Link>
 
                                 <ul className={styles["dropdown-menu"]}>
-                                    <li><a href="#">Сообщество</a></li>
-                                    <li><a href="#">Разработка</a></li>
+                                    <li><Link to="/blog/category/community">Сообщество</Link></li>
+                                    <li><Link to="/blog/category/development">Разработка</Link></li>
+                                    <li><Link to="/blog/category/functions">Функции</Link></li>
+                                    <li><Link to="/blog/category/safety">Безопасность</Link></li>
+                                </ul>
+                            </li>
+
+                            {/*<li className={styles["dropdown"]}>*/}
+                            {/*    <Link to="/news" className={`${styles["nav-link"]} ${styles["dropdown-toggle"]}`}>*/}
+                            {/*        Новости<span className={styles["arrow"]}>*/}
+                            {/*        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">*/}
+                            {/*            <path d="M12 6L8 10L4 6" stroke="white" strokeOpacity="0.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>*/}
+                            {/*        </svg>*/}
+                            {/*    </span>*/}
+                            {/*    </Link>*/}
+
+                            {/*    <ul className={styles["dropdown-menu"]}>*/}
+                            {/*        <li><a href="#">Обновления</a></li>*/}
+                            {/*        <li><a href="#">Об игре</a></li>*/}
+                            {/*        <li><a href="#">Баги и ошибки</a></li>*/}
+                            {/*    </ul>*/}
+                            {/*</li>*/}
+
+                            <li className={styles["dropdown"]}>
+                                <Link to="/company-information" className={`${styles["nav-link"]} ${styles["dropdown-toggle"]}`}>
+                                    Информация<span className={styles["arrow"]}>
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 6L8 10L4 6" stroke="white" strokeOpacity="0.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                    </svg>
+                                </span>
+                                </Link>
+
+                                <ul className={styles["dropdown-menu"]}>
+                                    <li><Link to="/about-us">О нас</Link></li>
+                                    <li><Link to="/how-to-play">Как играть?</Link></li>
                                 </ul>
                             </li>
 
                             <li>
-                                <a href="#" className={styles["nav-link"]}>О нас</a>
-                            </li>
-                            <li>
-                                <a href="#" className={styles["nav-link"]}>Контакты</a>
+                                <a href="/news" className={styles["nav-link"]}>Новости</a>
                             </li>
                         </ul>
                     </nav>

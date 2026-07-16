@@ -9,6 +9,7 @@ import CardDesk_styles from "./Card.Desk_styles.module.css";
 import api from "../../api/api.ts";
 // import play = Simulate.play;
 import toast from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
 
 export const Game_Menus = ({
                                playerCard,
@@ -18,19 +19,24 @@ export const Game_Menus = ({
                                list, setList,
                                handList, setHandList,
                                enemyHandList,
-                               isEnemyCardSelected,
+                               activePlayerCard, activeEnemyCard, setActivePlayerCard,
                                loading,
                                setBodyLoader,
                                playersInfo,
-                               isBlock, setIsBlock
+                               isBlock, setIsBlock,
+                               useCardIdRef,
                             }) => {
+    const navigate = useNavigate();
+
     const [isOpen, setIsOpen] = useState(true);
     const [isClosing, setIsClosing] = useState(false);
 
     const [isOpenCardActions, setIsOpenCardActions] = useState(false);
     const [selectCard, setSelectCard] = useState([]);
 
-    const [activePlayerCard, setActivePlayerCard] = useState<string | null>(null);
+    const [isOpenLeaveMenu, setIsOpenLeaveMenu] = useState(false);
+
+    // const [activePlayerCard, setActivePlayerCard] = useState<string | null>(null);
     // const [isCardSelectAnimationPlayer, setIsCardSelectAnimationPlayer] = useState<boolean>(false);
     const [isCardSelectAnimationEnemy, setIsCardSelectAnimationEnemy] = useState<boolean>(false);
     const [activeAnimationCardId, setActiveAnimationCardId] = useState<string | null>(null);
@@ -44,6 +50,15 @@ export const Game_Menus = ({
             setIsOpen(false);
             setIsClosing(false);
         }, 200);
+    }
+
+    const actionsMenu = () => {
+        setIsOpenLeaveMenu(!isOpenLeaveMenu);
+    }
+
+    const leaveGame = () => {
+        setIsBlock(false);
+        setTimeout(() => navigate("/"), 500);
     }
 
     const toggleMenu = () => {
@@ -90,13 +105,13 @@ export const Game_Menus = ({
         });
     }
 
-    const useCardIdRef = useRef<string | undefined>(undefined);
+    // const useCardIdRef = useRef<string | undefined>(undefined);
 
     const useCard = (type: 'open' | 'close' | 'useCard', data?: object) => {
         if (type === 'open') {
             const { cardInfo } = data;
             if (!cardInfo) return;
-            console.log('cardIdInfo', cardInfo);
+            console.log('cardIdInfo', cardInfo.id);
             useCardIdRef.current = cardInfo.id;
 
             setSelectCard(prevCard => [...prevCard, cardInfo]);
@@ -104,28 +119,30 @@ export const Game_Menus = ({
             setIsOpenCardActions(true);
         } else if (type === 'useCard') {
             const useCardId = useCardIdRef.current;
+            if (activePlayerCard !== null || activePlayerCard === useCardId) return;
             if (!useCardId) return;
 
             setIsOpenCardActions(false);
 
-            // const updatedHandList = handList.filter(item => item.menu_id !== useCardId);
-            // setHandList(updatedHandList);
+            const updatedHandList = handList.filter(item => item.menu_id !== useCardId);
+            setHandList(updatedHandList);
 
             setActivePlayerCard(useCardId);
 
             socket.emit("select_card", {
                 game_key: game_key,
                 player_id: player_id,
-                enemy_name: playersInfo[0].enemyInfo.name,
+                // enemy_name: playersInfo[0].enemyInfo.name,
+                enemy_name: playersInfo?.enemyInfo.name,
                 card_id: useCardId
             });
             setSelectCard([]);
 
-            if (activePlayerCard) return;
+            if (activePlayerCard !== null) return;
 
-            const updatedHandList = handList.filter(item => item.menu_id !== useCardId);
+            // const removeId = handList.filter(item => item.menu_id !== useCardId);
 
-            setHandList(updatedHandList);
+            // setHandList(removeId);
         } else if (type === 'close') {
             setSelectCard([]);
             setIsOpenCardActions(false);
@@ -139,8 +156,9 @@ export const Game_Menus = ({
         <>
             <Game_CardDesk
                 onToggleMenu={toggleMenu} useCard={(type: 'open' | 'close' | 'useCard', cardInfo?: object) => useCard(type, cardInfo)}
+                onActionsMenu={actionsMenu}
 
-                activePlayerCard={activePlayerCard}
+                activePlayerCard={activePlayerCard} activeEnemyCard={activeEnemyCard}
                 setActivePlayerCard={setActivePlayerCard}
 
                 isCardSelectAnimationEnemy={isCardSelectAnimationEnemy}
@@ -149,12 +167,9 @@ export const Game_Menus = ({
                 handList={handList} setHandList={setHandList}
                 enemyHandList={enemyHandList}
 
-                isEnemyCardSelected={isEnemyCardSelected}
-
                 activeAnimationCardId={activeAnimationCardId} setActiveAnimationCardId={setActiveAnimationCardId}
                 my_nickname={my_nickname} enemy_nickname={enemy_nickname}
                 playersInfo={playersInfo}
-                isBlock={isBlock} setIsBlock={setIsBlock}
             />
 
             {isOpenCardActions && (
@@ -308,6 +323,22 @@ export const Game_Menus = ({
                     </div>
                 </div>
             )}
+
+            {isOpenLeaveMenu ? (
+                <div className={Menus_styles["menu-wrapper"]} style={{justifyContent: 'center', alignItems: 'center', textAlign: 'center'}}>
+                    <div className={Menus_styles["player-actions-menu"]}>
+                        <h2>Покинуть игру?</h2>
+                        <div className={Menus_styles["btn-actions"]}>
+                            <button onClick={leaveGame}>
+                                <span>Выйти</span>
+                            </button>
+                            <button onClick={actionsMenu}>
+                                <span>Отмена</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            ): null}
         </>
     );
 };

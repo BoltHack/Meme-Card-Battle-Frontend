@@ -104,8 +104,7 @@ export const HelpCenterPage = ({ title }) => {
     const clearSearchCategory = () => {
         setSearchInput("");
         setSearchURL("");
-        sessionStorage.removeItem("searchSettings")
-
+        sessionStorage.removeItem("searchSettings");
         categoryFound.current = false;
         anotherCategoryFound.current = false;
 
@@ -120,11 +119,17 @@ export const HelpCenterPage = ({ title }) => {
         const searchSettingsCheck = setTimeout(() => {
             if (searchSettings) {
                 searchCategory(searchSettings);
+                return;
             }
         }, 100);
 
         return () => {
-            clearInterval(searchSettingsCheck)
+            clearInterval(searchSettingsCheck);
+            if (!window.location.pathname.includes("/help-center")) {
+                setSearchInput("");
+                setSearchURL("");
+                sessionStorage.removeItem("searchSettings");
+            }
         }
     }, []);
 
