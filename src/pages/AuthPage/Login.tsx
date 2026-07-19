@@ -1,5 +1,5 @@
-import {Link, useNavigate} from 'react-router-dom';
-import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import {ChangeEvent, useState} from "react";
 
 import styles from "../AuthPage/Card.Auth.module.css";
 import toast from "react-hot-toast";
@@ -9,7 +9,13 @@ axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
 
-export const LoginPage = ({ toggleModal, toggleVisible, passwordVisible }) => {
+interface SignInSettings {
+    toggleModal: (type: string) => void;
+    toggleVisible: () => void;
+    passwordVisible: boolean;
+}
+
+export const LoginPage = ({ toggleModal, toggleVisible, passwordVisible }: SignInSettings) => {
     const navigate = useNavigate();
 
     const [loader, setLoader] = useState(false);
@@ -19,7 +25,7 @@ export const LoginPage = ({ toggleModal, toggleVisible, passwordVisible }) => {
         password: '',
     });
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState,
@@ -27,7 +33,7 @@ export const LoginPage = ({ toggleModal, toggleVisible, passwordVisible }) => {
         }));
     }
 
-    const loginUser = async (e) => {
+    const loginUser = async (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setLoader(true);
@@ -45,15 +51,15 @@ export const LoginPage = ({ toggleModal, toggleVisible, passwordVisible }) => {
             localStorage.setItem("token", "true");
             setTimeout(() => navigate("/"), 1000);
 
-        } catch (err) {
+        } catch (err: any) {
             setLoader(false);
             console.log('error', err);
 
-            if (err.response && err.response.data) {
-                const serverError = err.response.data.error;
+            if (err?.response && err?.response.data) {
+                const serverError = err?.response.data.error;
                 toast.error(serverError);
             } else {
-                console.log('Ошибка сети/запроса:', err.message);
+                console.log('Ошибка сети/запроса:', err?.message);
                 toast.error('Ошибка соединения с сервером');
             }
         }

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import {ChangeEvent, useEffect, useRef, useState} from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import styles from './Card.HelpCenter.module.css';
 
@@ -15,6 +15,7 @@ import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
 interface PlayerData {
     name: string;
     id: string;
+    renderData: any
 }
 
 interface CategoryData {
@@ -24,11 +25,19 @@ interface CategoryData {
     link: { title: string; href: string };
 }
 
-export const HelpCenterPage = ({ title }) => {
+// interface Categories {
+//     categories: CategoryData[]
+// }
+
+interface TitleSettings {
+    title: string;
+}
+
+export const HelpCenterPage = ({ title }: TitleSettings) => {
     const navigate = useNavigate();
 
     // const [category, setCategory] = useState<CategoryData | null>(null);
-    const [categoriesList, setCategoriesList] = useState([]);
+    const [categoriesList, setCategoriesList] = useState<CategoryData[]>([]);
     const [searchInput, setSearchInput] = useState("");
     const [searchURL, setSearchURL] = useState("");
 
@@ -38,7 +47,7 @@ export const HelpCenterPage = ({ title }) => {
     // const searchSettings = JSON.parse(sessionStorage.getItem('searchSettings') || '{}');
     const searchSettings = sessionStorage.getItem('searchSettings');
 
-    const { data, loading, error, socket } = usePageRender<PlayerData>(
+    const { data, loading, error } = usePageRender<PlayerData>(
         `${api.API_BASE_URL}/api/help-center`
     )
 
@@ -47,13 +56,13 @@ export const HelpCenterPage = ({ title }) => {
         setSearchInput(value);
     }
 
-    const handleSearchCategoryKeyDown = (e, value) => {
+    const handleSearchCategoryKeyDown = (e: any, value: string) => {
         if (e.key === "Enter" && value.length > 0) {
             searchCategory(value);
         }
     }
 
-    const searchCategory = (value) => {
+    const searchCategory = (value: string) => {
         if (value.length < 1) return;
 
         categoryFound.current = false;
@@ -63,7 +72,7 @@ export const HelpCenterPage = ({ title }) => {
 
         const currentUrl = new URL(window.location.href);
 
-        const searchCategory = document.querySelectorAll('#categoriesGrid section');
+        const searchCategory = document.querySelectorAll('#categoriesGrid section') as NodeListOf<HTMLElement>;
 
         currentUrl.searchParams.set("category", searchValue);
         window.history.replaceState({}, "", currentUrl);
@@ -108,7 +117,8 @@ export const HelpCenterPage = ({ title }) => {
         categoryFound.current = false;
         anotherCategoryFound.current = false;
 
-        document.querySelectorAll('#categoriesGrid section').forEach((cs: HTMLElement) => {
+        const categoriesGrid = document.querySelectorAll('#categoriesGrid section') as NodeListOf<HTMLElement>
+        categoriesGrid.forEach((cs: HTMLElement) => {
             cs.style.display = "block";
         });
 
@@ -134,11 +144,9 @@ export const HelpCenterPage = ({ title }) => {
     }, []);
 
     useEffect(() => {
-        if (!loading && data?.categories.length > 0) {
+        if (!loading && data?.renderData && data.renderData?.length > 0) {
 
-            const categories = data?.categories;
-
-            const formattedCategories = categories.map(cat => ({
+            const formattedCategories = data?.renderData.map((cat: any) => ({
                 title: cat.title || "",
                 summary: cat.summary || "",
                 icon: {
@@ -154,7 +162,7 @@ export const HelpCenterPage = ({ title }) => {
 
             setCategoriesList(formattedCategories);
         }
-    }, [loading, data?.categories]);
+    }, [loading, data]);
 
     if (loading) return <LoadingPage />
     if (error) return <ErrorPage error={error} />

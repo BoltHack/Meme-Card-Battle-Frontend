@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
-import { useEffect, useState } from "react";
-import {Link, useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { LoginPage } from "./Login.tsx";
 import { RegisterPage } from "./Register.tsx";
@@ -12,22 +12,27 @@ axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
 import toast from "react-hot-toast";
-import {LoadingPage} from "../LoadingPage/Loading.tsx";
-import {ErrorPage} from "../ErrorPage/Error.tsx";
 import usePageRender from "../../tools/PageRender.ts";
 
-export const SignInPage = ({ title }) => {
+import {LoadingPage} from "../LoadingPage/Loading.tsx";
+import {ErrorPage} from "../ErrorPage/Error.tsx";
+
+interface TitleSettings {
+    title: string
+}
+
+export const SignInPage = ({ title }: TitleSettings) => {
     const navigate = useNavigate();
 
     const [passwordVisible, setPasswordVisible] = useState(false);
 
     const [modalType, setModalType] = useState("main");
 
-    const { data, loading, error, socket } = usePageRender<PlayerData>(
+    const { loading, error } = usePageRender(
         `${api.API_BASE_URL}/auth/sign-in`
     );
 
-    const toggleModal = (type) => {
+    const toggleModal = (type: string) => {
         setModalType(type);
     }
     const toggleVisible = () => {
@@ -109,9 +114,9 @@ export const SignInPage = ({ title }) => {
 
                     </div>
                 ) : modalType === "login" ? (
-                    <LoginPage toggleModal={toggleModal} toggleVisible={toggleVisible} passwordVisible={passwordVisible} setPasswordVisible={setPasswordVisible} />
+                    <LoginPage toggleModal={toggleModal} toggleVisible={toggleVisible} passwordVisible={passwordVisible} />
                 ) : modalType === "register" ? (
-                    <RegisterPage toggleModal={toggleModal} toggleVisible={toggleVisible} passwordVisible={passwordVisible} setPasswordVisible={setPasswordVisible} />
+                    <RegisterPage toggleModal={toggleModal} toggleVisible={toggleVisible} passwordVisible={passwordVisible} />
                 ): ''}
             </div>
             <footer>

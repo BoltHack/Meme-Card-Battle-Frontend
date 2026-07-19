@@ -1,38 +1,32 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { ChangeEvent, useEffect, useState } from "react";
-import {Helmet} from "react-helmet-async";
+import { ChangeEvent, useState } from "react";
+import { Helmet } from "react-helmet-async";
 
-import styles from "./stylesheets/Card.CreateCards.module.css";
+import styles from "./Card.CreateCards.module.css";
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../api/api.ts";
-import {LoadingPage} from "../LoadingPage/Loading.tsx";
-import usePageRender from "../../tools/PageRender.ts";
-import {ErrorPage} from "../ErrorPage/Error.tsx";
+import api from "../../../api/api.ts";
+import usePageRender from "../../../tools/PageRender.ts";
+import { ErrorPage } from "../../ErrorPage/Error.tsx";
+import { LoadingPage } from "../../LoadingPage/Loading.tsx";
 
 interface PlayerData {
     name: string;
 }
 
-interface CardData {
-    card_name: string,
-    card_description: string,
-    card_damage: string,
-    card_protection: string,
-    lvl_number: string,
-    lvl_name: string
+interface titleSettings {
+    title: string;
 }
 
-export const CreateCardsPage = ({ title }) => {
-    const navigate = useNavigate();
+export const CreateCardPage = ({ title }: titleSettings) => {
+    // const navigate = useNavigate();
 
-    const { data, loading, error, socket } = usePageRender<PlayerData>(
-        `${api.API_BASE_URL}/admin/create-cards`
+    const { loading, error } = usePageRender<PlayerData>(
+        `${api.API_BASE_URL}/admin/create/card`
     );
 
-    const [formData, setFormData] = useState<CardData>({
+    const [formData, setFormData] = useState({
         card_name: '',
         card_description: '',
         card_damage: '',
@@ -56,7 +50,7 @@ export const CreateCardsPage = ({ title }) => {
         }
     };
 
-    const addNewCard = async (e) => {
+    const addNewCard = async (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const dataToSend = new FormData();
@@ -72,16 +66,13 @@ export const CreateCardsPage = ({ title }) => {
             dataToSend.append("card_avatar", file);
         }
         try {
-            const response = await axios.post(`${api.API_BASE_URL}/admin/add-card`, dataToSend, {
+            const response = await axios.post(`${api.API_BASE_URL}/admin/add/card`, dataToSend, {
                 withCredentials: true
-                // headers: {
-                //     'Content-Type': 'multipart/form-data'
-                // }
             });
 
             console.log('Карта успешно создана:', response.data);
 
-            setFormData<CardData>({
+            setFormData({
                 card_name: '',
                 card_description: '',
                 card_damage: '',
@@ -90,9 +81,6 @@ export const CreateCardsPage = ({ title }) => {
                 lvl_name: 'DEFAULT'
             });
             setFile(null);
-
-            // const fileInput = document.getElementsByClassName("card_avatar");
-            // if (fileInput) fileInput.value = '';
 
             return response.data;
         } catch (error) {

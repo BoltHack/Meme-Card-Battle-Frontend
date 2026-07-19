@@ -16,9 +16,14 @@ import { ErrorPage } from "../ErrorPage/Error.tsx";
 interface PlayerData {
     name: string;
     id: string;
+    role: string;
 }
 
-export const MainPage = ({ title }) => {
+interface TitleSettings {
+    title: string;
+}
+
+export const MainPage = ({ title }: TitleSettings) => {
     const navigate = useNavigate();
 
     const isAuth = Boolean(localStorage.getItem("token"));
@@ -71,7 +76,7 @@ export const MainPage = ({ title }) => {
 
         socket.emit("search_game", {
             type: false,
-            player_id: data.id
+            player_id: data?.id
         });
     }, [data]);
 
@@ -89,7 +94,7 @@ export const MainPage = ({ title }) => {
         }, 1000);
     }, [isRunning, gameFoundTimerReset]);
 
-    const gameFountTimerFormat = (time) => {
+    const gameFountTimerFormat = (time: number) => {
         const totalSeconds = Number(time) || 0;
         if (totalSeconds <= 0) return "0 с";
 
@@ -102,7 +107,7 @@ export const MainPage = ({ title }) => {
         return (minutesStr + secondsStr).trim();
     }
 
-    const foundGame = (type) => {
+    const foundGame = (type: string) => {
         if (!isAuth) {
             navigate("/auth/sign-in");
             return;
@@ -110,10 +115,10 @@ export const MainPage = ({ title }) => {
         if (type === "search") {
             setIsGameFound(true);
             setIsOpen(false);
-            console.log('search game...', data.id);
+            console.log('search game...', data?.id);
             socket.emit("search_game", {
                 type: true,
-                player_id: data.id
+                player_id: data?.id
             });
             gameFoundTimerStart();
         } else if (type === "cancel") {
@@ -189,8 +194,8 @@ export const MainPage = ({ title }) => {
             }, 200);
 
             return response.data;
-        } catch (error) {
-            const errorMessage = error.response?.data?.error || 'Произошла ошибка при выходе';
+        } catch (error: any) {
+            const errorMessage = error?.response?.data.error || 'Произошла ошибка при выходе';
             console.log('Ошибка logout:', errorMessage);
         }
     }
@@ -205,8 +210,8 @@ export const MainPage = ({ title }) => {
             toast.success(data.success);
 
             return response.data;
-        } catch (error) {
-            const errorMessage = error.response?.data?.error || 'Произошла ошибка при выходе';
+        } catch (error: any) {
+            const errorMessage = error?.response?.data?.error || 'Произошла ошибка при выходе';
             console.log('Ошибка:', errorMessage);
         }
     }
@@ -271,46 +276,46 @@ export const MainPage = ({ title }) => {
             </Helmet>
 
             <div className={styles["parallax-body"]}></div>
-            {/*<div className={styles["parallax-wrapper"]}>*/}
+            <div className={styles["parallax-wrapper"]}>
 
-            {/*    <div className={styles["smoke-glow smoke-red"]}></div>*/}
-            {/*    <div className={styles["smoke-glow smoke-blue"]}></div>*/}
-            {/*    <div className={styles["smoke-glow smoke-purple"]}></div>*/}
+                <div className={styles["smoke-glow smoke-red"]}></div>
+                <div className={styles["smoke-glow smoke-blue"]}></div>
+                <div className={styles["smoke-glow smoke-purple"]}></div>
 
-            {/*    <div className={styles["halftone-overlay"]}></div>*/}
+                <div className={styles["halftone-overlay"]}></div>
 
-            {/*    <div className={styles["star-particles"]}></div>*/}
+                <div className={styles["star-particles"]}></div>
 
-            {/*    <div className={styles["shard shard-1"]}></div>*/}
-            {/*    <div className={styles["shard shard-2"]}></div>*/}
+                <div className={styles["shard shard-1"]}></div>
+                <div className={styles["shard shard-2"]}></div>
 
-            {/*    <svg className={`${styles["lightning"]} ${styles["lightning-right"]}`} viewBox="0 0 24 24">*/}
-            {/*        <path d="M19 9h-6l3-7L5 13h6l-3 9z"/>*/}
-            {/*    </svg>*/}
+                <svg className={`${styles["lightning"]} ${styles["lightning-right"]}`} viewBox="0 0 24 24">
+                    <path d="M19 9h-6l3-7L5 13h6l-3 9z"/>
+                </svg>
 
-            {/*    <div className={styles["card-layer"]}>*/}
+                <div className={styles["card-layer"]}>
 
-            {/*        <div className={`${styles["premium-card"]} ${styles["card-king"]}`}>*/}
-            {/*            <div></div>*/}
-            {/*            <div className={styles["card-suit-center"]}>?</div>*/}
-            {/*            <div className={styles["card-suit-bottom"]}></div>*/}
-            {/*        </div>*/}
+                    <div className={`${styles["premium-card"]} ${styles["card-king"]}`}>
+                        <div></div>
+                        <div className={styles["card-suit-center"]}>?</div>
+                        <div className={styles["card-suit-bottom"]}></div>
+                    </div>
 
-            {/*        <div className={`${styles["premium-card"]} ${styles["card-ace-spades"]}`}>*/}
-            {/*            <div></div>*/}
-            {/*            <div className={styles["card-suit-center"]}>?</div>*/}
-            {/*            <div className={styles["card-suit-bottom"]}></div>*/}
-            {/*        </div>*/}
+                    <div className={`${styles["premium-card"]} ${styles["card-ace-spades"]}`}>
+                        <div></div>
+                        <div className={styles["card-suit-center"]}>?</div>
+                        <div className={styles["card-suit-bottom"]}></div>
+                    </div>
 
-            {/*        <div className={`${styles["premium-card"]} ${styles["card-ace-diamonds"]}`}>*/}
-            {/*            <div></div>*/}
-            {/*            <div className={styles["card-suit-center"]}>?</div>*/}
-            {/*            <div className={styles["card-suit-bottom"]}></div>*/}
-            {/*        </div>*/}
+                    <div className={`${styles["premium-card"]} ${styles["card-ace-diamonds"]}`}>
+                        <div></div>
+                        <div className={styles["card-suit-center"]}>?</div>
+                        <div className={styles["card-suit-bottom"]}></div>
+                    </div>
 
-            {/*    </div>*/}
+                </div>
 
-            {/*</div>*/}
+            </div>
 
             <div className={styles['buttons-container']}>
 
@@ -403,7 +408,7 @@ export const MainPage = ({ title }) => {
                                     {data?.role === "Admin" && (
                                         <div>
                                             <li>
-                                                <div className={styles["tools-menu-btn"]} onClick={() => navigate("/admin/create-cards")}>
+                                                <div className={styles["tools-menu-btn"]} onClick={() => navigate("/admin/create/card")}>
                                                     <span>Админка</span>
                                                 </div>
                                             </li>

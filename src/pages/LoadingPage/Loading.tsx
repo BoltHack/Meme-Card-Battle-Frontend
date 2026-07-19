@@ -1,16 +1,6 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.Loading.module.css";
-
-import usePageRender from "../../tools/PageRender.ts";
-import api from "../../api/api.ts";
-
-interface PlayerData {
-    name: string;
-    id: string;
-}
 
 export const LoadingPage = () => {
 

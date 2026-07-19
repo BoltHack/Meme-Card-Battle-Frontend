@@ -1,5 +1,5 @@
 import { useParams, useNavigate, useBlocker } from 'react-router-dom';
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from 'react-helmet-async';
 import { io, Socket } from "socket.io-client";
 
@@ -17,6 +17,7 @@ axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
 import toast from "react-hot-toast";
+
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import usePageRender from "../../tools/PageRender.ts";
 
@@ -34,6 +35,32 @@ interface PlayerData {
     health: number;
     lvl: number;
     ult: number;
+
+    game_key: string;
+}
+
+interface PlayersInfoResponse {
+    data: PlayerData[]
+}
+
+interface GameParams {
+    game_type: string
+    game_key: string
+}
+
+interface CardData {
+    card_name: string;
+    card_avatar: string;
+    card_description: string;
+    card_damage: string;
+    card_protection: string;
+    lvl_number: string;
+    lvl_name: string;
+    _id: string;
+}
+
+interface PlayerCardsResponse {
+    cards_data?: CardData | CardData[];
 }
 
 export const GamePage = () => {
@@ -43,10 +70,10 @@ export const GamePage = () => {
 
     const [bodyLoader, setBodyLoader] = useState(false);
 
-    const { game_type, game_key } = useParams<{ type: string }>();
+    const { game_type, game_key } = useParams<{ type: string }>() as GameParams;
 
-    const [playerCard, setPlayerCard] = useState([]);
-    const [list, setList] = useState([]);
+    const [playerCard, setPlayerCard] = useState<CardData[]>([]);
+    const [list, setList] = useState<CardData[]>([]);
 
     const [handList, setHandList] = useState([]);
     const [enemyHandList, setEnemyHandList] = useState([0, 1, 2, 3, 4, 5, 6, 7]);
@@ -87,9 +114,9 @@ export const GamePage = () => {
     }
 
     useEffect(() => {
-        const handleBeforeUnload = (event) => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
             event.preventDefault();
-            event.returnValue = '';
+            // event.returnValue = '';
         };
 
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -134,22 +161,9 @@ export const GamePage = () => {
 
         socket.on("connect", sendInitialData);
 
-        const handlePlayerCards = (data) => {
+        const handlePlayerCards = (data: PlayerCardsResponse) => {
             const { cards_data } = data;
             if (!cards_data) return;
-
-            // const duplicatedCards = cards_data.flatMap(card => {
-            //     const count = card.quantity || 1;
-            //
-            //     return Array.from({ length: count }, (_, index) => ({
-            //         ...card,
-            //         ui_key: `${card.card_id}_duplicate_${index}`
-            //         // ui_key: `${crypto.randomUUID()}_duplicate_${index}`
-            //         // ui_key: crypto.randomUUID()
-            //     }));
-            // });
-            //
-            // setPlayerCard(duplicatedCards);
 
             setPlayerCard(prevCards => {
                 if (Array.isArray(cards_data)) {
@@ -159,15 +173,30 @@ export const GamePage = () => {
                     return [...prevCards, ...newUniqueCards];
                 }
 
-                const isDuplicate = prevCards.some(card => card._id === cards_data._id);
+                const singleCard = cards_data
+
+                const isDuplicate = prevCards.some(card => card._id === singleCard._id);
                 if (isDuplicate) return prevCards;
-                return [...prevCards, cards_data];
+                return [...prevCards, singleCard];
             });
+
+            // setPlayerCard(prevCards => {
+            //     if (Array.isArray(cards_data)) {
+            //         const newUniqueCards = cards_data.filter(
+            //             newCard => !prevCards.some(pCard => pCard._id === newCard._id)
+            //         );
+            //         return [...prevCards, ...newUniqueCards];
+            //     }
+            //
+            //     const isDuplicate = prevCards.some(card => card._id === cards_data._id);
+            //     if (isDuplicate) return prevCards;
+            //     return [...prevCards, cards_data];
+            // });
         };
 
         const id= data?.id;
 
-        socket.on("players_info", (data) => {
+        socket.on("players_info", (data: PlayersInfoResponse) => {
             const updatedPlayer = data.data;
 
             const playerInfo_index = data.data.findIndex(up => up.id === id);

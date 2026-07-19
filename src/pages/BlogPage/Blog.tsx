@@ -1,0 +1,231 @@
+import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
+import { Helmet } from "react-helmet-async";
+
+import styles from './Card.Blog.module.css';
+
+import axios from "axios";
+axios.defaults.withCredentials = true;
+
+import api from "../../api/api.ts";
+
+import usePageRender from "../../tools/PageRender.ts";
+import { ErrorPage } from "../ErrorPage/Error.tsx";
+import { LoadingPage } from "../LoadingPage/Loading.tsx";
+
+import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
+import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
+
+// interface BlogAuthor {
+//     name: string;
+// }
+
+// interface BlogMainContent {
+//     title: string;
+//     description: string;
+//     cover: string;
+// }
+
+interface BlogPost {
+    author: string;
+    title: string;
+    description: string,
+    cover: string;
+    category: string;
+    date: string;
+    id: string;
+}
+
+interface BlogResponse {
+    id?: string;
+    renderData: {
+        blog: BlogPost[];
+    }
+
+}
+
+interface BlogPageProps {
+    title: string;
+}
+
+export const BlogPage = ({ title }: BlogPageProps) => {
+    // const navigate = useNavigate();
+    const [blog, setBlog] = useState<BlogPost[]>([]);
+
+    const { data, loading, error } = usePageRender<BlogResponse>(
+        `${api.API_BASE_URL}/api/blog`
+    );
+
+    const dateSettings = (date: string) => {
+        return new Date(date).toLocaleString('ru-RU', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            // hour: '2-digit', minute: '2-digit',
+            hour12: false
+        });
+    }
+
+    useEffect(() => {
+        if (!data || !Array.isArray(data.renderData.blog)) {
+            console.log('Данные еще не загрузились или структура не совпадает:', data);
+            return;
+        }
+
+        // const formattedBlogs = data.blog.map(blog => ({
+        //     author: {
+        //         name: blog.author?.name || "Аноним"
+        //     },
+        //     main_content: {
+        //         title: blog.main_content?.title || "",
+        //         description: blog.main_content?.description || "",
+        //         cover: blog.main_content?.cover || "",
+        //     },
+        //     category: blog.category,
+        //     content: blog.content,
+        //     date: blog.date,
+        //     id: blog._id.toString()
+        // }));
+
+        setBlog(data.renderData.blog);
+    }, [data]);
+
+    if (loading) return <LoadingPage />;
+    if (error) return <ErrorPage error={error} />;
+
+    return (
+        <div className={styles["body-wrapper"]}>
+            <Helmet>
+                <title>{title}</title>
+            </Helmet>
+
+            <Header />
+
+            <main className={styles["discord-blog-container"]}>
+
+                <section className={styles["featured-section"]}>
+
+                    {blog && blog.length > 0 ? (
+
+                        // <article className={styles["featured-card"]}>
+                        //     <div className={styles["featured-image"]}>
+                        //         <div className={styles["img-placeholder"]}></div>
+                        //     </div>
+                        //     <div className={styles["featured-content"]}>
+                        //         <span className={styles["category"]}>Обновление</span>
+                        //         <h2>Встречайте глобальный апгрейд интерфейса и новые фичи</h2>
+                        //         <p>Мы полностью переработали логику работы с динамическими макетами, добавили поддержку кастомных шейдеров и ускорили рендеринг страниц на мобильных устройствах в два раза. Читайте подробный разбор изменений.</p>
+                        //         <div className={styles["card-footer"]}>
+                        //             <span className={styles["date"]}>16 июля, 2026</span>
+                        //             <a href="#" className={styles["read-more-btn"]}>Читать статью</a>
+                        //         </div>
+                        //     </div>
+                        // </article>
+
+                        <article className={styles["featured-card"]}>
+                            <div className={styles["featured-image"]}>
+                                {blog[0].cover.length > 0 ? (
+                                    <img src={`${api.API_BASE_URL}/${blog[0].cover}`} className={styles["img-placeholder"]} />
+                                ): <div className={styles["img-placeholder"]}></div> }
+                            </div>
+                            <div className={styles["featured-content"]}>
+                                <span className={styles["category"]}>{blog[0].category}</span>
+                                <h2>{blog[0].title}</h2>
+                                <p>{blog[0].description}</p>
+                                <div className={styles["card-footer"]}>
+                                    <span className={styles["date"]}>{dateSettings(blog[0].date)}</span>
+                                    <Link to={`/blog/${blog[0].id}`} className={styles["read-more-btn"]}>Читать статью</Link>
+                                </div>
+                            </div>
+                        </article>
+
+                    ): null}
+
+                </section>
+
+                <section className={styles["posts-grid-section"]}>
+
+                    {blog && blog.length > 0 ? (
+
+                        blog.slice(1).map((bd, index) => {
+
+                            return (
+                                <article key={index} className={styles["grid-card"]}>
+                                    <div className={styles["card-image"]}>
+                                        {bd.cover.length > 0 ? (
+                                            <img src={`${api.API_BASE_URL}/${bd.cover}`} className={styles["img-placeholder"]} />
+                                        ): <div className={styles["img-placeholder"]} style={{ background: "linear-gradient(135deg, #0066ff, #ff007f)" }}></div> }
+                                    </div>
+                                    <div className={styles["card-body"]}>
+                                        <span className={styles["category"]}>{bd.category}</span>
+                                        <h3>{bd.title}</h3>
+                                        <p>{bd.description}</p>
+                                        <div className={styles["card-footer"]}>
+                                            <span className={styles["date"]}>{dateSettings(bd.date)}</span>
+                                            <Link to={`/blog/${bd.id}`} className={`${styles["read-more-btn"]} ${styles["small"]}`}>Читать статью</Link>
+                                        </div>
+                                    </div>
+                                </article>
+                            )
+                        })
+                    ): null}
+
+                    {/*<article className={styles["grid-card"]}>*/}
+                    {/*    <div className={styles["card-image"]}>*/}
+                    {/*         <div className={styles["img-placeholder"]} style={{ background: "linear-gradient(135deg, #0066ff, #ff007f)" }}></div>*/}
+                    {/*    </div>*/}
+                    {/*    <div className={styles["card-body"]}>*/}
+                    {/*        <span className={styles["category"]}>CSS</span>*/}
+                    {/*        <h3>Погружение в Dynamic Viewport Units</h3>*/}
+                    {/*        <p>Как единицы измерения вроде dvh и dvw помогают решать старые проблемы с отображением сайтов.</p>*/}
+                    {/*        <div className={styles["card-footer"]}>*/}
+                    {/*            <span className={styles["date"]}>14 июля, 2026</span>*/}
+                    {/*            <a href="#" className={`${styles["read-more-btn"]} ${styles["small"]}`}>Читать статью</a>*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*</article>*/}
+
+                    {/*<article className={styles["grid-card"]}>*/}
+                    {/*    <div className={styles["card-image"]}>*/}
+                    {/*        <div*/}
+                    {/*            className={styles["img-placeholder"]}*/}
+                    {/*            style={{ background: "linear-gradient(135deg, #7289da, #150931)" }}*/}
+                    {/*        ></div>*/}
+                    {/*    </div>*/}
+                    {/*    <div className={styles["card-body"]}>*/}
+                    {/*        <span className={styles["category"]}>Дизайн</span>*/}
+                    {/*        <h3>Магия сложных градиентов в современном UI</h3>*/}
+                    {/*        <p>Создаем глубокие космические фоны с помощью многослойных радиальных градиентов.</p>*/}
+                    {/*        <div className={styles["card-footer"]}>*/}
+                    {/*            <span className={styles["date"]}>10 июля, 2026</span>*/}
+                    {/*            <a href="#" className={`${styles["read-more-btn"]} ${styles["small"]}`}>Читать статью</a>*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*</article>*/}
+
+                    {/*<article className={styles["grid-card"]}>*/}
+                    {/*    <div className={styles["card-image"]}>*/}
+                    {/*        <div*/}
+                    {/*            className={styles["img-placeholder"]}*/}
+                    {/*            style={{ background: "linear-gradient(135deg, #ff007f, #0b0518)" }}*/}
+                    {/*        ></div>*/}
+                    {/*    </div>*/}
+                    {/*    <div className={styles["card-body"]}>*/}
+                    {/*        <span className={styles["category"]}>Разработка</span>*/}
+                    {/*        <h3>Нативные веб-компоненты в 2026</h3>*/}
+                    {/*        <p>Стоит ли отказываться от тяжелых фреймворков в пользу стандартных решений браузера?</p>*/}
+                    {/*        <div className={styles["card-footer"]}>*/}
+                    {/*            <span className={styles["date"]}>05 июля, 2026</span>*/}
+                    {/*            <a href="#" className={`${styles["read-more-btn"]} ${styles["small"]}`}>Читать статью</a>*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*</article>*/}
+
+                </section>
+
+            </main>
+
+            <Footer />
+        </div>
+    );
+};

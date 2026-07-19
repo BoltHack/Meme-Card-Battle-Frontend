@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import ReactMarkdown from 'react-markdown';
 
@@ -7,28 +8,39 @@ import api from "../../api/api.ts";
 
 import usePageRender from "../../tools/PageRender.ts";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
+import { ErrorPage } from "../ErrorPage/Error.tsx";
 
 import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
-import {useEffect, useRef, useState} from "react";
-import {ErrorPage} from "../ErrorPage/Error.tsx";
 
-interface PlayerData {
-    name: string;
-    id: string;
+
+interface ArticlesData {
+    renderData: string;
 }
 
-export const TermsOfUsePage = ({ title }) => {
+interface ArticleNavigationItem {
+    id: string;
+    article: string | null;
+}
 
-    const articleSectionsContainer= useRef(null);
-    const [articleList, setArticleList] = useState([]);
+interface TitleSettings {
+    title: string;
+}
 
-    const { data, loading, error, socket } = usePageRender<PlayerData>(
+export const TermsOfUsePage = ({ title }: TitleSettings) => {
+
+    const articleSectionsContainer= useRef<HTMLDivElement>(null);
+    const [articleList, setArticleList] = useState<ArticleNavigationItem[]>([]);
+
+    const { data, loading, error } = usePageRender<ArticlesData>(
         `${api.API_BASE_URL}/api/terms-of-use`
     );
 
     useEffect(() => {
-        if (!loading && data?.content && articleSectionsContainer.current) {
+
+        console.log('data', data);
+
+        if (!loading && data?.renderData && articleSectionsContainer.current) {
 
             setTimeout(() => {
                 if (!articleSectionsContainer.current) return;
@@ -37,7 +49,7 @@ export const TermsOfUsePage = ({ title }) => {
 
                 const tempArticles: Array<{ id: string; article: string | null }> = [];
 
-                h2Elements.forEach((h2, index) => {
+                h2Elements.forEach((h2: HTMLHeadingElement, index: number) => {
                     const headingText = h2.textContent;
                     const sectionId = (index + 1).toString();
 
@@ -54,7 +66,7 @@ export const TermsOfUsePage = ({ title }) => {
             }, 0)
 
         }
-    }, [loading, data?.content]);
+    }, [loading, data?.renderData]);
 
     if (loading) return <LoadingPage />
     if (error) return <ErrorPage error={error} />
@@ -84,9 +96,9 @@ export const TermsOfUsePage = ({ title }) => {
                             <p className={styles["subtitle"]}>Последнее обновление: 22 июня 2026 г.</p>
                         </header>
 
-                        {data.content && data.content.length > 0 ? (
+                        {data?.renderData && data?.renderData.length > 0 ? (
                             <section className={styles["article-section"]}>
-                                <ReactMarkdown>{data.content}</ReactMarkdown>
+                                <ReactMarkdown>{data?.renderData}</ReactMarkdown>
                             </section>
                         ) : null}
 

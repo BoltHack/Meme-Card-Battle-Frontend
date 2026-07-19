@@ -16,7 +16,13 @@ import { HowToPlayPage } from "./pages/RulePages/HowToPlay.tsx";
 import { TermsOfUsePage } from "./pages/RulePages/TermsOfUse.tsx";
 import { PrivacyPolicy } from "./pages/RulePages/PrivacyPolicy.tsx";
 
-import { CreateCardsPage } from "./pages/AdminPages/CreateCards.tsx";
+import { BlogPage } from "./pages/BlogPage/Blog.tsx";
+import { BlogReadPage } from "./pages/BlogReadPage/BlogRead.tsx";
+import { BlogCategoryPage } from "./pages/BlogCategoryPage/BlogCategory.tsx";
+
+import { CreateCardPage } from "./pages/AdminPages/CreateCard/CreateCardPage.tsx";
+import { CreateBlogPage } from "./pages/AdminPages/CreateBlog/CreateBlogPage.tsx";
+import { EditBlogPage } from "./pages/AdminPages/EditBlog/EditBlogPage.tsx";
 
 import { ErrorPage } from "./pages/ErrorPage/Error.tsx";
 
@@ -50,16 +56,36 @@ const router = createBrowserRouter([
         element: <PrivacyPolicy title="MCB | Политика конфиденциальности" />
     },
     {
+        path: "/blog",
+        element: <BlogPage title="MCB | Блог" />
+    },
+    {
+        path: "/category/:blog_category",
+        element: <BlogCategoryPage title="MCB | Блог" />
+    },
+    {
+        path: "/blog/:blog_id",
+        element: <BlogReadPage />
+    },
+    {
         path: "/game/:game_type/:game_key",
-        element: <GamePage title="" />
+        element: <GamePage />
     },
     {
         path: "/auth/sign-in",
         element: <SignInPage title="MCB | Аккаунт" />
     },
     {
-        path: "/admin/create-cards",
-        element: <CreateCardsPage title="Админка | Редактор" />
+        path: "/admin/create/card",
+        element: <CreateCardPage title="Админка | Редактор" />
+    },
+    {
+        path: "/admin/create/blog",
+        element: <CreateBlogPage title="Админка | Редактор блога" />
+    },
+    {
+        path: "/admin/edit/blog/:blog_id",
+        element: <EditBlogPage title="Админка | edit блога" />
     },
     {
         path: "*",

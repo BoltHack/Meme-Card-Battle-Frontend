@@ -38,9 +38,6 @@ export default function usePageRender<T>(url: string) {
                 // if (trigger === 0) return;
                 setData(response.data);
                 setLoading(false);
-                console.log('data', response.data);
-                console.log('socket', socket.connected);
-                console.log('loading', loading);
             })
             .catch((err) => {
                 if (axios.isCancel(err) || err.name === "") return;
