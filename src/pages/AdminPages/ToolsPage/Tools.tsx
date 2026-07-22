@@ -1,9 +1,12 @@
 import styles from "../AdminPanel/Card.AdminPanel.module.css";
 import {Dispatch, SetStateAction} from "react";
 
+type AdminPageType = "ToolsPage" | "TeamPage" | "CreateCardPage" | "CreateBlogPage" | "LogsPage" | "SettingsPage";
+
 interface TitleSettings {
-    setActiveTab: Dispatch<SetStateAction<string>>;
+    setActiveTab: Dispatch<SetStateAction<AdminPageType>>;
 }
+
 
 export const ToolsPage = ({ setActiveTab }: TitleSettings) => {
 
@@ -14,7 +17,7 @@ export const ToolsPage = ({ setActiveTab }: TitleSettings) => {
                 <p>Выберите необходимый инструмент администрирования.</p>
             </header>
 
-            <div className={styles["tools-grid"]}>
+            <div className={styles["container-grid"]}>
                 <div className={styles["tool-card"]} onClick={() => setActiveTab("TeamPage")}>
                     <div className={styles["tool-icon"]}>
                         <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -27,7 +30,7 @@ export const ToolsPage = ({ setActiveTab }: TitleSettings) => {
                     <div className={styles["tool-icon"]}>
                         <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/></svg>
                     </div>
-                    <h3>Редактор новостей</h3>
+                    <h3>Редактор блогов</h3>
                     <p>Публикация новых статей, редактирование существующих материалов и блогов.</p>
                 </div>
 

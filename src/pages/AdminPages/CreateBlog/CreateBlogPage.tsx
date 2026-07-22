@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react";
 // import { Helmet } from "react-helmet-async";
 
 import styles from './Card.CreateBlog.module.css';
+import admin_styles from '../AdminPanel/Card.AdminPanel.module.css';
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
@@ -102,97 +103,87 @@ export const CreateBlogPage = () => {
     if (error) return <ErrorPage error={error} />
 
     return (
-        <div className={styles["editor-container"]}>
-            <h1 className={styles["editor-title"]}>Создание новой публикации</h1>
+        <div id="create-blog-page" className={`${admin_styles["page"]} ${admin_styles["active"]}`}>
+            <header className={admin_styles["header"]}>
+                <h1>Создание публикаций (блогов)</h1>
+                <p>Напишите свои мысли, выберите желаемую категорию и опубликуйте блог.</p>
+            </header>
 
-            <form className={styles["editor-form"]} onSubmit={handleSubmit}>
+            <div className={styles["editor-container"]}>
+                <h1 className={styles["editor-title"]}>Создание новой публикации</h1>
 
-                <div className={styles["editor-left-side"]}>
-                    <div className={styles["form-group"]}>
-                        <label className={styles["form-label"]} htmlFor="post_title">Название статьи</label>
-                        <input
-                            type="text" name="post_title" id="post_title"
-                            onChange={handleChange} value={formData.post_title}
-                            className={styles["form-input"]}
-                            placeholder="Введите броский заголовок..."
-                            required
-                        />
-                    </div>
+                <form className={styles["editor-form"]} onSubmit={handleSubmit}>
 
-                    <div className={styles["form-group"]}>
-                        <label className={styles["form-label"]} htmlFor="post_description">Краткое содержание</label>
-                        <input
-                            type="text" name="post_description" id="post_description"
-                            onChange={handleChange} value={formData.post_description}
-                            className={styles["form-input"]}
-                            placeholder="Введите желаемый текст..."
-                            required
-                        />
-                    </div>
-
-                    <div className={styles["form-group"]}>
-                        <label className={styles["form-label"]} htmlFor="post_category">Категория</label>
-                        <select
-                            name="post_category" id="post_category"
-                            onChange={handleChange} value={formData.post_category}
-                            className={styles["form-select"]}
-                        >
-                            <option value="community">Сообщество</option>
-                            <option value="development">Разработка</option>
-                            <option value="functions">Функции</option>
-                            <option value="safety">Безопасность</option>
-                        </select>
-                    </div>
-
-                    <div className={styles["form-group"]}>
-                        <label className={styles["form-label"]}>Обложка публикации</label>
-                        <label className={styles["file-dropzone"]}>
+                    <div className={styles["editor-left-side"]}>
+                        <div className={styles["form-group"]}>
+                            <label className={styles["form-label"]} htmlFor="post_title">Название статьи</label>
                             <input
-                                onChange={handleFileChange}
-                                type="file" name="post_cover" accept="image/*"
+                                type="text" name="post_title" id="post_title"
+                                onChange={handleChange} value={formData.post_title}
+                                className={styles["form-input"]}
+                                placeholder="Введите броский заголовок..."
+                                required
                             />
-                            <div className={styles["file-dropzone-text"]}>
-                                {file !== null ? (
-                                    <span>Файл выбран <strong>{file.name}</strong></span>
-                                ): <span>Перетащите изображение сюда или <strong>выберите файл</strong></span>}
-                            </div>
-                        </label>
-                        {file !== null && (
-                            <a className={styles["delete-file-btn"]} onClick={() => setFile(null)}>Нажмите, чтобы удалить файл</a>
-                        )}
+                        </div>
+
+                        <div className={styles["form-group"]}>
+                            <label className={styles["form-label"]} htmlFor="post_description">Краткое содержание</label>
+                            <input
+                                type="text" name="post_description" id="post_description"
+                                onChange={handleChange} value={formData.post_description}
+                                className={styles["form-input"]}
+                                placeholder="Введите желаемый текст..."
+                                required
+                            />
+                        </div>
+
+                        <div className={styles["form-group"]}>
+                            <label className={styles["form-label"]} htmlFor="post_category">Категория</label>
+                            <select
+                                name="post_category" id="post_category"
+                                onChange={handleChange} value={formData.post_category}
+                                className={styles["form-select"]}
+                            >
+                                <option value="community">Сообщество</option>
+                                <option value="development">Разработка</option>
+                                <option value="functions">Функции</option>
+                                <option value="safety">Безопасность</option>
+                            </select>
+                        </div>
+
+                        <div className={styles["form-group"]}>
+                            <label className={styles["form-label"]}>Обложка публикации</label>
+                            <label className={styles["file-dropzone"]}>
+                                <input
+                                    onChange={handleFileChange}
+                                    type="file" name="post_cover" accept="image/*"
+                                />
+                                <div className={styles["file-dropzone-text"]}>
+                                    {file !== null ? (
+                                        <span>Файл выбран <strong>{file.name}</strong></span>
+                                    ): <span>Перетащите изображение сюда или <strong>выберите файл</strong></span>}
+                                </div>
+                            </label>
+                            {file !== null && (
+                                <a className={styles["delete-file-btn"]} onClick={() => setFile(null)}>Нажмите, чтобы удалить файл</a>
+                            )}
+                        </div>
                     </div>
-                </div>
 
-                <div className={styles["editor-right-side"]}>
-                    <div
-                        onInput={handleInput}
-                        className={styles["form-editor"]}
-                        contentEditable="true"
-                        spellCheck="false"
-                        autoCorrect="off"
-                        autoCapitalize="off"
-                        translate="no"
-                    ></div>
-                    <button type="submit" className={styles["submit-btn"]}>Опубликовать статью</button>
-                </div>
-
-                {/*<div className={styles["form-group"]}>*/}
-                {/*    <label className={styles["form-label"]} htmlFor="post-content">Текст статьи</label>*/}
-
-                {/*    <div*/}
-                {/*        onInput={handleInput}*/}
-                {/*        className={styles["form-editor"]}*/}
-                {/*        contentEditable="true"*/}
-                {/*        spellCheck="false"*/}
-                {/*        autoCorrect="off"*/}
-                {/*        autoCapitalize="off"*/}
-                {/*        // writingsuggestions="false"*/}
-                {/*        translate="no"*/}
-                {/*    ></div>*/}
-                {/*</div>*/}
-
-                {/*<button className={styles["submit-btn"]} type="submit">Опубликовать статью</button>*/}
-            </form>
+                    <div className={styles["editor-right-side"]}>
+                        <div
+                            onInput={handleInput}
+                            className={styles["form-editor"]}
+                            contentEditable="true"
+                            spellCheck="false"
+                            autoCorrect="off"
+                            autoCapitalize="off"
+                            translate="no"
+                        ></div>
+                        <button type="submit" className={styles["submit-btn"]}>Опубликовать статью</button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };

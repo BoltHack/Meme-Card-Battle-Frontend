@@ -43,7 +43,7 @@ export const TeamPage = () => {
                 <p>Управление уровнями доступа и модераторами проекта.</p>
             </header>
 
-            <div className={styles["team-grid"]}>
+            <div className={`${styles["container-grid"]} ${styles["team-grid"]}`}>
 
                 {team && team.length > 0 ? (
                     team.map(tm => {
