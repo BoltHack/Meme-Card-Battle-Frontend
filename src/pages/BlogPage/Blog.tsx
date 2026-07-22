@@ -159,7 +159,7 @@ export const BlogPage = ({ title }: BlogPageProps) => {
                                     <div className={styles["card-body"]}>
                                         <span className={styles["category"]}>{bd.category}</span>
                                         <h3>{bd.title}</h3>
-                                        <p>{bd.description}</p>
+                                        <p>{bd.description.length > 120 ? bd.description.slice(0, 120) + "..." : bd.description}</p>
                                         <div className={styles["card-footer"]}>
                                             <span className={styles["date"]}>{dateSettings(bd.date)}</span>
                                             <Link to={`/blog/${bd.id}`} className={`${styles["read-more-btn"]} ${styles["small"]}`}>Читать статью</Link>

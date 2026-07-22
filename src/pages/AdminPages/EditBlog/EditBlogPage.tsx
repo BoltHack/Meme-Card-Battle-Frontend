@@ -118,65 +118,62 @@ export const EditBlogPage = ({ title }: titleSettings) => {
 
                 <form className={styles["editor-form"]}>
 
-                    <div className={styles["form-group"]}>
-                        <label className={styles["form-label"]} htmlFor="edit_title">Название статьи</label>
-                        <input
-                            type="text" name="edit_title"
-                            onChange={handleChange} value={formData.edit_title}
-                            className={styles["form-input"]}
-                            placeholder="Введите броский заголовок..."
-                            required
-                        />
-                    </div>
-
-                    <div className={styles["form-group"]}>
-                        <label className={styles["form-label"]} htmlFor="edit_description">Краткое содержание</label>
-                        <input
-                            type="text" name="edit_description"
-                            onChange={handleChange} value={formData.edit_description}
-                            className={styles["form-input"]}
-                            placeholder="Введите желаемый текст..."
-                            required
-                        />
-                    </div>
-
-                    <div className={styles["form-group"]}>
-                        <label className={styles["form-label"]} htmlFor="edit_category">Категория</label>
-                        <select
-                            name="edit_category"
-                            onChange={handleChange} value={formData.edit_category}
-                            className={styles["form-select"]}
-                        >
-                            <option value="community">Сообщество</option>
-                            <option value="development">Разработка</option>
-                            <option value="functions">Функции</option>
-                            <option value="safety">Безопасность</option>
-                        </select>
-                    </div>
-
-                    <div className={styles["form-group"]}>
-                        <label className={styles["form-label"]}>Обложка публикации</label>
-                        <label className={styles["file-dropzone"]}>
+                    <div className={styles["editor-left-side"]}>
+                        <div className={styles["form-group"]}>
+                            <label className={styles["form-label"]} htmlFor="edit_title">Название статьи</label>
                             <input
-                                onChange={handleFileChange}
-                                type="file" name="post_cover" accept="image/*"
+                                type="text" name="edit_title"
+                                onChange={handleChange} value={formData.edit_title}
+                                className={styles["form-input"]}
+                                placeholder="Введите броский заголовок..."
+                                required
                             />
-                            <div className={styles["file-dropzone-text"]}>
-                                {file !== null ? (
-                                    <span>Файл выбран <strong>{file.name}</strong></span>
-                                ): <span>Перетащите изображение сюда или <strong>выберите файл</strong></span>}
-                            </div>
-                        </label>
+                        </div>
+
+                        <div className={styles["form-group"]}>
+                            <label className={styles["form-label"]} htmlFor="edit_description">Краткое содержание</label>
+                            <input
+                                type="text" name="edit_description"
+                                onChange={handleChange} value={formData.edit_description}
+                                className={styles["form-input"]}
+                                placeholder="Введите желаемый текст..."
+                                required
+                            />
+                        </div>
+
+                        <div className={styles["form-group"]}>
+                            <label className={styles["form-label"]} htmlFor="edit_category">Категория</label>
+                            <select
+                                name="edit_category"
+                                onChange={handleChange} value={formData.edit_category}
+                                className={styles["form-select"]}
+                            >
+                                <option value="community">Сообщество</option>
+                                <option value="development">Разработка</option>
+                                <option value="functions">Функции</option>
+                                <option value="safety">Безопасность</option>
+                            </select>
+                        </div>
+
+                        <div className={styles["form-group"]}>
+                            <label className={styles["form-label"]}>Обложка публикации</label>
+                            <label className={styles["file-dropzone"]}>
+                                <input
+                                    onChange={handleFileChange}
+                                    type="file" name="post_cover" accept="image/*"
+                                />
+                                <div className={styles["file-dropzone-text"]}>
+                                    {file !== null ? (
+                                        <span>Файл выбран <strong>{file.name}</strong></span>
+                                    ): <span>Перетащите изображение сюда или <strong>выберите файл</strong></span>}
+                                </div>
+                            </label>
+                        </div>
                     </div>
 
-                    <div className={styles["form-group"]}>
-                        <label className={styles["form-label"]} htmlFor="post-content">Текст статьи</label>
+                    <div className={styles["editor-right-side"]}>
+                        {/*<label className={styles["form-label"]} htmlFor="post-content">Текст статьи</label>*/}
 
-                        {/*<div className={styles["form-editor"]}>*/}
-                        {/*<MilkdownProvider>*/}
-                        {/*    <CrepeEditor onChange={setMarkdownContent} />*/}
-                        {/*</MilkdownProvider>*/}
-                        {/*</div>*/}
                         <div
                             dangerouslySetInnerHTML={{ __html: formData.content }}
                             onInput={handleInput}
@@ -187,9 +184,9 @@ export const EditBlogPage = ({ title }: titleSettings) => {
                             autoCapitalize="off"
                             translate="no"
                         ></div>
+                        <button className={styles["submit-btn"]} type="submit">Изменить статью</button>
                     </div>
 
-                    <button className={styles["submit-btn"]} type="submit">Опубликовать статью</button>
                 </form>
             </div>
 

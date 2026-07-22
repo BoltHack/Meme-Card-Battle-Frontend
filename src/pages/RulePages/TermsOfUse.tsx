@@ -13,7 +13,6 @@ import { ErrorPage } from "../ErrorPage/Error.tsx";
 import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
 
-
 interface ArticlesData {
     renderData: string;
 }

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Simulate } from "react-dom/test-utils";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
 
 import { Game_CardDesk } from "./Game_CardDesk.tsx";
 
@@ -7,41 +7,102 @@ import Menus_styles from "./Card.Menu_styles.module.css";
 import CardDesk_styles from "./Card.Desk_styles.module.css";
 
 import api from "../../api/api.ts";
-// import play = Simulate.play;
 import toast from "react-hot-toast";
-import {useNavigate} from "react-router-dom";
+
+interface CardData {
+    menu_id: string;
+    id: string;
+    name: string;
+    description: string;
+    avatar: string;
+    lvl: number;
+    rarity: string;
+    damage: number;
+    protection: number;
+
+    _id: string;
+}
+
+interface UseCardData {
+    id: string;
+    lvl?: number;
+    rarity?: string;
+    avatar?: string;
+    name?: string;
+    description?: string;
+    damage?: number;
+    protection?: number;
+}
+
+export interface ActionData {
+    cardInfo: CardData;
+}
+
+interface TitleSettings {
+    playerCard: CardData[];
+    socket: any;
+
+    player_id: string | undefined;
+    game_key: string | undefined;
+
+    list: CardData[];
+    setList: Dispatch<SetStateAction<CardData[]>>;
+
+    handList: CardData[];
+    setHandList: Dispatch<SetStateAction<CardData[]>>;
+
+    enemyHandList: any;
+
+    activePlayerCard: string | null;
+    setActivePlayerCard: Dispatch<SetStateAction<string | null>>;
+    activeEnemyCard: boolean | false;
+
+    loading: boolean | false;
+
+    setBodyLoader: Dispatch<SetStateAction<boolean>>;
+
+    playersInfo: any;
+
+    setIsBlock: Dispatch<SetStateAction<boolean>>;
+
+    damageAnimation: string | null;
+
+    // useCardIdRef: string | null;
+}
 
 export const Game_Menus = ({
                                playerCard,
                                socket,
                                player_id, game_key,
-                               my_nickname, enemy_nickname,
                                list, setList,
                                handList, setHandList,
                                enemyHandList,
                                activePlayerCard, activeEnemyCard, setActivePlayerCard,
-                               loading,
+                               // loading,
                                setBodyLoader,
+                               loading,
                                playersInfo,
-                               isBlock, setIsBlock,
-                               useCardIdRef,
-                            }) => {
+                               setIsBlock,
+                               damageAnimation
+                               // useCardIdRef,
+                           }: TitleSettings) => {
     const navigate = useNavigate();
 
     const [isOpen, setIsOpen] = useState(true);
     const [isClosing, setIsClosing] = useState(false);
 
     const [isOpenCardActions, setIsOpenCardActions] = useState(false);
-    const [selectCard, setSelectCard] = useState([]);
+    const [selectCard, setSelectCard] = useState<UseCardData[]>([]);
 
     const [isOpenLeaveMenu, setIsOpenLeaveMenu] = useState(false);
 
     // const [activePlayerCard, setActivePlayerCard] = useState<string | null>(null);
     // const [isCardSelectAnimationPlayer, setIsCardSelectAnimationPlayer] = useState<boolean>(false);
-    const [isCardSelectAnimationEnemy, setIsCardSelectAnimationEnemy] = useState<boolean>(false);
-    const [activeAnimationCardId, setActiveAnimationCardId] = useState<string | null>(null);
+    const [isCardSelectAnimationEnemy, setIsCardSelectAnimationEnemy] = useState<boolean | false>(false);
+    // const [activeAnimationCardId, setActiveAnimationCardId] = useState<string | null>(null);
 
     // const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const useCardIdRef = useRef<string | null>(null);
     const timeoutRef = useRef<number | null>(null);
 
     const closeMenu = () => {
@@ -74,7 +135,7 @@ export const Game_Menus = ({
         };
     }, []);
 
-    const checkBattleCard = (card_id, menu_id) => {
+    const checkBattleCard = (card_id: string, menu_id: string) => {
         const cardsList = list.map(c => c.menu_id);
 
         if ([...cardsList].includes(menu_id)) {
@@ -93,7 +154,7 @@ export const Game_Menus = ({
         });
     }
 
-    const removeCard = (idToRemove) => {
+    const removeCard = (idToRemove: string) => {
         console.log('idToRemove', idToRemove);
         console.log('list', list);
         const removeId = list.filter(item => item.menu_id !== idToRemove);
@@ -107,20 +168,28 @@ export const Game_Menus = ({
 
     // const useCardIdRef = useRef<string | undefined>(undefined);
 
-    const useCard = (type: 'open' | 'close' | 'useCard', data?: object) => {
-        if (type === 'open') {
-            const { cardInfo } = data;
-            if (!cardInfo) return;
-            console.log('cardIdInfo', cardInfo.id);
-            useCardIdRef.current = cardInfo.id;
+    const useCard = (type: 'open' | 'close' | 'useCard', data?: ActionData | undefined) => {
 
-            setSelectCard(prevCard => [...prevCard, cardInfo]);
+        console.log('type', type);
+        // if (type !== 'open' || type !== 'close' || type !== 'useCard') return;
+
+        if (type === 'open') {
+            const cardInfo = data?.cardInfo;
+            if (!cardInfo) return;
+            useCardIdRef.current = cardInfo?.id;
+
+            console.log('useCardIdRef', useCardIdRef.current);
+
+            setSelectCard(prevState => [...prevState, cardInfo]);
+            // setSelectCard(cardInfo);
 
             setIsOpenCardActions(true);
         } else if (type === 'useCard') {
             const useCardId = useCardIdRef.current;
-            if (activePlayerCard !== null || activePlayerCard === useCardId) return;
-            if (!useCardId) return;
+            console.log('useCardId 2', useCardId);
+            if (activePlayerCard === useCardId || !useCardId) return;
+
+            console.log('useCardId', useCardId);
 
             setIsOpenCardActions(false);
 
@@ -138,10 +207,12 @@ export const Game_Menus = ({
             });
             setSelectCard([]);
 
-            if (activePlayerCard !== null) return;
+            console.log('activePlayerCard', activePlayerCard);
 
+            // if (activePlayerCard !== null) return;
+            //
             // const removeId = handList.filter(item => item.menu_id !== useCardId);
-
+            //
             // setHandList(removeId);
         } else if (type === 'close') {
             setSelectCard([]);
@@ -155,7 +226,9 @@ export const Game_Menus = ({
     return (
         <>
             <Game_CardDesk
-                onToggleMenu={toggleMenu} useCard={(type: 'open' | 'close' | 'useCard', cardInfo?: object) => useCard(type, cardInfo)}
+                onToggleMenu={toggleMenu}
+                useCard={(type: 'open' | 'close' | 'useCard', data?: ActionData | undefined) => useCard(type, data)}
+                // useCard={useCard}
                 onActionsMenu={actionsMenu}
 
                 activePlayerCard={activePlayerCard} activeEnemyCard={activeEnemyCard}
@@ -164,12 +237,15 @@ export const Game_Menus = ({
                 isCardSelectAnimationEnemy={isCardSelectAnimationEnemy}
                 setIsCardSelectAnimationEnemy={setIsCardSelectAnimationEnemy}
 
-                handList={handList} setHandList={setHandList}
+                handList={handList}
+                // setHandList={setHandList}
                 enemyHandList={enemyHandList}
 
-                activeAnimationCardId={activeAnimationCardId} setActiveAnimationCardId={setActiveAnimationCardId}
-                my_nickname={my_nickname} enemy_nickname={enemy_nickname}
+                // activeAnimationCardId={activeAnimationCardId}
+                // setActiveAnimationCardId={setActiveAnimationCardId}
                 playersInfo={playersInfo}
+
+                damageAnimation={damageAnimation}
             />
 
             {isOpenCardActions && (
@@ -181,19 +257,19 @@ export const Game_Menus = ({
 
                             <div className={Menus_styles["actions-card-info"]}>
                                 {selectCard && selectCard.length ?
-                                    selectCard.map((card, index) => {
+                                    selectCard.map((card: any, index) => {
                                         return (
-                                            <div key={index} className={`${CardDesk_styles["dem-card"]} ${CardDesk_styles[card.rarity.toLowerCase()]}`}>
+                                            <div key={index} className={`${CardDesk_styles["dem-card"]} ${CardDesk_styles[card?.rarity.toLowerCase()]}`}>
                                                 <div className={CardDesk_styles["card-shine"]}></div>
                                                 <div className={CardDesk_styles["card-header"]}>
-                                                    <span className={CardDesk_styles["card-cost"]}>{card.lvl}</span>
-                                                    <span className={`${CardDesk_styles["card-rarity"]} ${CardDesk_styles[card.rarity.toLowerCase()]}`}>{card.rarity}</span>
+                                                    <span className={CardDesk_styles["card-cost"]}>{card?.lvl}</span>
+                                                    <span className={`${CardDesk_styles["card-rarity"]} ${CardDesk_styles[card?.rarity.toLowerCase()]}`}>{card.rarity}</span>
                                                 </div>
-                                                <img className={CardDesk_styles["card-artwork"]} src={`${api.API_BASE_URL}/${card.avatar}`} />
+                                                <img className={CardDesk_styles["card-artwork"]} src={`${api.API_BASE_URL}/${card?.avatar}`} />
                                                 <div className={CardDesk_styles["card-body"]}>
-                                                    <div className={CardDesk_styles["card-title"]}>{card.name}</div>
+                                                    <div className={CardDesk_styles["card-title"]}>{card?.name}</div>
                                                     <div className={CardDesk_styles["card-description"]}>
-                                                        {card.description}
+                                                        {card?.description}
                                                     </div>
                                                 </div>
                                                 <div className={CardDesk_styles["card-footer"]}>

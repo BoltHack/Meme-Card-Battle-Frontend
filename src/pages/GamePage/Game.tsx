@@ -2,6 +2,8 @@ import { useParams, useNavigate, useBlocker } from 'react-router-dom';
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from 'react-helmet-async';
 import { io, Socket } from "socket.io-client";
+// import { ref } from 'vue';
+
 
 const socket: Socket = io(api.API_BASE_URL, {
     autoConnect: false
@@ -20,14 +22,6 @@ import toast from "react-hot-toast";
 
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import usePageRender from "../../tools/PageRender.ts";
-
-// interface PlayerData {
-//     name: string;
-//     id: string;
-//     game_key: string;
-//     my_nickname: string
-//     enemy_nickname: string
-// }
 
 interface PlayerData {
     id: string | number;
@@ -49,13 +43,25 @@ interface GameParams {
 }
 
 interface CardData {
-    card_name: string;
-    card_avatar: string;
-    card_description: string;
-    card_damage: string;
-    card_protection: string;
-    lvl_number: string;
-    lvl_name: string;
+    // card_name: string;
+    // card_avatar: string;
+    // card_description: string;
+    // card_damage: string;
+    // card_protection: string;
+    // lvl_number: string;
+    // lvl_name: string;
+    // _id: string;
+
+    menu_id: string;
+    id: string;
+    name: string;
+    description: string;
+    avatar: string;
+    lvl: number;
+    rarity: string;
+    damage: number;
+    protection: number;
+
     _id: string;
 }
 
@@ -68,27 +74,29 @@ export const GamePage = () => {
 
     const [title, setTitle] = useState("");
 
-    const [bodyLoader, setBodyLoader] = useState(false);
+    const [bodyLoader, setBodyLoader] = useState<boolean | false>(false);
 
     const { game_type, game_key } = useParams<{ type: string }>() as GameParams;
 
     const [playerCard, setPlayerCard] = useState<CardData[]>([]);
     const [list, setList] = useState<CardData[]>([]);
 
-    const [handList, setHandList] = useState([]);
-    const [enemyHandList, setEnemyHandList] = useState([0, 1, 2, 3, 4, 5, 6, 7]);
+    const [handList, setHandList] = useState<CardData[]>([]);
+    const [enemyHandList, setEnemyHandList] = useState<number[]>([0, 1, 2, 3, 4, 5, 6, 7]);
 
     // const [isEnemyCardSelected, setIsEnemyCardSelected] = useState(false);
     const [activePlayerCard, setActivePlayerCard] = useState<string | null>(null);
-    const [activeEnemyCard, setActiveEnemyCard] = useState(false);
+    const [activeEnemyCard, setActiveEnemyCard] = useState<boolean | false>(false);
 
     // const [playersInfo, setPlayersInfo] = useState<PlayerData | null>(null);
     // const [playersInfo, setPlayersInfo] = useState([]);
     const [playersInfo, setPlayersInfo] = useState<any>(null);
 
-    const useCardIdRef = useRef<string | undefined>(undefined);
+    const winnerIdRef = useRef<string | null>(null);
 
-    const [isBlock, setIsBlock] = useState(true);
+    const [isBlock, setIsBlock] = useState<boolean | true>(true);
+
+    const [damageAnimation, setDamageAnimation] = useState<string | null>(null);
 
     const { data, loading, error } = usePageRender<PlayerData>(
         `${api.API_BASE_URL}/api/game/${game_type}/${game_key}`
@@ -111,6 +119,14 @@ export const GamePage = () => {
     const leaveGame = () => {
         setIsBlock(false);
         setTimeout(() => navigate("/"), 500);
+    }
+
+    const setDamageState = (player: string) => {
+        setDamageAnimation(player);
+        setTimeout(() => {
+            setDamageAnimation(null);
+            winnerIdRef.current = null;
+        }, 1000);
     }
 
     useEffect(() => {
@@ -165,7 +181,7 @@ export const GamePage = () => {
             const { cards_data } = data;
             if (!cards_data) return;
 
-            setPlayerCard(prevCards => {
+            setPlayerCard((prevCards: CardData[]) => {
                 if (Array.isArray(cards_data)) {
                     const newUniqueCards = cards_data.filter(
                         newCard => !prevCards.some(pCard => pCard._id === newCard._id)
@@ -232,29 +248,30 @@ export const GamePage = () => {
         });
 
         socket.on("get_player_cards", handlePlayerCards);
-        socket.on("select_battle_card", (data) => {
+        socket.on("select_battle_card", (data: any) => {
             const { card, menu_id } = data;
 
             console.log('menu_id', menu_id);
 
-            if (card.length < 1) return;
+            if (card?.length < 1) return;
 
             const formattedCard = {
-                menu_id: menu_id,
-                id: card._id,
-                name: card.card_name,
-                description: card.card_description || "",
-                avatar: card.card_avatar || "",
-                lvl: card.card_lvl_info?.lvl_number || 1,
-                rarity: card.card_lvl_info?.lvl_name || 'Default',
-                damage: card.card_stats?.card_damage || 0,
-                protection: card.card_stats?.card_protection || 0
+                menu_id: menu_id || "",
+                id: card?._id || "",
+                _id: card?._id || "",
+                name: card?.card_name || "",
+                description: card?.card_description || "",
+                avatar: card?.card_avatar || "",
+                lvl: card?.card_lvl_info?.lvl_number || 1,
+                rarity: card?.card_lvl_info?.lvl_name || 'Default',
+                damage: card?.card_stats?.card_damage || 0,
+                protection: card?.card_stats?.card_protection || 0
             };
 
             console.log('Formatted card to save:', formattedCard);
 
-            setList(prevList => [...prevList, formattedCard]);
-            setHandList(prevHandList => [...prevHandList, formattedCard]);
+            setList(prevState => [...prevState, formattedCard]);
+            setHandList(prevState => [...prevState, formattedCard]);
             setBodyLoader(false);
         });
 
@@ -314,13 +331,20 @@ export const GamePage = () => {
             if (type === "timer") {
                 if (gameData.timer === 0) {
                     console.log('Время вскрываться!');
+                    console.log('winnerIdRef', winnerIdRef.current);
+                    if (id === winnerIdRef.current) {
+                        console.log('дамаг нанес ты', gameData.winnerId);
+                        setDamageState("enemy_damage");
+                    } else {
+                        console.log('дамаг нанес враг', gameData.winnerId);
+                        setDamageState("player_damage");
+                    }
                 }
                 return;
             }
             if (type === "result") {
                 console.log("damage", gameData.damage);
-                if (gameData.winnerId === data.id) {
-                }
+                winnerIdRef.current = gameData.winnerId;
                 return
             }
             if (type === "clear") {
@@ -399,20 +423,26 @@ export const GamePage = () => {
                     <div className={styles["loader"]}></div>
                 </div>
             )}
-            {/*<Game_Tools />*/}
             <Game_Menus
-                playerCard={playerCard} setPlayerCard={setPlayerCard}
+                playerCard={playerCard}
+                // setPlayerCard={setPlayerCard}
                 socket={socket}
-                player_id={data.id} game_key={data.game_key}
-                list={list} setList={setList}
-                handList={handList} setHandList={setHandList}
-                enemyHandList={enemyHandList} setEnemyHandList={setEnemyHandList}
-                activePlayerCard={activePlayerCard} activeEnemyCard={activeEnemyCard} setActivePlayerCard={setActivePlayerCard}
+                player_id={`${data?.id}`}
+                game_key={data?.game_key}
+                list={list}
+                setList={setList}
+                handList={handList}
+                setHandList={setHandList}
+                enemyHandList={enemyHandList}
+                // setEnemyHandList={setEnemyHandList}
+                activePlayerCard={activePlayerCard}
+                activeEnemyCard={activeEnemyCard}
+                setActivePlayerCard={setActivePlayerCard}
                 loading={loading}
                 setBodyLoader={setBodyLoader}
                 playersInfo={playersInfo}
-                isBlock={isBlock} setIsBlock={setIsBlock}
-                useCardIdRef={useCardIdRef}
+                setIsBlock={setIsBlock}
+                damageAnimation={damageAnimation}
             />
         </div>
     );

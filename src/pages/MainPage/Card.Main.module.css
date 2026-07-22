@@ -360,59 +360,43 @@
     box-shadow: none;
 }
 
-.tools-menu {
-    margin-left: auto;
-    margin-top: auto;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    /*margin: auto 10px auto 10px;*/
-    color: white;
+
+.actions-menu {
+    margin: auto 10px 10px auto;
+    z-index: 1000;
 }
-.tools-menu-container {
+.actions-menu-container {
     display: flex;
+    gap: 10px;
     justify-content: center;
     align-items: center;
+    flex-direction: row-reverse;
 }
-.tools-menu-icon {
+.actions-menu-tool {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /*padding: 20px;*/
+}
+.actions-menu-icon {
+    order: 2;
+    display: flex;
+    align-items: center;
+    padding: 5px;
     cursor: pointer;
-    transition-duration: 0.6s;
+    margin-left: auto;
+    border-radius: 5px;
+    transition-duration: 0.3s;
 }
-.tools-menu-icon.tools-menu-open {
-    transition-duration: 0.6s;
-    transform: rotate(180deg);
+.actions-menu-icon.active {
+    background: #2f3136;
 }
-/*.tools-menu-icon svg {*/
-/*    width: 35px;*/
-/*    height: auto;*/
-/*}*/
-.bottom-menu {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 250px;
-    /*height: 100dvh;*/
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    background: #16171d;
-    border: 1px solid #313338;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    /*padding: 0 20px 0 20px;*/
-    padding: 20px;
-    /*box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);*/
-    z-index: 1000;
-    /*transform: translateY(82%);*/
-    transform: translateY(calc(100% - 80px));
-    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+.actions-menu-icon svg {
+    width: 28px;
+    height: auto;
+    color: #a5a5a5;
 }
-
-.bottom-menu.active {
-    transform: translateY(0);
-}
-.bottom-menu.disable {
-    transform: translateY(calc(100% - 80px));
-}
-
-.menu-header {
+.actions-menu-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -420,15 +404,64 @@
     border-bottom: 2px solid #2a2f37;
     padding-bottom: 10px;
 }
-
-.menu-title {
+.actions-menu-title {
+    color: #ffffff;
     font-size: 18px;
     font-weight: bold;
 }
+.actions-menu-top {
+    position: fixed;
+    bottom: 55px;
+    right: 10px;
+    width: 250px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: #16171d;
+    border: 1px solid #313338;
+    /*border-top-left-radius: 10px;*/
+    /*border-bottom-left-radius: 10px;*/
+    /*border-top-right-radius: 10px;*/
+    border-radius: 10px;
+    padding: 20px;
+    opacity: 0;
+    transform: translateY(15px);
+    animation: ActionsMenuOpen 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
 
-.tools-menu-btn {
+.actions-menu-top.closing {
+    animation: ActionsMenuClose 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes ActionsMenuOpen {
+    from {
+        opacity: 0; transform: translateY(15px);
+    }
+    to {
+        opacity: 1; transform: translateY(0);
+    }
+}
+@keyframes ActionsMenuClose {
+    from {
+        opacity: 1; transform: translateY(0);
+    }
+    to {
+        opacity: 0; transform: translateY(15px);
+    }
+}
+
+.actions-menu-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /*height: 50dvh;*/
+}
+.actions-menu-list li {
+    margin-bottom: 15px;
+}
+.actions-menu-btn {
     width: 100%;
-    padding: 8px 0;
+    padding: 8px;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     background: transparent;
@@ -444,38 +477,23 @@
     /*transition: background 0.2s;*/
     text-decoration: none;
 }
-.tools-menu-btn:hover {
+.actions-menu-btn:hover {
     background: rgba(255, 255, 255, 0.05);
 }
-
 .close-btn {
-    font-size: 28px;
-    background: none;
-    border: none;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px;
     cursor: pointer;
     color: #888;
     transition-duration: 0.3s;
 }
-.close-btn.active {
-    transform: rotate(180deg);
+.close-btn:hover {
+    background: #2f3136;
 }
-
-
-.menu-list {
-    display: flex;
-    flex-direction: column;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    height: 50dvh;
-}
-
-.menu-list li {
-    margin-bottom: 15px;
-}
-
-.menu-main-tools {
-    margin-top: auto;
+.actions-menu-other-list {
+    margin-top: 20px;
 }
 
 .menu-wrapper {

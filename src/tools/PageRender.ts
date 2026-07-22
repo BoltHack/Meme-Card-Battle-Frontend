@@ -17,16 +17,17 @@ interface ErrorState {
     message: string;
 }
 
-export default function usePageRender<T>(url: string) {
+export default function usePageRender<T extends Record<string, any>>(url: string) {
     const navigate = useNavigate();
 
     const [data, setData] = useState<T | null>(null);
+    // const [data, setData] = useState<unknown>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ErrorState | null>(null);
 
-    const [trigger, setTrigger] = useState(0);
+    // const [trigger, setTrigger] = useState(0);
 
-    const refetch = () => setTrigger(prev => prev + 1);
+    // const refetch = () => setTrigger(prev => prev + 1);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -67,11 +68,11 @@ export default function usePageRender<T>(url: string) {
         return () => {
             controller.abort();
         }
-    }, [url, navigate, trigger]);
+    }, [url, navigate]);
 
     useEffect(() => {
 
-        if (!data || !data.id) return;
+        if (!data || !data?.id) return;
 
         socket.connect();
 
@@ -103,5 +104,5 @@ export default function usePageRender<T>(url: string) {
         }
     }, [data]);
 
-    return { data, loading, error, socket, refetch };
+    return { data, loading, error, socket };
 }

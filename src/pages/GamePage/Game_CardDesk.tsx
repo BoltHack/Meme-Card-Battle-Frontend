@@ -1,12 +1,49 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 
 import CardDesk_styles from "./Card.Desk_styles.module.css";
 import Menus_styles from "./Card.Menu_styles.module.css";
 
 import api from "../../api/api.ts";
-import toast from "react-hot-toast";
+
+import { ActionData } from "./Game_Menus.tsx"
+
+interface CardData {
+    menu_id: string;
+    id: string;
+    name: string;
+    description: string;
+    avatar: string;
+    lvl: number;
+    rarity: string;
+    damage: number;
+    protection: number;
+
+    _id: string;
+}
+
+interface TitleSettings {
+    useCard: (type: 'open' | 'close' | 'useCard', data?: ActionData | undefined) => void;
+    onToggleMenu: () => void;
+    onActionsMenu: () => void;
+
+    isCardSelectAnimationEnemy: boolean;
+    setIsCardSelectAnimationEnemy: Dispatch<SetStateAction<boolean>>;
+
+    handList: CardData[];
+    enemyHandList: any;
+
+    activePlayerCard: string | null;
+    activeEnemyCard: boolean | false;
+
+    // activeAnimationCardId: string | null;
+
+    setActivePlayerCard: Dispatch<SetStateAction<string | null>>;
+
+    playersInfo: any;
+
+    damageAnimation: string | null;
+}
 
 export const Game_CardDesk = ({
                                   onToggleMenu, onActionsMenu, useCard,
@@ -14,20 +51,21 @@ export const Game_CardDesk = ({
                                   handList,
                                   enemyHandList,
                                   activePlayerCard, activeEnemyCard,
-                                  activeAnimationCardId,
+                                  // activeAnimationCardId,
                                   playersInfo,
-                             }) => {
-    const navigate = useNavigate();
+                                  damageAnimation
+                             }: TitleSettings) => {
+    const [isGameStart,] = useState<boolean | false>(false);
+    const [isFullScreen, setIsFullScreen] = useState<boolean | false>(false);
 
-    const [isGameStart, setIsGameStart] = useState(false);
-    const [isFullScreen, setIsFullScreen] = useState(false);
+    // const [damageAnimation, setDamageAnimation] = useState<string | null>(null);
 
     const testEnemu = () => {
-        setIsCardSelectAnimationEnemy(null);
+        setIsCardSelectAnimationEnemy(false);
     }
 
     useEffect(() => {
-        const handleKeyDown = (e) => {
+        const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'F11') {
                 e.preventDefault();
 
@@ -113,28 +151,14 @@ export const Game_CardDesk = ({
                 <div className={CardDesk_styles["game-board"]}>
 
                     <div className={`${CardDesk_styles["board-row"]} ${CardDesk_styles["top-row"]}`}>
-                        {/*{playersInfo && playersInfo.length > 0 && (*/}
-                        {/*    playersInfo.map((player, index) => (*/}
-                        {/*        <div key={player.id || index} className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["enemy-profile"]}`}>*/}
-                        {/*            <div className={CardDesk_styles["avatar-wrapper"]}>*/}
-                        {/*                <div className={CardDesk_styles["avatar-image"]}>😈</div>*/}
-                        {/*                <div className={CardDesk_styles["player-level"]}>Lv.{player.enemyInfo.lvl}</div>*/}
-                        {/*            </div>*/}
-                        {/*            <div className={CardDesk_styles["player-status"]}>*/}
-                        {/*                <div className={CardDesk_styles["player-name"]}>{player.enemyInfo.name}</div>*/}
-                        {/*                <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}*/}
-                        {/*                       min="0" max="100" value={player.enemyInfo.health}*/}
-                        {/*                ></meter>*/}
-                        {/*                <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`}*/}
-                        {/*                       min="0" max="100" value={player.enemyInfo.ult}*/}
-                        {/*                ></meter>*/}
-                        {/*            </div>*/}
-                        {/*        </div>*/}
-                        {/*    ))*/}
-                        {/*)}*/}
 
                         {playersInfo && playersInfo.enemyInfo && (
-                            <div className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["enemy-profile"]}`}>
+                            <div className={`
+                            ${CardDesk_styles["player-profile"]}
+                            ${CardDesk_styles["enemy-profile"]}
+                            ${damageAnimation === "enemy_damage" ? CardDesk_styles["damage-received"] : null}
+                            `}
+                            >
                                 <div className={CardDesk_styles["avatar-wrapper"]}>
                                     <div className={CardDesk_styles["avatar-image"]}>😈</div>
                                     <div className={CardDesk_styles["player-level"]}>Lv.{playersInfo.enemyInfo.lvl}</div>
@@ -154,7 +178,7 @@ export const Game_CardDesk = ({
                         <div className={`${Menus_styles["hand-container"]} ${CardDesk_styles["enemy-hand"]}`}>
                             <AnimatePresence>
                                 {enemyHandList && enemyHandList.length > 0 ? (
-                                    enemyHandList.map((item, index) => {
+                                    enemyHandList.map((item: number, index: number) => {
 
                                         return (
                                             <motion.div
@@ -186,7 +210,7 @@ export const Game_CardDesk = ({
 
                         <div className={CardDesk_styles["arena-center"]}>
 
-                            {isCardSelectAnimationEnemy === "desk-enemyCard" && (
+                            {isCardSelectAnimationEnemy && (
                                 <motion.div
                                     layoutId="shared-EnemyCard">
                                     <div className={`${CardDesk_styles["game-card"]} ${CardDesk_styles["legendary"]}`} onClick={testEnemu}>
@@ -229,7 +253,8 @@ export const Game_CardDesk = ({
 
                                             return (
                                                 <div className={`${CardDesk_styles["strike-slot"]} ${CardDesk_styles["enemy-strike-slot"]}`}>
-                                                    <div className={CardDesk_styles["blind-card"]} onClick={() => setIsCardSelectAnimationEnemy('desk-enemyCard')}></div>
+                                                    {/*<div className={CardDesk_styles["blind-card"]} onClick={() => setIsCardSelectAnimationEnemy('desk-enemyCard')}></div>*/}
+                                                    <div className={CardDesk_styles["blind-card"]} onClick={() => setIsCardSelectAnimationEnemy(true)}></div>
                                                 </div>
                                             );
 
@@ -273,8 +298,8 @@ export const Game_CardDesk = ({
                         <div className={`${Menus_styles["hand-container"]} ${CardDesk_styles["player-hand"]}`}>
 
                             <AnimatePresence>
-                                {handList && handList.length > 0 ? (
-                                    handList.map((card, index) => {
+                                {handList && handList?.length > 0 ? (
+                                    handList.map((card,) => {
 
                                         const cardId = card.menu_id;
                                         // const isThisCardAnimating = activePlayerCard === cardId;
@@ -289,7 +314,8 @@ export const Game_CardDesk = ({
                                             >
                                                 <div id={cardId} className={`${CardDesk_styles["hand-card"]} ${CardDesk_styles[`${card.rarity?.toLowerCase()}`]}`}
                                                      onClick={() => {
-                                                         if (activeAnimationCardId || activePlayerCard !== null) return;
+                                                         // if (activeAnimationCardId || activePlayerCard !== null) return;
+                                                         if (activePlayerCard !== null) return;
                                                          useCard('open', {
                                                              cardInfo: {
                                                                  id: cardId,
@@ -301,7 +327,7 @@ export const Game_CardDesk = ({
                                                                  damage: card?.damage,
                                                                  protection: card?.protection,
                                                              }
-                                                         });
+                                                         } as ActionData);
                                                      }}
                                                 >
                                                     <div className={CardDesk_styles["h-cost"]}>{card?.lvl}</div>
@@ -348,7 +374,11 @@ export const Game_CardDesk = ({
 
                         {playersInfo && playersInfo.playerInfo && (
                             <div
-                                 className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["user-profile"]}`} style={ !isGameStart ? {cursor: 'pointer'} : {}}
+                                 className={`
+                                 ${CardDesk_styles["player-profile"]}
+                                 ${CardDesk_styles["user-profile"]}
+                                 ${damageAnimation === "player_damage" ? CardDesk_styles["damage-received"] : null}
+                                 `} style={ !isGameStart ? {cursor: 'pointer'} : {}}
                                  onClick={onToggleMenu}
                             >
                                 <div className={CardDesk_styles["player-status"]}>

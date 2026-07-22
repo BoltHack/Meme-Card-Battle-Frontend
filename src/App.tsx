@@ -18,10 +18,11 @@ import { PrivacyPolicy } from "./pages/RulePages/PrivacyPolicy.tsx";
 
 import { BlogPage } from "./pages/BlogPage/Blog.tsx";
 import { BlogReadPage } from "./pages/BlogReadPage/BlogRead.tsx";
-import { BlogCategoryPage } from "./pages/BlogCategoryPage/BlogCategory.tsx";
+import { BlogCategoryPage } from "./pages/BlogPage/BlogCategory.tsx";
 
+import { AdminPanelPage } from "./pages/AdminPages/AdminPanel/AdminPanel.tsx";
 import { CreateCardPage } from "./pages/AdminPages/CreateCard/CreateCardPage.tsx";
-import { CreateBlogPage } from "./pages/AdminPages/CreateBlog/CreateBlogPage.tsx";
+// import { CreateBlogPage } from "./pages/AdminPages/CreateBlog/CreateBlogPage.tsx";
 import { EditBlogPage } from "./pages/AdminPages/EditBlog/EditBlogPage.tsx";
 
 import { ErrorPage } from "./pages/ErrorPage/Error.tsx";
@@ -76,13 +77,17 @@ const router = createBrowserRouter([
         element: <SignInPage title="MCB | Аккаунт" />
     },
     {
+        path: "/admin/panel",
+        element: <AdminPanelPage title="Админ панель" />
+    },
+    {
         path: "/admin/create/card",
         element: <CreateCardPage title="Админка | Редактор" />
     },
-    {
-        path: "/admin/create/blog",
-        element: <CreateBlogPage title="Админка | Редактор блога" />
-    },
+    // {
+    //     path: "/admin/create/blog",
+    //     element: <CreateBlogPage />
+    // },
     {
         path: "/admin/edit/blog/:blog_id",
         element: <EditBlogPage title="Админка | edit блога" />

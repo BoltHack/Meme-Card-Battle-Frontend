@@ -1,13 +1,8 @@
+import { Link } from "react-router-dom";
+
 import styles from "../stylesheets/Card.HeaderFooter.module.css";
-import {Link} from "react-router-dom";
-import {useState} from "react";
 
 export const Header = () => {
-    const [isOpen, setIsOpen] = useState(null);
-
-    const handleMenuOpen = (menuId) => {
-        setIsOpen(menuId);
-    }
 
     return (
         <>
@@ -48,6 +43,7 @@ export const Header = () => {
                                 </Link>
 
                                 <ul className={styles["dropdown-menu"]}>
+                                    {/*<li><Link to="/category/community" reloadDocument>Сообщество</Link></li>*/}
                                     <li><Link to="/category/community">Сообщество</Link></li>
                                     <li><Link to="/category/development">Разработка</Link></li>
                                     <li><Link to="/category/functions">Функции</Link></li>

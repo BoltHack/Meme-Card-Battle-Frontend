@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { Helmet } from "react-helmet-async";
+// import { Helmet } from "react-helmet-async";
 
 import styles from './Card.CreateBlog.module.css';
 
@@ -11,20 +11,13 @@ import api from "../../../api/api.ts";
 
 import usePageRender from "../../../tools/PageRender.ts";
 import { ErrorPage } from "../../ErrorPage/Error.tsx";
-import { LoadingPage } from "../../LoadingPage/Loading.tsx";
-
-import { Header } from "../../../tools/PageTools/header_footer/Header.tsx";
-import { Footer } from "../../../tools/PageTools/header_footer/Footer.tsx";
+import { DefaultLoading } from "../../LoadingPage/DefaultLoading.tsx";
 
 interface PlayerData {
     name: string;
 }
 
-interface titleSettings {
-    title: string
-}
-
-export const CreateBlogPage = ({ title }: titleSettings) => {
+export const CreateBlogPage = () => {
 
     const [formData, setFormData] = useState({
         post_title: "",
@@ -105,22 +98,16 @@ export const CreateBlogPage = ({ title }: titleSettings) => {
         }
     }
 
-    if (loading) return <LoadingPage />
+    if (loading) return <DefaultLoading />
     if (error) return <ErrorPage error={error} />
 
     return (
-        <div className={styles["body-wrapper"]}>
-            <Helmet>
-                <title>{title}</title>
-            </Helmet>
+        <div className={styles["editor-container"]}>
+            <h1 className={styles["editor-title"]}>Создание новой публикации</h1>
 
-            <Header />
+            <form className={styles["editor-form"]} onSubmit={handleSubmit}>
 
-            <div className={styles["editor-container"]}>
-                <h1 className={styles["editor-title"]}>Создание новой публикации</h1>
-
-                <form className={styles["editor-form"]} onSubmit={handleSubmit}>
-
+                <div className={styles["editor-left-side"]}>
                     <div className={styles["form-group"]}>
                         <label className={styles["form-label"]} htmlFor="post_title">Название статьи</label>
                         <input
@@ -170,28 +157,42 @@ export const CreateBlogPage = ({ title }: titleSettings) => {
                                 ): <span>Перетащите изображение сюда или <strong>выберите файл</strong></span>}
                             </div>
                         </label>
+                        {file !== null && (
+                            <a className={styles["delete-file-btn"]} onClick={() => setFile(null)}>Нажмите, чтобы удалить файл</a>
+                        )}
                     </div>
+                </div>
 
-                    <div className={styles["form-group"]}>
-                        <label className={styles["form-label"]} htmlFor="post-content">Текст статьи</label>
+                <div className={styles["editor-right-side"]}>
+                    <div
+                        onInput={handleInput}
+                        className={styles["form-editor"]}
+                        contentEditable="true"
+                        spellCheck="false"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        translate="no"
+                    ></div>
+                    <button type="submit" className={styles["submit-btn"]}>Опубликовать статью</button>
+                </div>
 
-                        <div
-                            onInput={handleInput}
-                            className={styles["form-editor"]}
-                            contentEditable="true"
-                            spellCheck="false"
-                            autoCorrect="off"
-                            autoCapitalize="off"
-                            // writingsuggestions="false"
-                            translate="no"
-                        ></div>
-                    </div>
+                {/*<div className={styles["form-group"]}>*/}
+                {/*    <label className={styles["form-label"]} htmlFor="post-content">Текст статьи</label>*/}
 
-                    <button className={styles["submit-btn"]} type="submit">Опубликовать статью</button>
-                </form>
-            </div>
+                {/*    <div*/}
+                {/*        onInput={handleInput}*/}
+                {/*        className={styles["form-editor"]}*/}
+                {/*        contentEditable="true"*/}
+                {/*        spellCheck="false"*/}
+                {/*        autoCorrect="off"*/}
+                {/*        autoCapitalize="off"*/}
+                {/*        // writingsuggestions="false"*/}
+                {/*        translate="no"*/}
+                {/*    ></div>*/}
+                {/*</div>*/}
 
-            <Footer />
+                {/*<button className={styles["submit-btn"]} type="submit">Опубликовать статью</button>*/}
+            </form>
         </div>
     );
 };

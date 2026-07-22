@@ -155,8 +155,9 @@
 }
 
 .grid-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(255, 0, 127, 0.15);
+    /*transform: translateY(-8px);*/
+    /*box-shadow: 0 15px 30px rgba(255, 0, 127, 0.15);*/
+    box-shadow: 0 15px 30px rgba(255, 0, 127, 0.5);
 }
 
 .card-image {

@@ -35,7 +35,7 @@ export const MainPage = ({ title }: TitleSettings) => {
     const [isClosing, setIsClosing] = useState(false);
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     // const timeoutRef = useRef<number | null>(null);
-    const [isToolsOpen, setIsToolsOpen] = useState(false);
+    const [isActionOpen, setIsActionOpen] = useState<string | null>("");
 
     const [isGameFound, setIsGameFound] = useState(false);
     const [seconds, setSeconds] = useState(0);
@@ -62,8 +62,12 @@ export const MainPage = ({ title }: TitleSettings) => {
         }, 200);
     }
 
-    const toggleToolsMenu = () => {
-        setIsToolsOpen(!isToolsOpen);
+    const toggleActionsMenu = (type: string) => {
+        if (isActionOpen !== null && isActionOpen === type) {
+            setIsActionOpen("");
+        } else {
+            setIsActionOpen(type);
+        }
     }
 
     const gameFoundTimerReset = useCallback(() => {
@@ -368,79 +372,121 @@ export const MainPage = ({ title }: TitleSettings) => {
 
             </div>
 
-            <div className={styles["tools-menu"]}>
-                <div className={styles["tools-menu-container"]}>
-                    <div className={styles["tools-menu-content"]}>
-                        <div className={`${styles["bottom-menu"]} ${isToolsOpen ? styles["active"] : '' }`}>
-                            <div className={styles["menu-header"]} onClick={toggleToolsMenu}>
-                                <span className={styles["menu-title"]}>Навигация</span>
-                                {/*<button className={styles["close-btn"]} onClick={toggleToolsMenu}>&times;</button>*/}
-                                <div className={`${styles["close-btn"]} ${isToolsOpen ? styles["active"] : '' }`}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-circle-chevron-up-icon lucide-circle-chevron-up"><circle cx="12" cy="12" r="10"/>
-                                        <path d="m8 14 4-4 4 4"/>
-                                    </svg>
-                                </div>
-                            </div>
-                            <ul className={styles["menu-list"]}>
-                                <li>
-                                    <Link to="/privacy-policy" className={styles["tools-menu-btn"]} onClick={() => navigate("/")}>
-                                        <span>
-                                            Политика конфиденциальности
-                                        </span>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/terms-of-use" className={styles["tools-menu-btn"]}>
-                                        <span>
-                                            Условия использования
-                                        </span>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/help-center" className={styles["tools-menu-btn"]}>
-                                        <span>
-                                            Справочный центр
-                                        </span>
-                                    </Link>
-                                </li>
+            <div className={styles["actions-menu"]}>
+                <div className={styles["actions-menu-container"]}>
 
-                                <div className={styles["menu-main-tools"]}>
-                                    {data?.role === "Admin" && (
-                                        <div>
-                                            <li>
-                                                <div className={styles["tools-menu-btn"]} onClick={() => navigate("/admin/create/card")}>
-                                                    <span>Админка</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className={styles["tools-menu-btn"]} onClick={() => getRandomCards()}>
-                                                    <span>Получить случайную карту</span>
-                                                </div>
-                                            </li>
-                                        </div>
-                                    )}
+                    <div className={styles["actions-menu-tool"]}>
 
-                                    {!isAuth ? (
-                                        <li>
-                                            <div className={styles["tools-menu-btn"]} onClick={() => navigate("/auth/sign-in")}>
-                                                <span>
-                                                    Войти в аккаунт
-                                                </span>
-                                            </div>
-                                        </li>
-                                    ) : (
-                                        <li>
-                                            <div className={styles["tools-menu-btn"]} onClick={logout}>
-                                                <span>
-                                                    Выйти
-                                                </span>
-                                            </div>
-                                        </li>
-                                    )}
-                                </div>
-                            </ul>
+                        <div className={`${styles["actions-menu-icon"]} ${isActionOpen === "navigation" ? styles["active"] : null }`}
+                             onClick={() => toggleActionsMenu("navigation")}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-text-align-justify-icon lucide-text-align-justify">
+                                <path d="M3 5h18"/><path d="M3 12h18"/><path d="M3 19h18"/>
+                            </svg>
                         </div>
+
+                        {(isActionOpen === "navigation") && (
+                            <div className={`${styles["actions-menu-top"]} ${!isActionOpen === null ? styles["closing"] : null}`}>
+                                <div className={styles["actions-menu-header"]}>
+                                    <span className={styles["actions-menu-title"]}>Навигация</span>
+                                    <div className={styles["close-btn"]} onClick={() => setIsActionOpen(null)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-icon lucide-x">
+                                            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <ul className={styles["actions-menu-list"]}>
+                                    <li>
+                                        <Link to="/privacy-policy" className={styles["actions-menu-btn"]} onClick={() => navigate("/")}>
+                                            <span>Политика конфиденциальности</span>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/terms-of-use" className={styles["actions-menu-btn"]}>
+                                            <span>Условия использования</span>
+                                        </Link>
+                                    </li>
+
+                                    <div className={styles["actions-menu-other-list"]}>
+                                        {data?.role === "Admin" && (
+                                            <>
+                                                <li>
+                                                    <div className={styles["actions-menu-btn"]} onClick={() => navigate("/admin/panel")}>
+                                                        <span>Админка</span>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div className={styles["actions-menu-btn"]} onClick={() => getRandomCards()}>
+                                                        <span>Получить случайную карту</span>
+                                                    </div>
+                                                </li>
+                                            </>
+                                        )}
+
+                                        {!isAuth ? (
+                                            <li>
+                                                <div className={styles["actions-menu-btn"]} onClick={() => navigate("/auth/sign-in")}>
+                                                    <span>Войти в аккаунт</span>
+                                                </div>
+                                            </li>
+                                        ) : (
+                                            <li>
+                                                <div className={styles["actions-menu-btn"]} onClick={logout}>
+                                                    <span>Выйти</span>
+                                                </div>
+                                            </li>
+                                        )}
+                                    </div>
+                                </ul>
+                            </div>
+                        )}
+
                     </div>
+
+                    <div className={styles["actions-menu-tool"]}>
+
+                        <div className={`${styles["actions-menu-icon"]} ${isActionOpen === "test" ? styles["active"] : null }`}
+                             onClick={() => toggleActionsMenu("test")}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-menu-icon lucide-square-menu">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10"/><path d="M7 12h10"/><path d="M7 16h10"/>
+                            </svg>
+                        </div>
+
+                        {(isActionOpen === "test") && (
+                            <div className={`${styles["actions-menu-top"]} ${!isActionOpen === null ? styles["closing"] : null}`}>
+                                <div className={styles["actions-menu-header"]}>
+                                    <span className={styles["actions-menu-title"]}>Другое</span>
+                                    <div className={styles["close-btn"]} onClick={() => setIsActionOpen(null)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-icon lucide-x">
+                                            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <ul className={styles["actions-menu-list"]}>
+                                    <li>
+                                        <Link to="/help-center" className={styles["actions-menu-btn"]} onClick={() => navigate("/")}>
+                                            <span>Справочный центр</span>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/support" className={styles["actions-menu-btn"]}>
+                                            <span>Поддержка</span>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/blog" className={styles["actions-menu-btn"]}>
+                                            <span>Блог</span>
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+
+                    </div>
+
                 </div>
             </div>
 

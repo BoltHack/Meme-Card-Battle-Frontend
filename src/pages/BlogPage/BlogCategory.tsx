@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {Link, useParams} from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
 
-import styles from '../BlogPage/Card.Blog.module.css';
+import styles from './Card.Blog.module.css';
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
@@ -137,7 +137,7 @@ export const BlogCategoryPage = ({ title }: BlogPageProps) => {
                                     <div className={styles["card-body"]}>
                                         <span className={styles["category"]}>{blog_category}</span>
                                         <h3>{bd.title}</h3>
-                                        <p>{bd.description}</p>
+                                        <p>{bd.description.length > 120 ? bd.description.slice(0, 120) + "..." : bd.description}</p>
                                         <div className={styles["card-footer"]}>
                                             <span className={styles["date"]}>{dateSettings(bd.date)}</span>
                                             <Link to={`/blog/${bd.id}`} className={`${styles["read-more-btn"]} ${styles["small"]}`}>Читать статью</Link>
