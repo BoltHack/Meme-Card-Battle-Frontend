@@ -411,7 +411,10 @@ export const GamePage = () => {
     })();
 
     if (loading) return <LoadingPage />
-    if (error) return <ErrorPage error={error} />
+    if (error) {
+        setIsBlock(false);
+        return <ErrorPage error={error} />
+    }
 
     return (
         <div className={styles['body-wrapper']}>
