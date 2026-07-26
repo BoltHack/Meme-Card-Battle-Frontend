@@ -47,7 +47,8 @@ interface TitleSettings {
 
 export const Game_CardDesk = ({
                                   onToggleMenu, onActionsMenu, useCard,
-                                  isCardSelectAnimationEnemy, setIsCardSelectAnimationEnemy,
+                                  // isCardSelectAnimationEnemy,
+                                  setIsCardSelectAnimationEnemy,
                                   handList,
                                   enemyHandList,
                                   activePlayerCard, activeEnemyCard,
@@ -210,7 +211,7 @@ export const Game_CardDesk = ({
 
                         <div className={CardDesk_styles["arena-center"]}>
 
-                            {isCardSelectAnimationEnemy && (
+                            {/*{isCardSelectAnimationEnemy && (*/}
                                 <motion.div
                                     layoutId="shared-EnemyCard">
                                     <div className={`${CardDesk_styles["game-card"]} ${CardDesk_styles["legendary"]}`} onClick={testEnemu}>
@@ -240,7 +241,7 @@ export const Game_CardDesk = ({
                                         </div>
                                     </div>
                                 </motion.div>
-                            )}
+                            {/*)}*/}
                         </div>
 
                         <div className={CardDesk_styles["blind-strike-zone"]}>

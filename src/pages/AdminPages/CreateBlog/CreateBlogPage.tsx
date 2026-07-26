@@ -35,10 +35,57 @@ export const CreateBlogPage = () => {
 
     let cleanHTMLText = (rawHTML: string) => {
         return rawHTML
-            .replace(/<div>(?:\s|<br>|&nbsp;)*<\/div>/gi, '')
-            .replace(/<span[^>]*>(.*?)<\/span>/gi, '$1')
-            .replace(/<br\s*\/?>/gi, '\n');
+            // .replace(/<div>(?:\s|<br>|&nbsp;)*<\/div>/gi, '')
+            // .replace(/<span[^>]*>(.*?)<\/span>/gi, '$1')
+            // .replace(/<br\s*\/?>/gi, '\n');
+
+            // .replace(/<div>(?:\s|<br>|&nbsp;)*<\/div>/gi, '')
+            // .replace(/<div>(.*?)<\/div>/gi, '$1\n')
+            // .replace(/<span[^>]*>(.*?)<\/span>/gi, '$1')
+            // .replace(/<br\s*\/?>/gi, '\n')
+            // .replace(/&nbsp;/gi, ' ');
+
+            .replace(/<\/p>|<\/div>/gi, '\n')
+            .replace(/<br\s*\/?>/gi, '\n')
+            .replace(/<\/?[^>]+(>|$)/g, "")
+            .replace(/&nbsp;/gi, ' ')
+            .trim();
+
+            // .replace(/<p>\s*<\/p>/gi, '')
+            // .replace(/<\/p>|<\/div>/gi, '\n')
+            // .replace(/<br\s*\/?>/gi, '\n')
+            // .replace(/<\/?[^>]+(>|$)/g, "")
+            // .replace(/&nbsp;/gi, ' ')
+            // .replace(/\n{3,}/g, '\n\n')
+            // .trim();
+
+            // .replace(/<(p|div|blockquote)[^>]*>(?:\s|<br[^>]*>|&nbsp;)*<\/\1>/gi, '\n')
+            // .replace(/<\/p>|<\/div>|<\/blockquote>|<\/h[1-6]>/gi, '\n')
+            // .replace(/<br\s*\/?>/gi, '\n')
+            // .replace(/<\/?[^>]+(>|$)/g, "")
+            // .replace(/&nbsp;/gi, ' ')
+            // // .replace(/\n{3,}/g, '\n\n')
+            // .trim();
     }
+
+    // const cleanTextBeforeSend = (text) => {
+    //     if (!text) return "";
+    //     return text
+    //         .replace(/\r\n/g, '\n')
+    //         .replace(/\n{3,}/g, '\n\n')
+    //         .trim();
+    // };
+
+    // let cleanHTMLText = (rawHTML: string) => {
+    //     if (!rawHTML) return "";
+    //
+    //     const parser = new DOMParser();
+    //     const doc = parser.parseFromString(rawHTML, 'text/html');
+    //
+    //     let text = doc.body.textContent || "";
+    //
+    //     return text.replace(/&nbsp;/gi, ' ').trim();
+    // }
 
     const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
         const rawContent = e.currentTarget.innerHTML;
@@ -59,6 +106,11 @@ export const CreateBlogPage = () => {
             setFile(event.target.files[0]);
         }
     };
+
+    // useEffect(() => {
+    //     document.execCommand('defaultParagraphSeparator', false, 'br');
+    // }, []);
+
 
     const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -172,13 +224,20 @@ export const CreateBlogPage = () => {
 
                     <div className={styles["editor-right-side"]}>
                         <div
+                            // children={editorText}
                             onInput={handleInput}
-                            className={styles["form-editor"]}
-                            contentEditable="true"
-                            spellCheck="false"
+                            onPaste={(e) => {
+                                e.preventDefault();
+                                const text = e.clipboardData.getData('text/plain');
+                                document.execCommand('insertText', false, text);
+                            }}
+                            className={styles['form-editor']}
+                            contentEditable={true}
+                            spellCheck={false}
                             autoCorrect="off"
                             autoCapitalize="off"
                             translate="no"
+                            suppressContentEditableWarning={true}
                         ></div>
                         <button type="submit" className={styles["submit-btn"]}>Опубликовать статью</button>
                     </div>

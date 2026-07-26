@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
+import { Config } from 'dompurify';
+import { marked, Tokens, TokenizerThis, RendererThis } from 'marked';
+import { sanitize } from "isomorphic-dompurify";
 
 import styles from './Card.BlogRead.module.css';
 
@@ -16,14 +19,20 @@ import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
 import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 
+interface BlogAuthor {
+    id: string;
+    name: string;
+}
+
 interface BlogPost {
-    // author: BlogAuthor;
+    author: BlogAuthor;
     // main_content: BlogMainContent;
     // category: string;
     // content: string;
     // date: string;
     // id: string;
-    author: string;
+    // id: string;
+    // name: string;
     title: string;
     description: string;
     cover: string;
@@ -60,6 +69,137 @@ export const BlogReadPage = () => {
         });
     }
 
+    const multiBoxExtension = {
+        name: "multiBox",
+        level: "block" as const,
+
+        // start(src: string) {
+        start(src: string) {
+            // return src.match(/[\$%@#]/)?.index;
+            // return src.match(/^[\$%@#]/m)?.index;
+            return src.match(/^[\$%@#[]/m)?.index;
+            // return src.match(/[\$%@]/)?.index;
+        },
+
+        // tokenizer(src: string) {
+        tokenizer(this: TokenizerThis, src: string) {
+            // const rule = /^([\$%@#])([^\$%@#\n]+)\1/;
+            // const rule = /^([\$%@#])([^\$%@#\n]+)\1(?:\n|$)/;
+            const rule = /^((?:\{1\}|\{2\}|\{3\}|[\$%@#]))([^\$%@#\n]+)\1(?:\n|$)/;
+            const match = rule.exec(src);
+
+            if (match) {
+
+                const marker = match[1];
+                const text = match[2].trim();
+
+                let boxType = 'default';
+
+                switch (marker) {
+                    case '{1}':
+                        boxType = 'heading1';
+                        break;
+                    case '{2}':
+                        boxType = 'heading2';
+                        break;
+                    case '$':
+                        boxType = 'blockquote';
+                        break;
+                    case '%':
+                        boxType = 'span';
+                        break;
+                }
+
+                // if (!marker) boxType = 'default';
+                // if (marker === '#') boxType = 'heading2';
+                // if (marker === '{1}') boxType = 'heading1';
+                // if (marker === '$') boxType = 'blockquote';
+                // if (marker === '%') boxType = 'span';
+
+                return {
+                    type: 'multiBox',
+                    raw: match[0],
+                    text: text,
+                    boxType: boxType,
+                    tokens: this.lexer.inlineTokens(text)
+                }
+            }
+        },
+        // renderer(token: any) {
+        //     if (token.boxType === "heading1") {
+        //         return `<h1>${token.text}</h1>`;
+        //     }
+        //     if (token.boxType === "heading2") {
+        //         return `<h2>${token.text}</h2>`;
+        //     }
+        //     if (token.boxType === "blockquote") {
+        //         return `<blockquote>${token.text}</blockquote>`;
+        //     }
+        //     if (token.boxType === "span") {
+        //         return `<span>${token.text}</span>`;
+        //     }
+        //     return "";
+        // }
+        renderer(this: RendererThis, token: any): string {
+            const content = this.parser.parseInline(token.tokens);
+
+            switch (token.boxType) {
+                case "heading1":
+                    return `<h1>${content}</h1>`;
+                case "heading2":
+                    return `<h2>${content}</h2>`;
+                case "blockquote":
+                    return `<blockquote>${content}</blockquote>`;
+                case "span":
+                    return `<span>${content}</span>`;
+                default:
+                    return `<div>${content}</div>`;
+            }
+        }
+    }
+
+    const sanitizeConfig: Config = {
+        ALLOWED_ATTR: ['class', 'src', 'alt', 'title', 'href', 'id', 'start', 'loading', 'onclick', 'target', 'rel']
+    };
+
+    const customRenderer = {
+        // text(token: any): string {
+        //     // const rawText = token.text || '';
+        //     const { text } = token;
+        //
+        //     const sendText = text.length > 2 ? `<p>${text}</p>` : "";
+        //
+        //     return sendText;
+        // },
+
+        link(token: Tokens.Link) {
+            const { href, title, text } = token;
+            const isExternal = href.startsWith("http") || href.startsWith("https");
+
+            const targetAttr = isExternal ? 'target="_blank"' : "";
+            const titleAttr = title ? `title="${title}"` : "";
+
+            return `<a href="${href}" ${targetAttr} ${titleAttr} rel="noopener noreferrer" class="blog-link">${text}</a>`;
+        }
+    }
+
+    // marked.use({ renderer: customRenderer });
+    // marked.use({ extensions: [multiBoxExtension] });
+    marked.use({
+        renderer: customRenderer,
+        extensions: [multiBoxExtension]
+    });
+
+    // let cleanHTMLText = (rawHTML: string) => {
+    //     return rawHTML
+    //         .replace(/<(p|div|blockquote)[^>]*>(?:\s|<br[^>]*>|&nbsp;)*<\/\1>/gi, '\n')
+    //         .replace(/<\/p>|<\/div>|<\/blockquote>|<\/h[1-6]>/gi, '\n')
+    //         .replace(/<br\s*\/?>/gi, '\n')
+    //         .replace(/<\/?[^>]+(>|$)/g, "")
+    //         .replace(/&nbsp;/gi, ' ')
+    //         .trim();
+    // }
+
     useEffect(() => {
         if (!data) {
             console.log('Данные еще не загрузились или структура не совпадает:', data);
@@ -73,16 +213,30 @@ export const BlogReadPage = () => {
         setTitle(title);
 
         const formattedBlogs= {
-            author: blog.author || "Аноним",
+            author: {
+                id: blog?.author?.id,
+                name: blog?.author?.name
+            },
             title: blog?.title || "",
             description: blog?.description || "",
             cover: blog?.cover || "",
             category: blog.category || "community",
-            content: blog.content.replace(/\n/g, '<br/>') || "",
+            // content: blog.content.replace(/\n/g, ' \n ') || "",
+            // content: blog.content.replace(/\r?\n/g, ' <br/> ') || "",
+            // content: blog.content.replace(/\r\n|\n|\r/g, '\n') || "",
+            // content: blog.content.replace(/\r\n|\n|\r/g, '\n') || "",
+            content: (blog.content || "").replace(/\r\n|\n|\r/g, '\n'),
+            // content: (blog.content || "").replace(/<p>\s*<\/p>/gi, ''),
+
+            // content: blog.content || "",
             date: blog.date || "",
         }
 
+        console.log('formattedBlogs', formattedBlogs);
+
         setBlog(formattedBlogs);
+
+        console.log('blog', blog);
     }, [data]);
 
     if (loading) return <LoadingPage />;
@@ -109,9 +263,10 @@ export const BlogReadPage = () => {
 
                             <div className={styles["post-page-meta"]}>
                                 <div className={styles["author-info"]}>
-                                    <div className={styles["avatar"]}></div>
+                                    {/*<div className={styles["avatar"]}></div>*/}
+                                    <img src={`${api.API_BASE_URL}/uploads/UserCovers/${blog?.author?.id}/UserProfile.jpg`} className={styles["avatar"]} />
                                     <div>
-                                        <div className={styles["name"]}>{blog.author}</div>
+                                        <div className={styles["name"]}>{blog?.author?.name}</div>
                                         <div className={styles["role"]}>Frontend Architect</div>
                                     </div>
                                 </div>
@@ -121,13 +276,15 @@ export const BlogReadPage = () => {
 
                         <div className={styles["post-page-image"]}>
                             {blog.cover ? (
-                                <img src={`${api.API_BASE_URL}/${blog.cover}`} className={styles["img-placeholder"]} />
+                                <img src={`${api.API_BASE_URL}/${blog.cover}`} loading="lazy" className={styles["img-placeholder"]} />
                             ) : <div className={styles["img-placeholder"]}></div> }
                         </div>
 
                         <div className={styles["post-page-body"]}>
                             <p className={styles["lead"]}>{blog.description}</p>
-                            <div dangerouslySetInnerHTML={{ __html: blog.content }}></div>
+                            <div dangerouslySetInnerHTML={{
+                                __html: sanitize(marked.parse(blog?.content ?? "") as string, sanitizeConfig)
+                            }}></div>
                         </div>
 
                     </article>

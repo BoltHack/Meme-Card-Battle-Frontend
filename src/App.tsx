@@ -7,6 +7,8 @@ import { MainPage } from './pages/MainPage/Main';
 
 import { HelpCenterPage } from "./pages/HelpCenterPage/HelpCenter.tsx";
 
+import { MyCardsPage } from "./pages/MyCardsPage/MyCards.tsx";
+
 import { BotSettingsPage } from "./pages/BotSettingsPage/BotSettings.tsx";
 
 import { GameSettingsPage } from "./pages/GameSettingsPage/GameSettings.tsx";
@@ -35,6 +37,10 @@ const router = createBrowserRouter([
     {
         path: "/help-center",
         element: <HelpCenterPage title="MCB | Справочный центр" />
+    },
+    {
+        path: "/my-cards",
+        element: <MyCardsPage title="MCB | Мои карты" />
     },
     {
         path: "/how-to-play",
@@ -82,7 +88,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/admin/create/card",
-        element: <CreateCardPage title="Админка | Редактор" />
+        element: <CreateCardPage />
     },
     // {
     //     path: "/admin/create/blog",

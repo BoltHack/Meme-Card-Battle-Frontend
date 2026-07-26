@@ -66,8 +66,6 @@ interface TitleSettings {
     setIsBlock: Dispatch<SetStateAction<boolean>>;
 
     damageAnimation: string | null;
-
-    // useCardIdRef: string | null;
 }
 
 export const Game_Menus = ({
@@ -84,7 +82,6 @@ export const Game_Menus = ({
                                playersInfo,
                                setIsBlock,
                                damageAnimation
-                               // useCardIdRef,
                            }: TitleSettings) => {
     const navigate = useNavigate();
 
@@ -150,7 +147,8 @@ export const Game_Menus = ({
             game_key: game_key,
             player_id: player_id,
             card_id: card_id,
-            menu_id: menu_id
+            menu_id: menu_id,
+            enemy_id: playersInfo?.enemyInfo.id,
         });
     }
 
@@ -162,7 +160,7 @@ export const Game_Menus = ({
         setList(removeId);
         setHandList(removeId);
         socket.emit("remove_battle_card", {
-            game_key: game_key, player_id: player_id, remove_id: idToRemove
+            game_key: game_key, player_id: player_id, remove_id: idToRemove, enemy_id: playersInfo?.enemyInfo.id,
         });
     }
 
@@ -202,7 +200,7 @@ export const Game_Menus = ({
                 game_key: game_key,
                 player_id: player_id,
                 // enemy_name: playersInfo[0].enemyInfo.name,
-                enemy_name: playersInfo?.enemyInfo.name,
+                enemy_id: playersInfo?.enemyInfo.id,
                 card_id: useCardId
             });
             setSelectCard([]);

@@ -154,8 +154,9 @@
     color: #f8fafc;
     font-family: inherit;
     box-sizing: border-box;
-    flex-wrap: wrap;
-    word-break: break-all;
+    /*flex-wrap: wrap;*/
+    /*word-break: break-all;*/
+    /*white-space: pre-wrap;*/
 }
 
 .form-input, .form-textarea, .form-select {

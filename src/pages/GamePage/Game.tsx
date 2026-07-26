@@ -315,9 +315,23 @@ export const GamePage = () => {
             }
         });
 
-        socket.on("enemy_card_selected", () => {
-            setActiveEnemyCard(true);
-            setEnemyHandList(enemyHandList.filter(num => num - 1))
+        socket.on("enemy_hand_list", (action: string) => {
+            if (action === "card_selected") {
+                setActiveEnemyCard(true);
+
+                setEnemyHandList((prevList) => {
+                    const lastIndex = prevList.length - 1;
+
+                    if (lastIndex < 0) return prevList;
+
+                    const updatedList = prevList.filter((_, index) => index !== lastIndex);
+
+                    console.log('card_selected:', updatedList.length);
+
+                    return updatedList;
+                });
+                return;
+            }
         });
 
         socket.on("game_cards_selected", () => {
@@ -343,7 +357,7 @@ export const GamePage = () => {
                 return;
             }
             if (type === "result") {
-                console.log("damage", gameData.damage);
+                console.log("result", gameData.result);
                 winnerIdRef.current = gameData.winnerId;
                 return
             }

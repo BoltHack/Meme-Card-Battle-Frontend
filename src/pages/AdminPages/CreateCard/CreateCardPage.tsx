@@ -15,6 +15,15 @@ interface PlayerData {
     name: string;
 }
 
+interface CardsFormat {
+    card_name: string;
+    card_description: string;
+    card_damage: string;
+    card_protection: string;
+    lvl_number: string;
+    lvl_name: string;
+}
+
 export const CreateCardPage = () => {
     // const navigate = useNavigate();
 
@@ -22,7 +31,7 @@ export const CreateCardPage = () => {
         `${api.API_BASE_URL}/admin/create/card`
     );
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<CardsFormat>({
         card_name: '',
         card_description: '',
         card_damage: '',
@@ -40,11 +49,28 @@ export const CreateCardPage = () => {
         }));
     }
 
-    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files.length > 0) {
-            setFile(event.target.files[0]);
+    // const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    //     const { name, value } = e.target;
+    //     formData[name as keyof typeof formData] = value;
+    // };
+
+    const handleTextAreaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setFile(e.target.files[0]);
         }
-    };
+    }
+
+    const handleMinusNumber = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if(e.key === "-" || e.key === "+") e.preventDefault();
+    }
 
     const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -59,7 +85,7 @@ export const CreateCardPage = () => {
         dataToSend.append("lvl_name", formData.lvl_name);
         if (file) {
             console.log('file', file);
-            dataToSend.append("card_cover", file);
+            dataToSend.append("card_avatar", file);
         }
         try {
             const response = await axios.post(`${api.API_BASE_URL}/admin/add/card`, dataToSend, {
@@ -110,22 +136,23 @@ export const CreateCardPage = () => {
                             />
                         </div>
 
-                        <div className={styles["form-group"]}>
-                            <label className={styles["form-label"]} htmlFor="card_description">Описание</label>
-                            <input
-                                type="text" name="card_description" id="card_description"
-                                onChange={handleChange} value={formData.card_description}
-                                className={styles["form-input"]}
-                                placeholder="Заполните форму..."
-                                required
-                            />
-                        </div>
+                        {/*<div className={styles["form-group"]}>*/}
+                        {/*    <label className={styles["form-label"]} htmlFor="card_description">Описание</label>*/}
+                        {/*    <input*/}
+                        {/*        type="text" name="card_description" id="card_description"*/}
+                        {/*        onChange={handleChange} value={formData.card_description}*/}
+                        {/*        className={styles["form-input"]}*/}
+                        {/*        placeholder="Заполните форму..."*/}
+                        {/*        required*/}
+                        {/*    />*/}
+                        {/*</div>*/}
 
                         <div className={styles["form-group"]}>
                             <label className={styles["form-label"]} htmlFor="card_damage">Урон</label>
                             <input
-                                type="text" name="card_damage" id="card_damage"
-                                onChange={handleChange} value={formData.card_damage}
+                                type="number" name="card_damage" id="card_damage" min="1"
+                                onKeyDown={handleMinusNumber} onChange={handleChange}
+                                value={formData.card_damage}
                                 className={styles["form-input"]}
                                 placeholder="Заполните форму..."
                                 required
@@ -135,8 +162,9 @@ export const CreateCardPage = () => {
                         <div className={styles["form-group"]}>
                             <label className={styles["form-label"]} htmlFor="card_protection">Броня</label>
                             <input
-                                type="text" name="card_protection" id="card_protection"
-                                onChange={handleChange} value={formData.card_protection}
+                                type="number" name="card_protection" id="card_protection" min="1"
+                                onKeyDown={handleMinusNumber} onChange={handleChange}
+                                value={formData.card_protection}
                                 className={styles["form-input"]}
                                 placeholder="Заполните форму..."
                                 required
@@ -146,8 +174,9 @@ export const CreateCardPage = () => {
                         <div className={styles["form-group"]}>
                             <label className={styles["form-label"]} htmlFor="lvl_number">Уровень</label>
                             <input
-                                type="text" name="lvl_number" id="lvl_number"
-                                onChange={handleChange} value={formData.lvl_number}
+                                type="number" name="lvl_number" id="lvl_number" min="1"
+                                onKeyDown={handleMinusNumber} onChange={handleChange}
+                                value={formData.lvl_number}
                                 className={styles["form-input"]}
                                 placeholder="Заполните форму..."
                                 required
@@ -165,6 +194,11 @@ export const CreateCardPage = () => {
                                 <option value="LEGENDARY">Legendary</option>
                             </select>
                         </div>
+
+                        {/*<button type="submit" className={styles["submit-btn"]}>Создать карту</button>*/}
+                    </div>
+
+                    <div className={styles["editor-right-side"]}>
 
                         <div className={styles["form-group"]}>
                             <label className={styles["form-label"]}>Обложка</label>
@@ -184,47 +218,21 @@ export const CreateCardPage = () => {
                             )}
                         </div>
 
-                        <button type="submit" className={styles["submit-btn"]}>Создать карту</button>
+                        <div className={styles["form-group"]}>
+                            <label className={styles["form-label"]}>Описание</label>
+                            <textarea
+                                name="card_description" id="card_description"
+                                onInput={handleTextAreaChange} value={formData.card_description}
+                                className={styles["form-textarea"]}
+                                placeholder="Заполните форму..."
+                                required
+                            />
+                        </div>
+                        <button type="submit" className={styles["submit-btn"]}>Опубликовать статью</button>
+
                     </div>
                 </form>
             </div>
         </div>
-        // <div className={styles['body-wrapper']}>
-        //     <form onSubmit={addNewCard}>
-        //         <input
-        //             type="text" name="card_name" placeholder="Название карты"
-        //             onChange={handleChange} value={formData.card_name}
-        //             required />
-        //         <input
-        //             type="text" name="card_description" placeholder="Описание"
-        //             onChange={handleChange} value={formData.card_description}
-        //             required />
-        //         <input
-        //             type="file" name="card_avatar"
-        //             onChange={handleFileChange}
-        //              />
-        //         <input
-        //             type="text" name="card_damage" placeholder="Урон"
-        //             onChange={handleChange} value={formData.card_damage}
-        //             required />
-        //         <input
-        //             type="text" name="card_protection" placeholder="Броня"
-        //             onChange={handleChange} value={formData.card_protection}
-        //             required />
-        //         <input
-        //             type="text" name="lvl_number" placeholder="Уровень"
-        //             onChange={handleChange} value={formData.lvl_number}
-        //             required />
-        //         <select
-        //             name="lvl_name"
-        //             onChange={handleChange} value={formData.lvl_name}
-        //         >
-        //             <option value="DEFAULT">Default</option>
-        //             <option value="LEGENDARY">Legendary</option>
-        //         </select>
-        //
-        //         <button type="submit">Создать карту</button>
-        //     </form>
-        // </div>
     );
 };

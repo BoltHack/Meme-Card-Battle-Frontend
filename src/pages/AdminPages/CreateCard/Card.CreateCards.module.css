@@ -22,7 +22,7 @@
 
 .editor-container {
     width: 100%;
-    max-width: 600px;
+    max-width: 1200px;
     /*max-height: calc(100dvh - 48px);*/
     background: rgba(21, 9, 49, 0.4);
     backdrop-filter: blur(12px);
@@ -30,13 +30,25 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     padding: 32px;
-    /*margin: 50px auto;*/
-    margin-top: 50px;
+    margin: 50px auto;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: center;
+
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*max-width: 1200px;*/
+    /*max-height: 400px;*/
+    /*margin: 40px auto;*/
+    /*padding: 32px;*/
+    /*background: rgba(21, 9, 49, 0.4);*/
+    /*backdrop-filter: blur(12px);*/
+    /*-webkit-backdrop-filter: blur(12px);*/
+    /*border: 1px solid rgba(255, 255, 255, 0.08);*/
+    /*box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);*/
+    /*border-radius: 16px;*/
+    /*gap: 32px;*/
 }
 
 .editor-title {
@@ -58,6 +70,8 @@
 
     display: flex;
     gap: 32px;
+    /*justify-content: center;*/
+    /*align-items: center;*/
 }
 .editor-form::-webkit-scrollbar {
     width: 6px;
@@ -75,8 +89,8 @@
 }
 
 .editor-left-side {
-    width: 500px;
-    /*width: 100%;*/
+    width: 100%;
+    max-width: 400px;
     flex-shrink: 0;
 }
 
@@ -84,6 +98,7 @@
     flex-grow: 1;
     width: 400px;
     /*margin-left: 50px;*/
+    margin-top: -55px;
 }
 
 .form-group {
@@ -142,8 +157,9 @@
     color: #f8fafc;
     font-family: inherit;
     box-sizing: border-box;
-    flex-wrap: wrap;
-    word-break: break-all;
+    /*flex-wrap: wrap;*/
+    /*word-break: break-all;*/
+    /*white-space: pre-wrap;*/
 }
 
 .form-input, .form-textarea, .form-select {
@@ -168,7 +184,7 @@
 
 .form-textarea {
     resize: vertical;
-    min-height: 140px;
+    min-height: 300px;
     line-height: 1.6;
 }
 
@@ -233,6 +249,26 @@
 .submit-btn:active {
     transform: scale(0.98);
 }
+
+/*.editor-meta-grid {*/
+/*    display: grid;*/
+/*    grid-template-columns: 1fr 1fr;*/
+/*    gap: 20px;*/
+/*    margin-bottom: 24px;*/
+/*    flex-shrink: 0;*/
+/*}*/
+
+/*.editor-expanded-group {*/
+/*    flex-grow: 1;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    min-height: 0;*/
+/*}*/
+
+/*.form-editor {*/
+/*    flex-grow: 1;*/
+/*    overflow-y: auto;*/
+/*}*/
 
 @media (max-width: 968px) {
     .editor-form { flex-direction: column; }

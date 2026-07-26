@@ -627,7 +627,7 @@ h2 {
 
     background: linear-gradient(270deg, #5E17EB 0%, #864CA6 100%);
     box-shadow: 0 10px 20px rgba(94, 23, 235, 0.3);
-    border: 2px solid #3c096c;
+    /*border: 2px solid #3c096c;*/
 
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 40px 100%);
 }
@@ -670,7 +670,8 @@ h2 {
     font-weight: 525;
 }
 .game-search-info-text.waiting-time .search-text{
-    margin-left: -15px;
+    /*margin-left: -15px;*/
+    margin-left: -5px;
 }
 .game-search-info-text .search-timer {
     font-family: 'Roboto Condensed', sans-serif;
@@ -678,6 +679,17 @@ h2 {
     font-weight: 600;
     font-size: 1em;
     margin-left: auto;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.game-search-search-type .text {
+    color: #ffffff;
+    font-family: 'Roboto Condensed', sans-serif;
+    letter-spacing: -0.5px;
+    font-weight: 600;
+    font-size: 1em;
+    margin-left: -20px;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
@@ -698,6 +710,9 @@ h2 {
             1px -1px 0 #000, -1px 1px 0 #000,
             1px 0 0 #000, -1px 0 0 #000,
             0 1px 0 #000, 0 -1px 0 #000;
+}
+.game-search-info .current-waiting-time .search-text {
+    margin-left: 5px;
 }
 
 .game-search-actions {

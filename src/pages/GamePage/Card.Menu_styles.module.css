@@ -126,7 +126,7 @@
 }
 
 
-h2 {
+.body-wrapper h2 {
     color: #f8fafc;
     margin: 2rem 0 2rem 0;
     font-family: 'Inter', sans-serif;
