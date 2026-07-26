@@ -524,7 +524,8 @@
 .menu-card {
     background-color: #1e293b;
     border: 2px solid #334155;
-    padding: 0 2.5rem 2.5rem 2.5rem;
+    /*padding: 0 2.5rem 2.5rem 2.5rem;*/
+    padding: 2.5rem;
     border-radius: 24px;
     /*width: 320px;*/
     width: 400px;

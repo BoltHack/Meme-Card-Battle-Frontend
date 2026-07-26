@@ -26,7 +26,7 @@ interface TitleSettings {
 export const MainPage = ({ title }: TitleSettings) => {
     const navigate = useNavigate();
 
-    const isAuth = Boolean(localStorage.getItem("token"));
+    // const isAuth = Boolean(localStorage.getItem("token"));
 
     // const [data, setData] = useState<PlayerData | null>(null);
     // const [loading, setLoading] = useState(true);
@@ -112,7 +112,7 @@ export const MainPage = ({ title }: TitleSettings) => {
     }
 
     const foundGame = (type: string) => {
-        if (!isAuth) {
+        if (!data?.id) {
             navigate("/auth/sign-in");
             return;
         }
@@ -427,7 +427,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                                             </>
                                         )}
 
-                                        {!isAuth ? (
+                                        {!data?.id ? (
                                             <li>
                                                 <div className={styles["actions-menu-btn"]} onClick={() => navigate("/auth/sign-in")}>
                                                     <span>Войти в аккаунт</span>
