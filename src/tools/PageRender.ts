@@ -81,22 +81,20 @@ export default function usePageRender<T extends Record<string, any>>(url: string
             socket.emit("user_register", { player_id: data?.id });
         };
 
-        if (!socket.connected) {
-            socket.connect();
-        }
+        socket.on("connect", sendInitialData);
 
         if (socket.connected) {
             sendInitialData();
+        } else {
+            socket.connect();
         }
-
-        socket.on("connect", sendInitialData);
 
         socket.on("error_handler", (message) => {
             toast.error(message);
         });
 
         return () => {
-            socket.off("connect");
+            socket.off("connect", sendInitialData);
             socket.off("user_register");
             socket.off("error_handler");
             socket.disconnect();

@@ -126,7 +126,7 @@
 }
 
 
-.body-wrapper h2 {
+.menu-wrapper h2 {
     color: #f8fafc;
     margin: 2rem 0 2rem 0;
     font-family: 'Inter', sans-serif;
@@ -243,6 +243,7 @@
     box-sizing: border-box;
     background-color: #1e293b;
     border: 2px solid #334155;
+    /*padding: 2.5rem;*/
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);

@@ -562,7 +562,7 @@
     opacity: 0.6;
 }
 
-h2 {
+.menu-wrapper h2 {
     color: #f8fafc;
     margin: 0 0 2rem 0;
     font-family: 'Inter', sans-serif;

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import styles from "../stylesheets/Card.HeaderFooter.module.css";
+import styles from "./Card.HeaderFooter.module.css";
 
 export const Header = () => {
 

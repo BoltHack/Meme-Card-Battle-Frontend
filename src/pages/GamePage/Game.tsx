@@ -61,6 +61,7 @@ interface CardData {
     rarity: string;
     damage: number;
     protection: number;
+    power_slot: number;
 
     _id: string;
 }
@@ -265,7 +266,8 @@ export const GamePage = () => {
                 lvl: card?.card_lvl_info?.lvl_number || 1,
                 rarity: card?.card_lvl_info?.lvl_name || 'Default',
                 damage: card?.card_stats?.card_damage || 0,
-                protection: card?.card_stats?.card_protection || 0
+                protection: card?.card_stats?.card_protection || 0,
+                power_slot: card?.power_slot || 0
             };
 
             console.log('Formatted card to save:', formattedCard);

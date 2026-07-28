@@ -40,6 +40,7 @@ interface PlayerData {
     id: string;
     name: string;
     role: string;
+    cards_count: number;
     renderData: RenderData[];
     stats: StatsData;
 }
@@ -64,10 +65,10 @@ export const MyCardsPage = ({ title }: TitleSettings) => {
 
         setStats(stats);
 
-        console.log('data', data.renderData);
+        console.log('data', data);
 
-        console.log('reduce', cards?.reduce((acc, card) => acc + card.card_quantity, 0));
-        console.log('power reduce', cards?.reduce((acc, card) => acc + card.power_slot, 0));
+        // console.log('reduce', cards?.reduce((acc, card) => acc + card.card_quantity, 0));
+        // console.log('power reduce', cards?.reduce((acc, card) => acc + card.power_slot, 0));
 
     }, [data, cards]);
 
@@ -104,9 +105,16 @@ export const MyCardsPage = ({ title }: TitleSettings) => {
 
                         <div className={styles["progress-container-row"]}>
                             <div className={styles["collection-progress-box"]}>
-                                <div className={styles["progress-text"]}>Коллекция: <span>{cards?.reduce((acc, card) => acc + card.card_quantity, 0) || 0}</span> / 150</div>
+                                <div className={styles["progress-text"]}>Коллекция: <span>{data?.cards_count}</span> / 250</div>
                                 <div className={styles["progress-bar-bg"]}>
-                                    <div className={styles["progress-bar-fill"]} style={{ width: `${cards?.reduce((acc, card) => acc + card.card_quantity, 0) || 0}%`}}></div>
+                                    {data?.cards_count && Number(data?.cards_count) > 120 ? (
+                                        <div className={styles["progress-bar-fill"]} style={{ width: `calc(${data?.cards_count || 0}px - 30px)` }}></div>
+                                    ) :
+                                        <div className={styles["progress-bar-fill"]} style={{ width: `${data?.cards_count || 0}px` }}></div>
+
+                                    }
+                                    {/*<div className={styles["progress-bar-fill"]} style={{ width: `220px` }}></div>*/}
+                                    {/*<div className={styles["progress-bar-fill"]} style={{ width: `calc(250% - 327px)` }}></div>*/}
                                 </div>
                             </div>
 
@@ -170,10 +178,61 @@ export const MyCardsPage = ({ title }: TitleSettings) => {
                     <div className={styles["filter-main"]}>
                         <input type="text" className={styles["search-input"]} placeholder="Поиск карты..." />
                         <div className={styles["filter-buttons"]}>
-                            <button className={`${styles["filter-btn"]} ${cardsCategory === "all" ? styles["active"] : null}`} onClick={() => setCardsCategory("all")}>Все</button>
-                            <button className={`${styles["filter-btn"]} ${cardsCategory === "rare" ? styles["active"] : null}`} onClick={() => setCardsCategory("rare")}>Редкие</button>
-                            <button className={`${styles["filter-btn"]} ${cardsCategory === "epic" ? styles["active"] : null}`} onClick={() => setCardsCategory("epic")}>Эпические</button>
-                            <button className={`${styles["filter-btn"]} ${cardsCategory === "legendary" ? styles["active"] : null}`} onClick={() => setCardsCategory("legendary")}>Легендарные</button>
+                            <button
+                                onClick={() => setCardsCategory("all")}
+                                className={`${styles["filter-btn"]} ${cardsCategory === "all" ? styles["active"] : null}`}
+                            >
+                                Все
+                                {cardsCategory === "all" &&
+                                    <span className={styles["filter-btn-cards-count"]}>
+                                        {cards?.reduce((acc, card) => acc + card.card_quantity, 0) || 0}
+                                    </span>
+                                }
+                            </button>
+                            <button
+                                onClick={() => setCardsCategory("default")}
+                                className={`${styles["filter-btn"]} ${cardsCategory === "default" ? styles["active"] : null}`}
+                            >
+                                Обычные
+                                {cardsCategory === "default" &&
+                                    <span className={styles["filter-btn-cards-count"]}>
+                                        {cards?.reduce((acc, card) => acc + card.card_quantity, 0) || 0}
+                                    </span>
+                                }
+                            </button>
+                            <button
+                                onClick={() => setCardsCategory("rare")}
+                                className={`${styles["filter-btn"]} ${cardsCategory === "rare" ? styles["active"] : null}`}
+                            >
+                                Редкие
+                                {cardsCategory === "rare" &&
+                                    <span className={styles["filter-btn-cards-count"]}>
+                                        {cards?.reduce((acc, card) => acc + card.card_quantity, 0) || 0}
+                                    </span>
+                                }
+                            </button>
+                            <button
+                                onClick={() => setCardsCategory("epic")}
+                                className={`${styles["filter-btn"]} ${cardsCategory === "epic" ? styles["active"] : null}`}
+                            >
+                                Эпические
+                                {cardsCategory === "epic" &&
+                                    <span className={styles["filter-btn-cards-count"]}>
+                                        {cards?.reduce((acc, card) => acc + card.card_quantity, 0) || 0}
+                                    </span>
+                                }
+                            </button>
+                            <button
+                                onClick={() => setCardsCategory("legendary")}
+                                className={`${styles["filter-btn"]} ${cardsCategory === "legendary" ? styles["active"] : null}`}
+                            >
+                                Легендарные
+                                {cardsCategory === "legendary" &&
+                                    <span className={styles["filter-btn-cards-count"]}>
+                                        {cards?.reduce((acc, card) => acc + card.card_quantity, 0) || 0}
+                                    </span>
+                                }
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -188,17 +247,17 @@ export const MyCardsPage = ({ title }: TitleSettings) => {
                             return (
                                 <div key={card.card_id} className={styles["card-3d-wrapper"]}>
                                     <div className={styles["card-inner"]}>
-                                        <div className={`${styles["game-card"]} ${styles[lvlName]} ${styles["front"]}`}>
+                                        <div className={`${styles["game-card"]} ${styles[lvlName.toLowerCase()]} ${styles[lvlName.toLowerCase()]}`}>
                                             <div className={styles["card-shine"]}></div>
                                             <div className={styles["card-header"]}>
-                                                <span className={styles["card-cost"]} title="Занимает 15 слотов силы">15</span>
-                                                <span className={`${styles["card-rarity"]} ${styles[lvlName]}`}>{card.lvl_name}</span>
+                                                <span className={styles["card-cost"]} title="Занимает 15 слотов силы">{card.power_slot}</span>
+                                                <span className={`${styles["card-rarity"]} ${styles[lvlName.toLowerCase()]}`}>{card.lvl_name}</span>
                                             </div>
                                             <div className={styles["card-artwork"]}>
                                                 <img src={`${api.API_BASE_URL}/${card.card_avatar}`} alt="artwork" />
                                             </div>
                                             <div className={styles["card-body"]}>
-                                                <div className={`${styles["card-title"]} ${styles[lvlName]}`}>{card.card_name}</div>
+                                                <div className={`${styles["card-title"]} ${styles[lvlName.toLowerCase()]}`}>{card.card_name}</div>
                                                 <div className={styles["card-description"]}>
                                                     {card.card_description}
                                                 </div>

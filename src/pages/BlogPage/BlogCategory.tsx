@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import {Link, useParams} from 'react-router-dom';
+import { useEffect, useRef, useState } from "react";
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
 
 import styles from './Card.Blog.module.css';
@@ -15,6 +15,7 @@ import { LoadingPage } from "../LoadingPage/Loading.tsx";
 
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
 import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
+import { Pagination } from "../../tools/PageTools/Pagination/Pagination.tsx";
 
 interface BlogPost {
     author: string;
@@ -30,6 +31,8 @@ interface BlogResponse {
     id?: string;
     renderData: {
         blog: BlogPost[];
+        currentPage: number;
+        totalPages: number;
     }
 }
 
@@ -42,12 +45,19 @@ interface BlogCategory {
 }
 
 export const BlogCategoryPage = ({ title }: BlogPageProps) => {
-    // const navigate = useNavigate();
+    const bodyWrapperRef = useRef<HTMLDivElement | null>(null);
+
     const [blog, setBlog] = useState<BlogPost[]>([]);
     const { blog_category } = useParams<{ type: string }>() as BlogCategory;
 
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
+
+    const [searchParams] = useSearchParams();
+    const getCurrentPage = Number(searchParams.get("page")) || 1;
+
     const { data, loading, error } = usePageRender<BlogResponse>(
-        `${api.API_BASE_URL}/api/category/${blog_category}`
+        `${api.API_BASE_URL}/api/category/${blog_category}?page=${currentPage}`
     );
 
     const dateSettings = (date: string) => {
@@ -59,35 +69,37 @@ export const BlogCategoryPage = ({ title }: BlogPageProps) => {
         });
     }
 
+    const handleScrollToTop = () => {
+        setTimeout(() => {
+            if (bodyWrapperRef.current) {
+                bodyWrapperRef.current.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                });
+            }
+        }, 50);
+    };
+
     useEffect(() => {
         if (!data || !Array.isArray(data.renderData.blog)) {
             console.log('Данные еще не загрузились или структура не совпадает:', data);
             return;
         }
 
-        // const formattedBlogs = data.blog.map(blog => ({
-        //     author: {
-        //         name: blog.author?.name || "Аноним"
-        //     },
-        //     main_content: {
-        //         title: blog.main_content?.title || "",
-        //         description: blog.main_content?.description || "",
-        //         cover: blog.main_content?.cover || "",
-        //     },
-        //     category: blog.category,
-        //     content: blog.content,
-        //     date: blog.date,
-        //     id: blog._id.toString()
-        // }));
-
         setBlog(data.renderData.blog);
+
+        setCurrentPage(getCurrentPage);
+        setTotalPages(data.renderData.totalPages);
+
+        handleScrollToTop();
+
     }, [data]);
 
     if (loading) return <LoadingPage />;
     if (error) return <ErrorPage error={error} />;
 
     return (
-        <div className={styles["body-wrapper"]}>
+        <div className={styles["body-wrapper"]} ref={bodyWrapperRef}>
             <Helmet>
                 <title>{title}</title>
             </Helmet>
@@ -149,6 +161,13 @@ export const BlogCategoryPage = ({ title }: BlogPageProps) => {
                     ): null}
 
                 </section>
+
+                <Pagination
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+
+                    totalPages={totalPages}
+                />
 
             </main>
 
