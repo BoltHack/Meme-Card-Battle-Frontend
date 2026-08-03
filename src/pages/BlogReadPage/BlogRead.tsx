@@ -146,6 +146,9 @@ export const BlogReadPage = () => {
                     case '[F]':
                         boxType = 'postInlineImage';
                         break;
+                    // case '{i}':
+                    //     boxType = 'image';
+                    //     break;
                     case '%':
                         boxType = 'span';
                         break;
@@ -202,8 +205,10 @@ export const BlogReadPage = () => {
                     return galleryItemSettings('div', 'gallery-item', 'span', content.replace(/(?<=<\/div>)\s*[^<>\s][^<>]*\s*/g, ''));
                 case "postInlineImage":
                     return galleryItemSettings('figure', 'post-inline-image', 'figcaption', content);
+                // case "image":
+                //     return `<img src="${content}" />`;
                 case "span":
-                    return `<span>${content}</span>`;
+                    return `<span>${content.replace(/<[^>]*>/g, '')}</span>`;
                 default:
                     return `<div>${content}</div>`;
             }
