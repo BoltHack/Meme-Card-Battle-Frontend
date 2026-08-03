@@ -258,11 +258,11 @@ export const Game_Menus = ({
 
                             <div className={Menus_styles["actions-card-info"]}>
                                 {selectCard && selectCard.length ?
-                                    selectCard.map((card: any) => {
-                                        const lvlName = card.rarity.toLowerCase();
+                                    selectCard.map((card: any, index: number) => {
+                                        const lvlName = card?.rarity.toLowerCase();
                                         return (
                                             <div
-                                                key={card.menu_id} id={card.menu_id} className={CardsDesign_styles["card-3d-wrapper"]}
+                                                key={index} id={card?.menu_id} className={CardsDesign_styles["card-3d-wrapper"]}
                                             >
                                                 <div className={CardsDesign_styles["card-inner"]}>
                                                     <div className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles["hand_card"]} ${CardsDesign_styles[lvlName.toLowerCase()]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}>

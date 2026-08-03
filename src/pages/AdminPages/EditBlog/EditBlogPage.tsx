@@ -16,6 +16,9 @@ import { LoadingPage } from "../../LoadingPage/Loading.tsx";
 import { Header } from "../../../tools/PageTools/header_footer/Header.tsx";
 import { Footer } from "../../../tools/PageTools/header_footer/Footer.tsx";
 import { useParams } from "react-router-dom";
+import {sanitize} from "isomorphic-dompurify";
+import {marked} from "marked";
+import {Config} from "dompurify";
 
 interface BlogId {
     blog_id: string
@@ -81,6 +84,10 @@ export const EditBlogPage = ({ title }: titleSettings) => {
         if (event.target.files && event.target.files.length > 0) {
             setFile(event.target.files[0]);
         }
+    }
+
+    const sanitizeConfig: Config = {
+        ALLOWED_ATTR: ['class', 'src', 'alt', 'title', 'href', 'id', 'start', 'loading', 'onclick', 'target', 'rel']
     };
 
     useEffect(() => {
@@ -96,7 +103,8 @@ export const EditBlogPage = ({ title }: titleSettings) => {
             edit_description: blog?.description || "",
             edit_cover: blog?.cover || "",
             edit_category: blog?.category || "",
-            content: blog?.content.replace(/\n/g, '<br/>') || "",
+            // content: blog?.content.replace(/\n/g, '<br/>') || "",
+            content: (blog.content || "").replace(/\r\n|\n|\r/g, '\n')
         }
 
         setFormData(formattedBlogs);
@@ -175,7 +183,10 @@ export const EditBlogPage = ({ title }: titleSettings) => {
                         {/*<label className={styles["form-label"]} htmlFor="post-content">Текст статьи</label>*/}
 
                         <div
-                            dangerouslySetInnerHTML={{ __html: formData.content }}
+                            // dangerouslySetInnerHTML={{ __html: formData.content }}
+                            dangerouslySetInnerHTML={{
+                                __html: sanitize(marked.parse(formData?.content ?? "") as string, sanitizeConfig)
+                            }}
                             onInput={handleInput}
                             className={styles["form-editor"]}
                             contentEditable="true"

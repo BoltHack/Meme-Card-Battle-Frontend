@@ -152,6 +152,7 @@
     font-size: 2.5rem;
     line-height: 1.2;
     margin: 0.5rem 0 1.5rem 0;
+    word-break: break-word;
 }
 
 .post-page-meta {
@@ -207,6 +208,14 @@
     /*margin-bottom: 1.5rem;*/
 }
 
+.full-post-container p.lead {
+    font-size: 1.25rem;
+    color: #fff;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    word-break: break-word;
+}
+
 .post-page-body p.lead {
     font-size: 1.25rem;
     color: #fff;
@@ -226,8 +235,8 @@
     border-left: 4px solid #0066ff;
     background: rgba(0, 102, 255, 0.03);
     padding: 1rem 1.5rem;
-    /*margin: 2rem 0;*/
-    margin-bottom: 2rem;
+    margin: 2rem 0;
+    /*margin-bottom: 2rem;*/
     font-style: italic;
     color: #94a3b8;
     border-radius: 0 8px 8px 0;
@@ -297,6 +306,11 @@
 
 .post-inline-image {
     margin: 2.5rem 0;
+}
+
+.post-inline-image img {
+    /*max-height: 800px;*/
+    height: 100%;
 }
 
 .post-inline-image figcaption {

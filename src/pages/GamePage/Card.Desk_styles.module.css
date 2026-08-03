@@ -308,6 +308,7 @@ meter {
     position: relative;
     z-index: 1;
 }
+
 .hand-card.legendary {
     color: #ffd700;
     border: 1.5px solid #ffd700;
@@ -317,6 +318,27 @@ meter {
 }
 .hand-card.legendary .h-rarity::before { content: "⭐ "; }
 .hand-card.legendary .h-title { color: #ffd700 }
+
+
+.hand-card.epic {
+    border: 1.5px solid #a855f7;
+}
+.hand-card.epic:hover {
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.1);
+}
+.hand-card.epic .h-rarity::before { content: "✨ "; }
+.hand-card.epic .h-title { color: #c084fc; }
+
+
+.hand-card.rare {
+    border: 1.5px solid #3CDDFFD9;
+}
+.hand-card.rare:hover {
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(168, 85, 247, 0.4);
+}
+.hand-card.rare .h-rarity::before { content: "💎 "; }
+.hand-card.rare .h-title { color: #23F2FF; }
+
 
 .hand-card.default { border: 1.5px solid #6c757d; }
 .hand-card.default:hover {

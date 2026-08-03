@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
 import { Config } from 'dompurify';
 import { marked, Tokens, TokenizerThis, RendererThis } from 'marked';
@@ -51,6 +51,8 @@ interface BlogId {
 }
 
 export const BlogReadPage = () => {
+    const navigate = useNavigate();
+
     const [title, setTitle] = useState("");
 
     const [blog, setBlog] = useState<BlogPost>({} as BlogPost);
@@ -69,6 +71,24 @@ export const BlogReadPage = () => {
         });
     }
 
+    const galleryItemSettings = (element: string, className: string, textElement: string, content: string) => {
+        const cleanText = content.replace(/<[^>]*>/g, '').trim();
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+        const text = cleanText.replace(urlRegex, '').trim();
+
+        const matchUrl = cleanText.match(urlRegex)?.[0];
+
+        if (!matchUrl) return text;
+
+        return `
+            <${element} class="${styles[className]}">
+                <img src="${matchUrl}" />
+                ${text ? `<${textElement}>${text}</${textElement}>` : ''}
+            </${element}>
+                `;
+    }
+
     const multiBoxExtension = {
         name: "multiBox",
         level: "block" as const,
@@ -77,19 +97,31 @@ export const BlogReadPage = () => {
         start(src: string) {
             // return src.match(/[\$%@#]/)?.index;
             // return src.match(/^[\$%@#]/m)?.index;
-            return src.match(/^[\$%@#[]/m)?.index;
+            // return src.match(/^[\$%@#[]GI/m)?.index;
+            // return src.match(/(?:^|[\n])(?:\{1\}|\{2\}|\{3\}|\[G\]|\[I\]|[\$%@#])/)?.index;
             // return src.match(/[\$%@]/)?.index;
+
+            // const match = src.match(/^(?:\{1\}|\{2\}|\{3\}|\[G\]|\[I\]|[\$%@#])/m);
+            // return match ? match.index : undefined;
+
+            const match = src.match(/^(?:\{1\}|\{2\}|\{3\}|\[G\]|\[I\]|\[F\]|[\$%@#])/m);
+            return match ? match.index : undefined;
         },
 
         // tokenizer(src: string) {
         tokenizer(this: TokenizerThis, src: string) {
             // const rule = /^([\$%@#])([^\$%@#\n]+)\1/;
             // const rule = /^([\$%@#])([^\$%@#\n]+)\1(?:\n|$)/;
-            const rule = /^((?:\{1\}|\{2\}|\{3\}|[\$%@#]))([^\$%@#\n]+)\1(?:\n|$)/;
+            // const rule = /^((?:\{1\}|\{2\}|\{3\}|\[G\]|\[I\]|[\$%@#]))([^\$%@#\n]+)\1(?:\n|$)/;
+            // const rule = /^((?:\{1\}|\{2\}|\{3\}|\[G\]|\[I\]|[\$%@#]))((?:(?!\1)[^\n])+)\1(?:\n|$)/;
+
+            // const rule = /^((?:\{1\}|\{2\}|\{3\}|\[G\]|\[I\]|[\$%@#]))\s*([\s\S]*?)\s*\1(?:\n|$)/;
+            // const match = rule.exec(src);
+
+            const rule = /^((?:\{1\}|\{2\}|\{3\}|\[G\]|\[I\]|\[F\]|[\$%@#]))\s*([\s\S]*?)\s*\1(?:\n|$)/;
             const match = rule.exec(src);
 
             if (match) {
-
                 const marker = match[1];
                 const text = match[2].trim();
 
@@ -104,6 +136,15 @@ export const BlogReadPage = () => {
                         break;
                     case '$':
                         boxType = 'blockquote';
+                        break;
+                    case '[G]':
+                        boxType = 'postImageGallery';
+                        break;
+                    case '[I]':
+                        boxType = 'galleryItem';
+                        break;
+                    case '[F]':
+                        boxType = 'postInlineImage';
                         break;
                     case '%':
                         boxType = 'span';
@@ -121,7 +162,7 @@ export const BlogReadPage = () => {
                     raw: match[0],
                     text: text,
                     boxType: boxType,
-                    tokens: this.lexer.inlineTokens(text)
+                    tokens: this.lexer.blockTokens(text, [])
                 }
             }
         },
@@ -140,16 +181,27 @@ export const BlogReadPage = () => {
         //     }
         //     return "";
         // }
-        renderer(this: RendererThis, token: any): string {
-            const content = this.parser.parseInline(token.tokens);
+        renderer(this: RendererThis, token: any) {
+            let content = this.parser.parse(token.tokens);
+
+            content = content.replace(/^<div>([\s\S]*?)<\/div>$/, '$1');
+            content = content.replace(/^<p>([\s\S]*?)<\/p>$/, '$1');
+
+            // content = content.replace(/(?<=<\/div>)\s*[^<>\s][^<>]*\s*/g, '');
 
             switch (token.boxType) {
                 case "heading1":
-                    return `<h1>${content}</h1>`;
+                    return `<h1>${content.replace(/<[^>]*>/g, '')}</h1>`;
                 case "heading2":
-                    return `<h2>${content}</h2>`;
+                    return `<h2>${content.replace(/<[^>]*>/g, '')}</h2>`;
                 case "blockquote":
-                    return `<blockquote>${content}</blockquote>`;
+                    return `<blockquote>${content.replace(/<[^>]*>/g, '')}</blockquote>`;
+                case "postImageGallery":
+                    return `<div class="${styles['post-image-gallery']}">${content}</div>`;
+                case "galleryItem":
+                    return galleryItemSettings('div', 'gallery-item', 'span', content.replace(/(?<=<\/div>)\s*[^<>\s][^<>]*\s*/g, ''));
+                case "postInlineImage":
+                    return galleryItemSettings('figure', 'post-inline-image', 'figcaption', content);
                 case "span":
                     return `<span>${content}</span>`;
                 default:
@@ -252,7 +304,7 @@ export const BlogReadPage = () => {
 
             <div className={styles["post-page-layout"]}>
 
-                <Link to="/blog" className={styles["back-to-blog"]}>← Назад в блог</Link>
+                <a href="#" onClick={() => navigate(-1)} className={styles["back-to-blog"]}>← Назад в блог</a>
 
                 {blog ? (
                     <article className={styles["full-post-container"]}>
@@ -280,12 +332,38 @@ export const BlogReadPage = () => {
                             ) : <div className={styles["img-placeholder"]}></div> }
                         </div>
 
-                        <div className={styles["post-page-body"]}>
-                            <p className={styles["lead"]}>{blog.description}</p>
-                            <div dangerouslySetInnerHTML={{
-                                __html: sanitize(marked.parse(blog?.content ?? "") as string, sanitizeConfig)
-                            }}></div>
+                        {/*<div className={styles["post-page-body"]}>*/}
+                        {/*    <p className={styles["lead"]}>{blog.description}</p>*/}
+                        {/*    <div dangerouslySetInnerHTML={{__html: sanitize(marked.parse(blog?.content ?? "") as string, sanitizeConfig)}}></div>*/}
+                        {/*</div>*/}
+
+                        <p className={styles["lead"]}>{blog.description}</p>
+                        <div className={styles["post-page-body"]}
+                             dangerouslySetInnerHTML={{__html: sanitize(marked.parse(blog?.content ?? "") as string, sanitizeConfig)}}
+                        >
                         </div>
+
+                        {/*<div className={styles["post-page-body"]}>*/}
+                        {/*    <div className={styles["post-image-gallery"]}>*/}
+                        {/*        <div className={styles["gallery-item"]}>*/}
+                        {/*            <img src="https://static.yani.tv/posters/huge/1636933340.avif" alt="Старый подход к верстке" />*/}
+                        {/*            <span>Старый подход (Grid v1)</span>*/}
+                        {/*        </div>*/}
+                        {/*        <div className={styles["gallery-item"]}>*/}
+                        {/*            <img src="https://static.yani.tv/posters/huge/1636894511.avif" alt="Новый подход к верстке" />*/}
+                        {/*            <span>Новый подход (Advanced Subgrid)</span>*/}
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
+
+                        {/*<div className={styles["post-image-gallery"]}>*/}
+                        {/*    gfd4g654df*/}
+                        {/*</div>*/}
+
+                        {/*            <figure className={styles["post-inline-image"]}>*/}
+                        {/*                <img src="" alt="Панорамный концепт-арт интерфейса" />*/}
+                        {/*                <figcaption>Геометрический паттерн распределения элементов в ультра-широких разрешениях</figcaption>*/}
+                        {/*            </figure>*/}
 
                     </article>
                 ): null}

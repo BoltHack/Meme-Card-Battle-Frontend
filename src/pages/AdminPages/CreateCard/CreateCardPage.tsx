@@ -190,10 +190,10 @@ export const CreateCardPage = () => {
                                 onChange={handleChange} value={formData.lvl_name}
                                 className={styles["form-input"]}
                             >
-                                <option value="default">Обычный</option>
-                                <option value="rare">Редкий</option>
-                                <option value="epic">Эпический</option>
-                                <option value="legendary">Легендарный</option>
+                                <option value="DEFAULT">Обычный</option>
+                                <option value="RARE">Редкий</option>
+                                <option value="EPIC">Эпический</option>
+                                <option value="LEGENDARY">Легендарный</option>
                             </select>
                         </div>
 

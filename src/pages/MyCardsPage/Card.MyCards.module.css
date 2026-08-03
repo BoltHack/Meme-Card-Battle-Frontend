@@ -505,11 +505,18 @@
 .card-3d-wrapper:hover .game-card.legendary { box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 215, 0, 0.4); }
 
 .card-rarity.epic { color: #c084fc; text-shadow: 0 0 5px rgba(168, 85, 247, 0.5); }
-.card-rarity.epic::before { content: "💎 "; }
+.card-rarity.epic::before { content: "✨ "; }
 .card-title.epic { color: #c084fc; }
 .game-card.epic { border: 2px solid #a855f7; box-shadow: 0 0 25px rgba(168, 85, 247, 0.2), 0 15px 35px rgba(0, 0, 0, 0.7); }
 .game-card.epic .card-cost { background: radial-gradient(circle, #d946ef 0%, #a855f7 100%); box-shadow: 0 0 10px #a855f7; }
 .card-3d-wrapper:hover .game-card.epic { box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(168, 85, 247, 0.4); }
+
+.card-rarity.rare { color: #23F2FF; text-shadow: 0 0 5px rgba(148, 163, 184, 0.3); }
+.card-rarity.rare::before { content: "💎 "; }
+.card-title.rare { color: #23F2FF; }
+.game-card.rare { border: 2px solid #3CDDFFD9; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7); }
+.game-card.rare .card-cost { background: radial-gradient(circle, #00bcd4 0%, #475569 100%); box-shadow: 0 0 10px #475569; }
+.card-3d-wrapper:hover .game-card.rare { box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.1); }
 
 .card-rarity.default { color: #94a3b8; text-shadow: 0 0 5px rgba(148, 163, 184, 0.3); }
 .card-title.default { color: #cbd5e1; }

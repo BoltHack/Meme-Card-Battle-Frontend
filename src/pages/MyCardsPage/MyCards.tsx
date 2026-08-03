@@ -59,16 +59,21 @@ export const MyCardsPage = ({ title }: TitleSettings) => {
     useEffect(() => {
         if (!data || !data.id) return;
 
+        console.log('data', data);
+
         setCards(data?.renderData);
 
         const stats = data?.stats;
 
         setStats(stats);
 
-        console.log('data', data);
-
         // console.log('reduce', cards?.reduce((acc, card) => acc + card.card_quantity, 0));
-        // console.log('power reduce', cards?.reduce((acc, card) => acc + card.power_slot, 0));
+
+        // const cards_reduce = cards?.map(card => card.power_slot * card.card_quantity).reduce((acc, card) => acc + card, 0);
+
+        // console.log('cards_reduce', cards_reduce);
+
+        // cards?.reduce((acc, card) => acc + card.power_slot, 0));
 
     }, [data, cards]);
 
@@ -169,7 +174,7 @@ export const MyCardsPage = ({ title }: TitleSettings) => {
                                     <path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/>
                                 </svg>
                             </span>
-                            <span className={styles["currency-amount"]}>{cards?.reduce((acc, card) => acc + card.power_slot, 0) || 0}</span>
+                            <span className={styles["currency-amount"]}>{cards?.map(card => card.power_slot * card.card_quantity).reduce((acc, card) => acc + card, 0) || 0}</span>
                         </div>
                     </div>
                 </header>

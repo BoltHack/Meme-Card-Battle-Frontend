@@ -7,7 +7,6 @@ import Menus_styles from "./Card.Menu_styles.module.css";
 import api from "../../api/api.ts";
 
 import { ActionData } from "./Game_Menus.tsx"
-import CardsDesign_styles from "../MyCardsPage/Card.MyCards.module.css";
 
 interface CardData {
     menu_id: string;
@@ -303,7 +302,6 @@ export const Game_CardDesk = ({
                             <AnimatePresence>
                                 {handList && handList?.length > 0 ? (
                                     handList.map((card,) => {
-                                        const lvlName = card.rarity.toLowerCase();
                                         const cardId = card.menu_id;
                                         // const isThisCardAnimating = activePlayerCard === cardId;
 
@@ -380,6 +378,7 @@ export const Game_CardDesk = ({
                                                                  description: card?.description,
                                                                  damage: card?.damage,
                                                                  protection: card?.protection,
+                                                                 power_slot: card?.power_slot
                                                              }
                                                          } as ActionData);
                                                      }}

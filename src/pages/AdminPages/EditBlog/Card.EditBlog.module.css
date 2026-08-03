@@ -258,3 +258,15 @@
     .editor-form { flex-direction: column; }
     .editor-left-side { width: 100%; }
 }
+
+
+.post-page-body blockquote {
+    border-left: 4px solid #0066ff;
+    background: rgba(0, 102, 255, 0.03);
+    padding: 1rem 1.5rem;
+    /*margin: 2rem 0;*/
+    margin-bottom: 2rem;
+    font-style: italic;
+    color: #94a3b8;
+    border-radius: 0 8px 8px 0;
+}

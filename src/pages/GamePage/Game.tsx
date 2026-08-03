@@ -344,6 +344,8 @@ export const GamePage = () => {
         socket.on("game_cards_selected_result", (data) => {
             const { type, gameData } = data;
 
+            console.log('result data', data);
+
             if (type === "timer") {
                 if (gameData.timer === 0) {
                     console.log('Время вскрываться!');
