@@ -51,7 +51,7 @@ export const BlogPage = ({ title }: BlogPageProps) => {
     const [searchParams] = useSearchParams();
     const getCurrentPage = Number(searchParams.get("page")) || 1;
 
-    const blog_state = JSON.parse(sessionStorage.getItem('blog_state') || '{}');
+    const blog_state = JSON.parse(localStorage.getItem('blog_state') || '{}');
 
     const { data, loading, error } = usePageRender<BlogResponse>(
         `${api.API_BASE_URL}/api/blog?page=${currentPage}`
@@ -92,7 +92,7 @@ export const BlogPage = ({ title }: BlogPageProps) => {
         handleScrollToTop();
 
         const updatedState = { ...blog_state, page: getCurrentPage, category: "" };
-        sessionStorage.setItem("blog_state", JSON.stringify(updatedState));
+        localStorage.setItem("blog_state", JSON.stringify(updatedState));
 
     }, [data]);
 

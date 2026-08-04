@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
 import { Config } from 'dompurify';
 import { marked, Tokens, TokenizerThis, RendererThis } from 'marked';
@@ -51,14 +51,12 @@ interface BlogId {
 }
 
 export const BlogReadPage = () => {
-    const navigate = useNavigate();
-
     const [title, setTitle] = useState("");
 
     const [blog, setBlog] = useState<BlogPost>({} as BlogPost);
     const { blog_id } = useParams<{ type: string }>() as BlogId;
 
-    const blog_state = JSON.parse(sessionStorage.getItem('blog_state') || '{}');
+    const blog_state = JSON.parse(localStorage.getItem('blog_state') || '{}');
 
     const { data, loading, error } = usePageRender<BlogResponse>(
         `${api.API_BASE_URL}/api/blog/${blog_id}`
