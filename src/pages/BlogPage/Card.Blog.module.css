@@ -74,6 +74,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    word-break: break-word;
 }
 
 .category {
@@ -171,6 +172,8 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    word-break: break-word;
+    /*height: 300px;*/
 }
 
 .grid-card h3 {

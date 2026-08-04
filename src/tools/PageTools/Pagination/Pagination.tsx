@@ -18,11 +18,6 @@ export const Pagination = (
         totalPages,
     }: TitleSettings) => {
 
-    // const [searchParams] = useSearchParams();
-    // const getCurrentPage = Number(searchParams.get("page")) || 1;
-
-    if (totalPages <= 1) return null;
-
     let maxPagesToShow = 4;
 
     let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
@@ -37,15 +32,9 @@ export const Pagination = (
         pagesCount.push(i);
     }
 
-    // useEffect(() => {
-    //
-    //     console.log('Страница в URL изменилась на:', getCurrentPage);
-    //
-    //     setCurrentPage(getCurrentPage);
-    // }, [getCurrentPage]);
-
     const handleChangeCurrentPage = (page: number) => {
-        setCurrentPage(page)
+        setCurrentPage(page);
+
         setTimeout(() => {
             window.scrollTo({
                 top: 0,

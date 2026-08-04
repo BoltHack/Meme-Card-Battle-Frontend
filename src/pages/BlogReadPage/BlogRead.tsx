@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
 import { Config } from 'dompurify';
 import { marked, Tokens, TokenizerThis, RendererThis } from 'marked';
@@ -57,6 +57,8 @@ export const BlogReadPage = () => {
 
     const [blog, setBlog] = useState<BlogPost>({} as BlogPost);
     const { blog_id } = useParams<{ type: string }>() as BlogId;
+
+    const blog_state = JSON.parse(sessionStorage.getItem('blog_state') || '{}');
 
     const { data, loading, error } = usePageRender<BlogResponse>(
         `${api.API_BASE_URL}/api/blog/${blog_id}`
@@ -309,7 +311,7 @@ export const BlogReadPage = () => {
 
             <div className={styles["post-page-layout"]}>
 
-                <a href="#" onClick={() => navigate(-1)} className={styles["back-to-blog"]}>← Назад в блог</a>
+                <Link to={`/${blog_state.category ? "category/" + blog_state.category : "blog"}${blog_state.page ? "?page=" + blog_state.page : ""}`} className={styles["back-to-blog"]}>← Назад в блог</Link>
 
                 {blog ? (
                     <article className={styles["full-post-container"]}>

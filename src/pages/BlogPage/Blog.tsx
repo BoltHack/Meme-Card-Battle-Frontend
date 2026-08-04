@@ -51,6 +51,8 @@ export const BlogPage = ({ title }: BlogPageProps) => {
     const [searchParams] = useSearchParams();
     const getCurrentPage = Number(searchParams.get("page")) || 1;
 
+    const blog_state = JSON.parse(sessionStorage.getItem('blog_state') || '{}');
+
     const { data, loading, error } = usePageRender<BlogResponse>(
         `${api.API_BASE_URL}/api/blog?page=${currentPage}`
     );
@@ -88,6 +90,9 @@ export const BlogPage = ({ title }: BlogPageProps) => {
         setTotalPages(data.renderData.totalPages);
 
         handleScrollToTop();
+
+        const updatedState = { ...blog_state, page: getCurrentPage, category: "" };
+        sessionStorage.setItem("blog_state", JSON.stringify(updatedState));
 
     }, [data]);
 
@@ -131,8 +136,8 @@ export const BlogPage = ({ title }: BlogPageProps) => {
                             </div>
                             <div className={styles["featured-content"]}>
                                 <span className={styles["category"]}>{blog[0].category}</span>
-                                <h2>{blog[0].title.length > 20 ? blog[0].title.slice(0, 20) + "..." : blog[0].title}</h2>
-                                <p>{blog[0].description.length > 50 ? blog[0].description.slice(0, 50) + "..." : blog[0].description}</p>
+                                <h2>{blog[0].title.length > 62 ? blog[0].title.slice(0, 62) + "..." : blog[0].title}</h2>
+                                <p>{blog[0].description.length > 240 ? blog[0].description.slice(0, 240) + "..." : blog[0].description}</p>
                                 <div className={styles["card-footer"]}>
                                     <span className={styles["date"]}>{dateSettings(blog[0].date)}</span>
                                     <Link to={`/blog/${blog[0].id}`} className={styles["read-more-btn"]}>Читать статью</Link>
@@ -159,8 +164,8 @@ export const BlogPage = ({ title }: BlogPageProps) => {
                                     </div>
                                     <div className={styles["card-body"]}>
                                         <span className={styles["category"]}>{bd.category}</span>
-                                        <h3>{bd.title.length > 25 ? bd.title.slice(0, 25) + "..." : bd.title}</h3>
-                                        <p>{bd.description.length > 40 ? bd.description.slice(0, 40) + "..." : bd.description}</p>
+                                        <h3>{bd.title.length > 63 ? bd.title.slice(0, 63) + "..." : bd.title}</h3>
+                                        <p>{bd.description.length > 110 ? bd.description.slice(0, 110) + "..." : bd.description}</p>
                                         <div className={styles["card-footer"]}>
                                             <span className={styles["date"]}>{dateSettings(bd.date)}</span>
                                             <Link to={`/blog/${bd.id}`} className={`${styles["read-more-btn"]} ${styles["small"]}`}>Читать статью</Link>
