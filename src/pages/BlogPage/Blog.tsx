@@ -51,7 +51,8 @@ export const BlogPage = ({ title }: BlogPageProps) => {
     const [searchParams] = useSearchParams();
     const getCurrentPage = Number(searchParams.get("page")) || 1;
 
-    const blog_state = JSON.parse(localStorage.getItem('blog_state') || '{}');
+    const blog_state = JSON.parse(sessionStorage.getItem('blog_state') || '{}');
+    // const [isBlogState, setIsBlogState] = useState<boolean | false>(false);
 
     const { data, loading, error } = usePageRender<BlogResponse>(
         `${api.API_BASE_URL}/api/blog?page=${currentPage}`
@@ -76,7 +77,16 @@ export const BlogPage = ({ title }: BlogPageProps) => {
                 });
             }
         }, 50);
-    };
+    }
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            sessionStorage.removeItem("blog_state");
+        }
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, []);
 
     useEffect(() => {
         if (!data || !Array.isArray(data.renderData.blog)) {
@@ -92,7 +102,13 @@ export const BlogPage = ({ title }: BlogPageProps) => {
         handleScrollToTop();
 
         const updatedState = { ...blog_state, page: getCurrentPage, category: "" };
-        localStorage.setItem("blog_state", JSON.stringify(updatedState));
+        sessionStorage.setItem("blog_state", JSON.stringify(updatedState));
+
+        return () => {
+            if (!window.location.pathname.startsWith("/blog/") && !window.location.pathname.startsWith("/category/")) {
+                sessionStorage.removeItem("blog_state");
+            }
+        }
 
     }, [data]);
 

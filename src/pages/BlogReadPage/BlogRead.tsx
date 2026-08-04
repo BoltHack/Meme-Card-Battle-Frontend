@@ -56,11 +56,20 @@ export const BlogReadPage = () => {
     const [blog, setBlog] = useState<BlogPost>({} as BlogPost);
     const { blog_id } = useParams<{ type: string }>() as BlogId;
 
-    const blog_state = JSON.parse(localStorage.getItem('blog_state') || '{}');
+    const blog_state = JSON.parse(sessionStorage.getItem('blog_state') || '{}');
 
     const { data, loading, error } = usePageRender<BlogResponse>(
         `${api.API_BASE_URL}/api/blog/${blog_id}`
     );
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            sessionStorage.removeItem("blog_state");
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, []);
 
     const dateSettings = (date: string) => {
         return new Date(date).toLocaleString('ru-RU', {
@@ -293,7 +302,12 @@ export const BlogReadPage = () => {
 
         setBlog(formattedBlogs);
 
-        console.log('blog', blog);
+        // return () => {
+        //     window.addEventListener("unload", () => {
+        //         console.log('test');
+        //     });
+        // }
+
     }, [data]);
 
     if (loading) return <LoadingPage />;
