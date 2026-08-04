@@ -92,7 +92,7 @@ export const BlogReadPage = () => {
 
         return `
             <${element} class="${styles[className]}">
-                <img src="${matchUrl}" />
+                <img src="${matchUrl}" onclick="window.open('${matchUrl}', '_blank')" />
                 ${text ? `<${textElement}>${text}</${textElement}>` : ''}
             </${element}>
                 `;

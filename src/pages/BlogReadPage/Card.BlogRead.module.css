@@ -230,6 +230,7 @@
     /*font-size: 1.6rem;*/
     /*margin: 2.5rem 0 1rem 0;*/
     margin-bottom: 1rem;
+    word-break: break-word;
 }
 
 .post-page-body blockquote {
@@ -312,6 +313,7 @@
 .post-inline-image img {
     max-height: 600px;
     height: 100%;
+    cursor: pointer;
 }
 
 .post-inline-image figcaption {
@@ -320,6 +322,7 @@
     font-size: 0.85rem;
     margin-top: 0.75rem;
     font-style: italic;
+    word-break: break-word;
 }
 
 .post-image-gallery {
@@ -335,11 +338,16 @@
     align-items: center;
 }
 
+.gallery-item img {
+    cursor: pointer;
+}
+
 .gallery-item span {
     color: #94a3b8;
     font-size: 0.9rem;
     margin-top: 0.5rem;
     text-align: center;
+    word-break: break-word;
 }
 
 @media (max-width: 600px) {
