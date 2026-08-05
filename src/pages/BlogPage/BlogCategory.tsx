@@ -138,7 +138,7 @@ export const BlogCategoryPage = ({ title }: BlogPageProps) => {
                             <div className={styles["featured-image"]}>
                                 {blog[0].cover.length > 0 ? (
                                     <img src={`${api.API_BASE_URL}/${blog[0].cover}`} loading="lazy" className={styles["img-placeholder"]} />
-                                ): <div className={styles["img-placeholder"]}></div> }
+                                ): <div className={`${styles["img-placeholder"]} ${styles[blog[0].category]}`}></div> }
                             </div>
                             <div className={styles["featured-content"]}>
                                 <span className={styles["category"]}>{blog_category}</span>
@@ -166,7 +166,7 @@ export const BlogCategoryPage = ({ title }: BlogPageProps) => {
                                     <div className={styles["card-image"]}>
                                         {bd.cover.length > 0 ? (
                                             <img src={`${api.API_BASE_URL}/${bd.cover}`} loading="lazy" className={styles["img-placeholder"]} />
-                                        ): <div className={styles["img-placeholder"]} style={{ background: "linear-gradient(135deg, #0066ff, #ff007f)" }}></div> }
+                                        ): <div className={`${styles["img-placeholder"]} ${styles[bd.category]}`}></div> }
                                     </div>
                                     <div className={styles["card-body"]}>
                                         <span className={styles["category"]}>{blog_category}</span>
