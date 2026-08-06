@@ -17,28 +17,33 @@ interface ErrorState {
     message: string;
 }
 
-export default function usePageRender<T extends Record<string, any>>(url: string) {
+export default function usePageRender<T extends Record<string, any>>(
+    url: string,
+    // options: { enabled: boolean } = { enabled: true }
+) {
     const navigate = useNavigate();
 
     const [data, setData] = useState<T | null>(null);
-    // const [data, setData] = useState<unknown>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ErrorState | null>(null);
 
-    // const [trigger, setTrigger] = useState(0);
+    const [trigger, setTrigger] = useState(0);
 
-    // const refetch = () => setTrigger(prev => prev + 1);
+    const refetch = () => setTrigger(prev => prev + 1);
 
     useEffect(() => {
+        // if (!options.enabled) return;
+        if (url === null) return;
+
         const controller = new AbortController();
 
         axios.get<T>(url, {
             signal: controller.signal
         })
             .then((response) => {
-                // if (trigger === 0) return;
                 setData(response.data);
                 setLoading(false);
+                console.log('trigger', trigger);
             })
             .catch((err) => {
                 if (axios.isCancel(err) || err.name === "") return;
@@ -58,6 +63,9 @@ export default function usePageRender<T extends Record<string, any>>(url: string
                     setLoading(false);
                     setError({ code: 404, message: errorMessage });
                     console.log('404');
+                    if (trigger > 0) {
+                        navigate(0);
+                    }
                     return;
                 }
                 setError({ code: 505, message: errorMessage });
@@ -68,7 +76,7 @@ export default function usePageRender<T extends Record<string, any>>(url: string
         return () => {
             controller.abort();
         }
-    }, [url, navigate]);
+    }, [url, navigate, trigger]);
 
     useEffect(() => {
 
@@ -102,5 +110,5 @@ export default function usePageRender<T extends Record<string, any>>(url: string
         }
     }, [data]);
 
-    return { data, loading, error, socket };
+    return { data, loading, error, socket, refetch };
 }

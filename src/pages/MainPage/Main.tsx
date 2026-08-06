@@ -273,8 +273,8 @@ export const MainPage = ({ title }: TitleSettings) => {
         }
     }, [data?.id]);
 
-    if (loading) return <LoadingPage />
-    if (error) return <ErrorPage error={error} />
+    if (!data && loading) return <LoadingPage />;
+    if (error) return <ErrorPage error={error} />;
 
     return (
         <div className={styles['body-wrapper']}>
@@ -418,65 +418,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                                             <span>Условия использования</span>
                                         </Link>
                                     </li>
-
-                                    <div className={styles["actions-menu-other-list"]}>
-                                        {data?.role === "Admin" && (
-                                            <>
-                                                <li>
-                                                    <div className={styles["actions-menu-btn"]} onClick={() => navigate("/admin/panel")}>
-                                                        <span>Админка</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className={styles["actions-menu-btn"]} onClick={() => getRandomCards()}>
-                                                        <span>Получить случайную карту</span>
-                                                    </div>
-                                                </li>
-                                            </>
-                                        )}
-
-                                        {!data?.id ? (
-                                            <li>
-                                                <div className={styles["actions-menu-btn"]} onClick={() => navigate("/auth/sign-in")}>
-                                                    <span>Войти в аккаунт</span>
-                                                </div>
-                                            </li>
-                                        ) : (
-                                            <li>
-                                                <div className={styles["actions-menu-btn"]} onClick={logout}>
-                                                    <span>Выйти</span>
-                                                </div>
-                                            </li>
-                                        )}
-                                    </div>
-                                </ul>
-                            </div>
-                        )}
-
-                    </div>
-
-                    <div className={styles["actions-menu-tool"]}>
-
-                        <div className={`${styles["actions-menu-icon"]} ${isActionOpen === "test" ? styles["active"] : null }`}
-                             onClick={() => toggleActionsMenu("test")}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-menu-icon lucide-square-menu">
-                                <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10"/><path d="M7 12h10"/><path d="M7 16h10"/>
-                            </svg>
-                        </div>
-
-                        {(isActionOpen === "test") && (
-                            <div className={`${styles["actions-menu-top"]} ${!isActionOpen === null ? styles["closing"] : null}`}>
-                                <div className={styles["actions-menu-header"]}>
-                                    <span className={styles["actions-menu-title"]}>Другое</span>
-                                    <div className={styles["close-btn"]} onClick={() => setIsActionOpen(null)}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-icon lucide-x">
-                                            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                <ul className={styles["actions-menu-list"]}>
+                                    <br/>
                                     <li>
                                         <Link to="/help-center" className={styles["actions-menu-btn"]} onClick={() => navigate("/")}>
                                             <span>Справочный центр</span>
@@ -487,11 +429,117 @@ export const MainPage = ({ title }: TitleSettings) => {
                                             <span>Поддержка</span>
                                         </Link>
                                     </li>
+                                    <br/>
                                     <li>
                                         <Link to="/blog" className={styles["actions-menu-btn"]}>
                                             <span>Блог</span>
                                         </Link>
                                     </li>
+                                    <li>
+                                        <Link to="/news" className={styles["actions-menu-btn"]}>
+                                            <span>Новости</span>
+                                        </Link>
+                                    </li>
+                                    <br/>
+                                    <li>
+                                        <Link to="/about-us" className={styles["actions-menu-btn"]}>
+                                            <span>О нас</span>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/company-information" className={styles["actions-menu-btn"]}>
+                                            <span>Информация о компании</span>
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+
+                    </div>
+
+                    {/*<div className={styles["actions-menu-tool"]}>*/}
+
+                    {/*    <div className={`${styles["actions-menu-icon"]} ${isActionOpen === "other" ? styles["active"] : null }`}*/}
+                    {/*         onClick={() => toggleActionsMenu("other")}*/}
+                    {/*    >*/}
+                    {/*        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-menu-icon lucide-square-menu">*/}
+                    {/*            <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10"/><path d="M7 12h10"/><path d="M7 16h10"/>*/}
+                    {/*        </svg>*/}
+                    {/*    </div>*/}
+
+                    {/*    {(isActionOpen === "other") && (*/}
+                    {/*        <div className={`${styles["actions-menu-top"]} ${!isActionOpen === null ? styles["closing"] : null}`}>*/}
+                    {/*            <div className={styles["actions-menu-header"]}>*/}
+                    {/*                <span className={styles["actions-menu-title"]}>Другое</span>*/}
+                    {/*                <div className={styles["close-btn"]} onClick={() => setIsActionOpen(null)}>*/}
+                    {/*                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-icon lucide-x">*/}
+                    {/*                        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>*/}
+                    {/*                    </svg>*/}
+                    {/*                </div>*/}
+                    {/*            </div>*/}
+
+                    {/*            <ul className={styles["actions-menu-list"]}>*/}
+                    {/*                <li>*/}
+                    {/*                    <Link to="/blog" className={styles["actions-menu-btn"]}>*/}
+                    {/*                        <span>Блог</span>*/}
+                    {/*                    </Link>*/}
+                    {/*                </li>*/}
+                    {/*            </ul>*/}
+                    {/*        </div>*/}
+                    {/*    )}*/}
+
+                    {/*</div>*/}
+
+                    <div className={styles["actions-menu-tool"]}>
+
+                        <div className={`${styles["actions-menu-icon"]} ${isActionOpen === "player" ? styles["active"] : null }`}
+                             onClick={() => toggleActionsMenu("player")}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-user-icon lucide-square-user">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 21v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </div>
+
+                        {(isActionOpen === "player") && (
+                            <div className={`${styles["actions-menu-top"]} ${!isActionOpen === null ? styles["closing"] : null}`}>
+                                <div className={styles["actions-menu-header"]}>
+                                    <span className={styles["actions-menu-title"]}>Аккаунт</span>
+                                    <div className={styles["close-btn"]} onClick={() => setIsActionOpen(null)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-icon lucide-x">
+                                            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <ul className={styles["actions-menu-list"]}>
+                                    {data?.role === "Admin" && (
+                                        <>
+                                            <li>
+                                                <div className={styles["actions-menu-btn"]} onClick={() => navigate("/admin/panel")}>
+                                                    <span>Админка</span>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div className={styles["actions-menu-btn"]} onClick={() => getRandomCards()}>
+                                                    <span>Получить случайную карту</span>
+                                                </div>
+                                            </li>
+                                            <br/>
+                                        </>
+                                    )}
+                                    {!data?.id ? (
+                                        <li>
+                                            <div className={styles["actions-menu-btn"]} onClick={() => navigate("/auth/sign-in")}>
+                                                <span>Войти в аккаунт</span>
+                                            </div>
+                                        </li>
+                                    ) : (
+                                        <li>
+                                            <div className={styles["actions-menu-btn"]} onClick={logout}>
+                                                <span>Выйти</span>
+                                            </div>
+                                        </li>
+                                    )}
                                 </ul>
                             </div>
                         )}

@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 import styles from "./Card.Error.module.css";
 
@@ -26,7 +26,7 @@ export const ErrorPage = ({ error }: ErrorData) => {
                 <h2>Произошла ошибка</h2>
                 <p>{message}</p>
                 {/*<p>Похоже, эта страница вышла из игры или её никогда не существовало. Давайте вернемся в главное меню.</p>*/}
-                <Link to="/">На главную</Link>
+                <a href="/">На главную</a>
             </div>
 
         </div>

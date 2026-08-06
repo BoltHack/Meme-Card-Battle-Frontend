@@ -59,23 +59,19 @@ export const MyCardsPage = ({ title }: TitleSettings) => {
     useEffect(() => {
         if (!data || !data.id) return;
 
-        console.log('data', data);
+        const timer = setTimeout(() => {
+            console.log('data', data);
 
-        setCards(data?.renderData);
+            setCards(data?.renderData);
 
-        const stats = data?.stats;
+            const stats = data?.stats;
 
-        setStats(stats);
+            setStats(stats);
+        }, 0);
 
-        // console.log('reduce', cards?.reduce((acc, card) => acc + card.card_quantity, 0));
+        return () => clearInterval(timer);
 
-        // const cards_reduce = cards?.map(card => card.power_slot * card.card_quantity).reduce((acc, card) => acc + card, 0);
-
-        // console.log('cards_reduce', cards_reduce);
-
-        // cards?.reduce((acc, card) => acc + card.power_slot, 0));
-
-    }, [data, cards]);
+    }, [data]);
 
     if (loading) return <LoadingPage />
     if (error) return <ErrorPage error={error} />

@@ -1,25 +1,52 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.Loading.module.css";
 
-export const LoadingPage = () => {
+import usePageRender from "../../tools/PageRender.ts";
+import api from "../../api/api.ts";
 
-    // console.log('setLoading', setLoading);
-    // const location = useLocation();
-    // const pageLocation = `${api.API_BASE_URL}/api${location.pathname}`;
-    //
-    // const { refetch } = usePageRender<PlayerData>(pageLocation);
-    // console.log('setLoading', setLoading);
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         console.log('Запрашиваем новые данные...');
-    //         refetch()
-    //     }, 5000);
-    //
-    //     return () => {
-    //         clearInterval(interval);
-    //     }
-    // }, [loading, refetch]);
+export const LoadingPage = () => {
+    // const navigate = useNavigate();
+    const pageLocation = useLocation() as any;
+
+    const [isRefetch, setIsRefetch] = useState<boolean | false>(false);
+
+    const targetUrl = isRefetch
+        ? `${api.API_BASE_URL}/api${pageLocation.pathname}`
+        : null;
+
+    const { data, loading, refetch } = usePageRender(targetUrl!);
+
+    useEffect(() => {
+        const checkFetchStatus = setTimeout(() => {
+            setIsRefetch(true);
+        }, 5000);
+
+        return () => clearTimeout(checkFetchStatus);
+    }, [pageLocation.pathname]);
+
+    useEffect(() => {
+        // if (!isRefetch || data && !loading) return;
+        if (!isRefetch) return;
+
+        const interval = setInterval(() => {
+            refetch();
+        }, 5000);
+
+        return () => clearInterval(interval);
+
+    }, [isRefetch, refetch]);
+
+    useEffect(() => {
+        if (data && !loading) {
+            // navigate(0);
+            console.log('load');
+            window.location.reload();
+            // navigate(location.pathname, { replace: true, state: { fetchedData: data } });
+        }
+    }, [data, loading]);
 
     return (
         <div className={styles["body-wrapper"]}>
@@ -74,4 +101,4 @@ export const LoadingPage = () => {
             </div>
         </div>
     );
-};
+}
