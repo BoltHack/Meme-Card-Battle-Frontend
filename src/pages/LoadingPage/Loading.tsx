@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.Loading.module.css";
@@ -8,7 +8,7 @@ import usePageRender from "../../tools/PageRender.ts";
 import api from "../../api/api.ts";
 
 export const LoadingPage = () => {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const pageLocation = useLocation() as any;
 
     const [isRefetch, setIsRefetch] = useState<boolean | false>(false);
@@ -41,10 +41,7 @@ export const LoadingPage = () => {
 
     useEffect(() => {
         if (data && !loading) {
-            // navigate(0);
-            console.log('load');
-            window.location.reload();
-            // navigate(location.pathname, { replace: true, state: { fetchedData: data } });
+            navigate(0);
         }
     }, [data, loading]);
 

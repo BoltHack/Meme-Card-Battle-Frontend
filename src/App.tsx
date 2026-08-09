@@ -96,7 +96,7 @@ const router = createBrowserRouter([
     // },
     {
         path: "/admin/edit/blog/:blog_id",
-        element: <EditBlogPage title="Админка | edit блога" />
+        element: <EditBlogPage />
     },
     {
         path: "*",

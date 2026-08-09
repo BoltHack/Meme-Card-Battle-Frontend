@@ -23,7 +23,7 @@
 .editor-container {
     width: 100%;
     max-width: 1200px;
-    max-height: calc(100dvh - 48px);
+    /*max-height: calc(100dvh - 48px);*/
     background: rgba(21, 9, 49, 0.4);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -70,6 +70,8 @@
 
     display: flex;
     gap: 32px;
+    /*justify-content: center;*/
+    /*align-items: center;*/
 }
 .editor-form::-webkit-scrollbar {
     width: 6px;
@@ -87,8 +89,8 @@
 }
 
 .editor-left-side {
-    max-width: 400px;
     width: 100%;
+    max-width: 400px;
     flex-shrink: 0;
 }
 
@@ -96,6 +98,7 @@
     flex-grow: 1;
     width: 400px;
     /*margin-left: 50px;*/
+    margin-top: -55px;
 }
 
 .form-group {
@@ -109,6 +112,19 @@
     font-size: 14px;
     font-weight: 500;
     color: #94a3b8;
+}
+
+.delete-file-btn {
+    cursor: pointer;
+    text-align: center;
+    padding: 5px;
+    border-radius: 8px;
+}
+.delete-file-btn:hover {
+    background: rgba(203,177,79,0.21);
+}
+.delete-file-btn:active {
+    opacity: 0.7;
 }
 
 .form-editor {
@@ -141,8 +157,9 @@
     color: #f8fafc;
     font-family: inherit;
     box-sizing: border-box;
-    flex-wrap: wrap;
-    word-break: break-all;
+    /*flex-wrap: wrap;*/
+    /*word-break: break-all;*/
+    /*white-space: pre-wrap;*/
 }
 
 .form-input, .form-textarea, .form-select {
@@ -167,7 +184,7 @@
 
 .form-textarea {
     resize: vertical;
-    min-height: 140px;
+    min-height: 300px;
     line-height: 1.6;
 }
 
@@ -196,6 +213,7 @@
 }
 
 .file-dropzone-text {
+    word-break: break-word;
     font-size: 14px;
     color: #94a3b8;
 }
@@ -233,7 +251,6 @@
     transform: scale(0.98);
 }
 
-
 /*.editor-meta-grid {*/
 /*    display: grid;*/
 /*    grid-template-columns: 1fr 1fr;*/
@@ -257,16 +274,4 @@
 @media (max-width: 968px) {
     .editor-form { flex-direction: column; }
     .editor-left-side { width: 100%; }
-}
-
-
-.post-page-body blockquote {
-    border-left: 4px solid #0066ff;
-    background: rgba(0, 102, 255, 0.03);
-    padding: 1rem 1.5rem;
-    /*margin: 2rem 0;*/
-    margin-bottom: 2rem;
-    font-style: italic;
-    color: #94a3b8;
-    border-radius: 0 8px 8px 0;
 }

@@ -273,7 +273,7 @@ export const MainPage = ({ title }: TitleSettings) => {
         }
     }, [data?.id]);
 
-    if (!data && loading) return <LoadingPage />;
+    if (loading) return <LoadingPage />;
     if (error) return <ErrorPage error={error} />;
 
     return (

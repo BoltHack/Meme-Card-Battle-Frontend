@@ -170,6 +170,13 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 20px;
 }
+.article-main header {
+    margin-bottom: 20px;
+}
+
+.article-tools header {
+    padding-top: 10px;
+}
 
 .container h1 {
     font-size: 32px;

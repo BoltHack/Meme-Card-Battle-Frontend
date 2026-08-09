@@ -1,24 +1,19 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
+import { useParams } from "react-router-dom";
+import { sanitize } from "isomorphic-dompurify";
+import { marked } from "marked";
 
 import styles from './Card.EditBlog.module.css';
+import admin_styles from './Card.EditBlog.module.css';
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../api/api.ts";
-// import toast from "react-hot-toast";
 
 import usePageRender from "../../../tools/PageRender.ts";
 import { ErrorPage } from "../../ErrorPage/Error.tsx";
-import { LoadingPage } from "../../LoadingPage/Loading.tsx";
-
-import { Header } from "../../../tools/PageTools/header_footer/Header.tsx";
-import { Footer } from "../../../tools/PageTools/header_footer/Footer.tsx";
-import { useParams } from "react-router-dom";
-import {sanitize} from "isomorphic-dompurify";
-import {marked} from "marked";
-import {Config} from "dompurify";
+import { DefaultLoading } from "../../LoadingPage/DefaultLoading.tsx";
 
 interface BlogId {
     blog_id: string
@@ -37,23 +32,19 @@ interface BlogPost {
     content: string;
 }
 
-interface titleSettings {
-    title: string;
-}
-
-export const EditBlogPage = ({ title }: titleSettings) => {
+export const EditBlogPage = () => {
     const { blog_id } = useParams<{ type: string }>() as BlogId;
 
     const [formData, setFormData] = useState({
         edit_title: "",
         edit_description: "",
-        edit_cover: "",
-        edit_category: "",
+        edit_category: "community",
         content: ""
     });
+
     const [file, setFile] = useState<File | null>(null);
 
-    const [, setEditorText] = useState("");
+    const [editorText, setEditorText] = useState("");
 
     const { data, loading, error } = usePageRender<{ blog: BlogPost }>(
         `${api.API_BASE_URL}/admin/edit/blog/${blog_id}`
@@ -61,9 +52,11 @@ export const EditBlogPage = ({ title }: titleSettings) => {
 
     let cleanHTMLText = (rawHTML: string) => {
         return rawHTML
-            .replace(/<div>(?:\s|<br>|&nbsp;)*<\/div>/gi, '')
-            .replace(/<span[^>]*>(.*?)<\/span>/gi, '$1')
-            .replace(/<br\s*\/?>/gi, '\n');
+            .replace(/<\/p>|<\/div>/gi, '\n')
+            .replace(/<br\s*\/?>/gi, '\n')
+            .replace(/<\/?[^>]+(>|$)/g, "")
+            .replace(/&nbsp;/gi, ' ')
+            .trim();
     }
 
     const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
@@ -71,7 +64,8 @@ export const EditBlogPage = ({ title }: titleSettings) => {
         const cleaned = cleanHTMLText(rawContent);
 
         setEditorText(cleaned);
-    };
+    }
+
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -86,9 +80,43 @@ export const EditBlogPage = ({ title }: titleSettings) => {
         }
     }
 
-    const sanitizeConfig: Config = {
-        ALLOWED_ATTR: ['class', 'src', 'alt', 'title', 'href', 'id', 'start', 'loading', 'onclick', 'target', 'rel']
-    };
+    const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const dataToSend = new FormData();
+
+        dataToSend.append("edit_title", formData.edit_title);
+        dataToSend.append("edit_description", formData.edit_description);
+        dataToSend.append("edit_category", formData.edit_category);
+        dataToSend.append("content", editorText);
+
+        if (file) {
+            console.log('cover', file);
+            dataToSend.append("edit_cover", file);
+        }
+
+        try {
+            const response = await axios.post(`${api.API_BASE_URL}/admin/edit/blog/${blog_id}`, dataToSend, {
+                withCredentials: true
+            });
+
+            console.log('Данные успешно добавлены:', response.data);
+
+            setFormData({
+                edit_title: "",
+                edit_description: "",
+                edit_category: "community",
+                content: ""
+            });
+
+            setFile(null);
+            setEditorText("");
+
+            return response.data;
+        } catch (error) {
+            console.log('error', error);
+        }
+    }
 
     useEffect(() => {
         if (!data) {
@@ -103,34 +131,39 @@ export const EditBlogPage = ({ title }: titleSettings) => {
             edit_description: blog?.description || "",
             edit_cover: blog?.cover || "",
             edit_category: blog?.category || "",
-            // content: blog?.content.replace(/\n/g, '<br/>') || "",
-            content: (blog.content || "").replace(/\r\n|\n|\r/g, '\n')
+            // content: (blog.content || "").replace(/\r\n|\n|\r/g, '\n')
+            content: (blog.content || "").replace(/<[^>]*>/g, '')
         }
 
         setFormData(formattedBlogs);
+        setFile(blog?.cover.length > 0 ? blog?.cover : null);
+
+        console.log('formattedBlogs:', formattedBlogs);
+        console.log('file:', file);
+        console.log('cover:', blog?.cover.length > 0 ? blog?.cover : null);
     }, [data]);
 
-    if (loading) return <LoadingPage />
+    if (loading) return <DefaultLoading />
     if (error) return <ErrorPage error={error} />
 
     return (
-        <div className={styles["body-wrapper"]}>
-            <Helmet>
-                <title>{title}</title>
-            </Helmet>
-
-            <Header />
+        // <div id="edit-blog-page" className={`${admin_styles["page"]} ${admin_styles["active"]}`}>
+        <div id="edit-blog-page" className={`${styles["body-wrapper"]}`}>
+            <header className={admin_styles["header"]}>
+                <h1>Создание публикаций (блогов)</h1>
+                <p>Напишите свои мысли, выберите желаемую категорию и опубликуйте блог.</p>
+            </header>
 
             <div className={styles["editor-container"]}>
-                <h1 className={styles["editor-title"]}>Редактирование публикации</h1>
+                <h1 className={styles["editor-title"]}>Создание новой публикации</h1>
 
-                <form className={styles["editor-form"]}>
+                <form className={styles["editor-form"]} onSubmit={handleSubmit}>
 
                     <div className={styles["editor-left-side"]}>
                         <div className={styles["form-group"]}>
-                            <label className={styles["form-label"]} htmlFor="edit_title">Название статьи</label>
+                            <label className={styles["form-label"]} htmlFor="post_title">Название статьи</label>
                             <input
-                                type="text" name="edit_title"
+                                type="text" name="post_title" id="post_title"
                                 onChange={handleChange} value={formData.edit_title}
                                 className={styles["form-input"]}
                                 placeholder="Введите броский заголовок..."
@@ -139,9 +172,9 @@ export const EditBlogPage = ({ title }: titleSettings) => {
                         </div>
 
                         <div className={styles["form-group"]}>
-                            <label className={styles["form-label"]} htmlFor="edit_description">Краткое содержание</label>
+                            <label className={styles["form-label"]} htmlFor="post_description">Краткое содержание</label>
                             <input
-                                type="text" name="edit_description"
+                                type="text" name="post_description" id="post_description"
                                 onChange={handleChange} value={formData.edit_description}
                                 className={styles["form-input"]}
                                 placeholder="Введите желаемый текст..."
@@ -150,9 +183,9 @@ export const EditBlogPage = ({ title }: titleSettings) => {
                         </div>
 
                         <div className={styles["form-group"]}>
-                            <label className={styles["form-label"]} htmlFor="edit_category">Категория</label>
+                            <label className={styles["form-label"]} htmlFor="post_category">Категория</label>
                             <select
-                                name="edit_category"
+                                name="post_category" id="post_category"
                                 onChange={handleChange} value={formData.edit_category}
                                 className={styles["form-select"]}
                             >
@@ -176,32 +209,36 @@ export const EditBlogPage = ({ title }: titleSettings) => {
                                     ): <span>Перетащите изображение сюда или <strong>выберите файл</strong></span>}
                                 </div>
                             </label>
+                            {file !== null && (
+                                <a className={styles["delete-file-btn"]} onClick={() => setFile(null)}>Нажмите, чтобы удалить файл</a>
+                            )}
                         </div>
                     </div>
 
                     <div className={styles["editor-right-side"]}>
-                        {/*<label className={styles["form-label"]} htmlFor="post-content">Текст статьи</label>*/}
-
                         <div
-                            // dangerouslySetInnerHTML={{ __html: formData.content }}
                             dangerouslySetInnerHTML={{
-                                __html: sanitize(marked.parse(formData?.content ?? "") as string, sanitizeConfig)
+                                __html: sanitize(marked.parse(formData?.content ?? "") as string).replace(/<[^>]*>/g, '<br/>')
                             }}
+                            // children={editorText}
                             onInput={handleInput}
-                            className={styles["form-editor"]}
-                            contentEditable="true"
-                            spellCheck="false"
+                            onPaste={(e) => {
+                                e.preventDefault();
+                                const text = e.clipboardData.getData('text/plain');
+                                document.execCommand('insertText', false, text);
+                            }}
+                            className={styles['form-editor']}
+                            contentEditable={true}
+                            spellCheck={false}
                             autoCorrect="off"
                             autoCapitalize="off"
                             translate="no"
+                            suppressContentEditableWarning={true}
                         ></div>
-                        <button className={styles["submit-btn"]} type="submit">Изменить статью</button>
+                        <button type="submit" className={styles["submit-btn"]}>Опубликовать статью</button>
                     </div>
-
                 </form>
             </div>
-
-            <Footer />
         </div>
     );
-};
+}
