@@ -1,23 +1,23 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { sanitize } from "isomorphic-dompurify";
 import { marked } from "marked";
 
 import styles from './Card.EditBlog.module.css';
-import admin_styles from './Card.EditBlog.module.css';
+import admin_styles from '../../AdminPanel/Card.AdminPanel.module.css';
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
+import api from "../../../../api/api.ts";
+import toast from "react-hot-toast";
 
-import usePageRender from "../../../tools/PageRender.ts";
-import { ErrorPage } from "../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../LoadingPage/DefaultLoading.tsx";
+import usePageRender from "../../../../tools/PageRender.ts";
+import { ErrorPage } from "../../../ErrorPage/Error.tsx";
+import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 
-interface BlogId {
-    blog_id: string
-}
+// interface BlogId {
+//     blog_id: string
+// }
 
 interface BlogPost {
     title: string;
@@ -25,29 +25,35 @@ interface BlogPost {
     cover: string;
     category: string;
 
-    edit_title: string;
-    edit_description: string;
-    edit_cover: string;
-    edit_category: string;
+    post_title: string;
+    post_description: string;
+    post_cover: string;
+    post_category: string;
     content: string;
 }
 
-export const EditBlogPage = () => {
-    const { blog_id } = useParams<{ type: string }>() as BlogId;
+interface IdProps {
+    blog_id: string;
+}
+
+export const EditBlogPage = ({ blog_id }: IdProps ) => {
+    // const blog_id = useState<IdProps | null>(null);
 
     const [formData, setFormData] = useState({
-        edit_title: "",
-        edit_description: "",
-        edit_category: "community",
+        post_title: "",
+        post_description: "",
+        post_category: "community",
+        post_cover: "",
         content: ""
     });
 
     const [file, setFile] = useState<File | null>(null);
+    const [isFileDelete, setIsFileDelete] = useState<boolean | false>(false);
 
     const [editorText, setEditorText] = useState("");
 
     const { data, loading, error } = usePageRender<{ blog: BlogPost }>(
-        `${api.API_BASE_URL}/admin/edit/blog/${blog_id}`
+        `${api.API_BASE_URL}/admin/blog/${blog_id}/edit`
     );
 
     let cleanHTMLText = (rawHTML: string) => {
@@ -80,41 +86,75 @@ export const EditBlogPage = () => {
         }
     }
 
+    async function setCoverFromUrl(url: string) {
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const file = new File([blob], "cover.jpg", { type: blob.type });
+            setFile(file);
+        } catch (error) {
+            console.error("Не удалось загрузить файл по ссылке", error);
+            setFile(null);
+        }
+    }
+
+    const handleFileRemove = () => {
+        setFile(null);
+        setIsFileDelete(true);
+    }
+
     const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const dataToSend = new FormData();
 
-        dataToSend.append("edit_title", formData.edit_title);
-        dataToSend.append("edit_description", formData.edit_description);
-        dataToSend.append("edit_category", formData.edit_category);
+        dataToSend.append("post_title", formData.post_title);
+        dataToSend.append("post_description", formData.post_description);
+        dataToSend.append("post_category", formData.post_category);
+        // dataToSend.append("isFileDelete", isFileDelete);
         dataToSend.append("content", editorText);
 
         if (file) {
             console.log('cover', file);
-            dataToSend.append("edit_cover", file);
+            dataToSend.append("post_cover", file);
         }
+        if (isFileDelete) {
+            dataToSend.append("post_cover", `${isFileDelete}`);
+        }
+        // if (file === null && formData.post_cover.length < 1) {
+        //     dataToSend.append("post_cover", "");
+        // }
 
         try {
-            const response = await axios.post(`${api.API_BASE_URL}/admin/edit/blog/${blog_id}`, dataToSend, {
+            const response = await axios.post(`${api.API_BASE_URL}/admin/blog/${blog_id}/edit`, dataToSend, {
                 withCredentials: true
             });
 
             console.log('Данные успешно добавлены:', response.data);
 
             setFormData({
-                edit_title: "",
-                edit_description: "",
-                edit_category: "community",
-                content: ""
+                post_title: formData.post_title,
+                post_description: formData.post_description,
+                post_category: formData.post_category,
+                post_cover: formData.post_cover,
+                content: formData.content
             });
 
             setFile(null);
-            setEditorText("");
+
+            toast.success(response.data.success);
+            setIsFileDelete(false);
+            setTimeout(() => getBlogData(formData.post_cover), 500);
 
             return response.data;
         } catch (error) {
             console.log('error', error);
+        }
+    }
+
+    const getBlogData = async (cover: string) => {
+        if (cover.length > 0) {
+            await setCoverFromUrl(formData.post_cover);
         }
     }
 
@@ -127,31 +167,29 @@ export const EditBlogPage = () => {
         const blog = (data as { blog: BlogPost }).blog;
 
         const formattedBlogs = {
-            edit_title: blog?.title || "",
-            edit_description: blog?.description || "",
-            edit_cover: blog?.cover || "",
-            edit_category: blog?.category || "",
+            post_title: blog?.title || "",
+            post_description: blog?.description || "",
+            post_cover: blog?.cover || "",
+            post_category: blog?.category || "",
             // content: (blog.content || "").replace(/\r\n|\n|\r/g, '\n')
             content: (blog.content || "").replace(/<[^>]*>/g, '')
         }
 
         setFormData(formattedBlogs);
-        setFile(blog?.cover.length > 0 ? blog?.cover : null);
 
-        console.log('formattedBlogs:', formattedBlogs);
-        console.log('file:', file);
-        console.log('cover:', blog?.cover.length > 0 ? blog?.cover : null);
+        getBlogData(blog?.cover);
+
     }, [data]);
 
-    if (loading) return <DefaultLoading />
-    if (error) return <ErrorPage error={error} />
+    if (loading) return <DefaultLoading />;
+    if (error) return <ErrorPage error={error} />;
 
     return (
         // <div id="edit-blog-page" className={`${admin_styles["page"]} ${admin_styles["active"]}`}>
-        <div id="edit-blog-page" className={`${styles["body-wrapper"]}`}>
+        <div id="edit-blog-page" className={`${admin_styles["page"]} ${admin_styles["active"]}`}>
             <header className={admin_styles["header"]}>
-                <h1>Создание публикаций (блогов)</h1>
-                <p>Напишите свои мысли, выберите желаемую категорию и опубликуйте блог.</p>
+                <h1>Редактирование публикаций (блогов)</h1>
+                <p>Напишите свои мысли, выберите желаемую категорию и отредактируйте блог.</p>
             </header>
 
             <div className={styles["editor-container"]}>
@@ -164,7 +202,7 @@ export const EditBlogPage = () => {
                             <label className={styles["form-label"]} htmlFor="post_title">Название статьи</label>
                             <input
                                 type="text" name="post_title" id="post_title"
-                                onChange={handleChange} value={formData.edit_title}
+                                onChange={handleChange} value={formData.post_title}
                                 className={styles["form-input"]}
                                 placeholder="Введите броский заголовок..."
                                 required
@@ -175,7 +213,7 @@ export const EditBlogPage = () => {
                             <label className={styles["form-label"]} htmlFor="post_description">Краткое содержание</label>
                             <input
                                 type="text" name="post_description" id="post_description"
-                                onChange={handleChange} value={formData.edit_description}
+                                onChange={handleChange} value={formData.post_description}
                                 className={styles["form-input"]}
                                 placeholder="Введите желаемый текст..."
                                 required
@@ -186,7 +224,7 @@ export const EditBlogPage = () => {
                             <label className={styles["form-label"]} htmlFor="post_category">Категория</label>
                             <select
                                 name="post_category" id="post_category"
-                                onChange={handleChange} value={formData.edit_category}
+                                onChange={handleChange} value={formData.post_category}
                                 className={styles["form-select"]}
                             >
                                 <option value="community">Сообщество</option>
@@ -206,11 +244,12 @@ export const EditBlogPage = () => {
                                 <div className={styles["file-dropzone-text"]}>
                                     {file !== null ? (
                                         <span>Файл выбран <strong>{file.name}</strong></span>
-                                    ): <span>Перетащите изображение сюда или <strong>выберите файл</strong></span>}
+                                    ): <span>Перетащите изображение сюда или <strong>выберите файл</strong></span>
+                                    }
                                 </div>
                             </label>
                             {file !== null && (
-                                <a className={styles["delete-file-btn"]} onClick={() => setFile(null)}>Нажмите, чтобы удалить файл</a>
+                                <a className={styles["delete-file-btn"]} onClick={handleFileRemove}>Нажмите, чтобы удалить файл</a>
                             )}
                         </div>
                     </div>
@@ -218,7 +257,9 @@ export const EditBlogPage = () => {
                     <div className={styles["editor-right-side"]}>
                         <div
                             dangerouslySetInnerHTML={{
-                                __html: sanitize(marked.parse(formData?.content ?? "") as string).replace(/<[^>]*>/g, '<br/>')
+                                __html: sanitize(marked.parse(formData?.content ?? "") as string)
+                                    .replace(/<[^>]*>/g, '<br/>')
+                                    .replace(/^(<br\s*\/?>\s*)+/i, "")
                             }}
                             // children={editorText}
                             onInput={handleInput}
@@ -235,7 +276,7 @@ export const EditBlogPage = () => {
                             translate="no"
                             suppressContentEditableWarning={true}
                         ></div>
-                        <button type="submit" className={styles["submit-btn"]}>Опубликовать статью</button>
+                        <button type="submit" className={styles["submit-btn"]}>Сохранить статью</button>
                     </div>
                 </form>
             </div>

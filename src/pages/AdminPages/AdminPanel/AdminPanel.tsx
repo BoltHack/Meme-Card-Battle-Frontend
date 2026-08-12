@@ -15,14 +15,17 @@ import { LoadingPage } from "../../LoadingPage/Loading.tsx";
 import { TeamPage } from "../TeamPage/Team.tsx";
 import { ToolsPage } from "../ToolsPage/Tools.tsx";
 import { LogsPage } from "../LogsPage/Logs.tsx";
-import { CreateBlogPage } from "../CreateBlog/CreateBlogPage.tsx";
-import {CreateCardPage} from "../CreateCard/CreateCardPage.tsx";
+
+import { CreateBlogPage } from "../BlogRedaction/CreateBlog/CreateBlogPage.tsx";
+import { BlogListPage } from "../BlogRedaction/BlogList/BlogListPage.tsx";
+
+import { CreateCardPage } from "../CreateCard/CreateCardPage.tsx";
 
 interface titleSettings {
     title: string;
 }
 
-type AdminPageType = "ToolsPage" | "TeamPage" | "CreateCardPage" | "CreateBlogPage" | "LogsPage" | "SettingsPage";
+type AdminPageType = "ToolsPage" | "TeamPage" | "CreateCardPage" | "CreateBlogPage" | "LogsPage" | "SettingsPage" | "BlogListPage";
 
 export const AdminPanelPage = ({ title }: titleSettings) => {
     const navigate = useNavigate();
@@ -33,8 +36,8 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
         `${api.API_BASE_URL}/admin/panel`
     );
 
-    if (loading) return <LoadingPage />
-    if (error) return <ErrorPage error={error} />
+    if (loading) return <LoadingPage />;
+    if (error) return <ErrorPage error={error} />;
 
     return (
         <div className={styles["body-wrapper"]}>
@@ -115,6 +118,8 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
                 {activeTab === "CreateCardPage" && <CreateCardPage />}
                 {activeTab === "CreateBlogPage" && <CreateBlogPage />}
                 {activeTab === "LogsPage" && <LogsPage />}
+                {activeTab === "BlogListPage" && <BlogListPage />}
+
                 {/*<div id="team-page" className={styles["page"]}>*/}
                 {/*    <header className={styles["header"]}>*/}
                 {/*        <h1>Состав администрации</h1>*/}

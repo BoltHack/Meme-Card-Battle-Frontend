@@ -151,7 +151,7 @@ export const BlogCategoryPage = ({ title }: BlogPageProps) => {
                             </div>
                         </article>
 
-                    ): <p>Категория не найдена</p>}
+                    ): null}
 
                 </section>
 
@@ -180,7 +180,22 @@ export const BlogCategoryPage = ({ title }: BlogPageProps) => {
                                 </article>
                             )
                         })
-                    ): null}
+                    ):
+                        <div className={styles["category-not-found"]}>
+                            <div className={styles["grid-card"]}>
+                                <div className={styles["card-body"]}>
+                                    <h3>Что-то пошло не так!</h3>
+                                    <p>На данный момент информация в этой категории отсутствует. Попробуйте поискать её в других категориях.</p>
+                                    <div style={{ display: "flex", gap: "10px" }}>
+                                        <Link to="/category/community" className={`${styles["read-more-btn"]} ${styles["small"]}`}>Сообщество</Link>
+                                        <Link to="/category/development" className={`${styles["read-more-btn"]} ${styles["small"]}`}>Разработка</Link>
+                                        <Link to="/category/functions" className={`${styles["read-more-btn"]} ${styles["small"]}`}>Функции</Link>
+                                        <Link to="/category/safety" className={`${styles["read-more-btn"]} ${styles["small"]}`}>Безопасность</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
 
                 </section>
 

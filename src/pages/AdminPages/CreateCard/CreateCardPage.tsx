@@ -28,7 +28,7 @@ export const CreateCardPage = () => {
     // const navigate = useNavigate();
 
     const { loading, error } = usePageRender<PlayerData>(
-        `${api.API_BASE_URL}/admin/create/card`
+        `${api.API_BASE_URL}/admin/card/create`
     );
 
     const [formData, setFormData] = useState<CardsFormat>({
@@ -88,7 +88,7 @@ export const CreateCardPage = () => {
             dataToSend.append("card_avatar", file);
         }
         try {
-            const response = await axios.post(`${api.API_BASE_URL}/admin/add/card`, dataToSend, {
+            const response = await axios.post(`${api.API_BASE_URL}/admin/card/create`, dataToSend, {
                 withCredentials: true
             });
 

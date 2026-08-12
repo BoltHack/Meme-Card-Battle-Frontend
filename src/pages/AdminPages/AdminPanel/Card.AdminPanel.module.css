@@ -16,6 +16,7 @@
     background-attachment: fixed;
     margin: 0;
     display: flex;
+    user-select: none;
 }
 
 .sidebar {

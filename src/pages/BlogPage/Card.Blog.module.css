@@ -215,6 +215,12 @@
     color: #ff007f;
 }
 
+.category-not-found {
+    display: flex;
+    justify-content: center;
+    /*text-align: center;*/
+}
+
 @media (max-width: 968px) {
     .featured-card {
         grid-template-columns: 1fr;

@@ -25,7 +25,7 @@ import { BlogCategoryPage } from "./pages/BlogPage/BlogCategory.tsx";
 import { AdminPanelPage } from "./pages/AdminPages/AdminPanel/AdminPanel.tsx";
 import { CreateCardPage } from "./pages/AdminPages/CreateCard/CreateCardPage.tsx";
 // import { CreateBlogPage } from "./pages/AdminPages/CreateBlog/CreateBlogPage.tsx";
-import { EditBlogPage } from "./pages/AdminPages/EditBlog/EditBlogPage.tsx";
+import { EditBlogPage } from "./pages/AdminPages/BlogRedaction/EditBlog/EditBlogPage.tsx";
 
 import { ErrorPage } from "./pages/ErrorPage/Error.tsx";
 
@@ -95,7 +95,7 @@ const router = createBrowserRouter([
     //     element: <CreateBlogPage />
     // },
     {
-        path: "/admin/edit/blog/:blog_id",
+        path: "/admin/blog/:blog_id/edit",
         element: <EditBlogPage />
     },
     {

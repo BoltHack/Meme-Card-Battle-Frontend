@@ -2,17 +2,17 @@ import { ChangeEvent, useState } from "react";
 // import { Helmet } from "react-helmet-async";
 
 import styles from './Card.CreateBlog.module.css';
-import admin_styles from '../AdminPanel/Card.AdminPanel.module.css';
+import admin_styles from '../../AdminPanel/Card.AdminPanel.module.css';
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
-// import toast from "react-hot-toast";
+import api from "../../../../api/api.ts";
+import toast from "react-hot-toast";
 
-import usePageRender from "../../../tools/PageRender.ts";
-import { ErrorPage } from "../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../LoadingPage/DefaultLoading.tsx";
+import usePageRender from "../../../../tools/PageRender.ts";
+import { ErrorPage } from "../../../ErrorPage/Error.tsx";
+import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 
 interface PlayerData {
     name: string;
@@ -25,12 +25,13 @@ export const CreateBlogPage = () => {
         post_description: "",
         post_category: "community"
     });
+
     const [file, setFile] = useState<File | null>(null);
 
     const [editorText, setEditorText] = useState("");
 
     const { loading, error } = usePageRender<PlayerData>(
-        `${api.API_BASE_URL}/admin/create/blog`
+        `${api.API_BASE_URL}/admin/blog/create`
     );
 
     let cleanHTMLText = (rawHTML: string) => {
@@ -51,21 +52,21 @@ export const CreateBlogPage = () => {
             .replace(/&nbsp;/gi, ' ')
             .trim();
 
-            // .replace(/<p>\s*<\/p>/gi, '')
-            // .replace(/<\/p>|<\/div>/gi, '\n')
-            // .replace(/<br\s*\/?>/gi, '\n')
-            // .replace(/<\/?[^>]+(>|$)/g, "")
-            // .replace(/&nbsp;/gi, ' ')
-            // .replace(/\n{3,}/g, '\n\n')
-            // .trim();
+        // .replace(/<p>\s*<\/p>/gi, '')
+        // .replace(/<\/p>|<\/div>/gi, '\n')
+        // .replace(/<br\s*\/?>/gi, '\n')
+        // .replace(/<\/?[^>]+(>|$)/g, "")
+        // .replace(/&nbsp;/gi, ' ')
+        // .replace(/\n{3,}/g, '\n\n')
+        // .trim();
 
-            // .replace(/<(p|div|blockquote)[^>]*>(?:\s|<br[^>]*>|&nbsp;)*<\/\1>/gi, '\n')
-            // .replace(/<\/p>|<\/div>|<\/blockquote>|<\/h[1-6]>/gi, '\n')
-            // .replace(/<br\s*\/?>/gi, '\n')
-            // .replace(/<\/?[^>]+(>|$)/g, "")
-            // .replace(/&nbsp;/gi, ' ')
-            // // .replace(/\n{3,}/g, '\n\n')
-            // .trim();
+        // .replace(/<(p|div|blockquote)[^>]*>(?:\s|<br[^>]*>|&nbsp;)*<\/\1>/gi, '\n')
+        // .replace(/<\/p>|<\/div>|<\/blockquote>|<\/h[1-6]>/gi, '\n')
+        // .replace(/<br\s*\/?>/gi, '\n')
+        // .replace(/<\/?[^>]+(>|$)/g, "")
+        // .replace(/&nbsp;/gi, ' ')
+        // // .replace(/\n{3,}/g, '\n\n')
+        // .trim();
     }
 
     // const cleanTextBeforeSend = (text) => {
@@ -131,7 +132,7 @@ export const CreateBlogPage = () => {
         }
 
         try {
-            const response = await axios.post(`${api.API_BASE_URL}/admin/add/blog`, dataToSend, {
+            const response = await axios.post(`${api.API_BASE_URL}/admin/blog/create`, dataToSend, {
                 withCredentials: true
             });
 
@@ -142,8 +143,12 @@ export const CreateBlogPage = () => {
                 post_description: "",
                 post_category: "community"
             });
+
             setFile(null);
-            setEditorText("");
+            // setEditorText("");
+            // handleInput();
+
+            toast.success(response.data.success);
 
             return response.data;
         } catch (error) {
