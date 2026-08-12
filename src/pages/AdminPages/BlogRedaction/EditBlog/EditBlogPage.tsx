@@ -91,6 +91,7 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
             const response = await fetch(url);
             const blob = await response.blob();
             const file = new File([blob], "cover.jpg", { type: blob.type });
+
             setFile(file);
         } catch (error) {
             console.error("Не удалось загрузить файл по ссылке", error);
@@ -111,7 +112,6 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
         dataToSend.append("post_title", formData.post_title);
         dataToSend.append("post_description", formData.post_description);
         dataToSend.append("post_category", formData.post_category);
-        // dataToSend.append("isFileDelete", isFileDelete);
         dataToSend.append("content", editorText);
 
         if (file) {
@@ -121,9 +121,6 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
         if (isFileDelete) {
             dataToSend.append("post_cover", `${isFileDelete}`);
         }
-        // if (file === null && formData.post_cover.length < 1) {
-        //     dataToSend.append("post_cover", "");
-        // }
 
         try {
             const response = await axios.post(`${api.API_BASE_URL}/admin/blog/${blog_id}/edit`, dataToSend, {
@@ -144,7 +141,9 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
 
             toast.success(response.data.success);
             setIsFileDelete(false);
-            setTimeout(() => getBlogData(formData.post_cover), 500);
+
+            const cover = file?.name.toString();
+            setTimeout(() => getBlogData(cover ?? ""), 100);
 
             return response.data;
         } catch (error) {
@@ -153,9 +152,13 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
     }
 
     const getBlogData = async (cover: string) => {
-        if (cover.length > 0) {
-            await setCoverFromUrl(formData.post_cover);
+        // const cover = formData.post_cover;
+
+        if (cover && cover?.length > 0) {
+            await setCoverFromUrl(cover);
         }
+
+        console.log('cover', cover);
     }
 
     useEffect(() => {
@@ -177,7 +180,7 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
 
         setFormData(formattedBlogs);
 
-        getBlogData(blog?.cover);
+        setTimeout(() => getBlogData(formattedBlogs.post_cover), 100);
 
     }, [data]);
 
