@@ -363,6 +363,8 @@ export const BlogReadPage = () => {
                         </div>
 
                         {/*<div className={styles["post-page-body"]}>*/}
+                        {/*    <p className={styles["lead"]}>Разбираемся, как новые стандарты CSS, генеративный UI и нативные веб-компоненты меняют привычный подход к созданию интерфейсов. Мир веб-технологий движется вперед с невероятной скоростью, и то, что казалось экспериментом вчера, сегодня становится стандартом.</p>*/}
+
                         {/*    <div className={styles["post-image-gallery"]}>*/}
                         {/*        <div className={styles["gallery-item"]}>*/}
                         {/*            <img src="https://static.yani.tv/posters/huge/1636933340.avif" alt="Старый подход к верстке" />*/}
@@ -373,16 +375,9 @@ export const BlogReadPage = () => {
                         {/*            <span>Новый подход (Advanced Subgrid)</span>*/}
                         {/*        </div>*/}
                         {/*    </div>*/}
-                        {/*</div>*/}
 
-                        {/*<div className={styles["post-image-gallery"]}>*/}
-                        {/*    gfd4g654df*/}
+                        {/*    <p>Спецификации CSS развиваются быстрее, чем когда-либо. Появление новых функций работы со сложными сетками, нативного скролл-driven анимаций и контейнерных запросов позволяет создавать невероятно отзывчивый дизайн без единой строчки на JavaScript.</p>*/}
                         {/*</div>*/}
-
-                        {/*            <figure className={styles["post-inline-image"]}>*/}
-                        {/*                <img src="" alt="Панорамный концепт-арт интерфейса" />*/}
-                        {/*                <figcaption>Геометрический паттерн распределения элементов в ультра-широких разрешениях</figcaption>*/}
-                        {/*            </figure>*/}
 
                     </article>
                 ): null}

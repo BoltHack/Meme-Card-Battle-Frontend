@@ -99,6 +99,7 @@
     width: 400px;
     /*margin-left: 50px;*/
     margin-top: 1px;
+    white-space: pre-wrap;
 }
 
 .form-group {

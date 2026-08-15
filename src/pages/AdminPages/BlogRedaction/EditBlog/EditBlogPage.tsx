@@ -152,13 +152,9 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
     }
 
     const getBlogData = async (cover: string) => {
-        // const cover = formData.post_cover;
-
         if (cover && cover?.length > 0) {
             await setCoverFromUrl(cover);
         }
-
-        console.log('cover', cover);
     }
 
     useEffect(() => {
@@ -175,7 +171,7 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
             post_cover: blog?.cover || "",
             post_category: blog?.category || "",
             // content: (blog.content || "").replace(/\r\n|\n|\r/g, '\n')
-            content: (blog.content || "").replace(/<[^>]*>/g, '')
+            content: blog.content.replace(/<[^>]*>/g, '')
         }
 
         setFormData(formattedBlogs);
@@ -261,8 +257,9 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
                         <div
                             dangerouslySetInnerHTML={{
                                 __html: sanitize(marked.parse(formData?.content ?? "") as string)
-                                    .replace(/<[^>]*>/g, '<br/>')
-                                    .replace(/^(<br\s*\/?>\s*)+/i, "")
+                                    // .replace(/<[^>]*>/g, '<br/>')
+                                    .replace(/<[^>]*>/g, '')
+                                    .replace(/^(<br\s*\/?>\s*)+/i, '')
                             }}
                             // children={editorText}
                             onInput={handleInput}
