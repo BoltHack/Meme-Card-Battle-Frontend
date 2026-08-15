@@ -225,7 +225,7 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
                                 name="post_category" id="post_category"
                                 onChange={handleChange} value={formData.post_category}
                                 className={styles["form-select"]}
-                            >
+                                >
                                 <option value="community">Сообщество</option>
                                 <option value="development">Разработка</option>
                                 <option value="functions">Функции</option>
