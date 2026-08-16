@@ -1,15 +1,15 @@
 import { ChangeEvent, useState } from "react";
 
-import styles from "./Card.CreateCards.module.css";
-import admin_styles from "../AdminPanel/Card.AdminPanel.module.css";
+import styles from "./Card.CreateCard.module.css";
+import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
-import usePageRender from "../../../tools/PageRender.ts";
-import { ErrorPage } from "../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../LoadingPage/DefaultLoading.tsx";
+import api from "../../../../api/api.ts";
+import usePageRender from "../../../../tools/PageRender.ts";
+import { ErrorPage } from "../../../ErrorPage/Error.tsx";
+import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 
 interface PlayerData {
     name: string;
@@ -22,6 +22,7 @@ interface CardsFormat {
     card_protection: string;
     lvl_number: string;
     lvl_name: string;
+    power_slot: string;
 }
 
 export const CreateCardPage = () => {
@@ -38,6 +39,7 @@ export const CreateCardPage = () => {
         card_protection: '',
         lvl_number: '',
         lvl_name: 'DEFAULT',
+        power_slot: ''
     });
     const [file, setFile] = useState<File | null>(null);
 
@@ -83,6 +85,7 @@ export const CreateCardPage = () => {
         dataToSend.append("card_protection", formData.card_protection);
         dataToSend.append("lvl_number", formData.lvl_number);
         dataToSend.append("lvl_name", formData.lvl_name);
+        dataToSend.append("power_slot", formData.power_slot);
         if (file) {
             console.log('file', file);
             dataToSend.append("card_avatar", file);
@@ -100,7 +103,8 @@ export const CreateCardPage = () => {
                 card_damage: '',
                 card_protection: '',
                 lvl_number: '',
-                lvl_name: 'DEFAULT'
+                lvl_name: 'DEFAULT',
+                power_slot: ''
             });
             setFile(null);
 
@@ -177,6 +181,18 @@ export const CreateCardPage = () => {
                                 type="number" name="lvl_number" id="lvl_number" min="1"
                                 onKeyDown={handleMinusNumber} onChange={handleChange}
                                 value={formData.lvl_number}
+                                className={styles["form-input"]}
+                                placeholder="Заполните форму..."
+                                required
+                            />
+                        </div>
+
+                        <div className={styles["form-group"]}>
+                            <label className={styles["form-label"]} htmlFor="power_slot">Слот уровня</label>
+                            <input
+                                type="number" name="power_slot" id="power_slot" min="1"
+                                onKeyDown={handleMinusNumber} onChange={handleChange}
+                                value={formData.power_slot}
                                 className={styles["form-input"]}
                                 placeholder="Заполните форму..."
                                 required

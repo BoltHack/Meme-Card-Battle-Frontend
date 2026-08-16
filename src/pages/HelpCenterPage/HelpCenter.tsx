@@ -80,7 +80,7 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
         Array.from(searchCategory).forEach((category: HTMLElement) => {
             const titleElement = category.querySelector("h3");
 
-            const searchTitle = titleElement ? titleElement.textContent.toLowerCase() : "";
+            const searchTitle = titleElement?.textContent?.toLowerCase() ?? "";
 
             if (searchTitle.includes(searchValue)) {
                 categoryFound.current = true;

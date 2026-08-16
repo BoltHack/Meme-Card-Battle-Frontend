@@ -23,9 +23,9 @@ import { BlogReadPage } from "./pages/BlogReadPage/BlogRead.tsx";
 import { BlogCategoryPage } from "./pages/BlogPage/BlogCategory.tsx";
 
 import { AdminPanelPage } from "./pages/AdminPages/AdminPanel/AdminPanel.tsx";
-import { CreateCardPage } from "./pages/AdminPages/CreateCard/CreateCardPage.tsx";
+// import { CreateCardPage } from "./pages/AdminPages/CreateCard/CreateCardPage.tsx";
 // import { CreateBlogPage } from "./pages/AdminPages/CreateBlog/CreateBlogPage.tsx";
-import { EditBlogPage } from "./pages/AdminPages/BlogRedaction/EditBlog/EditBlogPage.tsx";
+// import { EditBlogPage } from "./pages/AdminPages/BlogRedaction/EditBlog/EditBlogPage.tsx";
 
 import { ErrorPage } from "./pages/ErrorPage/Error.tsx";
 
@@ -86,18 +86,18 @@ const router = createBrowserRouter([
         path: "/admin/panel",
         element: <AdminPanelPage title="Админ панель" />
     },
-    {
-        path: "/admin/create/card",
-        element: <CreateCardPage />
-    },
+    // {
+    //     path: "/admin/create/card",
+    //     element: <CreateCardPage />
+    // },
     // {
     //     path: "/admin/create/blog",
     //     element: <CreateBlogPage />
     // },
-    {
-        path: "/admin/blog/:blog_id/edit",
-        element: <EditBlogPage />
-    },
+    // {
+    //     path: "/admin/blog/:blog_id/edit",
+    //     element: <EditBlogPage />
+    // },
     {
         path: "*",
         element: <ErrorPage error={{ code: 404, message: "not found" }} />

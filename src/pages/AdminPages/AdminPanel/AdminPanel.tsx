@@ -19,13 +19,17 @@ import { LogsPage } from "../LogsPage/Logs.tsx";
 import { CreateBlogPage } from "../BlogRedaction/CreateBlog/CreateBlogPage.tsx";
 import { BlogListPage } from "../BlogRedaction/BlogList/BlogListPage.tsx";
 
-import { CreateCardPage } from "../CreateCard/CreateCardPage.tsx";
+import { CreateCardPage } from "../CardRedaction/CreateCard/CreateCardPage.tsx";
+import { CardListPage } from "../CardRedaction/CardList/CardListPage.tsx";
 
 interface titleSettings {
     title: string;
 }
 
-type AdminPageType = "ToolsPage" | "TeamPage" | "CreateCardPage" | "CreateBlogPage" | "LogsPage" | "SettingsPage" | "BlogListPage";
+type AdminPageType =
+    "ToolsPage" | "TeamPage" | "CreateCardPage" |
+    "CreateBlogPage" | "LogsPage" | "SettingsPage" |
+    "BlogListPage" | "CardListPage";
 
 export const AdminPanelPage = ({ title }: titleSettings) => {
     const navigate = useNavigate();
@@ -119,139 +123,7 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
                 {activeTab === "CreateBlogPage" && <CreateBlogPage />}
                 {activeTab === "LogsPage" && <LogsPage />}
                 {activeTab === "BlogListPage" && <BlogListPage />}
-
-                {/*<div id="team-page" className={styles["page"]}>*/}
-                {/*    <header className={styles["header"]}>*/}
-                {/*        <h1>Состав администрации</h1>*/}
-                {/*        <p>Управление уровнями доступа и модераторами проекта.</p>*/}
-                {/*    </header>*/}
-
-                {/*    <div className={styles["team-grid"]}>*/}
-
-                {/*        <div className={`${styles["team-card"]} ${styles["admin"]}`}>*/}
-                {/*            <div className={styles["team-avatar"]}>A</div>*/}
-                {/*            <div className={styles["team-info"]}>*/}
-                {/*                <h3 className={styles["team-name"]}>Alex_Creator</h3>*/}
-                {/*                <span className={`${styles["role-badge"]} ${styles["admin-tag"]}`}>Главный Админ</span>*/}
-                {/*            </div>*/}
-                {/*            <button className={styles["action-btn"]} title="Настройки">*/}
-                {/*                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>*/}
-                {/*            </button>*/}
-                {/*        </div>*/}
-
-                {/*        <div className={`${styles["team-card"]} ${styles["moder"]}`}>*/}
-                {/*            <div className={styles["team-avatar"]}>M</div>*/}
-                {/*            <div className={styles["team-info"]}>*/}
-                {/*                <h3 className={styles["team-name"]}>Dmitry_Mod</h3>*/}
-                {/*                <span className={`${styles["role-badge"]} ${styles["moder-tag"]}`}>Модератор чата</span>*/}
-                {/*            </div>*/}
-                {/*            <button className={styles["action-btn"]} title="Настройки">*/}
-                {/*                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>*/}
-                {/*            </button>*/}
-                {/*        </div>*/}
-
-                {/*    </div>*/}
-                {/*</div>*/}
-
-                {/*<div id="editor-page" className={styles["page"]}>*/}
-                {/*    <header className={styles["header"]}>*/}
-                {/*        <h1>Создание новой публикации</h1>*/}
-                {/*        <p>Заполните поля ниже, чтобы опубликовать новость на главную страницу сайта.</p>*/}
-                {/*    </header>*/}
-
-                {/*    <form className={styles["admin-form"]} onSubmit={(event) => { event.preventDefault(); alert('Статья успешно сохранена!'); }}>*/}
-                {/*        <div className={styles["form-group"]}>*/}
-                {/*            <label>Заголовок статьи</label>*/}
-                {/*            <input type="text" placeholder="Введите броский заголовок..." required />*/}
-                {/*        </div>*/}
-                {/*        <div className={styles["form-group"]}>*/}
-                {/*            <label>Категория публикации</label>*/}
-                {/*            <select>*/}
-                {/*                <option>Обновления системы</option>*/}
-                {/*                <option>Ивенты и события</option>*/}
-                {/*                <option>Важные объявления</option>*/}
-                {/*            </select>*/}
-                {/*        </div>*/}
-                {/*        <div className={styles["form-group"]}>*/}
-                {/*            <label>Текст новости (Markdown / HTML)</label>*/}
-                {/*            <textarea rows="8" placeholder="Напишите здесь основной текст статьи..."></textarea>*/}
-                {/*        </div>*/}
-                {/*        <button type="submit" className={`${styles["submit-btn"]} ${styles["pink-btn"]}`}>Опубликовать материал</button>*/}
-                {/*    </form>*/}
-                {/*</div>*/}
-
-                {/*<div id="logs-page" className={styles["page"]}>*/}
-                {/*    <header className={styles["header"]}>*/}
-                {/*        <h1>Системные логи</h1>*/}
-                {/*        <p>Последние зафиксированные события и ошибки на сервере.</p>*/}
-                {/*    </header>*/}
-
-                {/*    <div className={styles["table-container"]}>*/}
-                {/*        <table className={styles["admin-table"]}>*/}
-                {/*            <thead>*/}
-                {/*            <tr>*/}
-                {/*                <th>Время</th>*/}
-                {/*                <th>Тип</th>*/}
-                {/*                <th>Сообщение</th>*/}
-                {/*                <th>Статус</th>*/}
-                {/*            </tr>*/}
-                {/*            </thead>*/}
-                {/*            <tbody>*/}
-                {/*            <tr>*/}
-                {/*                <td>22:45:12</td>*/}
-                {/*                <td className={styles["type-error"]}>ERROR</td>*/}
-                {/*                <td>Failed to connect to Database node_02 (Timeout)</td>*/}
-                {/*                <td><span className={`${styles["status-badge"]} ${styles["status-critical"]}`}>Критическая</span></td>*/}
-                {/*            </tr>*/}
-                {/*            <tr>*/}
-                {/*                <td>22:42:05</td>*/}
-                {/*                <td className={styles["type-warning"]}>WARN</td>*/}
-                {/*                <td>API Request from IP 192.168.1.45 exceeded rate limit</td>*/}
-                {/*                <td><span className={`${styles["status-badge"]} ${styles["status-warning"]}`}>Внимание</span></td>*/}
-                {/*            </tr>*/}
-                {/*            <tr>*/}
-                {/*                <td>22:38:19</td>*/}
-                {/*                <td className={styles["type-info"]}>INFO</td>*/}
-                {/*                <td>User Alex_Creator successfully logged in</td>*/}
-                {/*                <td><span className={`${styles["status-badge"]} ${styles["status-ok"]}`}>Ок</span></td>*/}
-                {/*            </tr>*/}
-                {/*            </tbody>*/}
-                {/*        </table>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-
-                {/*<div id="settings-page" className={styles["page"]}>*/}
-                {/*    <header className={styles["header"]}>*/}
-                {/*        <h1>Глобальные настройки</h1>*/}
-                {/*        <p>Управление поведением платформы и безопасностью данных.</p>*/}
-                {/*    </header>*/}
-
-                {/*    <div className={styles["settings-box"]}>*/}
-
-                {/*        <div className={styles["settings-row"]}>*/}
-                {/*            <div className={styles["settings-text"]}>*/}
-                {/*                <h3>Технический режим (Maintenance Mode)</h3>*/}
-                {/*                <p>Закрывает доступ к сайту для обычных гостей на время обновления БД.</p>*/}
-                {/*            </div>*/}
-                {/*            <label className={styles["switch-toggle"]}>*/}
-                {/*                <input type="checkbox" />*/}
-                {/*                <span className={styles["slider"]}></span>*/}
-                {/*            </label>*/}
-                {/*        </div>*/}
-
-                {/*        <div className={styles["settings-row"]}>*/}
-                {/*            <div className={styles["settings-text"]}>*/}
-                {/*                <h3>Двухфакторная аутентификация (2FA)</h3>*/}
-                {/*                <p>Требовать одноразовый код от всех модераторов при входе.</p>*/}
-                {/*            </div>*/}
-                {/*            <label className={styles["switch-toggle"]}>*/}
-                {/*                <input type="checkbox" defaultChecked />*/}
-                {/*                <span className={styles["slider"]}></span>*/}
-                {/*            </label>*/}
-                {/*        </div>*/}
-
-                {/*    </div>*/}
-                {/*</div>*/}
+                {activeTab === "CardListPage" && <CardListPage />}
 
             </main>
 
