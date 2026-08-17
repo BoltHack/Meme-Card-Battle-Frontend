@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import {BlogListPage} from "../BlogList/BlogListPage.tsx";
 
 // interface BlogId {
 //     blog_id: string
@@ -38,6 +39,7 @@ interface IdProps {
 
 export const EditBlogPage = ({ blog_id }: IdProps ) => {
     // const blog_id = useState<IdProps | null>(null);
+    const [backToBlogList, setBackToBlogList] = useState<boolean | false>(false);
 
     const [formData, setFormData] = useState({
         post_title: "",
@@ -183,6 +185,10 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
     if (loading) return <DefaultLoading />;
     if (error) return <ErrorPage error={error} />;
 
+    if (backToBlogList) {
+        return <BlogListPage />
+    }
+
     return (
         // <div id="edit-blog-page" className={`${admin_styles["page"]} ${admin_styles["active"]}`}>
         <div id="edit-blog-page" className={`${admin_styles["page"]} ${admin_styles["active"]}`}>
@@ -191,8 +197,11 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
                 <p>Напишите свои мысли, выберите желаемую категорию и отредактируйте блог.</p>
             </header>
 
+            <a href="#" className={styles["back-to-blog"]} onClick={() => setBackToBlogList(true)}>← Назад в список</a>
+
             <div className={styles["editor-container"]}>
-                <h1 className={styles["editor-title"]}>Создание новой публикации</h1>
+
+                <h1 className={styles["editor-title"]}>Редактирование публикации</h1>
 
                 <form className={styles["editor-form"]} onSubmit={handleSubmit}>
 

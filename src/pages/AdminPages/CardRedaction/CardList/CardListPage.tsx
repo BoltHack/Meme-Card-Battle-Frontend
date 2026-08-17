@@ -12,6 +12,7 @@ import api from "../../../../api/api.ts";
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import toast from "react-hot-toast";
 
 interface CardPost {
     card_id: string;
@@ -47,6 +48,27 @@ export const CardListPage = () => {
         setEditCardData(prevState => [...prevState, data]);
     }
 
+    const handleRemoveCard = async (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post(`${api.API_BASE_URL}/admin/card/${id}/delete`, {
+                withCredentials: true
+            });
+
+            console.log('Карта успешно удалена:', response.data);
+
+            const updatedBlogList = cards.filter(item => item.card_id !== id);
+            setCards(updatedBlogList);
+            setEditCardData([]);
+
+            toast.success(response.data.success);
+            return response.data;
+        } catch (error) {
+            console.log('error', error);
+        }
+    }
+
     useEffect(() => {
         if (!data || !Array.isArray(data.renderData.card)) {
             console.log('Данные еще не загрузились или структура не совпадает:', data);
@@ -68,7 +90,6 @@ export const CardListPage = () => {
             </header>
 
             <main className={styles["discord-card-container"]}>
-
                 <div className={styles["card-categories"]}>
                     <button onClick={() => setCardsCategory("all")} className={`${styles["card-categories-btn"]} ${cardsCategory === "all" ? styles["active"] : null}`}>
                         Все
@@ -189,7 +210,7 @@ export const CardListPage = () => {
                                 <br/>
                                 <br/>
                                 <div className={styles["action-menu-btn"]}>
-                                    <button>
+                                    <button onClick={(e) => handleRemoveCard(card.card_id, e)}>
                                         <span>Удалить</span>
                                     </button>
                                     <button onClick={() => setEditCardData([])}>

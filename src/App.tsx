@@ -35,6 +35,10 @@ const router = createBrowserRouter([
         element: <MainPage title="MCB | Главная" />
     },
     {
+        path: "/auth/sign-in",
+        element: <SignInPage title="MCB | Войдите в свою учётную запись" />
+    },
+    {
         path: "/help-center",
         element: <HelpCenterPage title="MCB | Справочный центр" />
     },
@@ -77,10 +81,6 @@ const router = createBrowserRouter([
     {
         path: "/game/:game_type/:game_key",
         element: <GamePage />
-    },
-    {
-        path: "/auth/sign-in",
-        element: <SignInPage title="MCB | Аккаунт" />
     },
     {
         path: "/admin/panel",
