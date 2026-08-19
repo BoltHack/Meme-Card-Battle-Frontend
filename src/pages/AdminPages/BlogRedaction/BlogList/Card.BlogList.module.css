@@ -279,7 +279,7 @@
 }
 
 .action-menu {
-    max-width: 600px;
+    max-width: 500px;
     width: 100%;
     height: auto;
     box-sizing: border-box;
@@ -304,7 +304,7 @@
     text-align: start;
 }
 .action-options .grid-card {
-    max-width: 350px;
+    max-width: 400px;
     width: 100%;
 }
 

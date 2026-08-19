@@ -348,7 +348,7 @@ export const BlogReadPage = () => {
                         <div className={styles["post-page-image"]}>
                             {blog.cover ? (
                                 <img src={`${api.API_BASE_URL}/${blog.cover}`} loading="lazy" className={styles["img-placeholder"]} />
-                            ) : <div className={styles["img-placeholder"]}></div> }
+                            ) : <div className={`${styles["img-placeholder"]} ${styles[blog.category]}`}></div> }
                         </div>
 
                         {/*<div className={styles["post-page-body"]}>*/}
