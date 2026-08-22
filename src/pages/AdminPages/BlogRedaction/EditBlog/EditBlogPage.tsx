@@ -267,6 +267,17 @@ export const EditBlogPage = ({ blog_id }: IdProps ) => {
                             dangerouslySetInnerHTML={{
                                 __html: sanitize(marked.parse(formData?.content ?? "") as string)
                                     // .replace(/<[^>]*>/g, '<br/>')
+
+                                    // .replace(/<[^>]*>/g, '')
+                                    // .replace(/^(<br\s*\/?>\s*)+/i, '')
+
+                                    // .replace(/<li>/g, '- ')
+                                    // .replace(/<\/li>/g, '<br/>')
+                                    // .replace(/<[^>]*>/g, '')
+                                    // .replace(/^(<br\s*\/?>\s*)+/i, '')
+
+                                    .replace(/<li[^>]*>/g, '- ')
+                                    .replace(/<\/li>/g, '<br/>')
                                     .replace(/<[^>]*>/g, '')
                                     .replace(/^(<br\s*\/?>\s*)+/i, '')
                             }}
