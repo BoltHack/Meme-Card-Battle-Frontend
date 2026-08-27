@@ -126,7 +126,7 @@ export const ProfilePage = ({ title }: TitleSettings) => {
 
     const searchTimer = setTimeout(() => {
       if (profile_state?.search_value?.length > 0) {
-        setCurrentSearch(profile_state.search_value);
+        searchCard(profile_state.search_value);
       }
     }, 100);
 
