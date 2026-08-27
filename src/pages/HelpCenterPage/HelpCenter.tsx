@@ -57,8 +57,8 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
     }
 
     const handleSearchCategoryKeyDown = (e: any, value: string) => {
-        if (e.key === "Enter" && value.length > 0) {
-            searchCategory(value);
+        if ((e.key === "Enter" || e.keyCode === 13) && value.length > 0) {
+          searchCategory(value);
         }
     }
 
