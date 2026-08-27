@@ -126,7 +126,7 @@ export const ProfilePage = ({ title }: TitleSettings) => {
 
     const searchTimer = setTimeout(() => {
       if (profile_state?.search_value?.length > 0) {
-        searchCard(profile_state.search_value);
+        setCurrentSearch(profile_state.search_value);
       }
     }, 100);
 
@@ -418,9 +418,7 @@ export const ProfilePage = ({ title }: TitleSettings) => {
                   ></path>
                 </svg>
               </div>
-              <p className={styles["search-result"]}>
-                {profile_state.search_value}
-              </p>
+              <p className={styles["search-result"]}>{currentSearch}</p>
             </div>
 
             {!cardFount.current && (
