@@ -53,12 +53,15 @@ export default function usePageRender<T extends Record<string, any>>(
                     if (!window.location.pathname.startsWith("/admin/")) {
                         navigate("/auth/sign-in");
                     } else {
-                        console.log('4fd65g465df4g654df6');
                         setLoading(false);
                         setError({ code: 404, message: "Not found." });
                     }
                     return;
                     // if (localStorage.getItem("token")) localStorage.removeItem("token");
+                }
+                if (err.response?.status === 403) {                    
+                    navigate("/");
+                    return;
                 }
                 if (err.response?.status === 404) {
                     setLoading(false);
