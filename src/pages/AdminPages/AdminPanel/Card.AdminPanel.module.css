@@ -394,8 +394,8 @@
     background-color: #94a3b8; transition: .3s; border-radius: 50%;
 }
 
-input:checked + .slider { background-color: rgba(0, 102, 255, 0.2); border-color: #0066ff; }
-input:checked + .slider:before { transform: translateX(24px); background-color: #0066ff; }
+.settings-box input:checked + .slider { background-color: rgba(0, 102, 255, 0.2); border-color: #0066ff; }
+.settings-box input:checked + .slider:before { transform: translateX(24px); background-color: #0066ff; }
 
 @media (max-width: 768px) {
     .body-wrapper { flex-direction: column; overflow: auto; }

@@ -50,22 +50,31 @@ export default function usePageRender<T extends Record<string, any>>(
                 const errorMessage = err.response.data.error;
 
                 if (err.response?.status === 401) {
-                    navigate("/auth/sign-in");
+                    if (!window.location.pathname.startsWith("/admin/")) {
+                        navigate("/auth/sign-in");
+                    } else {
+                        console.log('4fd65g465df4g654df6');
+                        setLoading(false);
+                        setError({ code: 404, message: "Not found." });
+                    }
+                    return;
                     // if (localStorage.getItem("token")) localStorage.removeItem("token");
-                    return;
-                }
-                if (err.response?.status === 403) {
-                    setLoading(false);
-                    setError({ code: 403, message: errorMessage });
-                    return;
                 }
                 if (err.response?.status === 404) {
                     setLoading(false);
                     setError({ code: 404, message: errorMessage });
-                    console.log('404');
                     if (trigger > 0) {
                         navigate(0);
                     }
+                    return;
+                }
+                if (err.response?.status) {
+                    console.log("err.response?.status", err.response?.status);
+                    setLoading(false);
+                    setError({
+                        code: Number(err.response?.status),
+                        message: errorMessage,
+                    });
                     return;
                 }
                 setError({ code: 505, message: errorMessage });

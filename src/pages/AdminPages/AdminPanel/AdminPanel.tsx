@@ -21,6 +21,7 @@ import { BlogListPage } from "../BlogRedaction/BlogList/BlogListPage.tsx";
 
 import { CreateCardPage } from "../CardRedaction/CreateCard/CreateCardPage.tsx";
 import { CardListPage } from "../CardRedaction/CardList/CardListPage.tsx";
+import { SettingsPage } from "../SettingsPage/Settings.tsx";
 
 interface titleSettings {
     title: string;
@@ -124,6 +125,7 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
                 {activeTab === "LogsPage" && <LogsPage />}
                 {activeTab === "BlogListPage" && <BlogListPage />}
                 {activeTab === "CardListPage" && <CardListPage />}
+                {activeTab === "SettingsPage" && <SettingsPage />}
 
             </main>
 
