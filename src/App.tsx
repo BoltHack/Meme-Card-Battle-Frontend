@@ -28,6 +28,7 @@ import { AdminPanelPage } from "./pages/AdminPages/AdminPanel/AdminPanel.tsx";
 // import { EditBlogPage } from "./pages/AdminPages/BlogRedaction/EditBlog/EditBlogPage.tsx";
 
 import { ErrorPage } from "./pages/ErrorPage/Error.tsx";
+import { ShopPage } from "./pages/ShopPage/Shop.tsx";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfilePage title="MCB | Профиль" />,
+  },
+  {
+    path: "/shop",
+    element: <ShopPage title="MCB | Магазин" />,
   },
   {
     path: "/how-to-play",

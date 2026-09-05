@@ -186,13 +186,13 @@
   border: 1px solid transparent;
 }
 
-.balance-item.gold {
+.balance-item.coins {
   border-color: rgba(234, 179, 8, 0.3);
   color: #fef08a;
   text-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
 }
 
-.balance-item.gems {
+.balance-item.money {
   border-color: rgba(6, 182, 212, 0.3);
   color: #cffafe;
   text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);

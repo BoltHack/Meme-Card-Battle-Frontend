@@ -14,7 +14,7 @@ import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 
 import { Pagination } from "../../../../tools/PageTools/Pagination/Pagination.tsx";
-import { EditBlogPage } from "../EditBlog/EditBlogPage.tsx";
+import { EditBlogPage } from "../EditBlog/EditBlog.tsx";
 import toast from "react-hot-toast";
 
 interface BlogPost {

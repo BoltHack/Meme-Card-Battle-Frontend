@@ -16,119 +16,207 @@ import { TeamPage } from "../TeamPage/Team.tsx";
 import { ToolsPage } from "../ToolsPage/Tools.tsx";
 import { LogsPage } from "../LogsPage/Logs.tsx";
 
-import { CreateBlogPage } from "../BlogRedaction/CreateBlog/CreateBlogPage.tsx";
-import { BlogListPage } from "../BlogRedaction/BlogList/BlogListPage.tsx";
+import { CreateBlogPage } from "../BlogRedaction/CreateBlogPage/CreateBlog.tsx";
+import { BlogListPage } from "../BlogRedaction/BlogListPage/BlogList.tsx";
 
 import { CreateCardPage } from "../CardRedaction/CreateCard/CreateCardPage.tsx";
 import { CardListPage } from "../CardRedaction/CardList/CardListPage.tsx";
 import { SettingsPage } from "../SettingsPage/Settings.tsx";
+import { CasePage } from "../CaseRedaction/CasePage/Case.tsx";
 
 interface titleSettings {
-    title: string;
+  title: string;
 }
 
 type AdminPageType =
-    "ToolsPage" | "TeamPage" | "CreateCardPage" |
-    "CreateBlogPage" | "LogsPage" | "SettingsPage" |
-    "BlogListPage" | "CardListPage";
+  | "ToolsPage"
+  | "TeamPage"
+  | "CreateCardPage"
+  | "CreateBlogPage"
+  | "LogsPage"
+  | "SettingsPage"
+  | "BlogListPage"
+  | "CardListPage"
+  | "CasePage";
 
 export const AdminPanelPage = ({ title }: titleSettings) => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [activeTab, setActiveTab] = useState<AdminPageType>("ToolsPage");
+  const [activeTab, setActiveTab] = useState<AdminPageType>("ToolsPage");
 
-    const { loading, error } = usePageRender(
-        `${api.API_BASE_URL}/admin/panel`
-    );
+  const { loading, error } = usePageRender(`${api.API_BASE_URL}/admin/panel`);
 
-    if (loading) return <LoadingPage />;
-    if (error) return <ErrorPage error={error} />;
+  if (loading) return <LoadingPage />;
+  if (error) return <ErrorPage error={error} />;
 
-    return (
-        <div className={styles["body-wrapper"]}>
+  return (
+    <div className={styles["body-wrapper"]}>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
 
-            <Helmet>
-                <title>{title}</title>
-            </Helmet>
+      <aside className={styles["sidebar"]}>
+        <div className={styles["logo"]}>ADMIN // PANEL</div>
+        <nav>
+          <ul className={styles["menu-list"]}>
+            <li>
+              <div
+                className={`${styles["menu-link"]} ${activeTab === "ToolsPage" && styles["active"]}`}
+                onClick={() => setActiveTab("ToolsPage")}
+              >
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="7" height="9" rx="1" />
+                  <rect x="14" y="3" width="7" height="5" rx="1" />
+                  <rect x="14" y="12" width="7" height="9" rx="1" />
+                  <rect x="3" y="16" width="7" height="5" rx="1" />
+                </svg>
+                Инструменты
+              </div>
+            </li>
+            <li>
+              <div
+                className={`${styles["menu-link"]} ${activeTab === "TeamPage" && styles["active"]}`}
+                onClick={() => setActiveTab("TeamPage")}
+              >
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                Команда (Админы)
+              </div>
+            </li>
+            <li>
+              <div
+                className={`${styles["menu-link"]} ${activeTab === "CreateCardPage" && styles["active"]}`}
+                onClick={() => setActiveTab("CreateCardPage")}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-gamepad-directional-icon lucide-gamepad-directional"
+                >
+                  <path d="M11.146 15.854a1.207 1.207 0 0 1 1.708 0l1.56 1.56A2 2 0 0 1 15 18.828V21a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2.172a2 2 0 0 1 .586-1.414z" />
+                  <path d="M18.828 15a2 2 0 0 1-1.414-.586l-1.56-1.56a1.207 1.207 0 0 1 0-1.708l1.56-1.56A2 2 0 0 1 18.828 9H21a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z" />
+                  <path d="M6.586 14.414A2 2 0 0 1 5.172 15H3a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h2.172a2 2 0 0 1 1.414.586l1.56 1.56a1.207 1.207 0 0 1 0 1.708z" />
+                  <path d="M9 3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2.172a2 2 0 0 1-.586 1.414l-1.56 1.56a1.207 1.207 0 0 1-1.708 0l-1.56-1.56A2 2 0 0 1 9 5.172z" />
+                </svg>
+                Создать новую карту
+              </div>
+            </li>
+            <li>
+              <div
+                className={`${styles["menu-link"]} ${activeTab === "CreateBlogPage" && styles["active"]}`}
+                onClick={() => setActiveTab("CreateBlogPage")}
+              >
+                <svg viewBox="0 0 24 24">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+                Создать статью (Блог)
+              </div>
+            </li>
+            <li>
+              <div
+                className={`${styles["menu-link"]} ${activeTab === "CasePage" && styles["active"]}`}
+                onClick={() => setActiveTab("CasePage")}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-key-square-icon lucide-key-square"
+                >
+                  <path d="M12.4 2.7a2.5 2.5 0 0 1 3.4 0l5.5 5.5a2.5 2.5 0 0 1 0 3.4l-3.7 3.7a2.5 2.5 0 0 1-3.4 0L8.7 9.8a2.5 2.5 0 0 1 0-3.4z" />
+                  <path d="m14 7 3 3" />
+                  <path d="m9.4 10.6-6.814 6.814A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814" />
+                </svg>
+                Кейсы (Настройка)
+              </div>
+            </li>
+            <li>
+              <div
+                className={`${styles["menu-link"]} ${activeTab === "LogsPage" && styles["active"]}`}
+                onClick={() => setActiveTab("LogsPage")}
+              >
+                <svg viewBox="0 0 24 24">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+                Логи системы
+              </div>
+            </li>
+            <li>
+              <div
+                className={`${styles["menu-link"]} ${activeTab === "SettingsPage" && styles["active"]}`}
+                onClick={() => setActiveTab("SettingsPage")}
+              >
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+                Настройки
+              </div>
+            </li>
 
-            <aside className={styles["sidebar"]}>
-                <div className={styles["logo"]}>ADMIN // PANEL</div>
-                <nav>
-                    <ul className={styles["menu-list"]}>
-                        <li>
-                            <div className={`${styles["menu-link"]} ${activeTab === "ToolsPage" && styles["active"]}`} onClick={() => setActiveTab('ToolsPage')}>
-                                <svg viewBox="0 0 24 24">
-                                    <rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>
-                                </svg>
-                                Инструменты
-                            </div>
-                        </li>
-                        <li>
-                            <div className={`${styles["menu-link"]} ${activeTab === "TeamPage" && styles["active"]}`} onClick={() => setActiveTab('TeamPage')}>
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                                </svg>
-                                Команда (Админы)
-                            </div>
-                        </li>
-                        <li>
-                            <div className={`${styles["menu-link"]} ${activeTab === "CreateCardPage" && styles["active"]}`} onClick={() => setActiveTab('CreateCardPage')}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-gamepad-directional-icon lucide-gamepad-directional">
-                                    <path d="M11.146 15.854a1.207 1.207 0 0 1 1.708 0l1.56 1.56A2 2 0 0 1 15 18.828V21a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2.172a2 2 0 0 1 .586-1.414z"/><path d="M18.828 15a2 2 0 0 1-1.414-.586l-1.56-1.56a1.207 1.207 0 0 1 0-1.708l1.56-1.56A2 2 0 0 1 18.828 9H21a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z"/><path d="M6.586 14.414A2 2 0 0 1 5.172 15H3a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h2.172a2 2 0 0 1 1.414.586l1.56 1.56a1.207 1.207 0 0 1 0 1.708z"/><path d="M9 3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2.172a2 2 0 0 1-.586 1.414l-1.56 1.56a1.207 1.207 0 0 1-1.708 0l-1.56-1.56A2 2 0 0 1 9 5.172z"/>
-                                </svg>
-                                Создать новую карту
-                            </div>
-                        </li>
-                        <li>
-                            <div className={`${styles["menu-link"]} ${activeTab === "CreateBlogPage" && styles["active"]}`} onClick={() => setActiveTab('CreateBlogPage')}>
-                                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                                </svg>
-                                Создать статью (Блог)
-                            </div>
-                        </li>
-                        <li>
-                            <div className={`${styles["menu-link"]} ${activeTab === "LogsPage" && styles["active"]}`} onClick={() => setActiveTab('LogsPage')}>
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-                                </svg>
-                                Логи системы
-                            </div>
-                        </li>
-                        <li>
-                            <div className={`${styles["menu-link"]} ${activeTab === "SettingsPage" && styles["active"]}`} onClick={() => setActiveTab('SettingsPage')}>
-                                <svg viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                                </svg>
-                                Настройки
-                            </div>
-                        </li>
+            <li
+              style={{
+                position: "absolute",
+                bottom: "0",
+                width: "85%",
+                padding: "20px 0",
+              }}
+            >
+              <div
+                className={styles["menu-link"]}
+                onClick={() => navigate("/")}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-house-icon lucide-house"
+                >
+                  <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+                  <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                </svg>
+                На главную
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </aside>
 
-                        <li style={{ position: "absolute", bottom: "0", width: "85%", padding: "20px 0" }}>
-                            <div className={styles["menu-link"]} onClick={() => navigate("/")}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-house-icon lucide-house">
-                                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                                </svg>
-                                На главную
-                            </div>
-                        </li>
-                    </ul>
-                </nav>
-            </aside>
-
-            <main className={styles["main-content"]}>
-
-                {activeTab === "ToolsPage" && <ToolsPage setActiveTab={setActiveTab} />}
-                {activeTab === "TeamPage" && <TeamPage />}
-                {activeTab === "CreateCardPage" && <CreateCardPage />}
-                {activeTab === "CreateBlogPage" && <CreateBlogPage />}
-                {activeTab === "LogsPage" && <LogsPage />}
-                {activeTab === "BlogListPage" && <BlogListPage />}
-                {activeTab === "CardListPage" && <CardListPage />}
-                {activeTab === "SettingsPage" && <SettingsPage />}
-
-            </main>
-
-        </div>
-    );
+      <main className={styles["main-content"]}>
+        {activeTab === "ToolsPage" && <ToolsPage setActiveTab={setActiveTab} />}
+        {activeTab === "TeamPage" && <TeamPage />}
+        {activeTab === "CreateCardPage" && <CreateCardPage />}
+        {activeTab === "CreateBlogPage" && <CreateBlogPage />}
+        {activeTab === "LogsPage" && <LogsPage />}
+        {activeTab === "BlogListPage" && <BlogListPage />}
+        {activeTab === "CardListPage" && <CardListPage />}
+        {activeTab === "SettingsPage" && <SettingsPage />}
+        {activeTab === "CasePage" && <CasePage />}
+      </main>
+    </div>
+  );
 };

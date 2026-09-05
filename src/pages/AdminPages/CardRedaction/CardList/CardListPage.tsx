@@ -43,6 +43,13 @@ export const CardListPage = () => {
     `${api.API_BASE_URL}/admin/card/list/${cardsCategory}`,
   );
 
+  const copy = (cardId: string) => {
+    navigator.clipboard.writeText(cardId)
+    .then(() => {
+      toast.success(`ID ${cardId} скопирован!`);
+    }).catch((err) => console.log("copy error", err));
+  }
+
   const cardEditMenu = (data: CardPost) => {
     console.log("data", data);
     setEditCardData((prevState) => [...prevState, data]);
@@ -315,6 +322,13 @@ export const CardListPage = () => {
                     </div>
                   </div>
                   <br />
+                  <br />
+                  <button
+                    className={styles["card_id_to_copy"]}
+                    onClick={() => copy(card.card_id)}
+                  >
+                    Скопировать ID карты
+                  </button>
                   <br />
                   <div className={styles["action-menu-btn"]}>
                     <button onClick={(e) => handleRemoveCard(card.card_id, e)}>

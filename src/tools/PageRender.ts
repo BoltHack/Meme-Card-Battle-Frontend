@@ -54,7 +54,7 @@ export default function usePageRender<T extends Record<string, any>>(
                         navigate("/auth/sign-in");
                     } else {
                         setLoading(false);
-                        setError({ code: 404, message: "Not found." });
+                        setError({ code: 404, message: "not found." });
                     }
                     return;
                     // if (localStorage.getItem("token")) localStorage.removeItem("token");

@@ -127,3 +127,16 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
+
+.card_id_to_copy {
+    display: flex;
+    width: 100%;
+    background: #334155;
+    border: 1px solid #475569;
+    color: #f1f5f9;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}

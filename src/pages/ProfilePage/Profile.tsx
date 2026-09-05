@@ -62,6 +62,16 @@ export const ProfilePage = ({ title }: TitleSettings) => {
     `${api.API_BASE_URL}/api/my-cards/${cardsCategory}`,
   );
 
+  const formattedCurrency = (count: number): string => {
+    const formattedCount = new Intl.NumberFormat("en-US", {
+      notation: "compact",
+      compactDisplay: "short",
+      maximumFractionDigits: 1,
+    }).format(count);
+
+    return formattedCount.toLowerCase();
+  };
+
   let updatedState = {
     search_value: ""
   };
@@ -199,89 +209,87 @@ export const ProfilePage = ({ title }: TitleSettings) => {
           </div>
 
           <div className={styles["balance-container"]}>
-            <div className={`${styles["balance-item"]} ${styles["gold"]}`}>
+            <div className={`${styles["balance-item"]} ${styles["coins"]}`}>
               <span className={styles["currency-icon"]}>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://w3.org">
+                  <defs>
+                    <linearGradient
+                      id="coinGrad"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="100%"
+                    >
+                      <stop offset="0%" stop-color="#fcd34d" />
+                      <stop offset="50%" stop-color="#fbbf24" />
+                      <stop offset="100%" stop-color="#b45309" />
+                    </linearGradient>
+                    <linearGradient
+                      id="symbolGrad"
+                      x1="0%"
+                      y1="0%"
+                      x2="0%"
+                      y2="100%"
+                    >
+                      <stop offset="0%" stop-color="#ffffff" />
+                      <stop offset="100%" stop-color="#f59e0b" />
+                    </linearGradient>
+                  </defs>
                   <circle
                     cx="12"
                     cy="12"
                     r="10"
-                    fill="url(#goldGrad)"
-                    stroke="#fef08a"
-                    strokeWidth="1.5"
+                    stroke="url(#coinGrad)"
+                    stroke-width="2"
+                    fill="rgba(21, 9, 49, 0.6)"
                   />
                   <circle
                     cx="12"
                     cy="12"
-                    r="6"
-                    stroke="#eab308"
-                    strokeWidth="1"
-                    strokeDasharray="2 2"
+                    r="7"
+                    stroke="url(#coinGrad)"
+                    stroke-width="1"
+                    stroke-dasharray="2 1"
+                    fill="none"
                   />
                   <path
-                    d="M12 7V17M12 7C11 7 9.5 7.5 9.5 9.5C9.5 11.5 14.5 11 14.5 13C14.5 15 12 15 12 15M12 15C10.5 15 9.5 14.5 9.5 14M12 7C13 7 14.5 7.5 14.5 8.5"
-                    stroke="#fef08a"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
+                    d="M12 6L15 12L12 18L9 12L12 6Z"
+                    fill="url(#symbolGrad)"
                   />
-                  <defs>
-                    <linearGradient
-                      id="goldGrad"
-                      x1="0%"
-                      y1="0%"
-                      x2="100%"
-                      y2="100%"
-                    >
-                      <stop offset="0%" stopColor="#ca8a04" />
-                      <stop offset="50%" stopColor="#eab308" />
-                      <stop offset="100%" stopColor="#854d0e" />
-                    </linearGradient>
-                  </defs>
+                  <path
+                    d="M12 8L14 12L12 16L10 12L12 8Z"
+                    fill="#b45309"
+                    opacity="0.5"
+                  />
                 </svg>
               </span>
-              <span className={styles["currency-amount"]}>{stats?.money}</span>
+              <span className={styles["currency-amount"]}>
+                {formattedCurrency(stats?.coins)}
+              </span>
             </div>
 
-            <div className={`${styles["balance-item"]} ${styles["gems"]}`}>
+            <div className={`${styles["balance-item"]} ${styles["money"]}`}>
               <span className={styles["currency-icon"]}>
                 <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  className="lucide lucide-circle-dollar-sign-icon lucide-circle-dollar-sign"
                 >
-                  <path
-                    d="M6 3L2 9L12 22L22 9L18 3H6Z"
-                    fill="url(#gemGrad)"
-                    stroke="#67e8f9"
-                    strokeWidth="1.5"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M6 3L12 9M18 3L12 9M2 9H22M6 3H18M12 9V22"
-                    stroke="#22d3ee"
-                    strokeWidth="1"
-                    strokeOpacity="0.6"
-                  />
-                  <defs>
-                    <linearGradient
-                      id="gemGrad"
-                      x1="0%"
-                      y1="0%"
-                      x2="100%"
-                      y2="100%"
-                    >
-                      <stop offset="0%" stopColor="#0891b2" />
-                      <stop offset="50%" stopColor="#06b6d4" />
-                      <stop offset="100%" stopColor="#155e75" />
-                    </linearGradient>
-                  </defs>
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
+                  <path d="M12 18V6" />
                 </svg>
               </span>
-              <span className={styles["currency-amount"]}>{stats?.coins}</span>
+              <span className={styles["currency-amount"]}>
+                {formattedCurrency(stats?.money)}
+              </span>
             </div>
 
             <div className={`${styles["balance-item"]} ${styles["power"]}`}>
