@@ -81,7 +81,12 @@ export const CreateCasePage = () => {
 
       return response.data;
     } catch (error) {
+      const errorMessage = error?.response?.data.error;
       console.log("error", error);
+      if (errorMessage) {
+        toast.error(errorMessage);
+        return;
+      }
     }
   };
 

@@ -10,6 +10,7 @@ import api from "../../../../api/api.ts";
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import toast from "react-hot-toast";
 
 interface PlayerData {
   name: string;
@@ -120,7 +121,12 @@ export const CreateCardPage = ({ onBack }: Props) => {
 
       return response.data;
     } catch (error) {
+      const errorMessage = error?.response?.data.error;
       console.log("error", error);
+      if (errorMessage) {
+        toast.error(errorMessage);
+        return;
+      }
     }
   };
 
