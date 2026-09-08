@@ -16,13 +16,12 @@ import { TeamPage } from "../TeamPage/Team.tsx";
 import { ToolsPage } from "../ToolsPage/Tools.tsx";
 import { LogsPage } from "../LogsPage/Logs.tsx";
 
-import { CreateBlogPage } from "../BlogRedaction/CreateBlogPage/CreateBlog.tsx";
-import { BlogListPage } from "../BlogRedaction/BlogListPage/BlogList.tsx";
+import { BlogSettingsPage } from "../BlogRedaction/BlogSettingsPage/BlogSettings.tsx";
 
-import { CreateCardPage } from "../CardRedaction/CreateCard/CreateCardPage.tsx";
-import { CardListPage } from "../CardRedaction/CardList/CardListPage.tsx";
+import { CardSettingsPage } from "../CardRedaction/CardSettingsPage/CardSettings.tsx";
+
 import { SettingsPage } from "../SettingsPage/Settings.tsx";
-import { CasePage } from "../CaseRedaction/CasePage/Case.tsx";
+import { CaseSettingsPage } from "../CaseRedaction/CaseSettingsPage/CaseSettings.tsx";
 
 interface titleSettings {
   title: string;
@@ -31,13 +30,13 @@ interface titleSettings {
 type AdminPageType =
   | "ToolsPage"
   | "TeamPage"
-  | "CreateCardPage"
-  | "CreateBlogPage"
+  | "CardSettingsPage"
+  | "BlogSettingsPage"
   | "LogsPage"
   | "SettingsPage"
   | "BlogListPage"
+  | "CaseSettingsPage"
   | "CardListPage"
-  | "CasePage";
 
 export const AdminPanelPage = ({ title }: titleSettings) => {
   const navigate = useNavigate();
@@ -86,8 +85,8 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
             </li>
             <li>
               <div
-                className={`${styles["menu-link"]} ${activeTab === "CreateCardPage" && styles["active"]}`}
-                onClick={() => setActiveTab("CreateCardPage")}
+                className={`${styles["menu-link"]} ${activeTab === "CardSettingsPage" && styles["active"]}`}
+                onClick={() => setActiveTab("CardSettingsPage")}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -99,32 +98,44 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-gamepad-directional-icon lucide-gamepad-directional"
+                  className="lucide lucide-playing-cards-fan-icon lucide-playing-cards-fan"
                 >
-                  <path d="M11.146 15.854a1.207 1.207 0 0 1 1.708 0l1.56 1.56A2 2 0 0 1 15 18.828V21a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2.172a2 2 0 0 1 .586-1.414z" />
-                  <path d="M18.828 15a2 2 0 0 1-1.414-.586l-1.56-1.56a1.207 1.207 0 0 1 0-1.708l1.56-1.56A2 2 0 0 1 18.828 9H21a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z" />
-                  <path d="M6.586 14.414A2 2 0 0 1 5.172 15H3a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h2.172a2 2 0 0 1 1.414.586l1.56 1.56a1.207 1.207 0 0 1 0 1.708z" />
-                  <path d="M9 3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2.172a2 2 0 0 1-.586 1.414l-1.56 1.56a1.207 1.207 0 0 1-1.708 0l-1.56-1.56A2 2 0 0 1 9 5.172z" />
+                  <path d="M12.65 7.65a2 2 0 012.629-1.046l5.51 2.374a2 2 0 011.046 2.628l-3.957 9.184a2 2 0 01-2.628 1.046l-5.51-2.374a2 2 0 01-1.046-2.628z" />
+                  <path d="M18 7.777V4a2 2 0 00-2-2h-6a2 2 0 00-2 2v10a2 2 0 001.137 1.805" />
+                  <path d="m8 4.389-4.364.809a2 2 0 00-1.602 2.33l1.822 9.833a2 2 0 002.331 1.602l2.542-.47" />
                 </svg>
-                Создать новую карту
+                Карты (Настройка)
               </div>
             </li>
             <li>
               <div
-                className={`${styles["menu-link"]} ${activeTab === "CreateBlogPage" && styles["active"]}`}
-                onClick={() => setActiveTab("CreateBlogPage")}
+                className={`${styles["menu-link"]} ${activeTab === "BlogSettingsPage" && styles["active"]}`}
+                onClick={() => setActiveTab("BlogSettingsPage")}
               >
-                <svg viewBox="0 0 24 24">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-newspaper"
+                >
+                  <path d="M15 18h-5" />
+                  <path d="M18 14h-8" />
+                  <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2" />
+                  <rect width="8" height="4" x="10" y="6" rx="1" />
                 </svg>
-                Создать статью (Блог)
+                Блог (Настройка)
               </div>
             </li>
             <li>
               <div
-                className={`${styles["menu-link"]} ${activeTab === "CasePage" && styles["active"]}`}
-                onClick={() => setActiveTab("CasePage")}
+                className={`${styles["menu-link"]} ${activeTab === "CaseSettingsPage" && styles["active"]}`}
+                onClick={() => setActiveTab("CaseSettingsPage")}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -209,13 +220,11 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
       <main className={styles["main-content"]}>
         {activeTab === "ToolsPage" && <ToolsPage setActiveTab={setActiveTab} />}
         {activeTab === "TeamPage" && <TeamPage />}
-        {activeTab === "CreateCardPage" && <CreateCardPage />}
-        {activeTab === "CreateBlogPage" && <CreateBlogPage />}
+        {activeTab === "CardSettingsPage" && <CardSettingsPage />}
+        {activeTab === "BlogSettingsPage" && <BlogSettingsPage />}
+        {activeTab === "CaseSettingsPage" && <CaseSettingsPage />}
         {activeTab === "LogsPage" && <LogsPage />}
-        {activeTab === "BlogListPage" && <BlogListPage />}
-        {activeTab === "CardListPage" && <CardListPage />}
         {activeTab === "SettingsPage" && <SettingsPage />}
-        {activeTab === "CasePage" && <CasePage />}
       </main>
     </div>
   );

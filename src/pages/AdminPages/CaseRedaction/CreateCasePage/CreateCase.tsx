@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 
-import styles from "../../CardRedaction/CreateCard/Card.CreateCard.module.css";
+import styles from "../../CardRedaction/CreateCardPage/Card.CreateCard.module.css";
 import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 
 import axios from "axios";
@@ -12,6 +12,8 @@ import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 import toast from "react-hot-toast";
 
+import { CaseSettingsPage } from "../CaseSettingsPage/CaseSettings.tsx";
+
 interface CaseFormat {
   case_name: string;
   case_description: string;
@@ -19,17 +21,15 @@ interface CaseFormat {
   case_price: string;
 }
 
-interface ResponseSettings {
-  onBack: () => void;
-}
-
-export const CreateCasePage = ({ onBack }: ResponseSettings) => {
+export const CreateCasePage = () => {
   const [formData, setFormData] = useState<CaseFormat>({
     case_name: "",
     case_description: "",
     case_rarity: "DEFAULT",
     case_price: "",
   });
+
+  const [back, setBack] = useState<boolean | false>(false);
 
   const { loading, error } = usePageRender(
     `${api.API_BASE_URL}/admin/case/create`,
@@ -88,6 +88,8 @@ export const CreateCasePage = ({ onBack }: ResponseSettings) => {
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
 
+  if (back) return <CaseSettingsPage />;
+
   return (
     <div
       id="create-case-page"
@@ -98,7 +100,11 @@ export const CreateCasePage = ({ onBack }: ResponseSettings) => {
         <p>Создание нового, уникального кейса.</p>
       </header>
 
-      <a href="#" className={admin_styles["on-back"]} onClick={onBack}>
+      <a
+        href="#"
+        className={admin_styles["on-back"]}
+        onClick={() => setBack(true)}
+      >
         ← Назад
       </a>
 

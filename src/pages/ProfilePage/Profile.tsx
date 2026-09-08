@@ -220,9 +220,9 @@ export const ProfilePage = ({ title }: TitleSettings) => {
                       x2="100%"
                       y2="100%"
                     >
-                      <stop offset="0%" stop-color="#fcd34d" />
-                      <stop offset="50%" stop-color="#fbbf24" />
-                      <stop offset="100%" stop-color="#b45309" />
+                      <stop offset="0%" stopColor="#fcd34d" />
+                      <stop offset="50%" stopColor="#fbbf24" />
+                      <stop offset="100%" stopColor="#b45309" />
                     </linearGradient>
                     <linearGradient
                       id="symbolGrad"
@@ -231,8 +231,8 @@ export const ProfilePage = ({ title }: TitleSettings) => {
                       x2="0%"
                       y2="100%"
                     >
-                      <stop offset="0%" stop-color="#ffffff" />
-                      <stop offset="100%" stop-color="#f59e0b" />
+                      <stop offset="0%" stopColor="#ffffff" />
+                      <stop offset="100%" stopColor="#f59e0b" />
                     </linearGradient>
                   </defs>
                   <circle
@@ -240,7 +240,7 @@ export const ProfilePage = ({ title }: TitleSettings) => {
                     cy="12"
                     r="10"
                     stroke="url(#coinGrad)"
-                    stroke-width="2"
+                    strokeWidth="2"
                     fill="rgba(21, 9, 49, 0.6)"
                   />
                   <circle
@@ -248,8 +248,8 @@ export const ProfilePage = ({ title }: TitleSettings) => {
                     cy="12"
                     r="7"
                     stroke="url(#coinGrad)"
-                    stroke-width="1"
-                    stroke-dasharray="2 1"
+                    strokeWidth="1"
+                    strokeDasharray="2 1"
                     fill="none"
                   />
                   <path
@@ -277,9 +277,9 @@ export const ProfilePage = ({ title }: TitleSettings) => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="lucide lucide-circle-dollar-sign-icon lucide-circle-dollar-sign"
                 >
                   <circle cx="12" cy="12" r="10" />

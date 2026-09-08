@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 import styles from "./Card.CaseList.module.css";
@@ -13,10 +13,12 @@ import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 import { EditDataPage } from "../EditCasePage/EditData.tsx";
 import { EditContentPage } from "../EditCasePage/EditContent.tsx";
+import toast from "react-hot-toast";
+import { CaseSettingsPage } from "../CaseSettingsPage/CaseSettings.tsx";
 // import toast from "react-hot-toast";
 
 interface CasePost {
-  id: string;
+  _id: string;
   name: string;
   rarity: string;
 }
@@ -33,21 +35,52 @@ interface EditCaseType {
   type: string;
 }
 
-interface ResponseSettings {
-  onBack: () => void;
-}
-
-export const CaseListPage = ({ onBack }: ResponseSettings) => {
+export const CaseListPage = () => {
   const [editCase, setEditCase] = useState<EditCaseType>({
     id: "",
-    type: ""
+    type: "",
   });
 
   const [caseList, setCaseList] = useState<CasePost[]>([]);
 
+  const [isCaseDelete, setIsCaseDelete] = useState<string | null>(null);
+
+  const [back, setBack] = useState<boolean | false>(false);
+
   const { data, loading, error } = usePageRender(
     `${api.API_BASE_URL}/admin/case/list`,
   );
+
+  const handleRemoveCase = async (
+    case_id: string,
+    e: ChangeEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        `${api.API_BASE_URL}/admin/case/${case_id}/delete`,
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (response.data.success) {
+        console.log("Кейс успешно удалён:", response.data);
+
+        toast.success(response.data.success);
+
+        const updatedCaseList = caseList.filter((item) => item._id !== case_id);
+
+        setCaseList(updatedCaseList);
+        setIsCaseDelete(null);
+      }
+
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   useEffect(() => {
     if (!data || !Array.isArray(data.renderData.cases)) {
@@ -58,79 +91,118 @@ export const CaseListPage = ({ onBack }: ResponseSettings) => {
       return;
     }
 
+    console.log("data", data);
+
     setCaseList(data.renderData.cases);
   }, [data]);
-
-  useEffect(() => {
-    console.log("caseList обновился:", caseList);
-  }, [caseList]);
 
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
 
-  if (editCase.id !== null && editCase.type === "EditData") return <EditDataPage case_id={editCase.id} onBack={onBack} />;
-  if (editCase.id !== null && editCase.type === "EditContent") return <EditContentPage case_id={editCase.id} onBack={onBack} />;
+  if (editCase.id !== null && editCase.type === "EditData")
+    return <EditDataPage case_id={editCase.id} />;
+  if (editCase.id !== null && editCase.type === "EditContent")
+    return <EditContentPage case_id={editCase.id} />;
+  if (back) return <CaseSettingsPage />;
 
-    return (
-      <div
-        id="case-list-page"
-        className={`${admin_styles["page"]} ${admin_styles["active"]}`}
-      >
-        <header className={admin_styles["header"]}>
-          <h1>Список кейсов</h1>
-          <p>Управление кейсами и их содержимым.</p>
-        </header>
+  return (
+    <div
+      id="case-list-page"
+      className={`${admin_styles["page"]} ${admin_styles["active"]}`}
+    >
+      <header className={admin_styles["header"]}>
+        <h1>Список кейсов</h1>
+        <p>Управление кейсами и их содержимым.</p>
+      </header>
 
-        <a href="#" className={admin_styles["on-back"]} onClick={onBack}>
-          ← Назад
-        </a>
+      <a href="#" className={admin_styles["on-back"]} onClick={() => setBack(true)}>
+        ← Назад
+      </a>
 
-        <br />
-        <br />
-        <br />
+      <br />
+      <br />
+      <br />
 
-        <section className={styles["posts-grid-section"]}>
-          {caseList && caseList.length > 0
-            ? caseList.map((caseItem, index) => {
-                return (
-                  <article key={index} className={styles["grid-card"]}>
-                    <div className={styles["card-body"]}>
-                      <h3>{caseItem.name}</h3>
-                      <p>Тип: {caseItem.rarity}</p>
-                      <ul className={styles["actions-menu"]}>
-                        <li className={styles["actions-menu-btn"]}>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setEditCase({
-                                id: caseItem._id.toString(),
-                                type: "EditData",
-                              })
-                            }
-                          >
-                            Данные
-                          </button>
-                        </li>
-                        <li className={styles["actions-menu-btn"]}>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setEditCase({
-                                id: caseItem._id.toString(),
-                                type: "EditContent",
-                              })
-                            }
-                          >
-                            Содержимое
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  </article>
-                );
-              })
-            : null}
-        </section>
-      </div>
-    );
+      <section className={styles["posts-grid-section"]}>
+        {caseList && caseList.length > 0 ? (
+          caseList.map((caseItem, index) => {
+            return (
+              <article key={index} className={styles["grid-card"]}>
+                <div className={styles["card-body"]}>
+                  <h3>{caseItem.name}</h3>
+                  <p>Тип: {caseItem.rarity}</p>
+                  <p>id: {caseItem._id}</p>
+                  <ul className={styles["actions-menu"]}>
+                    <li className={styles["actions-menu-btn"]}>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditCase({
+                            id: caseItem._id.toString(),
+                            type: "EditData",
+                          })
+                        }
+                      >
+                        Данные
+                      </button>
+                    </li>
+                    <li className={styles["actions-menu-btn"]}>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditCase({
+                            id: caseItem._id.toString(),
+                            type: "EditContent",
+                          })
+                        }
+                      >
+                        Содержимое
+                      </button>
+                    </li>
+                    <li
+                      className={`${styles["actions-menu-btn"]} ${styles["remove-case-btn"]}`}
+                    >
+                      <button
+                        type="button"
+                        onClick={(e) =>
+                          setIsCaseDelete(caseItem._id.toString())
+                        }
+                      >
+                        Удалить
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </article>
+            );
+          })
+        ) : (
+          <p>База данных кейсов пуста.</p>
+        )}
+      </section>
+
+      {isCaseDelete !== null && (
+        <div className={styles["menu-wrapper"]}>
+          <div className={styles["action-menu"]}>
+            <h2>Удалить кейс</h2>
+            <div className={styles["action-options"]}>
+              <div className={styles["options-group"]}>
+                Удалить кейс с ID: {isCaseDelete}?
+              </div>
+            </div>
+            <br />
+            <div className={styles["action-menu-btn"]}>
+              <button onClick={(e) => handleRemoveCase(isCaseDelete, e)}>
+                <span>Удалить</span>
+              </button>
+              <button onClick={() => setIsCaseDelete(null)}>
+                <span>Отмена</span>
+              </button>
+            </div>
+            <br />
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };

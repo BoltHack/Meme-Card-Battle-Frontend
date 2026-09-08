@@ -33,7 +33,14 @@ interface CardResponse {
   };
 }
 
-export const CardListPage = () => {
+// interface Props {
+//   onBack: () => void;
+// }
+interface Props {
+  onBack: () => void;
+}
+
+export const CardListPage = ({ onBack }: Props) => {
   const [cards, setCards] = useState<CardPost[]>([]);
   const [editCardData, setEditCardData] = useState<CardPost[]>([]);
 
@@ -44,11 +51,13 @@ export const CardListPage = () => {
   );
 
   const copy = (cardId: string) => {
-    navigator.clipboard.writeText(cardId)
-    .then(() => {
-      toast.success(`ID ${cardId} скопирован!`);
-    }).catch((err) => console.log("copy error", err));
-  }
+    navigator.clipboard
+      .writeText(cardId)
+      .then(() => {
+        toast.success(`ID ${cardId} скопирован!`);
+      })
+      .catch((err) => console.log("copy error", err));
+  };
 
   const cardEditMenu = (data: CardPost) => {
     console.log("data", data);
@@ -106,6 +115,10 @@ export const CardListPage = () => {
         <h1>Список игровых карт</h1>
         <p>Просматривайте, редактируйте и удаляйте карты.</p>
       </header>
+
+      <a href="#" className={admin_styles["on-back"]} onClick={onBack}>
+        ← Назад
+      </a>
 
       <main className={styles["discord-card-container"]}>
         <div className={styles["card-categories"]}>

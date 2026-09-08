@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
@@ -9,19 +9,25 @@ import api from "../../api/api.ts";
 
 export const LoadingPage = () => {
     const navigate = useNavigate();
-    const pageLocation = useLocation() as any;
+    const pageLocation = useLocation();
 
     const [isRefetch, setIsRefetch] = useState<boolean | false>(false);
+    const currentUrl = useRef<string | null>(null);
 
     const targetUrl = isRefetch
         ? `${api.API_BASE_URL}/api${pageLocation.pathname}`
         : null;
 
-    const { data, loading, refetch } = usePageRender(targetUrl!);
+    const { data, loading, url, refetch } = usePageRender(
+      currentUrl.current !== null ? currentUrl.current : targetUrl!,
+    );
+
+    currentUrl.current = url;
 
     useEffect(() => {
         const checkFetchStatus = setTimeout(() => {
             setIsRefetch(true);
+            console.log("currentUrl.current", currentUrl.current);
         }, 5000);
 
         return () => clearTimeout(checkFetchStatus);

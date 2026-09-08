@@ -6,121 +6,156 @@ import { io, Socket } from "socket.io-client";
 import api from "../api/api.ts";
 
 const socket: Socket = io(api.API_BASE_URL, {
-    autoConnect: false
+  autoConnect: false,
 });
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
 interface ErrorState {
-    code: number;
-    message: string;
+  code: number;
+  message: string;
 }
 
 export default function usePageRender<T extends Record<string, any>>(
-    url: string,
-    // options: { enabled: boolean } = { enabled: true }
+  url: string,
+  // options: { enabled: boolean } = { enabled: true }
 ) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [data, setData] = useState<T | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<ErrorState | null>(null);
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<ErrorState | null>(null);
 
-    const [trigger, setTrigger] = useState(0);
+  const [trigger, setTrigger] = useState(0);
 
-    const refetch = () => setTrigger(prev => prev + 1);
+  //   const lastFetchedUrl = useRef<string | null>(null);
 
-    useEffect(() => {
-        // if (!options.enabled) return;
-        if (url === null) return;
+  // const socket = useMemo(() => {
+  //   return io(api.API_BASE_URL, { autoConnect: false });
+  // }, []);
 
-        const controller = new AbortController();
+  const refetch = () => {
+    // lastFetchedUrl.current = null;
+    setTrigger((prev) => prev + 1);
+  };
 
-        axios.get<T>(url, {
-            signal: controller.signal
-        })
-            .then((response) => {
-                setData(response.data);
-                setLoading(false);
-                console.log('trigger', trigger);
-            })
-            .catch((err) => {
-                if (axios.isCancel(err) || err.name === "") return;
-                const errorMessage = err.response.data.error;
+  useEffect(() => {
+    // if (!options.enabled) return;
+    if (!url) return;
 
-                if (err.response?.status === 401) {
-                    if (!window.location.pathname.startsWith("/admin/")) {
-                        navigate("/auth/sign-in");
-                    } else {
-                        setLoading(false);
-                        setError({ code: 404, message: "not found." });
-                    }
-                    return;
-                    // if (localStorage.getItem("token")) localStorage.removeItem("token");
-                }
-                if (err.response?.status === 403) {                    
-                    navigate("/");
-                    return;
-                }
-                if (err.response?.status === 404) {
-                    setLoading(false);
-                    setError({ code: 404, message: errorMessage });
-                    if (trigger > 0) {
-                        navigate(0);
-                    }
-                    return;
-                }
-                if (err.response?.status) {
-                    console.log("err.response?.status", err.response?.status);
-                    setLoading(false);
-                    setError({
-                        code: Number(err.response?.status),
-                        message: errorMessage,
-                    });
-                    return;
-                }
-                setError({ code: 505, message: errorMessage });
-                console.error("Ошибка загрузки профиля:", err);
-                setLoading(false);
-            });
+    // const requestKey = url + `_trig_${trigger}`;
 
-        return () => {
-            controller.abort();
-        }
-    }, [url, navigate, trigger]);
+    // if (String(lastFetchedUrl.current) === String(requestKey)) {
+    //   //   console.log("Запрос заблокирован (уже загружен ранее):", url);
+    //   return;
+    // }
+    // lastFetchedUrl.current = requestKey;
 
-    useEffect(() => {
+    // console.log("requestKey", requestKey);
+    // console.log("\nrequestKey\n", requestKey);
 
-        if (!data || !data?.id) return;
+    const controller = new AbortController();
 
-        socket.connect();
-
-        const sendInitialData = () => {
-            console.log('Автоматическая отправка данных на бэк для ID:', data?.id);
-            socket.emit("user_register", { player_id: data?.id });
-        };
-
-        socket.on("connect", sendInitialData);
-
-        if (socket.connected) {
-            sendInitialData();
-        } else {
-            socket.connect();
+    axios
+      .get<T>(url, {
+        signal: controller.signal,
+      })
+      .then((response) => {
+        setData(response.data);
+        setError(null);
+        setLoading(false);
+        console.log("trigger", trigger);
+      })
+      .catch((err) => {
+        // if (axios.isCancel(err) || err.name === "") {
+        if (
+          axios.isCancel(err) ||
+          err.name === "CanceledError" ||
+          err.name === "AbortError" ||
+          err.name === ""
+        ) {
+          //   lastFetchedUrl.current = null;
+          //   console.log("Запрос успешно отменен AbortController:\n", url);
+          return;
         }
 
-        socket.on("error_handler", (message) => {
-            toast.error(message);
-        });
+        setLoading(false);
 
-        return () => {
-            socket.off("connect", sendInitialData);
-            socket.off("user_register");
-            socket.off("error_handler");
-            socket.disconnect();
-            console.log('Сокет отключен, подписки сняты');
+        const errorMessage = err.response.data.error;
+        // const errorStatus = err.response.status;
+
+        if (err.response?.status === 401) {
+          if (!window.location.pathname.startsWith("/admin/")) {
+            navigate("/auth/sign-in");
+          } else {
+            setLoading(false);
+            setError({ code: 404, message: "not found." });
+          }
+          return;
+          // if (localStorage.getItem("token")) localStorage.removeItem("token");
         }
-    }, [data]);
+        if (err.response?.status === 403) {
+          navigate("/");
+          return;
+        }
+        if (err.response?.status === 404) {
+          setLoading(false);
+          setError({ code: 404, message: errorMessage });
+          if (trigger > 0) {
+            navigate(0);
+          }
+          return;
+        }
+        if (err.response?.status) {
+          console.log("err.response?.status", err.response?.status);
+          setLoading(false);
+          setError({
+            code: Number(err.response?.status),
+            message: errorMessage,
+          });
+          return;
+        }
+        setError({ code: 505, message: errorMessage });
+        console.error("Ошибка загрузки профиля:", err);
+        setLoading(false);
+      });
 
-    return { data, loading, error, socket, refetch };
+    return () => {
+      controller.abort();
+    };
+  }, [url, navigate, trigger]);
+
+  useEffect(() => {
+    if (!data || !data.id) return;
+
+    socket.connect();
+
+    const sendInitialData = () => {
+      console.log("Автоматическая отправка данных на бэк для ID:", data.id);
+      socket.emit("user_register", { player_id: data.id });
+    };
+
+    socket.on("connect", sendInitialData);
+
+    if (socket.connected) {
+      sendInitialData();
+    } else {
+      socket.connect();
+    }
+
+    socket.on("error_handler", (message) => {
+      toast.error(message);
+    });
+
+    return () => {
+      socket.off("connect", sendInitialData);
+      socket.off("user_register");
+      socket.off("error_handler");
+      socket.disconnect();
+      console.log("Сокет отключен, подписки сняты");
+    };
+  }, [data]);
+
+  return { data, loading, error, socket, url, refetch };
 }

@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 
-import styles from "../../CardRedaction/CreateCard/Card.CreateCard.module.css";
+import styles from "../../CardRedaction/CreateCardPage/Card.CreateCard.module.css";
 import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 
 import axios from "axios";
@@ -11,6 +11,7 @@ import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 import toast from "react-hot-toast";
+import { CaseListPage } from "../CaseListPage/CaseList.tsx";
 
 interface CaseFormat {
   case_name: string;
@@ -21,10 +22,9 @@ interface CaseFormat {
 
 interface ResponseProps {
   case_id: string;
-  onBack: () => void;
 }
 
-export const EditDataPage = ({ onBack, case_id }: ResponseProps) => {
+export const EditDataPage = ({ case_id }: ResponseProps) => {
   const [formData, setFormData] = useState<CaseFormat>({
     case_name: "",
     case_description: "",
@@ -32,8 +32,10 @@ export const EditDataPage = ({ onBack, case_id }: ResponseProps) => {
     case_price: "",
   });
 
+  const [back, setBack] = useState<boolean | false>(false);
+
   const { data, loading, error } = usePageRender(
-    `${api.API_BASE_URL}/admin/case/${case_id}/edit`,
+    `${api.API_BASE_URL}/admin/case/${case_id}/edit/data`,
   );
 
   const handleChange = (
@@ -62,7 +64,7 @@ export const EditDataPage = ({ onBack, case_id }: ResponseProps) => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/admin/case/${case_id}/edit`,
+        `${api.API_BASE_URL}/admin/case/${case_id}/edit/data`,
         dataToSend,
         {
           withCredentials: true,
@@ -80,25 +82,26 @@ export const EditDataPage = ({ onBack, case_id }: ResponseProps) => {
   };
 
   useEffect(() => {
-      if (!data || !data.renderData) {
-        console.log(
-          "Данные еще не загрузились или структура не совпадает:",
-          data,
-        );
-        return;
-      }
+    if (!data || !data.renderData) {
+      console.log(
+        "Данные еще не загрузились или структура не совпадает:",
+        data,
+      );
+      return;
+    }
 
-      setFormData({
-        case_name: data.renderData.name,
-        case_description: data.renderData.description,
-        case_rarity: data.renderData.rarity,
-        case_price: data.renderData.price,
-      });
-  
-    }, [data]);
+    setFormData({
+      case_name: data.renderData.name,
+      case_description: data.renderData.description,
+      case_rarity: data.renderData.rarity,
+      case_price: data.renderData.price,
+    });
+  }, [data]);
 
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
+
+  if (back) return <CaseListPage />;
 
   return (
     <div
@@ -110,7 +113,11 @@ export const EditDataPage = ({ onBack, case_id }: ResponseProps) => {
         <p>Изменение данных кейса.</p>
       </header>
 
-      <a href="#" className={admin_styles["on-back"]} onClick={onBack}>
+      <a
+        href="#"
+        className={admin_styles["on-back"]}
+        onClick={() => setBack(true)}
+      >
         ← Назад
       </a>
 

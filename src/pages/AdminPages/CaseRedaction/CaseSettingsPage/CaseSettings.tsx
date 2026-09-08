@@ -7,21 +7,25 @@ import { CreateCasePage } from "../CreateCasePage/CreateCase";
 
 type CaseAction = "List" | "Create" | null;
 
-export const CasePage = () => {
+// interface Props {
+//   ReturnTo: (tab: string) => void;
+// }
+
+export const CaseSettingsPage = () => {
   const [currentAction, setCurrentAction] = useState<CaseAction>(null);
 
-  const handleBack = () => setCurrentAction(null);
+  // const handleBack = () => setCurrentAction(null);
 
-  if (currentAction === "List") return <CaseListPage onBack={handleBack} />;
-  if (currentAction === "Create") return <CreateCasePage onBack={handleBack} />;
+  if (currentAction === "List") return <CaseListPage />;
+  if (currentAction === "Create") return <CreateCasePage />;
 
   return (
     <div
-      id="case-page"
+      id="case-settings-page"
       className={`${admin_styles["page"]} ${admin_styles["active"]}`}
     >
       <header className={admin_styles["header"]}>
-        <h1>Список кейсов</h1>
+        <h1>Настройка кейсов</h1>
         <p>Управление кейсами и их данными.</p>
       </header>
 
