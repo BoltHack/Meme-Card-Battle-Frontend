@@ -25,17 +25,17 @@ interface CardData {
   _id: string;
 }
 
-interface UseCardData {
-  id: string;
-  lvl?: number;
-  rarity?: string;
-  avatar?: string;
-  name?: string;
-  description?: string;
-  damage?: number;
-  protection?: number;
-  power_slot?: number;
-}
+// interface UseCardData {
+//   id: string;
+//   lvl?: number;
+//   rarity?: string;
+//   avatar?: string;
+//   name?: string;
+//   description?: string;
+//   damage?: number;
+//   protection?: number;
+//   power_slot?: number;
+// }
 
 export interface ActionData {
   cardInfo: CardData;
@@ -97,7 +97,18 @@ export const Game_Menus = ({
   const [isClosing, setIsClosing] = useState(false);
 
   const [isOpenCardActions, setIsOpenCardActions] = useState(false);
-  const [selectCard, setSelectCard] = useState<UseCardData[]>([]);
+
+  const initialCardState = {
+    menu_id: "",
+    rarity: "",
+    avatar: "",
+    name: "",
+    description: "",
+    damage: 0,
+    protection: 0,
+    power_slot: 0,
+  };
+  const [selectCard, setSelectCard] = useState(initialCardState);
 
   const [isOpenLeaveMenu, setIsOpenLeaveMenu] = useState(false);
 
@@ -193,7 +204,16 @@ export const Game_Menus = ({
 
       console.log("useCardIdRef", useCardIdRef.current);
 
-      setSelectCard((prevState) => [...prevState, cardInfo]);
+      setSelectCard({
+        menu_id: cardInfo.id,
+        rarity: cardInfo.rarity,
+        avatar: cardInfo.avatar,
+        name: cardInfo.name,
+        description: cardInfo.description,
+        damage: cardInfo.damage,
+        protection: cardInfo.protection,
+        power_slot: cardInfo.power_slot,
+      });
       // setSelectCard(cardInfo);
 
       setIsOpenCardActions(true);
@@ -220,7 +240,7 @@ export const Game_Menus = ({
         enemy_id: playersInfo?.enemyInfo.id,
         card_id: useCardId,
       });
-      setSelectCard([]);
+      setSelectCard(initialCardState);
 
       console.log("activePlayerCard", activePlayerCard);
 
@@ -230,10 +250,10 @@ export const Game_Menus = ({
       //
       // setHandList(removeId);
     } else if (type === "close") {
-      setSelectCard([]);
+      setSelectCard(initialCardState);
       setIsOpenCardActions(false);
     } else {
-      setSelectCard([]);
+      setSelectCard(initialCardState);
       setIsOpenCardActions(false);
     }
   };
@@ -278,121 +298,74 @@ export const Game_Menus = ({
             <h2>Использовать карту?</h2>
             <div className={Menus_styles["actions-options"]}>
               <div className={Menus_styles["actions-card-info"]}>
-                {selectCard && selectCard.length
-                  ? selectCard.map((card: any, index: number) => {
-                      const lvlName = card?.rarity.toLowerCase();
-                      return (
-                        <div
-                          key={index}
-                          id={card?.menu_id}
-                          className={CardsDesign_styles["card-3d-wrapper"]}
-                        >
-                          <div className={CardsDesign_styles["card-inner"]}>
-                            <div
-                              className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles["hand_card"]} ${CardsDesign_styles[lvlName.toLowerCase()]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
-                            >
-                              <div
-                                className={CardsDesign_styles["card-shine"]}
-                              ></div>
-                              <div
-                                className={CardsDesign_styles["card-header"]}
-                              >
-                                <span
-                                  className={CardsDesign_styles["card-cost"]}
-                                  title="Занимает 15 слотов силы"
-                                >
-                                  {card.power_slot}
-                                </span>
-                                <span
-                                  className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
-                                >
-                                  {lvlName}
-                                </span>
-                              </div>
-                              <div
-                                className={CardsDesign_styles["card-artwork"]}
-                              >
-                                <img
-                                  src={`${api.API_BASE_URL}/${card.avatar}`}
-                                  alt="artwork"
-                                />
-                              </div>
-                              <div className={CardsDesign_styles["card-body"]}>
-                                <div
-                                  className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
-                                >
-                                  {card.name}
-                                </div>
-                                <div
-                                  className={
-                                    CardsDesign_styles["card-description"]
-                                  }
-                                >
-                                  {card.description}
-                                </div>
-                              </div>
-                              <div
-                                className={CardsDesign_styles["card-footer"]}
-                              >
-                                <div
-                                  className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}
-                                >
-                                  <span
-                                    className={CardsDesign_styles["stat-icon"]}
-                                  >
-                                    ⚔️
-                                  </span>
-                                  <span
-                                    className={CardsDesign_styles["stat-value"]}
-                                  >
-                                    {card.damage}
-                                  </span>
-                                </div>
-                                <div
-                                  className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
-                                >
-                                  <span
-                                    className={CardsDesign_styles["stat-icon"]}
-                                  >
-                                    🛡️
-                                  </span>
-                                  <span
-                                    className={CardsDesign_styles["stat-value"]}
-                                  >
-                                    {card.protection}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
+                {selectCard.menu_id && (
+                  <div
+                    id={selectCard?.menu_id}
+                    className={CardsDesign_styles["card-3d-wrapper"]}
+                  >
+                    <div className={CardsDesign_styles["card-inner"]}>
+                      <div
+                        className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles["hand_card"]} ${CardsDesign_styles[selectCard.rarity.toLowerCase()]} ${CardsDesign_styles[selectCard.rarity.toLowerCase()]}`}
+                      >
+                        <div className={CardsDesign_styles["card-shine"]}></div>
+                        <div className={CardsDesign_styles["card-header"]}>
+                          <span
+                            className={CardsDesign_styles["card-cost"]}
+                            title="Занимает 15 слотов силы"
+                          >
+                            {selectCard.power_slot}
+                          </span>
+                          <span
+                            className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[selectCard.rarity.toLowerCase()]}`}
+                          >
+                            {selectCard.rarity}
+                          </span>
+                        </div>
+                        <div className={CardsDesign_styles["card-artwork"]}>
+                          <img
+                            src={`${api.API_BASE_URL}/${selectCard.avatar}`}
+                            alt="artwork"
+                          />
+                        </div>
+                        <div className={CardsDesign_styles["card-body"]}>
+                          <div
+                            className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[selectCard.rarity.toLowerCase()]}`}
+                          >
+                            {selectCard.name}
+                          </div>
+                          <div
+                            className={CardsDesign_styles["card-description"]}
+                          >
+                            {selectCard.description}
                           </div>
                         </div>
-                        // <div key={index} className={`${CardDesk_styles["dem-card"]} ${CardDesk_styles[card?.rarity.toLowerCase()]}`}>
-                        //     <div className={CardDesk_styles["card-shine"]}></div>
-                        //     <div className={CardDesk_styles["card-header"]}>
-                        //         <span className={CardDesk_styles["card-cost"]}>{card?.lvl}</span>
-                        //         <span className={`${CardDesk_styles["card-rarity"]} ${CardDesk_styles[card?.rarity.toLowerCase()]}`}>{card.rarity}</span>
-                        //     </div>
-                        //     <img className={CardDesk_styles["card-artwork"]} src={`${api.API_BASE_URL}/${card?.avatar}`} />
-                        //     <div className={CardDesk_styles["card-body"]}>
-                        //         <div className={CardDesk_styles["card-title"]}>{card?.name}</div>
-                        //         <div className={CardDesk_styles["card-description"]}>
-                        //             {card?.description}
-                        //         </div>
-                        //     </div>
-                        //     <div className={CardDesk_styles["card-footer"]}>
-                        //         <div className={`${CardDesk_styles["stat-badge"]} ${CardDesk_styles["attack-badge"]}`}>
-                        //             <span className={CardDesk_styles["stat-icon"]}>⚔️</span>
-                        //             <span className={CardDesk_styles["stat-value"]}>{card.damage}</span>
-                        //         </div>
-                        //         <div className={`${CardDesk_styles["stat-badge"]} ${CardDesk_styles["protection-badge"]}`}>
-                        //             <span className={CardDesk_styles["stat-icon"]}>🛡️</span>
-                        //             <span className={CardDesk_styles["stat-value"]}>{card.protection}</span>
-                        //         </div>
-                        //     </div>
-                        // </div>
-                      );
-                    })
-                  : ""}
+                        <div className={CardsDesign_styles["card-footer"]}>
+                          <div
+                            className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}
+                          >
+                            <span className={CardsDesign_styles["stat-icon"]}>
+                              ⚔️
+                            </span>
+                            <span className={CardsDesign_styles["stat-value"]}>
+                              {selectCard.damage}
+                            </span>
+                          </div>
+                          <div
+                            className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
+                          >
+                            <span className={CardsDesign_styles["stat-icon"]}>
+                              🛡️
+                            </span>
+                            <span className={CardsDesign_styles["stat-value"]}>
+                              {selectCard.protection}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                ;
               </div>
 
               <div className={Menus_styles["actions-buttons"]}>
@@ -509,32 +482,6 @@ export const Game_Menus = ({
                         </div>
                       </div>
                     );
-                    // <div key={`${card.menu_id || index}`} className={`${CardDesk_styles["dem-card"]} ${CardDesk_styles[`${card.rarity?.toLowerCase()}`]}`}
-                    //      onClick={() => removeCard(card.menu_id)} id={card.menu_id}
-                    // >
-                    //     <div className={CardDesk_styles["card-shine"]}></div>
-                    //     <div className={CardDesk_styles["card-header"]}>
-                    //         <span className={CardDesk_styles["card-cost"]}>{card.lvl}</span>
-                    //         <span className={`${CardDesk_styles["card-rarity"]} ${CardDesk_styles[card.rarity.toLowerCase()]}`}>{card.rarity}</span>
-                    //     </div>
-                    //     <img className={CardDesk_styles["card-artwork"]} src={`${api.API_BASE_URL}/${card.avatar}`} />
-                    //     <div className={CardDesk_styles["card-body"]}>
-                    //         <div className={CardDesk_styles["card-title"]}>{card?.name}</div>
-                    //         <div className={CardDesk_styles["card-description"]}>
-                    //             {card.description && card.description.length >= 100 ? card.description.slice(0, 100) + '...' : card.description}
-                    //         </div>
-                    //     </div>
-                    //     <div className={CardDesk_styles["card-footer"]}>
-                    //         <div className={`${CardDesk_styles["stat-badge"]} ${CardDesk_styles["attack-badge"]}`}>
-                    //             <span className={CardDesk_styles["stat-icon"]}>⚔️</span>
-                    //             <span className={CardDesk_styles["stat-value"]}>{card?.damage}</span>
-                    //         </div>
-                    //         <div className={`${CardDesk_styles["stat-badge"]} ${CardDesk_styles["protection-badge"]}`}>
-                    //             <span className={CardDesk_styles["stat-icon"]}>🛡️</span>
-                    //             <span className={CardDesk_styles["stat-value"]}>{card?.protection}</span>
-                    //         </div>
-                    //     </div>
-                    // </div>
                   })
                 ) : (
                   <p style={{ color: "#ffffff" }}>Тут пока пусто.</p>
@@ -659,33 +606,6 @@ export const Game_Menus = ({
                         </div>
                       </div>
                     );
-                    // <div key={card.menu_id} className={`${CardDesk_styles["dem-card"]} ${Menus_styles["menu-card"]} ${CardDesk_styles[card.rarity?.toLowerCase()]}`}
-                    //      onClick={() => checkBattleCard( card.id, card.menu_id )}
-                    //      id={card.menu_id}
-                    // >
-                    //     <div className={CardDesk_styles["card-shine"]}></div>
-                    //     <div className={CardDesk_styles["card-header"]}>
-                    //         <span className={CardDesk_styles["card-cost"]}>{card.lvl}</span>
-                    //         <span className={`${CardDesk_styles["card-rarity"]} ${CardDesk_styles[card.rarity.toLowerCase()]}`}>{card.rarity}</span>
-                    //     </div>
-                    //     <img className={CardDesk_styles["card-artwork"]} src={`${api.API_BASE_URL}/${card.avatar}`} />
-                    //     <div className={CardDesk_styles["card-body"]}>
-                    //         <div className={CardDesk_styles["card-title"]}>{card.name}</div>
-                    //         <div className={CardDesk_styles["card-description"]}>
-                    //             {card.description && card.description.length >= 100 ? card.description.slice(0, 100) + '...' : card.description}
-                    //         </div>
-                    //     </div>
-                    //     <div className={CardDesk_styles["card-footer"]}>
-                    //         <div className={`${CardDesk_styles["stat-badge"]} ${CardDesk_styles["attack-badge"]}`}>
-                    //             <span className={CardDesk_styles["stat-icon"]}>⚔️</span>
-                    //             <span className={CardDesk_styles["stat-value"]}>{card.damage}</span>
-                    //         </div>
-                    //         <div className={`${CardDesk_styles["stat-badge"]} ${CardDesk_styles["protection-badge"]}`}>
-                    //             <span className={CardDesk_styles["stat-icon"]}>🛡️</span>
-                    //             <span className={CardDesk_styles["stat-value"]}>{card.protection}</span>
-                    //         </div>
-                    //     </div>
-                    // </div>
                   })
                 ) : (
                   <p style={{ color: "#ffffff" }}>Загрузка...</p>
@@ -696,7 +616,7 @@ export const Game_Menus = ({
         </div>
       )}
 
-      {isOpenLeaveMenu ? (
+      {isOpenLeaveMenu && (
         <div
           className={Menus_styles["menu-wrapper"]}
           style={{
@@ -717,7 +637,7 @@ export const Game_Menus = ({
             </div>
           </div>
         </div>
-      ) : null}
+      )}
     </>
   );
 };

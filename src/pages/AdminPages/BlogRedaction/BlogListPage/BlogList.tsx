@@ -16,6 +16,7 @@ import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 import { Pagination } from "../../../../tools/PageTools/Pagination/Pagination.tsx";
 import { EditBlogPage } from "../EditBlog/EditBlog.tsx";
 import toast from "react-hot-toast";
+import { BlogSettingsPage } from "../BlogSettingsPage/BlogSettings.tsx";
 
 interface BlogPost {
   author: string;
@@ -36,12 +37,14 @@ interface BlogResponse {
   };
 }
 
-interface Props {
-  onBack: () => void;
-}
+// interface Props {
+//   onBack: () => void;
+// }
 
-export const BlogListPage = ({ onBack }: Props) => {
+export const BlogListPage = () => {
   const bodyWrapperRef = useRef<HTMLDivElement | null>(null);
+
+  const [back, setBack] = useState<boolean | false>(false);
 
   const [blog, setBlog] = useState<BlogPost[]>([]);
 
@@ -56,16 +59,25 @@ export const BlogListPage = ({ onBack }: Props) => {
   const [editingBlogId, setEditingBlogId] = useState<string | null>(null);
   // const [isBlogState, setIsBlogState] = useState<boolean | false>(false);
 
-  const [removeBlogData, setRemoveBlogData] = useState<BlogPost[]>([]);
+  const initialBlogState = {
+    author: "",
+    title: "",
+    description: "",
+    cover: "",
+    category: "",
+    date: "",
+    id: "",
+  };
+  const [removeBlogData, setRemoveBlogData] = useState(initialBlogState);
 
   const { data, loading, error } = usePageRender<BlogResponse>(
     `${api.API_BASE_URL}/api/blog?page=${currentPage}`,
   );
 
-  const blogRemoveMenu = (data: BlogPost) => {
-    console.log("data", data);
-    setRemoveBlogData((prevState) => [...prevState, data]);
-  };
+  // const blogRemoveMenu = (data: BlogPost) => {
+  //   console.log("data", data);
+  //   setRemoveBlogData((prevState) => [...prevState, data]);
+  // };
 
   const handleRemoveBlog = async (
     id: string,
@@ -75,7 +87,7 @@ export const BlogListPage = ({ onBack }: Props) => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/admin/blog/${removeBlogData[0].id}/delete`,
+        `${api.API_BASE_URL}/admin/blog/${removeBlogData.id}/delete`,
         {
           withCredentials: true,
         },
@@ -85,7 +97,7 @@ export const BlogListPage = ({ onBack }: Props) => {
 
       const updatedBlogList = blog.filter((item) => item.id !== id);
       setBlog(updatedBlogList);
-      setRemoveBlogData([]);
+      setRemoveBlogData(initialBlogState);
 
       toast.success(response.data.success);
       return response.data;
@@ -156,9 +168,8 @@ export const BlogListPage = ({ onBack }: Props) => {
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
 
-  if (editingBlogId) {
-    return <EditBlogPage blog_id={editingBlogId} />;
-  }
+  if (back) return <BlogSettingsPage />
+  if (editingBlogId) return <EditBlogPage blog_id={editingBlogId} />;
 
   return (
     <div
@@ -170,7 +181,7 @@ export const BlogListPage = ({ onBack }: Props) => {
         <p>Просматривайте, редактируйте и удаляйте публикации.</p>
       </header>
 
-      <a href="#" className={admin_styles["on-back"]} onClick={onBack}>
+      <a href="#" className={admin_styles["on-back"]} onClick={() => setBack(true)}>
         ← Назад
       </a>
 
@@ -228,7 +239,7 @@ export const BlogListPage = ({ onBack }: Props) => {
                     <button
                       type="button"
                       onClick={() =>
-                        blogRemoveMenu({
+                        setRemoveBlogData({
                           id: blog[0].id,
                           author: blog[0].author,
                           cover: blog[0].cover,
@@ -303,7 +314,7 @@ export const BlogListPage = ({ onBack }: Props) => {
                         <button
                           type="button"
                           onClick={() =>
-                            blogRemoveMenu({
+                            setRemoveBlogData({
                               id: bd.id,
                               author: bd.author,
                               cover: bd.cover,
@@ -370,62 +381,60 @@ export const BlogListPage = ({ onBack }: Props) => {
         />
       </main>
 
-      {removeBlogData && removeBlogData.length > 0
-        ? removeBlogData.map((bd, index) => {
-            return (
-              <div key={index} className={styles["menu-wrapper"]}>
-                <div className={styles["action-menu"]}>
-                  <h2>Удалить публикацию</h2>
-                  <div className={styles["action-options"]}>
-                    <article className={styles["grid-card"]}>
-                      <div className={styles["card-image"]}>
-                        {bd.cover.length > 0 ? (
-                          <img
-                            src={`${api.API_BASE_URL}/${bd.cover}`}
-                            loading="lazy"
-                            className={styles["img-placeholder"]}
-                          />
-                        ) : (
-                          <div
-                            className={`${styles["img-placeholder"]} ${styles[bd.category]}`}
-                          ></div>
-                        )}
-                      </div>
-                      <div className={styles["card-body"]}>
-                        <span className={styles["category"]}>
-                          {bd.category}
-                        </span>
-                        <h3>
-                          {bd.title.length > 30
-                            ? bd.title.slice(0, 30) + "..."
-                            : bd.title}
-                        </h3>
-                        <p>
-                          {bd.description.length > 45
-                            ? bd.description.slice(0, 45) + "..."
-                            : bd.description}
-                        </p>
-                        <div className={styles["card-footer"]}>
-                          <span className={styles["date"]}>{bd.date}</span>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                  <br />
-                  <div className={styles["action-menu-btn"]}>
-                    <button onClick={(e) => handleRemoveBlog(bd.id, e)}>
-                      <span>Удалить</span>
-                    </button>
-                    <button onClick={() => setRemoveBlogData([])}>
-                      <span>Отмена</span>
-                    </button>
-                  </div>
-                  <br />
+      {removeBlogData.id && (
+        <div className={styles["menu-wrapper"]}>
+          <div className={styles["action-menu"]}>
+            <h2>Удалить публикацию</h2>
+            <div className={styles["action-options"]}>
+              <article className={styles["grid-card"]}>
+                <div className={styles["card-image"]}>
+                  {removeBlogData.cover.length > 0 ? (
+                    <img
+                      src={`${api.API_BASE_URL}/${removeBlogData.cover}`}
+                      loading="lazy"
+                      className={styles["img-placeholder"]}
+                    />
+                  ) : (
+                    <div
+                      className={`${styles["img-placeholder"]} ${styles[removeBlogData.category]}`}
+                    ></div>
+                  )}
                 </div>
-              </div>
-            );
-          })
-        : null}
+                <div className={styles["card-body"]}>
+                  <span className={styles["category"]}>
+                    {removeBlogData.category}
+                  </span>
+                  <h3>
+                    {removeBlogData.title.length > 30
+                      ? removeBlogData.title.slice(0, 30) + "..."
+                      : removeBlogData.title}
+                  </h3>
+                  <p>
+                    {removeBlogData.description.length > 45
+                      ? removeBlogData.description.slice(0, 45) + "..."
+                      : removeBlogData.description}
+                  </p>
+                  <div className={styles["card-footer"]}>
+                    <span className={styles["date"]}>
+                      {removeBlogData.date}
+                    </span>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <br />
+            <div className={styles["action-menu-btn"]}>
+              <button onClick={(e) => handleRemoveBlog(removeBlogData.id, e)}>
+                <span>Удалить</span>
+              </button>
+              <button onClick={() => setRemoveBlogData(initialBlogState)}>
+                <span>Отмена</span>
+              </button>
+            </div>
+            <br />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

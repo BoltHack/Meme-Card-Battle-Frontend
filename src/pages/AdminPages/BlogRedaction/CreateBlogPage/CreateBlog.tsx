@@ -13,16 +13,15 @@ import toast from "react-hot-toast";
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { BlogSettingsPage } from "../BlogSettingsPage/BlogSettings.tsx";
 
 interface PlayerData {
   name: string;
 }
 
-interface Props {
-  onBack: () => void;
-}
+export const CreateBlogPage = () => {
+  const [back, setBack] = useState<boolean | false>(false);
 
-export const CreateBlogPage = ({ onBack }: Props) => {
   const [formData, setFormData] = useState({
     post_title: "",
     post_description: "",
@@ -169,6 +168,8 @@ export const CreateBlogPage = ({ onBack }: Props) => {
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
 
+  if (back) return <BlogSettingsPage />;
+
   return (
     <div
       id="create-blog-page"
@@ -181,7 +182,7 @@ export const CreateBlogPage = ({ onBack }: Props) => {
         </p>
       </header>
 
-      <a href="#" className={admin_styles["on-back"]} onClick={onBack}>
+      <a href="#" className={admin_styles["on-back"]} onClick={() => setBack(true)}>
         ← Назад
       </a>
 

@@ -20,12 +20,12 @@ interface CardPost {
   name: string;
   avatar: string;
   description: string;
-  damage: number;
+  damage: string;
   protection: string;
-  lvl: number;
+  lvl: string;
   rarity: string;
-  power_slot: number;
-  chance: number;
+  power_slot: string;
+  chance: string;
 }
 
 interface ResponseProps {
@@ -41,6 +41,19 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
   const [cardList, setCardList] = useState<CardPost[]>([]);
 
   const [addNewCardMenu, setAddNewCardMenu] = useState<boolean | false>(false);
+
+  const initialCardState = {
+    id: "",
+    name: "",
+    avatar: "",
+    description: "",
+    damage: "",
+    protection: "",
+    lvl: "",
+    rarity: "",
+    power_slot: "",
+  };
+  const [cardDeleteMenu, setCardDeleteMenu] = useState(initialCardState);
 
   const [back, setBack] = useState<boolean | false>(false);
 
@@ -72,7 +85,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/admin/case/${case_id}/edit/content`,
+        `${api.API_BASE_URL}/admin/case/${case_id}/edit/content/add`,
         dataToSend,
         {
           withCredentials: true,
@@ -99,6 +112,43 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
       }
     }
   };
+
+  const handleRemoveCardFromList = async (e: ChangeEvent) => {
+    e.preventDefault();
+
+    const dataToSend = new FormData();
+
+    dataToSend.append("card_id", cardDeleteMenu.id);
+    
+    try {
+      const response = await axios.post(
+        `${api.API_BASE_URL}/admin/case/${case_id}/edit/content/delete`,
+        dataToSend,
+        {
+          withCredentials: true,
+        },
+      );
+
+      console.log("Новая карта успешно добавлена:", response.data);
+
+      const updatedCardList = cardList.filter(card => card.id !== cardDeleteMenu.id);
+
+      setCardList(updatedCardList);
+
+      toast.success(response.data.success);
+      setCardDeleteMenu(initialCardState);
+
+      return response.data;
+    } catch (error) {
+      const errorMessage = error?.response?.data.error;
+      console.log("error", error);
+      if (errorMessage) {
+        toast.error(errorMessage);
+        return;
+      }
+    }
+
+  }
 
   useEffect(() => {
     if (!data || !Array.isArray(data.renderData)) {
@@ -157,6 +207,19 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
                   <div
                     key={card.id}
                     className={CardsDesign_styles["card-3d-wrapper"]}
+                    onClick={() =>
+                      setCardDeleteMenu({
+                        id: card.id,
+                        name: card.name,
+                        avatar: card.avatar,
+                        description: card.description,
+                        damage: card.damage,
+                        protection: card.protection,
+                        lvl: card.lvl,
+                        rarity: card.rarity,
+                        power_slot: card.power_slot,
+                      })
+                    }
                   >
                     <div className={CardsDesign_styles["card-inner"]}>
                       <div
@@ -268,6 +331,91 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
                 <span>Добавить</span>
               </button>
               <button onClick={() => setAddNewCardMenu(false)}>
+                <span>Отмена</span>
+              </button>
+            </div>
+            <br />
+          </div>
+        </div>
+      )}
+
+      {cardDeleteMenu.id && (
+        <div className={styles["menu-wrapper"]}>
+          <div className={styles["action-menu"]}>
+            <h2>Удалить карту</h2>
+            <div className={styles["action-options"]} style={{ justifyContent: "center" }}>
+              <div className={CardsDesign_styles["card-3d-wrapper"]}>
+                <div className={CardsDesign_styles["card-inner"]}>
+                  <div
+                    className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles[cardDeleteMenu.rarity.toLowerCase()]} ${CardsDesign_styles[cardDeleteMenu.rarity.toLowerCase()]}`}
+                  >
+                    <div className={CardsDesign_styles["card-shine"]}></div>
+                    <div className={CardsDesign_styles["card-header"]}>
+                      <span
+                        className={CardsDesign_styles["card-cost"]}
+                        title="Занимает 15 слотов силы"
+                      >
+                        {cardDeleteMenu.power_slot}
+                      </span>
+                      <span
+                        className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[cardDeleteMenu.rarity.toLowerCase()]}`}
+                      >
+                        {cardDeleteMenu.rarity}
+                      </span>
+                    </div>
+                    <div className={CardsDesign_styles["card-artwork"]}>
+                      <img
+                        src={`${api.API_BASE_URL}/${cardDeleteMenu.avatar}`}
+                        alt="artwork"
+                      />
+                    </div>
+                    <div className={CardsDesign_styles["card-body"]}>
+                      <div
+                        className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[cardDeleteMenu.rarity.toLowerCase()]}`}
+                      >
+                        {cardDeleteMenu.name}
+                      </div>
+                      <div className={CardsDesign_styles["card-description"]}>
+                        {cardDeleteMenu.description}
+                      </div>
+                    </div>
+                    <div className={CardsDesign_styles["card-footer"]}>
+                      <div
+                        className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}
+                      >
+                        <span className={CardsDesign_styles["stat-icon"]}>
+                          ⚔️
+                        </span>
+                        <span className={CardsDesign_styles["stat-value"]}>
+                          {cardDeleteMenu.damage}
+                        </span>
+                      </div>
+                      <div
+                        className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
+                      >
+                        <span className={CardsDesign_styles["stat-icon"]}>
+                          🛡️
+                        </span>
+                        <span className={CardsDesign_styles["stat-value"]}>
+                          {cardDeleteMenu.protection}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={CardsDesign_styles["game-card-back"]}>
+                    <div className={CardsDesign_styles["card-back-logo"]}>
+                      🔮
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div className={styles["action-menu-btn"]}>
+              <button onClick={(e) => handleRemoveCardFromList(e)}>
+                <span>Удалить</span>
+              </button>
+              <button onClick={() => setCardDeleteMenu(initialCardState)}>
                 <span>Отмена</span>
               </button>
             </div>

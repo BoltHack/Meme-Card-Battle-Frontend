@@ -10,10 +10,8 @@ type CaseAction = "List" | "Create" | null;
 export const BlogSettingsPage = () => {
   const [currentAction, setCurrentAction] = useState<CaseAction>(null);
 
-  const handleBack = () => setCurrentAction(null);
-
-  if (currentAction === "List") return <BlogListPage onBack={handleBack} />;
-  if (currentAction === "Create") return <CreateBlogPage onBack={handleBack} />;
+  if (currentAction === "List") return <BlogListPage />;
+  if (currentAction === "Create") return <CreateBlogPage />;
 
   return (
     <div

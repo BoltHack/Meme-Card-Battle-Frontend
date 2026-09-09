@@ -13,17 +13,18 @@ import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 import toast from "react-hot-toast";
+import { CardSettingsPage } from "../CardSettingsPage/CardSettings.tsx";
 
 interface CardPost {
   card_id: string;
   card_name: string;
   card_avatar: string;
   card_description: string;
-  card_damage: number;
+  card_damage: string;
   card_protection: string;
-  lvl_number: number;
+  lvl_number: string;
   lvl_name: string;
-  power_slot: number;
+  power_slot: string;
 }
 
 interface CardResponse {
@@ -33,16 +34,23 @@ interface CardResponse {
   };
 }
 
-// interface Props {
-//   onBack: () => void;
-// }
-interface Props {
-  onBack: () => void;
-}
+export const CardListPage = () => {
+  const [back, setBack] = useState<boolean | false>(false);
 
-export const CardListPage = ({ onBack }: Props) => {
   const [cards, setCards] = useState<CardPost[]>([]);
-  const [editCardData, setEditCardData] = useState<CardPost[]>([]);
+
+  const initialCardState = {
+    card_id: "",
+    card_name: "",
+    card_avatar: "",
+    card_description: "",
+    card_damage: "",
+    card_protection: "",
+    lvl_number: "",
+    lvl_name: "",
+    power_slot: "",
+  };
+  const [editCardData, setEditCardData] = useState(initialCardState);
 
   const [cardsCategory, setCardsCategory] = useState<string | "all">("all");
 
@@ -59,10 +67,10 @@ export const CardListPage = ({ onBack }: Props) => {
       .catch((err) => console.log("copy error", err));
   };
 
-  const cardEditMenu = (data: CardPost) => {
-    console.log("data", data);
-    setEditCardData((prevState) => [...prevState, data]);
-  };
+  // const cardEditMenu = (data: CardPost) => {
+  //   console.log("data", data);
+  //   setEditCardData((prevState) => [...prevState, data]);
+  // };
 
   const handleRemoveCard = async (
     id: string,
@@ -82,7 +90,7 @@ export const CardListPage = ({ onBack }: Props) => {
 
       const updatedBlogList = cards.filter((item) => item.card_id !== id);
       setCards(updatedBlogList);
-      setEditCardData([]);
+      setEditCardData(initialCardState);
 
       toast.success(response.data.success);
       return response.data;
@@ -106,6 +114,8 @@ export const CardListPage = ({ onBack }: Props) => {
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
 
+  if (back) return <CardSettingsPage />;
+  
   return (
     <div
       id="card-list-page"
@@ -116,7 +126,11 @@ export const CardListPage = ({ onBack }: Props) => {
         <p>Просматривайте, редактируйте и удаляйте карты.</p>
       </header>
 
-      <a href="#" className={admin_styles["on-back"]} onClick={onBack}>
+      <a
+        href="#"
+        className={admin_styles["on-back"]}
+        onClick={() => setBack(true)}
+      >
         ← Назад
       </a>
 
@@ -163,7 +177,7 @@ export const CardListPage = ({ onBack }: Props) => {
                     key={card.card_id}
                     className={CardsDesign_styles["card-3d-wrapper"]}
                     onClick={() =>
-                      cardEditMenu({
+                      setEditCardData({
                         card_id: card.card_id,
                         card_name: card.card_name,
                         card_avatar: card.card_avatar,
@@ -249,114 +263,100 @@ export const CardListPage = ({ onBack }: Props) => {
         </div>
       </main>
 
-      {editCardData && editCardData.length > 0
-        ? editCardData.map((card, index) => {
-            const lvlName = card?.lvl_name.toLowerCase();
-            return (
-              <div key={index} className={styles["menu-wrapper"]}>
-                <div className={styles["action-menu"]}>
-                  <h2>Удалить карту</h2>
-                  <div className={styles["action-options"]}>
-                    <div
-                      key={index}
-                      className={CardsDesign_styles["card-3d-wrapper"]}
-                    >
-                      <div className={CardsDesign_styles["card-inner"]}>
-                        <div
-                          className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles[lvlName.toLowerCase()]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
-                        >
-                          <div
-                            className={CardsDesign_styles["card-shine"]}
-                          ></div>
-                          <div className={CardsDesign_styles["card-header"]}>
-                            <span
-                              className={CardsDesign_styles["card-cost"]}
-                              title="Занимает 15 слотов силы"
-                            >
-                              {card.power_slot}
-                            </span>
-                            <span
-                              className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
-                            >
-                              {card.lvl_name}
-                            </span>
-                          </div>
-                          <div className={CardsDesign_styles["card-artwork"]}>
-                            <img
-                              src={`${api.API_BASE_URL}/${card.card_avatar}`}
-                              alt="artwork"
-                            />
-                          </div>
-                          <div className={CardsDesign_styles["card-body"]}>
-                            <div
-                              className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
-                            >
-                              {card.card_name}
-                            </div>
-                            <div
-                              className={CardsDesign_styles["card-description"]}
-                            >
-                              {card.card_description}
-                            </div>
-                          </div>
-                          <div className={CardsDesign_styles["card-footer"]}>
-                            <div
-                              className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}
-                            >
-                              <span className={CardsDesign_styles["stat-icon"]}>
-                                ⚔️
-                              </span>
-                              <span
-                                className={CardsDesign_styles["stat-value"]}
-                              >
-                                {card.card_damage}
-                              </span>
-                            </div>
-                            <div
-                              className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
-                            >
-                              <span className={CardsDesign_styles["stat-icon"]}>
-                                🛡️
-                              </span>
-                              <span
-                                className={CardsDesign_styles["stat-value"]}
-                              >
-                                {card.card_protection}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className={CardsDesign_styles["game-card-back"]}>
-                          <div className={CardsDesign_styles["card-back-logo"]}>
-                            🔮
-                          </div>
-                        </div>
+      {editCardData.card_id && (
+        <div className={styles["menu-wrapper"]}>
+          <div className={styles["action-menu"]}>
+            <h2>Удалить карту</h2>
+            <div className={styles["action-options"]}>
+              <div className={CardsDesign_styles["card-3d-wrapper"]}>
+                <div className={CardsDesign_styles["card-inner"]}>
+                  <div
+                    className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles[editCardData.lvl_name.toLowerCase()]} ${CardsDesign_styles[editCardData.lvl_name.toLowerCase()]}`}
+                  >
+                    <div className={CardsDesign_styles["card-shine"]}></div>
+                    <div className={CardsDesign_styles["card-header"]}>
+                      <span
+                        className={CardsDesign_styles["card-cost"]}
+                        title="Занимает 15 слотов силы"
+                      >
+                        {editCardData.power_slot}
+                      </span>
+                      <span
+                        className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[editCardData.lvl_name.toLowerCase()]}`}
+                      >
+                        {editCardData.lvl_name}
+                      </span>
+                    </div>
+                    <div className={CardsDesign_styles["card-artwork"]}>
+                      <img
+                        src={`${api.API_BASE_URL}/${editCardData.card_avatar}`}
+                        alt="artwork"
+                      />
+                    </div>
+                    <div className={CardsDesign_styles["card-body"]}>
+                      <div
+                        className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[editCardData.lvl_name.toLowerCase()]}`}
+                      >
+                        {editCardData.card_name}
+                      </div>
+                      <div className={CardsDesign_styles["card-description"]}>
+                        {editCardData.card_description}
+                      </div>
+                    </div>
+                    <div className={CardsDesign_styles["card-footer"]}>
+                      <div
+                        className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}
+                      >
+                        <span className={CardsDesign_styles["stat-icon"]}>
+                          ⚔️
+                        </span>
+                        <span className={CardsDesign_styles["stat-value"]}>
+                          {editCardData.card_damage}
+                        </span>
+                      </div>
+                      <div
+                        className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
+                      >
+                        <span className={CardsDesign_styles["stat-icon"]}>
+                          🛡️
+                        </span>
+                        <span className={CardsDesign_styles["stat-value"]}>
+                          {editCardData.card_protection}
+                        </span>
                       </div>
                     </div>
                   </div>
-                  <br />
-                  <br />
-                  <button
-                    className={styles["card_id_to_copy"]}
-                    onClick={() => copy(card.card_id)}
-                  >
-                    Скопировать ID карты
-                  </button>
-                  <br />
-                  <div className={styles["action-menu-btn"]}>
-                    <button onClick={(e) => handleRemoveCard(card.card_id, e)}>
-                      <span>Удалить</span>
-                    </button>
-                    <button onClick={() => setEditCardData([])}>
-                      <span>Отмена</span>
-                    </button>
+                  <div className={CardsDesign_styles["game-card-back"]}>
+                    <div className={CardsDesign_styles["card-back-logo"]}>
+                      🔮
+                    </div>
                   </div>
-                  <br />
                 </div>
               </div>
-            );
-          })
-        : null}
+            </div>
+            <br />
+            <br />
+            <button
+              className={styles["card_id_to_copy"]}
+              onClick={() => copy(editCardData.card_id)}
+            >
+              Скопировать ID карты
+            </button>
+            <br />
+            <div className={styles["action-menu-btn"]}>
+              <button
+                onClick={(e) => handleRemoveCard(editCardData.card_id, e)}
+              >
+                <span>Удалить</span>
+              </button>
+              <button onClick={() => setEditCardData(initialCardState)}>
+                <span>Отмена</span>
+              </button>
+            </div>
+            <br />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

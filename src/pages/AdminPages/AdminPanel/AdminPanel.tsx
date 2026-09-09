@@ -22,6 +22,8 @@ import { CardSettingsPage } from "../CardRedaction/CardSettingsPage/CardSettings
 
 import { SettingsPage } from "../SettingsPage/Settings.tsx";
 import { CaseSettingsPage } from "../CaseRedaction/CaseSettingsPage/CaseSettings.tsx";
+import { CardListPage } from "../CardRedaction/CardListPage/CardList.tsx";
+import { BlogListPage } from "../BlogRedaction/BlogListPage/BlogList.tsx";
 
 interface titleSettings {
   title: string;
@@ -220,11 +222,16 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
       <main className={styles["main-content"]}>
         {activeTab === "ToolsPage" && <ToolsPage setActiveTab={setActiveTab} />}
         {activeTab === "TeamPage" && <TeamPage />}
+
         {activeTab === "CardSettingsPage" && <CardSettingsPage />}
         {activeTab === "BlogSettingsPage" && <BlogSettingsPage />}
         {activeTab === "CaseSettingsPage" && <CaseSettingsPage />}
+
         {activeTab === "LogsPage" && <LogsPage />}
         {activeTab === "SettingsPage" && <SettingsPage />}
+
+        {activeTab === "BlogListPage" && <BlogListPage />}
+        {activeTab === "CardListPage" && <CardListPage />}
       </main>
     </div>
   );
