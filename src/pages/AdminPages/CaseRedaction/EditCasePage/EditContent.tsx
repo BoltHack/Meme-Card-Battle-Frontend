@@ -129,14 +129,18 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
         },
       );
 
-      console.log("Новая карта успешно добавлена:", response.data);
+      console.log("Карта успешно удалена:", response.data);
 
-      const updatedCardList = cardList.filter(card => card.id !== cardDeleteMenu.id);
+      if (response.data.success) {
+        const updatedCardList = cardList.filter(
+          (card) => card.id !== cardDeleteMenu.id,
+        );
 
-      setCardList(updatedCardList);
+        setCardList(updatedCardList);
 
-      toast.success(response.data.success);
-      setCardDeleteMenu(initialCardState);
+        toast.success(response.data.success);
+        setCardDeleteMenu(initialCardState);
+      }
 
       return response.data;
     } catch (error) {
