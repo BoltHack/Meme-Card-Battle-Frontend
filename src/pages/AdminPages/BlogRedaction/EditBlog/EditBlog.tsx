@@ -37,9 +37,9 @@ interface IdProps {
   blog_id: string;
 }
 
+import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
+
 export const EditBlogPage = ({ blog_id }: IdProps) => {
-  // const blog_id = useState<IdProps | null>(null);
-  const [backToBlogList, setBackToBlogList] = useState<boolean | false>(false);
 
   const [formData, setFormData] = useState({
     post_title: "",
@@ -193,10 +193,6 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
 
-  if (backToBlogList) {
-    return <BlogListPage />;
-  }
-
   return (
     // <div id="edit-blog-page" className={`${admin_styles["page"]} ${admin_styles["active"]}`}>
     <div
@@ -212,11 +208,10 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
       </header>
 
       <a
-        href="#"
         className={admin_styles["on-back"]}
-        onClick={() => setBackToBlogList(true)}
+        onClick={() => adminNavigator.handleChangeTab("blog:list")}
       >
-        ← Назад в список
+        ← Назад
       </a>
 
       <div className={styles["editor-container"]}>

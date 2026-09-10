@@ -34,8 +34,9 @@ interface CardResponse {
   };
 }
 
+import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
+
 export const CardListPage = () => {
-  const [back, setBack] = useState<boolean | false>(false);
 
   const [cards, setCards] = useState<CardPost[]>([]);
 
@@ -113,8 +114,6 @@ export const CardListPage = () => {
 
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
-
-  if (back) return <CardSettingsPage />;
   
   return (
     <div
@@ -129,7 +128,7 @@ export const CardListPage = () => {
       <a
         href="#"
         className={admin_styles["on-back"]}
-        onClick={() => setBack(true)}
+        onClick={() => adminNavigator.handleChangeTab("card:settings")}
       >
         ← Назад
       </a>

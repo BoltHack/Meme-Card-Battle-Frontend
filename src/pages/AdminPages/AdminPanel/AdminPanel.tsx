@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
@@ -16,14 +16,24 @@ import { TeamPage } from "../TeamPage/Team.tsx";
 import { ToolsPage } from "../ToolsPage/Tools.tsx";
 import { LogsPage } from "../LogsPage/Logs.tsx";
 
-import { BlogSettingsPage } from "../BlogRedaction/BlogSettingsPage/BlogSettings.tsx";
 
-import { CardSettingsPage } from "../CardRedaction/CardSettingsPage/CardSettings.tsx";
 
 import { SettingsPage } from "../SettingsPage/Settings.tsx";
-import { CaseSettingsPage } from "../CaseRedaction/CaseSettingsPage/CaseSettings.tsx";
-import { CardListPage } from "../CardRedaction/CardListPage/CardList.tsx";
+
+import { BlogSettingsPage } from "../BlogRedaction/BlogSettingsPage/BlogSettings.tsx";
 import { BlogListPage } from "../BlogRedaction/BlogListPage/BlogList.tsx";
+import { CreateBlogPage } from "../BlogRedaction/CreateBlogPage/CreateBlog.tsx";
+
+import { CardSettingsPage } from "../CardRedaction/CardSettingsPage/CardSettings.tsx";
+import { CardListPage } from "../CardRedaction/CardListPage/CardList.tsx";
+import { CreateCardPage } from "../CardRedaction/CreateCardPage/CreateCard.tsx";
+
+import { CaseSettingsPage } from "../CaseRedaction/CaseSettingsPage/CaseSettings.tsx";
+import { CaseListPage } from "../CaseRedaction/CaseListPage/CaseList.tsx";
+import { CreateCasePage } from "../CaseRedaction/CreateCasePage/CreateCase.tsx";
+import { EditDataPage } from "../CaseRedaction/EditCasePage/EditData.tsx";
+import { EditContentPage } from "../CaseRedaction/EditCasePage/EditContent.tsx";
+import { EditBlogPage } from "../BlogRedaction/EditBlog/EditBlog.tsx";
 
 interface titleSettings {
   title: string;
@@ -38,14 +48,54 @@ type AdminPageType =
   | "SettingsPage"
   | "BlogListPage"
   | "CaseSettingsPage"
-  | "CardListPage"
+  | "CardListPage";
+
+let edit_id: string = "";
+
+const BlogRedaction = ["blog:settings", "blog:list", "blog:create", "blog:edit"];
+
+const CardRedaction = ["card:settings", "card:list", "card:create"];
+
+const CaseRedaction = [
+  "case:settings",
+  "case:list",
+  "case:create",
+  "case:editData",
+  "case:editContent",
+];
+
+export const adminNavigator = {
+  handleChangeTab: (tab: string) => {},
+};
 
 export const AdminPanelPage = ({ title }: titleSettings) => {
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<AdminPageType>("ToolsPage");
+  const [activeTab, setActiveTab] = useState<string>("ToolsPage");
 
   const { loading, error } = usePageRender(`${api.API_BASE_URL}/admin/panel`);
+
+  useEffect(() => {
+    adminNavigator.handleChangeTab = (tab: string) => {
+      // console.log("edit_id 1", edit_id);
+      setActiveTab((prevTab) => {
+        console.log("Предыдущая вкладка:", prevTab);
+        console.log("Новая вкладка:", tab);
+
+        if (tab.includes("id_")) {
+          edit_id = tab.slice(-24);
+          tab = tab.slice(-tab.length, -28);
+        }
+
+        return tab;
+      });
+    };
+
+    return () => {
+      adminNavigator.handleChangeTab = () => {};
+      edit_id = "";
+    };
+  }, [activeTab]);
 
   if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;
@@ -87,8 +137,8 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
             </li>
             <li>
               <div
-                className={`${styles["menu-link"]} ${activeTab === "CardSettingsPage" && styles["active"]}`}
-                onClick={() => setActiveTab("CardSettingsPage")}
+                className={`${styles["menu-link"]} ${CardRedaction.includes(activeTab) && styles["active"]}`}
+                onClick={() => setActiveTab(CardRedaction[0])}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -111,8 +161,8 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
             </li>
             <li>
               <div
-                className={`${styles["menu-link"]} ${activeTab === "BlogSettingsPage" && styles["active"]}`}
-                onClick={() => setActiveTab("BlogSettingsPage")}
+                className={`${styles["menu-link"]} ${BlogRedaction.includes(activeTab) && styles["active"]}`}
+                onClick={() => setActiveTab(BlogRedaction[0])}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -136,8 +186,8 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
             </li>
             <li>
               <div
-                className={`${styles["menu-link"]} ${activeTab === "CaseSettingsPage" && styles["active"]}`}
-                onClick={() => setActiveTab("CaseSettingsPage")}
+                className={`${styles["menu-link"]} ${CaseRedaction.includes(activeTab) && styles["active"]}`}
+                onClick={() => setActiveTab(CaseRedaction[0])}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -223,15 +273,25 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
         {activeTab === "ToolsPage" && <ToolsPage setActiveTab={setActiveTab} />}
         {activeTab === "TeamPage" && <TeamPage />}
 
-        {activeTab === "CardSettingsPage" && <CardSettingsPage />}
-        {activeTab === "BlogSettingsPage" && <BlogSettingsPage />}
-        {activeTab === "CaseSettingsPage" && <CaseSettingsPage />}
+        {activeTab === CardRedaction[0] && <CardSettingsPage />}
+        {activeTab === CardRedaction[1] && <CardListPage />}
+        {activeTab === CardRedaction[2] && <CreateCardPage />}
+
+        {activeTab === BlogRedaction[0] && <BlogSettingsPage />}
+        {activeTab === BlogRedaction[1] && <BlogListPage />}
+        {activeTab === BlogRedaction[2] && <CreateBlogPage />}
+        {activeTab === BlogRedaction[3] && <EditBlogPage blog_id={edit_id} />}
+
+        {activeTab === CaseRedaction[0] && <CaseSettingsPage />}
+        {activeTab === CaseRedaction[1] && <CaseListPage />}
+        {activeTab === CaseRedaction[2] && <CreateCasePage />}
+        {activeTab === CaseRedaction[3] && <EditDataPage case_id={edit_id} />}
+        {activeTab === CaseRedaction[4] && (
+          <EditContentPage case_id={edit_id} />
+        )}
 
         {activeTab === "LogsPage" && <LogsPage />}
         {activeTab === "SettingsPage" && <SettingsPage />}
-
-        {activeTab === "BlogListPage" && <BlogListPage />}
-        {activeTab === "CardListPage" && <CardListPage />}
       </main>
     </div>
   );

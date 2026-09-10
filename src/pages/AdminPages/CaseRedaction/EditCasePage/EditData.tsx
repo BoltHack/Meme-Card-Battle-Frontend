@@ -24,6 +24,8 @@ interface ResponseProps {
   case_id: string;
 }
 
+import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
+
 export const EditDataPage = ({ case_id }: ResponseProps) => {
   const [formData, setFormData] = useState<CaseFormat>({
     case_name: "",
@@ -31,8 +33,6 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
     case_rarity: "DEFAULT",
     case_price: "",
   });
-
-  const [back, setBack] = useState<boolean | false>(false);
 
   const { data, loading, error } = usePageRender(
     `${api.API_BASE_URL}/admin/case/${case_id}/edit/data`,
@@ -106,8 +106,6 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
 
-  if (back) return <CaseListPage />;
-
   return (
     <div
       id="edit-data-page"
@@ -119,9 +117,8 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
       </header>
 
       <a
-        href="#"
         className={admin_styles["on-back"]}
-        onClick={() => setBack(true)}
+        onClick={() => adminNavigator.handleChangeTab("case:list")}
       >
         ← Назад
       </a>

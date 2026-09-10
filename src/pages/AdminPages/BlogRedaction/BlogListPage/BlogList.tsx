@@ -37,14 +37,10 @@ interface BlogResponse {
   };
 }
 
-// interface Props {
-//   onBack: () => void;
-// }
+import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 
 export const BlogListPage = () => {
   const bodyWrapperRef = useRef<HTMLDivElement | null>(null);
-
-  const [back, setBack] = useState<boolean | false>(false);
 
   const [blog, setBlog] = useState<BlogPost[]>([]);
 
@@ -55,9 +51,6 @@ export const BlogListPage = () => {
   const getCurrentPage = Number(searchParams.get("page")) || 1;
 
   const blog_state = JSON.parse(sessionStorage.getItem("blog_state") || "{}");
-
-  const [editingBlogId, setEditingBlogId] = useState<string | null>(null);
-  // const [isBlogState, setIsBlogState] = useState<boolean | false>(false);
 
   const initialBlogState = {
     author: "",
@@ -168,9 +161,6 @@ export const BlogListPage = () => {
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
 
-  if (back) return <BlogSettingsPage />
-  if (editingBlogId) return <EditBlogPage blog_id={editingBlogId} />;
-
   return (
     <div
       id="blog-list-page"
@@ -181,7 +171,10 @@ export const BlogListPage = () => {
         <p>Просматривайте, редактируйте и удаляйте публикации.</p>
       </header>
 
-      <a href="#" className={admin_styles["on-back"]} onClick={() => setBack(true)}>
+      <a
+        className={admin_styles["on-back"]}
+        onClick={() => adminNavigator.handleChangeTab("blog:settings")}
+      >
         ← Назад
       </a>
 
@@ -230,7 +223,11 @@ export const BlogListPage = () => {
                   <li className={styles["actions-menu-btn"]}>
                     <button
                       type="button"
-                      onClick={() => setEditingBlogId(blog[0].id)}
+                      onClick={() =>
+                        adminNavigator.handleChangeTab(
+                          `blog:edit:id_${blog[0].id}`,
+                        )
+                      }
                     >
                       Редактировать
                     </button>

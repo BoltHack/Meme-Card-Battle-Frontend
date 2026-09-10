@@ -1,23 +1,9 @@
-import { useState } from "react";
-
 import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 
-import { CardListPage } from "../CardListPage/CardList";
-import { CreateCardPage } from "../CreateCardPage/CreateCard";
 
-type CaseAction = "List" | "Create" | null;
-
-// interface Props {
-//   ReturnTo: (tab: string) => void;
-// }
+import { adminNavigator } from "../../AdminPanel/AdminPanel"; 
 
 export const CardSettingsPage = () => {
-  const [currentAction, setCurrentAction] = useState<CaseAction>(null);
-
-  const handleBack = () => setCurrentAction(null);
-
-  if (currentAction === "List") return <CardListPage onBack={handleBack} />;
-  if (currentAction === "Create") return <CreateCardPage onBack={handleBack} />;
 
   return (
     <div
@@ -32,7 +18,7 @@ export const CardSettingsPage = () => {
       <div className={admin_styles["container-grid"]}>
         <div
           className={`${admin_styles["tool-card"]} ${admin_styles["accent"]}`}
-          onClick={() => setCurrentAction("List")}
+          onClick={() => adminNavigator.handleChangeTab("card:list")}
         >
           <div className={admin_styles["tool-icon"]}>
             <svg viewBox="0 0 24 24">
@@ -48,7 +34,7 @@ export const CardSettingsPage = () => {
 
         <div
           className={`${admin_styles["tool-card"]}`}
-          onClick={() => setCurrentAction("Create")}
+          onClick={() => adminNavigator.handleChangeTab("card:create")}
         >
           <div className={admin_styles["tool-icon"]}>
             <svg viewBox="0 0 24 24">

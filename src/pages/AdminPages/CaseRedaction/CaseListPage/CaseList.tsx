@@ -11,10 +11,10 @@ import api from "../../../../api/api.ts";
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
-import { EditDataPage } from "../EditCasePage/EditData.tsx";
-import { EditContentPage } from "../EditCasePage/EditContent.tsx";
+// import { EditDataPage } from "../EditCasePage/EditData.tsx";
+// import { EditContentPage } from "../EditCasePage/EditContent.tsx";
 import toast from "react-hot-toast";
-import { CaseSettingsPage } from "../CaseSettingsPage/CaseSettings.tsx";
+// import { CaseSettingsPage } from "../CaseSettingsPage/CaseSettings.tsx";
 // import toast from "react-hot-toast";
 
 interface CasePost {
@@ -35,6 +35,8 @@ interface EditCaseType {
   type: string;
 }
 
+import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
+
 export const CaseListPage = () => {
   const [editCase, setEditCase] = useState<EditCaseType>({
     id: "",
@@ -45,7 +47,7 @@ export const CaseListPage = () => {
 
   const [isCaseDelete, setIsCaseDelete] = useState<string | null>(null);
 
-  const [back, setBack] = useState<boolean | false>(false);
+  // const [back, setBack] = useState<boolean | false>(false);
 
   const { data, loading, error } = usePageRender(
     `${api.API_BASE_URL}/admin/case/list`,
@@ -99,11 +101,15 @@ export const CaseListPage = () => {
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
 
-  if (editCase.id !== null && editCase.type === "EditData")
-    return <EditDataPage case_id={editCase.id} />;
-  if (editCase.id !== null && editCase.type === "EditContent")
-    return <EditContentPage case_id={editCase.id} />;
-  if (back) return <CaseSettingsPage />;
+  // if (editCase.id !== null && editCase.type === "EditData") {
+  //   adminNavigator.handleChangeTab(`case:editData:${editCase.id}`);
+  //   return <EditDataPage case_id={editCase.id} />;
+  // }
+  // if (editCase.id !== null && editCase.type === "EditContent") {
+  //   adminNavigator.handleChangeTab(`case:editContent:${editCase.id}`);
+  //   return <EditContentPage case_id={editCase.id} />;
+  // }
+  // if (back) return <CaseSettingsPage />;
 
   return (
     <div
@@ -115,7 +121,10 @@ export const CaseListPage = () => {
         <p>Управление кейсами и их содержимым.</p>
       </header>
 
-      <a href="#" className={admin_styles["on-back"]} onClick={() => setBack(true)}>
+      <a
+        className={admin_styles["on-back"]}
+        onClick={() => adminNavigator.handleChangeTab("case:settings")}
+      >
         ← Назад
       </a>
 
@@ -137,10 +146,9 @@ export const CaseListPage = () => {
                       <button
                         type="button"
                         onClick={() =>
-                          setEditCase({
-                            id: caseItem._id.toString(),
-                            type: "EditData",
-                          })
+                          adminNavigator.handleChangeTab(
+                            `case:editData:id_${caseItem._id.toString()}`,
+                          )
                         }
                       >
                         Данные
@@ -149,11 +157,11 @@ export const CaseListPage = () => {
                     <li className={styles["actions-menu-btn"]}>
                       <button
                         type="button"
-                        onClick={() =>
-                          setEditCase({
-                            id: caseItem._id.toString(),
-                            type: "EditContent",
-                          })
+                        onClick={
+                          () =>
+                            adminNavigator.handleChangeTab(
+                              `case:editContent:id_${caseItem._id.toString()}`,
+                            )
                         }
                       >
                         Содержимое

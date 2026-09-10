@@ -1,17 +1,8 @@
-import { useState } from "react";
-
 import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 
-import { BlogListPage } from "../BlogListPage/BlogList";
-import { CreateBlogPage } from "../CreateBlogPage/CreateBlog";
-
-type CaseAction = "List" | "Create" | null;
+import { adminNavigator } from "../../AdminPanel/AdminPanel";
 
 export const BlogSettingsPage = () => {
-  const [currentAction, setCurrentAction] = useState<CaseAction>(null);
-
-  if (currentAction === "List") return <BlogListPage />;
-  if (currentAction === "Create") return <CreateBlogPage />;
 
   return (
     <div
@@ -26,7 +17,7 @@ export const BlogSettingsPage = () => {
       <div className={admin_styles["container-grid"]}>
         <div
           className={`${admin_styles["tool-card"]} ${admin_styles["accent"]}`}
-          onClick={() => setCurrentAction("List")}
+          onClick={() => adminNavigator.handleChangeTab("blog:list")}
         >
           <div className={admin_styles["tool-icon"]}>
             <svg viewBox="0 0 24 24">
@@ -42,7 +33,7 @@ export const BlogSettingsPage = () => {
 
         <div
           className={`${admin_styles["tool-card"]}`}
-          onClick={() => setCurrentAction("Create")}
+          onClick={() => adminNavigator.handleChangeTab("blog:create")}
         >
           <div className={admin_styles["tool-icon"]}>
             <svg viewBox="0 0 24 24">

@@ -19,8 +19,9 @@ interface PlayerData {
   name: string;
 }
 
+import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
+
 export const CreateBlogPage = () => {
-  const [back, setBack] = useState<boolean | false>(false);
 
   const [formData, setFormData] = useState({
     post_title: "",
@@ -168,8 +169,6 @@ export const CreateBlogPage = () => {
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
 
-  if (back) return <BlogSettingsPage />;
-
   return (
     <div
       id="create-blog-page"
@@ -182,7 +181,10 @@ export const CreateBlogPage = () => {
         </p>
       </header>
 
-      <a href="#" className={admin_styles["on-back"]} onClick={() => setBack(true)}>
+      <a
+        className={admin_styles["on-back"]}
+        onClick={() => adminNavigator.handleChangeTab("blog:settings")}
+      >
         ← Назад
       </a>
 

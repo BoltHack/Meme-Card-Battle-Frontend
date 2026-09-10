@@ -10,6 +10,8 @@ interface TitleSettings {
     setActiveTab: Dispatch<SetStateAction<AdminPageType>>;
 }
 
+import { adminNavigator } from "../AdminPanel/AdminPanel";
+
 export const ToolsPage = ({ setActiveTab }: TitleSettings) => {
 
     return (
@@ -21,7 +23,7 @@ export const ToolsPage = ({ setActiveTab }: TitleSettings) => {
 
         <div className={styles["container-grid"]}>
           <div
-            className={styles["tool-card"]}
+            className={`${styles["tool-card"]} ${styles["accent"]}`}
             onClick={() => setActiveTab("TeamPage")}
           >
             <div className={styles["tool-icon"]}>
@@ -36,7 +38,7 @@ export const ToolsPage = ({ setActiveTab }: TitleSettings) => {
             </p>
           </div>
 
-          <div
+          {/* <div
             className={`${styles["tool-card"]} ${styles["accent"]}`}
             onClick={() => setActiveTab("CreateBlogPage")}
           >
@@ -50,7 +52,7 @@ export const ToolsPage = ({ setActiveTab }: TitleSettings) => {
               Публикация новых статей, редактирование существующих материалов и
               блогов.
             </p>
-          </div>
+          </div> */}
 
           <div
             className={styles["tool-card"]}
@@ -70,7 +72,7 @@ export const ToolsPage = ({ setActiveTab }: TitleSettings) => {
 
           <div
             className={`${styles["tool-card"]} ${styles["accent"]}`}
-            onClick={() => setActiveTab("BlogListPage")}
+            onClick={() => adminNavigator.handleChangeTab("blog:list")}
           >
             <div className={styles["tool-icon"]}>
               <svg
@@ -98,8 +100,8 @@ export const ToolsPage = ({ setActiveTab }: TitleSettings) => {
           </div>
 
           <div
-            className={styles["tool-card"]}
-            onClick={() => setActiveTab("CardListPage")}
+            className={`${styles["tool-card"]}`}
+            onClick={() => adminNavigator.handleChangeTab("card:list")}
           >
             <div className={styles["tool-icon"]}>
               <svg

@@ -1,23 +1,23 @@
-import { useState } from "react";
+// import { useState } from "react";
 
 import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 
-import { CaseListPage } from "../CaseListPage/CaseList";
-import { CreateCasePage } from "../CreateCasePage/CreateCase";
+// import { CaseListPage } from "../CaseListPage/CaseList";
+// import { CreateCasePage } from "../CreateCasePage/CreateCase";
 
-type CaseAction = "List" | "Create" | null;
+// type CaseAction = "List" | "Create" | null;
 
 // interface Props {
 //   ReturnTo: (tab: string) => void;
 // }
 
+import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
+
 export const CaseSettingsPage = () => {
-  const [currentAction, setCurrentAction] = useState<CaseAction>(null);
+  // const [currentAction, setCurrentAction] = useState<CaseAction>(null);
 
-  // const handleBack = () => setCurrentAction(null);
-
-  if (currentAction === "List") return <CaseListPage />;
-  if (currentAction === "Create") return <CreateCasePage />;
+  // if (currentAction === "List") return <CaseListPage />;
+  // if (currentAction === "Create") return <CreateCasePage />;
 
   return (
     <div
@@ -32,7 +32,7 @@ export const CaseSettingsPage = () => {
       <div className={admin_styles["container-grid"]}>
         <div
           className={`${admin_styles["tool-card"]} ${admin_styles["accent"]}`}
-          onClick={() => setCurrentAction("List")}
+          onClick={() => adminNavigator.handleChangeTab("case:list")}
         >
           <div className={admin_styles["tool-icon"]}>
             <svg viewBox="0 0 24 24">
@@ -48,7 +48,7 @@ export const CaseSettingsPage = () => {
 
         <div
           className={`${admin_styles["tool-card"]}`}
-          onClick={() => setCurrentAction("Create")}
+          onClick={() => adminNavigator.handleChangeTab("case:create")}
         >
           <div className={admin_styles["tool-icon"]}>
             <svg viewBox="0 0 24 24">

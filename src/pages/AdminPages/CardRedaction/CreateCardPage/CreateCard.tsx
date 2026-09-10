@@ -26,11 +26,9 @@ interface CardsFormat {
   power_slot: string;
 }
 
-interface Props {
-  onBack: () => void;
-}
+import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 
-export const CreateCardPage = ({ onBack }: Props) => {
+export const CreateCardPage = () => {
   // const navigate = useNavigate();
 
   const { loading, error } = usePageRender<PlayerData>(
@@ -143,7 +141,10 @@ export const CreateCardPage = ({ onBack }: Props) => {
         <p>Создайте себе карту, выбрав нужные характеристики.</p>
       </header>
 
-      <a href="#" className={admin_styles["on-back"]} onClick={onBack}>
+      <a
+        className={admin_styles["on-back"]}
+        onClick={() => adminNavigator.handleChangeTab("card:settings")}
+      >
         ← Назад
       </a>
 

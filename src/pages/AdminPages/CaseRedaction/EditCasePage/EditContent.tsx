@@ -13,7 +13,7 @@ import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 import toast from "react-hot-toast";
-import { CaseListPage } from "../CaseListPage/CaseList.tsx";
+// import { CaseListPage } from "../CaseListPage/CaseList.tsx";
 
 interface CardPost {
   id: string;
@@ -31,6 +31,8 @@ interface CardPost {
 interface ResponseProps {
   case_id: string;
 }
+
+import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 
 export const EditContentPage = ({ case_id }: ResponseProps) => {
   const [formData, setFormData] = useState({
@@ -55,7 +57,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
   };
   const [cardDeleteMenu, setCardDeleteMenu] = useState(initialCardState);
 
-  const [back, setBack] = useState<boolean | false>(false);
+  // const [back, setBack] = useState<boolean | false>(false);
 
   const { data, loading, error } = usePageRender(
     `${api.API_BASE_URL}/admin/case/${case_id}/edit/content`,
@@ -119,7 +121,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
     const dataToSend = new FormData();
 
     dataToSend.append("card_id", cardDeleteMenu.id);
-    
+
     try {
       const response = await axios.post(
         `${api.API_BASE_URL}/admin/case/${case_id}/edit/content/delete`,
@@ -151,8 +153,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
         return;
       }
     }
-
-  }
+  };
 
   useEffect(() => {
     if (!data || !Array.isArray(data.renderData)) {
@@ -172,7 +173,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
   if (loading) return <DefaultLoading />;
   if (error) return <ErrorPage error={error} />;
 
-  if (back) return <CaseListPage />;
+  // if (back) return <CaseListPage />;
 
   return (
     <div
@@ -185,9 +186,8 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
       </header>
 
       <a
-        href="#"
         className={admin_styles["on-back"]}
-        onClick={() => setBack(true)}
+        onClick={() => adminNavigator.handleChangeTab("case:list")}
       >
         ← Назад
       </a>
@@ -347,7 +347,10 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
         <div className={styles["menu-wrapper"]}>
           <div className={styles["action-menu"]}>
             <h2>Удалить карту</h2>
-            <div className={styles["action-options"]} style={{ justifyContent: "center" }}>
+            <div
+              className={styles["action-options"]}
+              style={{ justifyContent: "center" }}
+            >
               <div className={CardsDesign_styles["card-3d-wrapper"]}>
                 <div className={CardsDesign_styles["card-inner"]}>
                   <div
