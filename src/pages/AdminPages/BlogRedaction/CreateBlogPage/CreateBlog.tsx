@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 // import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.CreateBlog.module.css";
@@ -13,7 +13,6 @@ import toast from "react-hot-toast";
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
-import { BlogSettingsPage } from "../BlogSettingsPage/BlogSettings.tsx";
 
 interface PlayerData {
   name: string;
@@ -32,10 +31,30 @@ export const CreateBlogPage = () => {
   const [file, setFile] = useState<File | null>(null);
 
   const [editorText, setEditorText] = useState("");
+  const editorRef = useRef(null);
 
   const { loading, error } = usePageRender<PlayerData>(
     `${api.API_BASE_URL}/admin/blog/create`,
   );
+
+  const insertTextAtCaret = (text: string) => {
+    const selection = window.getSelection();
+    if (!selection?.rangeCount) return;    
+
+    const range = selection.getRangeAt(0);
+
+    range.deleteContents();
+
+    const textNode = document.createTextNode(text);
+
+    range.insertNode(textNode);
+
+    range.setStartAfter(textNode);
+    range.setEndAfter(textNode);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
 
   let cleanHTMLText = (rawHTML: string) => {
     return (
@@ -281,6 +300,7 @@ export const CreateBlogPage = () => {
 
           <div className={styles["editor-right-side"]}>
             <div
+              ref={editorRef}
               // children={editorText}
               onInput={handleInput}
               onPaste={(e) => {
@@ -301,6 +321,10 @@ export const CreateBlogPage = () => {
             </button>
           </div>
         </form>
+
+        <button onClick={() => insertTextAtCaret(" [ВСТАВКА] ")}>
+          Вставить текст
+        </button>
       </div>
     </div>
   );

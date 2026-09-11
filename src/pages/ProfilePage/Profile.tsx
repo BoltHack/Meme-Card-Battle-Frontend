@@ -13,6 +13,7 @@ import { ErrorPage } from "../ErrorPage/Error.tsx";
 
 import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
+import axios from "axios";
 
 interface TitleSettings {
   title: string;
@@ -48,6 +49,8 @@ interface PlayerData {
 
 export const ProfilePage = ({ title }: TitleSettings) => {
   const [cards, setCards] = useState<RenderData[]>([]);
+  const [cardsCount, setCardsCount] = useState<number>(0);
+
   const [stats, setStats] = useState<StatsData>({} as StatsData);
 
   const [cardsCategory, setCardsCategory] = useState<string | "all">("all");
@@ -56,10 +59,12 @@ export const ProfilePage = ({ title }: TitleSettings) => {
   const [currentSearch, setCurrentSearch] = useState<string>("");
   const cardFount = useRef<boolean | false>(false);
 
-  const profile_state = JSON.parse(sessionStorage.getItem('profile_state') || '{}');
+  const profile_state = JSON.parse(
+    sessionStorage.getItem("profile_state") || "{}",
+  );
 
   const { data, loading, error } = usePageRender<PlayerData>(
-    `${api.API_BASE_URL}/api/my-cards/${cardsCategory}`,
+    `${api.API_BASE_URL}/api/profile`,
   );
 
   const formattedCurrency = (count: number): string => {
@@ -73,20 +78,22 @@ export const ProfilePage = ({ title }: TitleSettings) => {
   };
 
   let updatedState = {
-    search_value: ""
+    search_value: "",
   };
 
-  const handleSearchCard = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleSearchCard = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { value } = e.target;
     setSearchInput(value);
-  }
+  };
 
   const handleSearchCardKeyDown = (e: any, value: string) => {
     if ((e.key === "Enter" || e.keyCode === 13) && value.trim().length > 0) {
       searchCard(value);
       setSearchInput("");
     }
-  }
+  };
 
   const clearSearchState = () => {
     updatedState = { ...profile_state, search_value: "" };
@@ -95,11 +102,13 @@ export const ProfilePage = ({ title }: TitleSettings) => {
     cardFount.current = false;
     setCurrentSearch("");
 
-    const cards = document.querySelectorAll("#cardsGrid section") as NodeListOf<HTMLElement>;
+    const cards = document.querySelectorAll(
+      "#cardsGrid section",
+    ) as NodeListOf<HTMLElement>;
     cards.forEach((card) => {
       card.style.display = "block";
     });
-  }
+  };
 
   const searchCard = (value: string) => {
     if (value.length < 1) return;
@@ -112,10 +121,14 @@ export const ProfilePage = ({ title }: TitleSettings) => {
 
     setCurrentSearch(searchValue);
 
-    const searchCard = document.querySelectorAll("#cardsGrid section") as NodeListOf<HTMLElement>;
+    const searchCard = document.querySelectorAll(
+      "#cardsGrid section",
+    ) as NodeListOf<HTMLElement>;
 
     Array.from(searchCard).forEach((card: HTMLElement) => {
-      const titleElement = card.querySelector(`.${CardsDesign_styles["card-title"]}`);
+      const titleElement = card.querySelector(
+        `.${CardsDesign_styles["card-title"]}`,
+      );
 
       const searchTitle = titleElement?.textContent?.toLowerCase() ?? "";
 
@@ -126,12 +139,37 @@ export const ProfilePage = ({ title }: TitleSettings) => {
         card.style.display = "none";
       }
     });
-  } 
+  };
+
+  const handleGetCards = async (cards_category: string) => {
+    try {
+      const response = await axios.post(
+        `${api.API_BASE_URL}/api/cards/get/${cards_category}`,
+        {
+          withCredentials: true,
+        },
+      );
+
+      console.log("response", response.data);
+
+      setCardsCount(response.data.cards_count);
+      setCards(response.data.renderData);
+
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetCards(cardsCategory);
+  }, [cardsCategory]);
 
   useEffect(() => {
     if (!data?.id) return;
 
-    setCards(data.renderData || []);
+    // handleGetCards("all");
+    // setCards(data.renderData || []);
     setStats(data.stats || ({} as StatsData));
 
     const searchTimer = setTimeout(() => {
@@ -143,7 +181,7 @@ export const ProfilePage = ({ title }: TitleSettings) => {
     return () => {
       clearTimeout(searchTimer);
       sessionStorage.removeItem("profile_state");
-    }
+    };
   }, [data]);
 
   if (loading) return <LoadingPage />;
@@ -187,20 +225,20 @@ export const ProfilePage = ({ title }: TitleSettings) => {
             <div className={styles["progress-container-row"]}>
               <div className={styles["collection-progress-box"]}>
                 <div className={styles["progress-text"]}>
-                  Коллекция: <span>{data?.cards_count}</span> / 250
+                  Коллекция: <span>{cardsCount}</span> / 250
                 </div>
                 <div className={styles["progress-bar-bg"]}>
-                  {data?.cards_count && Number(data?.cards_count) > 120 ? (
+                  {cardsCount && Number(cardsCount) > 120 ? (
                     <div
                       className={styles["progress-bar-fill"]}
                       style={{
-                        width: `calc(${data?.cards_count || 0}px - 30px)`,
+                        width: `calc(${cardsCount || 0}px - 30px)`,
                       }}
                     ></div>
                   ) : (
                     <div
                       className={styles["progress-bar-fill"]}
-                      style={{ width: `${data?.cards_count || 0}px` }}
+                      style={{ width: `${cardsCount || 0}px` }}
                     ></div>
                   )}
                 </div>
