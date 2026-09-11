@@ -302,7 +302,11 @@ export const BlogListPage = () => {
                       <li className={styles["actions-menu-btn"]}>
                         <button
                           type="button"
-                          onClick={() => setEditingBlogId(bd.id)}
+                          onClick={() =>
+                            adminNavigator.handleChangeTab(
+                              `blog:edit:id_${bd.id}`,
+                            )
+                          }
                         >
                           Редактировать
                         </button>
