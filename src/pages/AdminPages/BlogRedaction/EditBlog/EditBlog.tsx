@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { sanitize } from "isomorphic-dompurify";
 import { marked } from "marked";
 
@@ -40,7 +40,6 @@ interface IdProps {
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 
 export const EditBlogPage = ({ blog_id }: IdProps) => {
-
   const [formData, setFormData] = useState({
     post_title: "",
     post_description: "",
@@ -52,7 +51,10 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [isFileDelete, setIsFileDelete] = useState<boolean | false>(false);
 
-  const [editorText, setEditorText] = useState("");
+  const [galleryCover, setGalleryCover] = useState<File | null>(null);
+
+  const [editorText, setEditorText] = useState<string>("");
+  const editorRef = useRef<HTMLDivElement>(null);
 
   const { data, loading, error } = usePageRender<{ blog: BlogPost }>(
     `${api.API_BASE_URL}/admin/blog/${blog_id}/edit`,
@@ -87,6 +89,87 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
+    }
+  };
+
+  const handleGalleryCoverChange = (
+    type: string,
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      event.target.value = "";
+      setGalleryCover(file);
+      handleBlogCoverAdd(file, type);
+    }
+  };
+
+  const insertText = (text: string) => {
+    const selection = window.getSelection();
+
+    if (!selection?.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+
+    if (!editorRef.current?.contains(range.commonAncestorContainer)) {
+      console.log("editorRef не выбран");
+
+      return;
+    }
+
+    range.deleteContents();
+
+    const textNode = document.createTextNode(text);
+
+    range.insertNode(textNode);
+
+    range.setStartAfter(textNode);
+    range.setEndAfter(textNode);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    if (editorRef.current) {
+      // setEditorText(editorRef.current.textContent || "");
+      const event = new Event("input", { bubbles: true, cancelable: true });
+      editorRef.current.dispatchEvent(event);
+    }
+  };
+
+  const handleBlogCoverAdd = async (fileToSend?: File, type: string) => {
+    const file = fileToSend || galleryCover;
+
+    if (!file) {
+      console.log("Файл пустой:", file);
+      return;
+    }
+
+    const dataToSend = new FormData();
+
+    dataToSend.append("gallery_cover", file);
+
+    try {
+      const response = await axios.post(
+        `${api.API_BASE_URL}/admin/blog/cover/add`,
+        dataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      if (response?.data?.success) {
+        insertText(
+          `${type}\n${api.API_BASE_URL}/${response.data.cover}\n${type}`,
+        );
+        setGalleryCover(null);
+      }
+
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+      throw error;
     }
   };
 
@@ -327,6 +410,8 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
                   .replace(/^(<br\s*\/?>\s*)+/i, ""),
               }}
               // children={editorText}
+              ref={editorRef}
+              style={{ whiteSpace: "pre-wrap" }}
               onInput={handleInput}
               onPaste={(e) => {
                 e.preventDefault();
@@ -346,6 +431,37 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
             </button>
           </div>
         </form>
+
+        <div className={styles["file-tools"]}>
+          <label className={styles["file-tool"]}>
+            <input
+              onChange={(e) => handleGalleryCoverChange("[I]", e)}
+              type="file"
+              name="gallery_cover"
+              accept="image/*"
+            />
+            <div className={styles["file-tool-text"]}>
+              <span>
+                Загрузить изображение в формате: <strong>galleryItem</strong>
+              </span>
+            </div>
+          </label>
+
+          <label className={styles["file-tool"]}>
+            <input
+              onChange={(e) => handleGalleryCoverChange("[F]", e)}
+              type="file"
+              name="gallery_cover"
+              accept="image/*"
+            />
+            <div className={styles["file-tool-text"]}>
+              <span>
+                Загрузить изображение в формате:{" "}
+                <strong>postInlineImage</strong>
+              </span>
+            </div>
+          </label>
+        </div>
       </div>
     </div>
   );

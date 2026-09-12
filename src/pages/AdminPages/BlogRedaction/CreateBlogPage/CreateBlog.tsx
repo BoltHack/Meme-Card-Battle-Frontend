@@ -21,7 +21,6 @@ interface PlayerData {
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 
 export const CreateBlogPage = () => {
-
   const [formData, setFormData] = useState({
     post_title: "",
     post_description: "",
@@ -29,32 +28,14 @@ export const CreateBlogPage = () => {
   });
 
   const [file, setFile] = useState<File | null>(null);
+  const [galleryCover, setGalleryCover] = useState<File | null>(null);
 
-  const [editorText, setEditorText] = useState("");
-  const editorRef = useRef(null);
+  const [editorText, setEditorText] = useState<string>("");
+  const editorRef = useRef<HTMLDivElement>(null);
 
   const { loading, error } = usePageRender<PlayerData>(
     `${api.API_BASE_URL}/admin/blog/create`,
   );
-
-  const insertTextAtCaret = (text: string) => {
-    const selection = window.getSelection();
-    if (!selection?.rangeCount) return;    
-
-    const range = selection.getRangeAt(0);
-
-    range.deleteContents();
-
-    const textNode = document.createTextNode(text);
-
-    range.insertNode(textNode);
-
-    range.setStartAfter(textNode);
-    range.setEndAfter(textNode);
-
-    selection.removeAllRanges();
-    selection.addRange(range);
-  };
 
   let cleanHTMLText = (rawHTML: string) => {
     return (
@@ -138,6 +119,84 @@ export const CreateBlogPage = () => {
   //     document.execCommand('defaultParagraphSeparator', false, 'br');
   // }, []);
 
+  const handleGalleryCoverChange = (type: string, event: ChangeEvent<HTMLInputElement>) => {    
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      event.target.value = "";
+      setGalleryCover(file);
+      handleBlogCoverAdd(file, type);
+    }
+  };
+
+  const insertText = (text: string) => {
+    const selection = window.getSelection();
+
+    if (!selection?.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+
+    if (!editorRef.current?.contains(range.commonAncestorContainer)) {
+      console.log("editorRef не выбран");
+
+      return;
+    }
+
+    range.deleteContents();
+
+    const textNode = document.createTextNode(text);
+
+    range.insertNode(textNode);
+
+    range.setStartAfter(textNode);
+    range.setEndAfter(textNode);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    if (editorRef.current) {
+      // setEditorText(editorRef.current.textContent || "");
+      const event = new Event("input", { bubbles: true, cancelable: true });
+      editorRef.current.dispatchEvent(event);
+    }
+  };
+
+  const handleBlogCoverAdd = async (fileToSend?: File, type: string) => {
+    const file = fileToSend || galleryCover;
+
+    if (!file) {
+      console.log("Файл пустой:", file);
+      return;
+    }
+
+    const dataToSend = new FormData();
+
+    dataToSend.append("gallery_cover", file);
+
+    try {
+      const response = await axios.post(
+        `${api.API_BASE_URL}/admin/blog/cover/add`,
+        dataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      if (response?.data?.success) {
+        insertText(
+          `${type}\n${api.API_BASE_URL}/${response.data.cover}\n${type}`,
+        );
+        setGalleryCover(null);
+      }
+
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+      throw error;
+    }
+  };
+
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -174,14 +233,16 @@ export const CreateBlogPage = () => {
       });
 
       setFile(null);
-      // setEditorText("");
-      // handleInput();
+
+      if (editorRef.current) {
+        editorRef.current.textContent = "";
+      }
 
       toast.success(response.data.success);
 
       return response.data;
     } catch (error) {
-      console.log("error", error);
+      console.error("error", error);
     }
   };
 
@@ -301,6 +362,7 @@ export const CreateBlogPage = () => {
           <div className={styles["editor-right-side"]}>
             <div
               ref={editorRef}
+              style={{ whiteSpace: "pre-wrap" }}
               // children={editorText}
               onInput={handleInput}
               onPaste={(e) => {
@@ -322,9 +384,35 @@ export const CreateBlogPage = () => {
           </div>
         </form>
 
-        <button onClick={() => insertTextAtCaret(" [ВСТАВКА] ")}>
-          Вставить текст
-        </button>
+        <div className={styles["file-tools"]}>
+          <label className={styles["file-tool"]}>
+            <input
+              onChange={(e) => handleGalleryCoverChange("[I]", e)}
+              type="file"
+              name="gallery_cover"
+              accept="image/*"
+            />
+            <div className={styles["file-tool-text"]}>
+              <span>
+                Загрузить изображение в формате: <strong>galleryItem</strong>
+              </span>
+            </div>
+          </label>
+
+          <label className={styles["file-tool"]}>
+            <input
+              onChange={(e) => handleGalleryCoverChange("[F]", e)}
+              type="file"
+              name="gallery_cover"
+              accept="image/*"
+            />
+            <div className={styles["file-tool-text"]}>
+              <span>
+                Загрузить изображение в формате: <strong>postInlineImage</strong>
+              </span>
+            </div>
+          </label>
+        </div>
       </div>
     </div>
   );
