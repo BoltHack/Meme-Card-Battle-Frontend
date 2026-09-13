@@ -2,6 +2,7 @@ import { ChangeEvent, useRef, useState } from "react";
 // import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.CreateBlog.module.css";
+import blog_styles from "../../../BlogReadPage/Card.BlogRead.module.css";
 import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 
 import axios from "axios";
@@ -32,6 +33,8 @@ export const CreateBlogPage = () => {
 
   const [editorText, setEditorText] = useState<string>("");
   const editorRef = useRef<HTMLDivElement>(null);
+
+  const [symbolsMenu, setSymbolsMenu] = useState<boolean | false>(false);
 
   const { loading, error } = usePageRender<PlayerData>(
     `${api.API_BASE_URL}/admin/blog/create`,
@@ -119,7 +122,10 @@ export const CreateBlogPage = () => {
   //     document.execCommand('defaultParagraphSeparator', false, 'br');
   // }, []);
 
-  const handleGalleryCoverChange = (type: string, event: ChangeEvent<HTMLInputElement>) => {    
+  const handleGalleryCoverChange = (
+    type: string,
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       event.target.value = "";
@@ -328,7 +334,9 @@ export const CreateBlogPage = () => {
 
             <div className={styles["form-group"]}>
               <label className={styles["form-label"]}>Обложка публикации</label>
-              <label className={styles["file-dropzone"]}>
+              <label
+                className={`${styles["file-dropzone"]} ${styles["tool-btn"]}`}
+              >
                 <input
                   onChange={handleFileChange}
                   type="file"
@@ -360,9 +368,25 @@ export const CreateBlogPage = () => {
           </div>
 
           <div className={styles["editor-right-side"]}>
+            {/* <label className={styles["form-label"]}>
+              <span className={styles["code-text"]}>
+                Используйте <kbd>$</kbd> что-бы создать "blockquote"
+                <div className={styles["special-symbols-btn"]}>
+                  Специальне символы. Нажмите, чтобы открыть список символов для
+                  кастомизации.
+                </div>
+              </span>
+            </label> */}
+            <div
+              className={`${styles["file-tool"]} ${styles["tool-btn"]}`}
+              onClick={() => setSymbolsMenu(true)}
+            >
+              Список всех специальных символов для кастомизации
+            </div>
+            <br />
+            <label className={styles["form-label"]}>Содержимое статьи</label>
             <div
               ref={editorRef}
-              style={{ whiteSpace: "pre-wrap" }}
               // children={editorText}
               onInput={handleInput}
               onPaste={(e) => {
@@ -381,39 +405,263 @@ export const CreateBlogPage = () => {
             <button type="submit" className={styles["submit-btn"]}>
               Опубликовать статью
             </button>
+
+            <div className={styles["file-tools"]}>
+              <label className={`${styles["file-tool"]} ${styles["tool-btn"]}`}>
+                <input
+                  onChange={(e) => handleGalleryCoverChange("[I]", e)}
+                  type="file"
+                  name="gallery_cover"
+                  accept="image/*"
+                />
+                <div className={styles["file-tool-text"]}>
+                  <span>
+                    Загрузить изображение в формате:{" "}
+                    <strong>galleryItem</strong>
+                  </span>
+                </div>
+              </label>
+
+              <label className={`${styles["file-tool"]} ${styles["tool-btn"]}`}>
+                <input
+                  onChange={(e) => handleGalleryCoverChange("[F]", e)}
+                  type="file"
+                  name="gallery_cover"
+                  accept="image/*"
+                />
+                <div className={styles["file-tool-text"]}>
+                  <span>
+                    Загрузить изображение в формате:{" "}
+                    <strong>postInlineImage</strong>
+                  </span>
+                </div>
+              </label>
+            </div>
           </div>
         </form>
-
-        <div className={styles["file-tools"]}>
-          <label className={styles["file-tool"]}>
-            <input
-              onChange={(e) => handleGalleryCoverChange("[I]", e)}
-              type="file"
-              name="gallery_cover"
-              accept="image/*"
-            />
-            <div className={styles["file-tool-text"]}>
-              <span>
-                Загрузить изображение в формате: <strong>galleryItem</strong>
-              </span>
-            </div>
-          </label>
-
-          <label className={styles["file-tool"]}>
-            <input
-              onChange={(e) => handleGalleryCoverChange("[F]", e)}
-              type="file"
-              name="gallery_cover"
-              accept="image/*"
-            />
-            <div className={styles["file-tool-text"]}>
-              <span>
-                Загрузить изображение в формате: <strong>postInlineImage</strong>
-              </span>
-            </div>
-          </label>
-        </div>
       </div>
+
+      {symbolsMenu && (
+        <div className={styles["menu-wrapper"]}>
+          <button
+            className={styles["close-menu"]}
+            onClick={() => setSymbolsMenu(false)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-x"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
+          <div className={styles["table-container"]}>
+            <table className={styles["custom-table"]}>
+              <thead>
+                <tr>
+                  <th>Символ</th>
+                  <th>Пример использования</th>
+                  <th>Результат</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <kbd>[] + ()</kbd>
+                  </td>
+                  <td>
+                    [
+                    <span className={styles["table-muted-text"]}>
+                      Желаемый текст
+                    </span>
+                    ](
+                    <span className={styles["table-muted-text"]}>
+                      ссылка на ресурс
+                    </span>
+                    )
+                  </td>
+                  <td>
+                    <a href="#" className={styles["preview-link"]}>
+                      Текст
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <kbd>{"{1}"}</kbd>
+                  </td>
+                  <td>
+                    {"{1}"}{" "}
+                    <span className={styles["table-muted-text"]}>
+                      Желаемый текст
+                    </span>{" "}
+                    {"{1}"}
+                  </td>
+                  <td>
+                    <h1 className={styles["preview-h1"]}>Текст</h1>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <kbd>{"{2}"}</kbd>
+                  </td>
+                  <td>
+                    {"{2}"}{" "}
+                    <span className={styles["table-muted-text"]}>
+                      Желаемый текст
+                    </span>{" "}
+                    {"{2}"}
+                  </td>
+                  <td>
+                    <h2 className={styles["preview-h2"]}>Текст</h2>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <kbd>$</kbd>
+                  </td>
+                  <td>
+                    {"$"}{" "}
+                    <span className={styles["table-muted-text"]}>
+                      Желаемый текст
+                    </span>{" "}
+                    {"$"}
+                  </td>
+                  <td>
+                    <div className={blog_styles["post-page-body"]}>
+                      <blockquote>Текст</blockquote>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <kbd>[I]</kbd>
+                  </td>
+                  <td>
+                    <span>[I]</span>
+                    <br />
+                    <span className={styles["table-muted-text"]}>
+                      Ссылка на изображение
+                    </span>
+                    <br />
+                    <span>[I]</span>
+                  </td>
+                  <td>
+                    <div className={blog_styles["gallery-item"]}>
+                      <img
+                        className={styles["preview-img"]}
+                        src="https://fastly.picsum.photos/id/1084/536/354.jpg?grayscale&hmac=Ux7nzg19e1q35mlUVZjhCLxqkR30cC-CarVg-nlIf60"
+                        alt="Preview"
+                      />
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <kbd>[G] + [I]</kbd>
+                  </td>
+                  <td>
+                    <span>[G]</span>
+                    <br />
+                    [I]
+                    <br />
+                    <span className={styles["table-muted-text"]}>
+                      <br />
+                      Первая ссылка на изображение
+                      <br />
+                      <span className={styles["table-muted-text"]}>
+                        Желаемый текст (необязательно)
+                      </span>
+                      <br />
+                    </span>
+                    <br />
+                    [I]
+                    <br />
+                    [I]
+                    <br />
+                    <span className={styles["table-muted-text"]}>
+                      <br />
+                      Вторая ссылка на изображение
+                      <br />
+                      <span className={styles["table-muted-text"]}>
+                        Желаемый текст (необязательно)
+                      </span>
+                      <br />
+                    </span>
+                    <br />
+                    [I]
+                    <br />
+                    <span>[G]</span>
+                  </td>
+                  <td>
+                    <div className={blog_styles["post-image-gallery"]}>
+                      <div className={blog_styles["post-inline-image"]}>
+                        <img
+                          className={styles["preview-img-gallery"]}
+                          src="https://fastly.picsum.photos/id/1084/536/354.jpg?grayscale&hmac=Ux7nzg19e1q35mlUVZjhCLxqkR30cC-CarVg-nlIf60"
+                          alt="Preview 1"
+                        />
+                        <figcaption className={styles["preview-caption"]}>
+                          Текст 1
+                        </figcaption>
+                      </div>
+                      <div className={blog_styles["post-inline-image"]}>
+                        <img
+                          className={styles["preview-img-gallery"]}
+                          src="https://fastly.picsum.photos/id/1084/536/354.jpg?grayscale&hmac=Ux7nzg19e1q35mlUVZjhCLxqkR30cC-CarVg-nlIf60"
+                          alt="Preview 2"
+                        />
+                        <figcaption className={styles["preview-caption"]}>
+                          Текст 2
+                        </figcaption>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <kbd>[F]</kbd>
+                  </td>
+                  <td>
+                    {"[F]"}
+                    <br />
+                    <span className={styles["table-muted-text"]}>
+                      Ссылка на изображение
+                    </span>
+                    <br />
+                    <span className={styles["table-muted-text"]}>
+                      Желаемый текст (необязательно)
+                    </span>
+                    <br />
+                    {"[F]"}
+                  </td>
+                  <td>
+                    <div className={blog_styles["gallery-item"]}>
+                      <img
+                        className={styles["preview-img"]}
+                        style={{ maxWidth: "300px" }}
+                        src="https://fastly.picsum.photos/id/1084/536/354.jpg?grayscale&hmac=Ux7nzg19e1q35mlUVZjhCLxqkR30cC-CarVg-nlIf60"
+                        alt="Preview"
+                      />
+                      <figcaption className={styles["preview-caption"]}>
+                        Текст
+                      </figcaption>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
