@@ -523,7 +523,7 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
                     )
                   </td>
                   <td>
-                    <a href="#" className={styles["preview-link"]}>
+                    <a href="/" target="_blank" className={styles["preview-link"]}>
                       Текст
                     </a>
                   </td>
@@ -606,7 +606,6 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
                     <span>[G]</span>
                     <br />
                     [I]
-                    <br />
                     <span className={styles["table-muted-text"]}>
                       <br />
                       Первая ссылка на изображение
@@ -614,13 +613,12 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
                       <span className={styles["table-muted-text"]}>
                         Желаемый текст (необязательно)
                       </span>
-                      <br />
                     </span>
                     <br />
                     [I]
                     <br />
-                    [I]
                     <br />
+                    [I]
                     <span className={styles["table-muted-text"]}>
                       <br />
                       Вторая ссылка на изображение
@@ -630,7 +628,6 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
                       </span>
                       <br />
                     </span>
-                    <br />
                     [I]
                     <br />
                     <span>[G]</span>

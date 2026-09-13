@@ -16,8 +16,6 @@ import { TeamPage } from "../TeamPage/Team.tsx";
 import { ToolsPage } from "../ToolsPage/Tools.tsx";
 import { LogsPage } from "../LogsPage/Logs.tsx";
 
-
-
 import { SettingsPage } from "../SettingsPage/Settings.tsx";
 
 import { BlogSettingsPage } from "../BlogRedaction/BlogSettingsPage/BlogSettings.tsx";
@@ -33,26 +31,31 @@ import { CaseListPage } from "../CaseRedaction/CaseListPage/CaseList.tsx";
 import { CreateCasePage } from "../CaseRedaction/CreateCasePage/CreateCase.tsx";
 import { EditDataPage } from "../CaseRedaction/EditCasePage/EditData.tsx";
 import { EditContentPage } from "../CaseRedaction/EditCasePage/EditContent.tsx";
-import { EditBlogPage } from "../BlogRedaction/EditBlog/EditBlog.tsx";
+import { EditBlogPage } from "../BlogRedaction/EditBlogPage/EditBlog.tsx";
 
 interface titleSettings {
   title: string;
 }
 
-type AdminPageType =
-  | "ToolsPage"
-  | "TeamPage"
-  | "CardSettingsPage"
-  | "BlogSettingsPage"
-  | "LogsPage"
-  | "SettingsPage"
-  | "BlogListPage"
-  | "CaseSettingsPage"
-  | "CardListPage";
+// type AdminPageType =
+//   | "ToolsPage"
+//   | "TeamPage"
+//   | "CardSettingsPage"
+//   | "BlogSettingsPage"
+//   | "LogsPage"
+//   | "SettingsPage"
+//   | "BlogListPage"
+//   | "CaseSettingsPage"
+//   | "CardListPage";
 
 let edit_id: string = "";
 
-const BlogRedaction = ["blog:settings", "blog:list", "blog:create", "blog:edit"];
+const BlogRedaction = [
+  "blog:settings",
+  "blog:list",
+  "blog:create",
+  "blog:edit",
+];
 
 const CardRedaction = ["card:settings", "card:list", "card:create"];
 
