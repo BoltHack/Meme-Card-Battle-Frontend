@@ -4,6 +4,9 @@ import { Helmet } from "react-helmet-async";
 import styles from "./Card.Profile.module.css";
 import CardsDesign_styles from "../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 
+import axios from "axios";
+axios.defaults.withCredentials = true;
+
 import api from "../../api/api.ts";
 
 import usePageRender from "../../tools/PageRender.ts";
@@ -13,7 +16,6 @@ import { ErrorPage } from "../ErrorPage/Error.tsx";
 
 import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
-import axios from "axios";
 
 interface TitleSettings {
   title: string;

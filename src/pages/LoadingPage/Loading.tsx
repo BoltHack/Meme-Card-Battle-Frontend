@@ -97,7 +97,7 @@ export const LoadingPage = () => {
 
                 <div className={styles["epic-title"]}>
                     <h1>MCB</h1>
-                    <p>Пожалуйста, подождите...</p>
+                    <p>Загрузка...</p>
                     <div className={styles["loader"]}></div>
                 </div>
 

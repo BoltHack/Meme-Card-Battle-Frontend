@@ -11,11 +11,11 @@ import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 import toast from "react-hot-toast";
-import { CaseListPage } from "../CaseListPage/CaseList.tsx";
 
 interface CaseFormat {
   case_name: string;
   case_description: string;
+  case_icon: string;
   case_rarity: string;
   case_price: string;
 }
@@ -30,6 +30,7 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
   const [formData, setFormData] = useState<CaseFormat>({
     case_name: "",
     case_description: "",
+    case_icon: "",
     case_rarity: "DEFAULT",
     case_price: "",
   });
@@ -59,6 +60,7 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
 
     dataToSend.append("name", formData.case_name);
     dataToSend.append("description", formData.case_description);
+    dataToSend.append("icon", formData.case_icon);
     dataToSend.append("rarity", formData.case_rarity);
     dataToSend.append("price", formData.case_price);
 
@@ -98,6 +100,7 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
     setFormData({
       case_name: data.renderData.name,
       case_description: data.renderData.description,
+      case_icon: data.renderData.icon,
       case_rarity: data.renderData.rarity,
       case_price: data.renderData.price,
     });
@@ -157,6 +160,25 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
                 id="case_description"
                 onChange={handleChange}
                 value={formData.case_description}
+                className={styles["form-input"]}
+                placeholder="Заполните форму..."
+                required
+              />
+            </div>
+
+            <div className={styles["form-group"]}>
+              <label
+                className={styles["form-label"]}
+                htmlFor="case_icon"
+              >
+                Иконка
+              </label>
+              <input
+                type="text"
+                name="case_icon"
+                id="case_icon"
+                onChange={handleChange}
+                value={formData.case_icon}
                 className={styles["form-input"]}
                 placeholder="Заполните форму..."
                 required

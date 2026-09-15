@@ -30,18 +30,18 @@ interface CasePost {
 //   };
 // }
 
-interface EditCaseType {
-  id: string;
-  type: string;
-}
+// interface EditCaseType {
+//   id: string;
+//   type: string;
+// }
 
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 
 export const CaseListPage = () => {
-  const [editCase, setEditCase] = useState<EditCaseType>({
-    id: "",
-    type: "",
-  });
+  // const [editCase, setEditCase] = useState<EditCaseType>({
+  //   id: "",
+  //   type: "",
+  // });
 
   const [caseList, setCaseList] = useState<CasePost[]>([]);
 

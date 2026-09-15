@@ -35,7 +35,7 @@ export const MainPage = ({ title }: TitleSettings) => {
   const [isClosing, setIsClosing] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // const timeoutRef = useRef<number | null>(null);
-  const [isActionOpen, setIsActionOpen] = useState<string | null>("");
+  const [isActionOpen, setIsActionOpen] = useState<string | null>(null);
 
   const [isGameFound, setIsGameFound] = useState(false);
   const [seconds, setSeconds] = useState(0);
@@ -68,7 +68,7 @@ export const MainPage = ({ title }: TitleSettings) => {
 
   const toggleActionsMenu = (type: string) => {
     if (isActionOpen !== null && isActionOpen === type) {
-      setIsActionOpen("");
+      setIsActionOpen(null);
     } else {
       setIsActionOpen(type);
     }
@@ -408,6 +408,29 @@ export const MainPage = ({ title }: TitleSettings) => {
               <span>Мой профиль</span>
             </div>
 
+            <div
+              className={styles["btn"]}
+              onClick={() => navigate("/cases")}
+            >
+              <svg
+                xmlns="http://w3.org"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 10h18v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9Z" />
+                <path d="M21 10V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3" />
+                <path d="M3 10h18v3H3z" />
+                <path d="M10 13h4v4h-4z" />
+              </svg>
+              <span>Кейсы</span>
+            </div>
+
             <div className={styles["btn"]} onClick={() => navigate("/shop")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -431,7 +454,7 @@ export const MainPage = ({ title }: TitleSettings) => {
           </>
         )}
 
-        <div className={styles["btn"]} onClick={() => navigate("/how-to-play")}>
+        {/* <div className={styles["btn"]} onClick={() => navigate("/how-to-play")}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -449,7 +472,7 @@ export const MainPage = ({ title }: TitleSettings) => {
             <path d="M12 17h.01" />
           </svg>
           <span>Как играть</span>
-        </div>
+        </div> */}
 
         {data?.id && (
           <div className={styles["btn"]} onClick={() => navigate("/settings")}>
@@ -500,7 +523,7 @@ export const MainPage = ({ title }: TitleSettings) => {
 
             {isActionOpen === "navigation" && (
               <div
-                className={`${styles["actions-menu-top"]} ${!isActionOpen === null ? styles["closing"] : null}`}
+                className={`${styles["actions-menu-top"]} ${isActionOpen === null ? styles["closing"] : ""}`}
               >
                 <div className={styles["actions-menu-header"]}>
                   <span className={styles["actions-menu-title"]}>
@@ -649,7 +672,7 @@ export const MainPage = ({ title }: TitleSettings) => {
 
             {isActionOpen === "player" && (
               <div
-                className={`${styles["actions-menu-top"]} ${!isActionOpen === null ? styles["closing"] : null}`}
+                className={`${styles["actions-menu-top"]} ${isActionOpen === null ? styles["closing"] : ""}`}
               >
                 <div className={styles["actions-menu-header"]}>
                   <span className={styles["actions-menu-title"]}>Аккаунт</span>

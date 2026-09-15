@@ -17,6 +17,7 @@ import { CaseSettingsPage } from "../CaseSettingsPage/CaseSettings.tsx";
 interface CaseFormat {
   case_name: string;
   case_description: string;
+  case_icon: string;
   case_rarity: string;
   case_price: string;
 }
@@ -25,6 +26,7 @@ export const CreateCasePage = () => {
   const [formData, setFormData] = useState<CaseFormat>({
     case_name: "",
     case_description: "",
+    case_icon: "",
     case_rarity: "DEFAULT",
     case_price: "",
   });
@@ -56,6 +58,7 @@ export const CreateCasePage = () => {
 
     dataToSend.append("name", formData.case_name);
     dataToSend.append("description", formData.case_description);
+    dataToSend.append("icon", formData.case_icon);
     dataToSend.append("rarity", formData.case_rarity);
     dataToSend.append("price", formData.case_price);
 
@@ -73,6 +76,7 @@ export const CreateCasePage = () => {
       setFormData({
         case_name: "",
         case_description: "",
+        case_icon: "",
         case_rarity: "DEFAULT",
         case_price: "",
       });
@@ -147,6 +151,22 @@ export const CreateCasePage = () => {
                 id="case_description"
                 onChange={handleChange}
                 value={formData.case_description}
+                className={styles["form-input"]}
+                placeholder="Заполните форму..."
+                required
+              />
+            </div>
+
+            <div className={styles["form-group"]}>
+              <label className={styles["form-label"]} htmlFor="case_icon">
+                Иконка
+              </label>
+              <input
+                type="text"
+                name="case_icon"
+                id="case_icon"
+                onChange={handleChange}
+                value={formData.case_icon}
                 className={styles["form-input"]}
                 placeholder="Заполните форму..."
                 required

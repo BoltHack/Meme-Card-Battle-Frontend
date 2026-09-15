@@ -273,6 +273,22 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
                               {card.damage}
                             </span>
                           </div>
+
+                          <div
+                            className={`${CardsDesign_styles["stat-badge"]}`}
+                            style={{
+                              marginTop: "-300px",
+                              borderColor: "#606c38",
+                            }}
+                          >
+                            <span className={CardsDesign_styles["stat-icon"]}>
+                              %
+                            </span>
+                            <span className={CardsDesign_styles["stat-value"]}>
+                              {card.chance}
+                            </span>
+                          </div>
+
                           <div
                             className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
                           >
