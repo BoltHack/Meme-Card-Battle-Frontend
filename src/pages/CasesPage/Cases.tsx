@@ -55,7 +55,7 @@ export const CasesPage = ({ title }: TitleSettings) => {
 
   const openCase = async (case_id: string) => {
     // setIsCaseLoading(case_id);
-
+    if (isOpenCase !== "") return;
     try {
       const response = await axios.post(
         `${api.API_BASE_URL}/api/case/${case_id}/open`,
@@ -100,8 +100,8 @@ export const CasesPage = ({ title }: TitleSettings) => {
   };
 
   const openContainer = (case_id: string) => {
-    setMenuType("open");
     setIsOpenCase(case_id);
+    setMenuType("open");
     setTimeout(() => setReward(true), 1000);
   };
 
@@ -152,7 +152,7 @@ export const CasesPage = ({ title }: TitleSettings) => {
                   <div
                     className={styles["light-beam"]}
                     style={{
-                      background: `var(--${rewardCard?.lvl_name.toLowerCase()}-light)`,
+                      background: `var(--${isOpenCase === cs.id ? rewardCard?.lvl_name.toLowerCase() : ""}-light)`,
                     }}
                   ></div>
 
