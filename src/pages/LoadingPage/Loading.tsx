@@ -27,7 +27,6 @@ export const LoadingPage = () => {
     useEffect(() => {
         const checkFetchStatus = setTimeout(() => {
             setIsRefetch(true);
-            console.log("currentUrl.current", currentUrl.current);
         }, 5000);
 
         return () => clearTimeout(checkFetchStatus);
@@ -39,6 +38,9 @@ export const LoadingPage = () => {
 
         const interval = setInterval(() => {
             refetch();
+            if (!sessionStorage.getItem("active_session")) {
+                sessionStorage.setItem("active_session", crypto.randomUUID());
+            }
         }, 5000);
 
         return () => clearInterval(interval);
@@ -97,7 +99,7 @@ export const LoadingPage = () => {
 
                 <div className={styles["epic-title"]}>
                     <h1>MCB</h1>
-                    <p>Загрузка...</p>
+                    <p>Загрузка данных...</p>
                     <div className={styles["loader"]}></div>
                 </div>
 

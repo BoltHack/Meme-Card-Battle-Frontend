@@ -21,6 +21,8 @@ export default function usePageRender<T extends Record<string, any>>(
   url: string,
   // options: { enabled: boolean } = { enabled: true }
 ) {
+  const active_session = sessionStorage.getItem("active_session");
+
   const navigate = useNavigate();
 
   const [data, setData] = useState<T | null>(null);
@@ -64,6 +66,10 @@ export default function usePageRender<T extends Record<string, any>>(
       .then((response) => {
         setData(response.data);
         setError(null);
+        if (!active_session) {
+          setLoading(true);
+          return;
+        }
         setLoading(false);
         console.log("trigger", trigger);
       })

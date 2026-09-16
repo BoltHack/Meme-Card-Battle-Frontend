@@ -718,6 +718,14 @@ export const MainPage = ({ title }: TitleSettings) => {
                       <br />
                     </>
                   )}
+                  <li>
+                    <div
+                      className={styles["actions-menu-btn"]}
+                      onClick={() => navigate("/how-to-play")}
+                    >
+                      <span>Как играть</span>
+                    </div>
+                  </li>
                   {!data?.id ? (
                     <li>
                       <div

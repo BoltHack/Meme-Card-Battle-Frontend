@@ -54,6 +54,7 @@ export const CasesPage = ({ title }: TitleSettings) => {
   );
 
   const openCase = async (case_id: string) => {
+    console.log("case_id", case_id);
     // setIsCaseLoading(case_id);
     if (isOpenCase !== "") return;
     try {
@@ -142,26 +143,26 @@ export const CasesPage = ({ title }: TitleSettings) => {
           ? cases.map((cs) => {
               return (
                 <div
-                  key={cs.id}
-                  className={`${styles["scene"]} ${styles[isOpenCase === cs.id ? "opened" : ""]}`}
+                  key={cs?.id}
+                  className={`${styles["scene"]} ${styles[isOpenCase === cs?.id ? "opened" : ""]}`}
                 >
                   <div className={styles["platform"]}>
-                    <span>Ключей: {cs.keys}</span>
+                    <span>Ключей: {cs?.keys}</span>
                     <div className={styles["platform-line"]}></div>
                   </div>
                   <div
                     className={styles["light-beam"]}
                     style={{
-                      background: `var(--${isOpenCase === cs.id ? rewardCard?.lvl_name.toLowerCase() : ""}-light)`,
+                      background: `var(--${isOpenCase === cs?.id ? rewardCard?.lvl_name.toLowerCase() : ""}-light)`,
                     }}
                   ></div>
 
                   <div
                     className={styles["container-box"]}
-                    onClick={() => openCase(cs.id)}
+                    onClick={() => openCase(cs?.id)}
                   >
                     <div className={styles["badge"]}>
-                      <div className={styles["badge-icon"]}>{cs.icon}</div>
+                      <div className={styles["badge-icon"]}>{cs?.icon}</div>
                     </div>
                     <div className={`${styles["gate"]} ${styles["gate-top"]}`}>
                       <div className={styles["neon-line"]}></div>

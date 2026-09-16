@@ -22,6 +22,7 @@ import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 interface BlogAuthor {
     id: string;
     name: string;
+    avatar: string;
 }
 
 interface BlogPost {
@@ -281,7 +282,8 @@ export const BlogReadPage = () => {
         const formattedBlogs= {
             author: {
                 id: blog?.author?.id,
-                name: blog?.author?.name
+                name: blog?.author?.name,
+                avatar: blog?.author?.avatar
             },
             title: blog?.title || "",
             description: blog?.description || "",
@@ -335,7 +337,7 @@ export const BlogReadPage = () => {
                             <div className={styles["post-page-meta"]}>
                                 <div className={styles["author-info"]}>
                                     {/*<div className={styles["avatar"]}></div>*/}
-                                    <img src={`${api.API_BASE_URL}/uploads/UserCovers/${blog?.author?.id}/UserProfile.jpg`} className={styles["avatar"]} />
+                                    <img src={`${api.API_BASE_URL}/${blog?.author?.avatar}`} className={styles["avatar"]} />
                                     <div>
                                         <div className={styles["name"]}>{blog?.author?.name}</div>
                                         <div className={styles["role"]}>Frontend Architect</div>
