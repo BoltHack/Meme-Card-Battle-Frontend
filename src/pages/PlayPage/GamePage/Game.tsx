@@ -81,8 +81,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
   const [bodyLoader, setBodyLoader] = useState<boolean | false>(false);
 
-  // const { game_type, game_key } = useParams<{ type: string }>() as GameParams;
-
   const [playerCard, setPlayerCard] = useState<CardData[]>([]);
   const [list, setList] = useState<CardData[]>([]);
 
@@ -151,46 +149,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
   useEffect(() => {
     if (!data || !data.id) return;
-
-    const sendInitialData = () => {
-      console.log("Приняты данные из бэка:", data);
-
-      setTimeout(() => {
-        socket.emit("join_game", {
-          game_key: data.game_key,
-          player_id: data.id,
-        });
-        // socket.emit("get_players_info", { game_key: data.game_key });
-      }, 500);
-      setTimeout(() => {
-        // if (!data.id) return;
-        socket.emit("get_user_cards", { player_id: data.id });
-        // socket.emit("check_battle_cards", { game_key: data.game_key, player_id: data.id });
-        socket.emit("clear_game_cards", {
-          game_key: data.game_key,
-          player_id: data.id,
-        });
-      }, 1000);
-      // setInterval(() => {
-      //     if (data.id) return;
-      //     socket.emit("get_user_cards", { player_id: data.id });
-      //     socket.emit("check_battle_cards", { game_key: data.game_key, player_id: data.id });
-      //     console.log('test data');
-      // }, 1000);
-      if (game_type === "player_bot") {
-        socket.emit("game_start", "player_bot");
-      } else if (game_type === "player_player") {
-        socket.emit("game_start", "player_player");
-      }
-    };
-
-    if (!socket.connected) {
-      socket.connect();
-    } else {
-      sendInitialData();
-    }
-
-    socket.on("connect", sendInitialData);
 
     const handlePlayerCards = (data: PlayerCardsResponse) => {
       const { cards_data } = data;
@@ -395,16 +353,62 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     });
 
     return () => {
-      socket.off("connect");
-      socket.off("join_game");
       socket.off("get_user_cards");
       socket.off("select_battle_card");
       // socket.off("select_battle_card_list");
       // socket.off("check_battle_cards");
-      socket.disconnect();
+
       console.log("Сокет отключен, подписки сняты");
     };
   }, [data]);
+
+  useEffect(() => {
+    if (!data || !data.id) return;
+
+    let joinTimer: number;
+    let cardsTimer: number;
+
+    const sendInitialData = () => {
+      console.log("Приняты данные карт из бэка:", data);
+
+      clearTimeout(joinTimer);
+      clearTimeout(cardsTimer);
+
+      joinTimer = setTimeout(() => {
+        socket.emit("join_game", {
+          game_key: data.game_key,
+          player_id: data.id,
+        });
+      }, 500);
+
+      cardsTimer = setTimeout(() => {
+        socket.emit("get_user_cards", { player_id: data.id });
+        socket.emit("clear_game_cards", {
+          game_key: data.game_key,
+          player_id: data.id,
+        });
+      }, 1000);
+
+      if (game_type === "player_bot" || game_type === "player_player") {
+        socket.emit("game_start", game_type);
+      }
+    };
+
+    if (!socket.connected) {
+      socket.connect();
+    } else {
+      sendInitialData();
+    }
+
+    socket.on("connect", sendInitialData);
+
+    return () => {
+      socket.off("connect", sendInitialData);
+      socket.disconnect();
+      clearTimeout(joinTimer);
+      clearTimeout(cardsTimer);
+    };
+  }, [data, socket]);
 
   (function () {
     const fpsDiv = document.createElement("div");

@@ -291,10 +291,10 @@ export const PlayPage = ({ title }: TitleSettings) => {
       socket.off("connect", sendInitialData);
       socket.off("search_game");
       socket.off("found_game");
-      // socket.disconnect();
+      socket.disconnect();
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (timerId.current) clearInterval(timerId.current);
-      // console.log("Сокет отключен, подписки сняты");
+      console.log("Сокет (play) отключен, подписки сняты");
     };
   }, [data]);
 
