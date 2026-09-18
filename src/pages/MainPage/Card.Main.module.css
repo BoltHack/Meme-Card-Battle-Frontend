@@ -49,7 +49,7 @@
 
 .hero {
   position: relative;
-  height: 90vh;
+  height: 90dvh;
   min-height: 550px;
   background:
     radial-gradient(circle at center, rgba(16, 28, 41, 0.4) 0%, #0b1116 90%),
@@ -63,6 +63,7 @@
 }
 
 .hero-content {
+  margin-bottom: 100px;
   max-width: 800px;
   animation: fadeIn 1s ease-in-out;
   z-index: 2;
@@ -759,4 +760,21 @@
 @keyframes starsMove {
     from { background-position: 0 0, 50px 120px; }
     to { background-position: 200px 400px, 400px 470px; }
+}
+
+.admin-panel-btn {
+  display: flex;
+  padding: 18px 40px;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  color: #ffffff;
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); */
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 1000;
 }

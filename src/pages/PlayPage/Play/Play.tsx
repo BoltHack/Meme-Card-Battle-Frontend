@@ -301,7 +301,8 @@ export const PlayPage = ({ title }: TitleSettings) => {
   if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;
 
-  if (activeTab === PlayNavigation[5]) return <GamePage game_type={play_game_type} game_key={play_game_key} />;
+  if (activeTab === PlayNavigation[5])
+    return <GamePage game_type={play_game_type} game_key={play_game_key} />;
 
   return (
     <>

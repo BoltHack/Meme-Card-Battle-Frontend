@@ -233,6 +233,7 @@ export const ShopPage = () => {
                             </div>
                             <button
                               className={styles["buy-btn"]}
+                              disabled={shopData.product ? true : false}
                               onClick={() => buyCase(cs.id)}
                             >
                               <span>

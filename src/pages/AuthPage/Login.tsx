@@ -49,7 +49,7 @@ export const LoginPage = ({ toggleModal, toggleVisible, passwordVisible }: SignI
             setLoader(false);
             toast.success(data.success);
             localStorage.setItem("token", "true");
-            setTimeout(() => navigate("/"), 1000);
+            setTimeout(() => navigate(response.data.referer), 1000);
 
         } catch (err: any) {
             setLoader(false);

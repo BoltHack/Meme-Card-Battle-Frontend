@@ -57,7 +57,7 @@ export const RegisterPage = ({ toggleModal, toggleVisible, passwordVisible }: Si
             setLoader(false);
             toast.success(data.success);
             localStorage.setItem("token", "true");
-            setTimeout(() => navigate("/"), 1000);
+            setTimeout(() => navigate(response.data.referer), 1000);
 
         } catch (err: any) {
             console.log('error', err);

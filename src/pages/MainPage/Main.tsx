@@ -66,6 +66,15 @@ export const MainPage = ({ title }: TitleSettings) => {
 
       <Header />
 
+      {data?.role === "Admin" && (
+        <Link
+          to="/admin/panel"
+          className={styles["admin-panel-btn"]}
+        >
+          Админка
+        </Link>
+      )}
+
       <section className={styles["hero"]}>
         {/* <div className={styles["parallax-body"]}></div> */}
         <div className={styles["parallax-wrapper"]}>
@@ -124,12 +133,13 @@ export const MainPage = ({ title }: TitleSettings) => {
             >
               Играть в браузере
             </Link>
-            {/* <a
-              href="#"
+            <Link
+              to="/how-to-play"
               className={`${styles["btn"]} ${styles["btn-secondary"]}`}
             >
-              Скачать для Windows
-            </a> */}
+              {/* Скачать для Windows */}
+              Как играть?
+            </Link>
           </div>
         </div>
       </section>
@@ -244,7 +254,7 @@ export const MainPage = ({ title }: TitleSettings) => {
               <span>Discord</span>
             </a>
 
-            <a href="#" className={styles["social-card"]}>
+            {/* <a href="#" className={styles["social-card"]}>
               <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
                 <path
                   fill="none"
@@ -259,7 +269,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                 <path d="M23.5 12.4c0 1.5-.1 3-.3 4.4-.2 1.4-1.1 2.4-2.4 2.6-2.9.4-8.8.4-8.8.4s-5.9 0-8.8-.4c-1.3-.2-2.2-1.2-2.4-2.6-.2-1.4-.3-2.9-.3-4.4s.1-3 .3-4.4c.2-1.4 1.1-2.4 2.4-2.6 2.9-.4 8.8-.4 8.8-.4s5.9 0 8.8.4c1.3.2 2.2 1.2 2.4 2.6.2 1.4.3 2.9.3 4.4zM9.5 8.5V15.5L15.5 12L9.5 8.5z" />
               </svg>
               <span>Youtube</span>
-            </a>
+            </a> */}
 
             <a href="#" className={styles["social-card"]}>
               <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
@@ -353,11 +363,15 @@ export const MainPage = ({ title }: TitleSettings) => {
             </div>
 
             <div className={styles["legal-links"]}>
-              <a href="/rules" target="_blank">Правила игры</a>
+              <a href="/rules" target="_blank">
+                Правила игры
+              </a>
               <a href="/how-to-play" target="_blank">
                 Как играть?
               </a>
-              <a href="/support" target="_blank">Поддежрка</a>
+              <a href="/support" target="_blank">
+                Поддежрка
+              </a>
             </div>
 
             <div className={styles["age-rating"]}>0+</div>
