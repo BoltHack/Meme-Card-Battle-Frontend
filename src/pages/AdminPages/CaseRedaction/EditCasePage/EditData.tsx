@@ -17,7 +17,9 @@ interface CaseFormat {
   case_description: string;
   case_icon: string;
   case_rarity: string;
+  case_quantity: string;
   case_price: string;
+  case_priority: string;
 }
 
 interface ResponseProps {
@@ -32,7 +34,9 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
     case_description: "",
     case_icon: "",
     case_rarity: "DEFAULT",
+    case_quantity: "",
     case_price: "",
+    case_priority: "",
   });
 
   const { data, loading, error } = usePageRender(
@@ -56,13 +60,17 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    console.log("case_id", case_id);
+
     const dataToSend = new FormData();
 
     dataToSend.append("name", formData.case_name);
     dataToSend.append("description", formData.case_description);
     dataToSend.append("icon", formData.case_icon);
     dataToSend.append("rarity", formData.case_rarity);
+    dataToSend.append("quantity", formData.case_quantity);
     dataToSend.append("price", formData.case_price);
+    dataToSend.append("priority", formData.case_priority);
 
     try {
       const response = await axios.post(
@@ -102,7 +110,9 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
       case_description: data.renderData.description,
       case_icon: data.renderData.icon,
       case_rarity: data.renderData.rarity,
+      case_quantity: data.renderData.quantity,
       case_price: data.renderData.price,
+      case_priority: data.renderData.priority,
     });
   }, [data]);
 
@@ -167,10 +177,7 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
             </div>
 
             <div className={styles["form-group"]}>
-              <label
-                className={styles["form-label"]}
-                htmlFor="case_icon"
-              >
+              <label className={styles["form-label"]} htmlFor="case_icon">
                 Иконка
               </label>
               <input
@@ -201,6 +208,25 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
                 <option value="LEGENDARY">Легендарный</option>
               </select>
             </div>
+          </div>
+          <div className={styles["editor-right-side"]} style={{ marginTop: "0" }}>
+            <div className={styles["form-group"]}>
+              <label className={styles["form-label"]} htmlFor="case_quantity">
+                Количество
+              </label>
+              <input
+                type="number"
+                name="case_quantity"
+                id="case_quantity"
+                min="1"
+                onKeyDown={handleMinusNumber}
+                onChange={handleChange}
+                value={formData.case_quantity}
+                className={styles["form-input"]}
+                placeholder="Заполните форму..."
+                required
+              />
+            </div>
 
             <div className={styles["form-group"]}>
               <label className={styles["form-label"]} htmlFor="case_price">
@@ -214,6 +240,23 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
                 onKeyDown={handleMinusNumber}
                 onChange={handleChange}
                 value={formData.case_price}
+                className={styles["form-input"]}
+                placeholder="Заполните форму..."
+                required
+              />
+            </div>
+            <div className={styles["form-group"]}>
+              <label className={styles["form-label"]} htmlFor="case_priority">
+                Приоритет
+              </label>
+              <input
+                type="number"
+                name="case_priority"
+                id="case_priority"
+                min="1"
+                onKeyDown={handleMinusNumber}
+                onChange={handleChange}
+                value={formData.case_priority}
                 className={styles["form-input"]}
                 placeholder="Заполните форму..."
                 required

@@ -1,7 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import toast from "react-hot-toast";
 
 import styles from "./Card.Main.module.css";
 
@@ -9,14 +8,21 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
+
 import usePageRender from "../../tools/PageRender.ts";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
+import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
+import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 
-interface PlayerData {
-  name: string;
+interface BlogPost {
+  author: string;
+  title: string;
+  description: string;
+  cover: string;
+  category: string;
+  date: string;
   id: string;
-  role: string;
 }
 
 interface TitleSettings {
@@ -24,259 +30,30 @@ interface TitleSettings {
 }
 
 export const MainPage = ({ title }: TitleSettings) => {
-  const navigate = useNavigate();
+  const [mainBlog, setMainBlog] = useState<BlogPost[]>([]);
 
-  // const isAuth = Boolean(localStorage.getItem("token"));
+  const { data, loading, error } = usePageRender(`${api.API_BASE_URL}/api/`);
 
-  // const [data, setData] = useState<PlayerData | null>(null);
-  // const [loading, setLoading] = useState(true);
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // const timeoutRef = useRef<number | null>(null);
-  const [isActionOpen, setIsActionOpen] = useState<string | null>(null);
-
-  const [isGameFound, setIsGameFound] = useState(false);
-  const [seconds, setSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const { data, loading, error, socket } = usePageRender<PlayerData>(
-    `${api.API_BASE_URL}/api/`,
-  );
-
-  const toggleMenu = () => {
-    if (!data?.id) {
-      navigate("/auth/sign-in");
-      return;
-    }
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setIsClosing(false);
-    setIsOpen(true);
-  };
-  const closeMenu = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-    setIsClosing(true);
-
-    timeoutRef.current = window.setTimeout(() => {
-      setIsOpen(false);
-      setIsClosing(false);
-    }, 200);
-  };
-
-  const toggleActionsMenu = (type: string) => {
-    if (isActionOpen !== null && isActionOpen === type) {
-      setIsActionOpen(null);
-    } else {
-      setIsActionOpen(type);
-    }
-  };
-
-  const gameFoundTimerReset = useCallback(() => {
-    if (timerId.current) {
-      clearInterval(timerId.current);
-      timerId.current = null;
-    }
-    setIsRunning(false);
-    setSeconds(0);
-
-    socket.emit("search_game", {
-      type: false,
-      player_id: data?.id,
+  const dateSettings = (date: string) => {
+    return new Date(date).toLocaleString("ru-RU", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour12: false,
     });
-  }, [data]);
-
-  const gameFoundTimerStart = useCallback(() => {
-    if (isRunning) return;
-
-    if (timerId.current) {
-      gameFoundTimerReset();
-    }
-
-    setIsRunning(true);
-
-    timerId.current = setInterval(() => {
-      setSeconds((prev) => prev + 1);
-    }, 1000);
-  }, [isRunning, gameFoundTimerReset]);
-
-  const gameFountTimerFormat = (time: number) => {
-    const totalSeconds = Number(time) || 0;
-    if (totalSeconds <= 0) return "0 с";
-
-    const getMinutes = Math.floor(totalSeconds / 60);
-    const getSeconds = totalSeconds % 60;
-
-    const minutesStr = getMinutes > 0 ? `${getMinutes} м ` : "";
-    const secondsStr =
-      getSeconds > 0 || getMinutes === 0 ? `${getSeconds} с` : " 0 с";
-
-    return (minutesStr + secondsStr).trim();
-  };
-
-  const foundGame = (type: string) => {
-    if (!data?.id) {
-      navigate("/auth/sign-in");
-      return;
-    }
-    if (type === "search") {
-      setIsGameFound(true);
-      setIsOpen(false);
-      console.log("search game...", data?.id);
-      socket.emit("search_game", {
-        type: true,
-        player_id: data?.id,
-      });
-      gameFoundTimerStart();
-    } else if (type === "cancel") {
-      setIsGameFound(false);
-      setIsOpen(false);
-      gameFoundTimerReset();
-    } else {
-      setIsGameFound(false);
-      setIsOpen(false);
-      gameFoundTimerReset();
-    }
-  };
-
-  (function () {
-    const fpsDiv = document.createElement("div");
-
-    fpsDiv.style.position = "fixed";
-    fpsDiv.style.top = "10px";
-    fpsDiv.style.left = "10px";
-    fpsDiv.style.zIndex = "999999";
-    fpsDiv.style.background = "rgba(0, 0, 0, 0.8)";
-    fpsDiv.style.color = "#00ff00";
-    fpsDiv.style.padding = "5px 10px";
-    fpsDiv.style.fontFamily = "monospace";
-    fpsDiv.style.fontSize = "16px";
-    fpsDiv.style.borderRadius = "5px";
-    fpsDiv.innerText = "FPS: ...";
-    document.body.appendChild(fpsDiv);
-
-    let lastTime = performance.now();
-    let frames = 0;
-
-    function calculateFps() {
-      const now = performance.now();
-      frames++;
-
-      if (now >= lastTime + 1000) {
-        const fps = Math.round((frames * 1000) / (now - lastTime));
-        fpsDiv.innerText = `FPS: ${fps}`;
-
-        fpsDiv.style.color = fps < 45 ? "#ff0000" : "#00ff00";
-
-        frames = 0;
-        lastTime = now;
-      }
-
-      if (window.location.pathname !== "/") {
-        document.body.removeChild(fpsDiv);
-        return;
-      }
-      requestAnimationFrame(calculateFps);
-    }
-
-    requestAnimationFrame(calculateFps);
-  })();
-
-  const logout = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    try {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      const response = await axios.post(`${api.API_BASE_URL}/auth/logout`);
-
-      const data = response.data;
-
-      console.log("Успешный logout!");
-      toast.dismiss();
-      toast.success(data.success || "Вы вышли из системы");
-
-      localStorage.removeItem("token");
-
-      timeoutRef.current = window.setTimeout(() => {
-        navigate("/auth/sign-in");
-      }, 200);
-
-      return response.data;
-    } catch (error: any) {
-      const errorMessage =
-        error?.response?.data.error || "Произошла ошибка при выходе";
-      console.log("Ошибка logout:", errorMessage);
-    }
-  };
-
-  const getRandomCards = async () => {
-    try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/get-random-card`,
-      );
-
-      const data = response.data;
-
-      toast.dismiss();
-      toast.success(data.success);
-
-      return response.data;
-    } catch (error: any) {
-      const errorMessage =
-        error?.response?.data?.error || "Произошла ошибка при выходе";
-      console.log("Ошибка:", errorMessage);
-    }
   };
 
   useEffect(() => {
-    if (!data || !data.id) return;
-
-    const sendInitialData = () => {
-      socket.emit("search_game", {
-        type: false,
-        player_id: data.id,
-      });
-    };
-
-    if (!socket.connected) {
-      socket.connect();
-    } else {
-      sendInitialData();
+    if (!data || !data.renderData) {
+      console.log(
+        "Данные еще не загрузились или структура не совпадает:",
+        data,
+      );
     }
 
-    socket.on("connect", sendInitialData);
-
-    socket.on("found_game", (data) => {
-      const { game_key } = data;
-      console.log("data", data);
-
-      toast.dismiss();
-      toast.success("Противник найден! Удачной игры!");
-
-      setTimeout(() => {
-        navigate(`/game/player_player/${game_key}`);
-      }, 1000);
-    });
-
-    socket.on("game_error_handler", (message) => {
-      foundGame("cancel");
-
-      toast.dismiss();
-      toast.error(message);
-    });
-
-    return () => {
-      // foundGame("cancel");
-      socket.off("connect", sendInitialData);
-      socket.off("search_game");
-      socket.off("found_game");
-      socket.disconnect();
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      if (timerId.current) clearInterval(timerId.current);
-      console.log("Сокет отключен, подписки сняты");
-    };
-  }, [data?.id]);
+    setMainBlog(data?.renderData);
+    console.log("data", data);
+  }, [data]);
 
   if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;
@@ -287,587 +64,308 @@ export const MainPage = ({ title }: TitleSettings) => {
         <title>{title}</title>
       </Helmet>
 
-      <div className={styles["parallax-body"]}></div>
-      <div className={styles["parallax-wrapper"]}>
-        <div className={styles["smoke-glow smoke-red"]}></div>
-        <div className={styles["smoke-glow smoke-blue"]}></div>
-        <div className={styles["smoke-glow smoke-purple"]}></div>
+      <Header />
 
-        <div className={styles["halftone-overlay"]}></div>
+      <section className={styles["hero"]}>
+        <div className={styles["parallax-body"]}></div>
+        <div className={styles["parallax-wrapper"]}>
+          <div className={styles["smoke-glow smoke-red"]}></div>
+          <div className={styles["smoke-glow smoke-blue"]}></div>
+          <div className={styles["smoke-glow smoke-purple"]}></div>
 
-        <div className={styles["star-particles"]}></div>
+          <div className={styles["halftone-overlay"]}></div>
 
-        <div className={styles["shard shard-1"]}></div>
-        <div className={styles["shard shard-2"]}></div>
+          <div className={styles["star-particles"]}></div>
 
-        <svg
-          className={`${styles["lightning"]} ${styles["lightning-right"]}`}
-          viewBox="0 0 24 24"
-        >
-          <path d="M19 9h-6l3-7L5 13h6l-3 9z" />
-        </svg>
+          <div className={styles["shard shard-1"]}></div>
+          <div className={styles["shard shard-2"]}></div>
 
-        <div className={styles["card-layer"]}>
-          <div className={`${styles["premium-card"]} ${styles["card-king"]}`}>
-            <div></div>
-            <div className={styles["card-suit-center"]}>?</div>
-            <div className={styles["card-suit-bottom"]}></div>
-          </div>
-
-          <div
-            className={`${styles["premium-card"]} ${styles["card-ace-spades"]}`}
-          >
-            <div></div>
-            <div className={styles["card-suit-center"]}>?</div>
-            <div className={styles["card-suit-bottom"]}></div>
-          </div>
-
-          <div
-            className={`${styles["premium-card"]} ${styles["card-ace-diamonds"]}`}
-          >
-            <div></div>
-            <div className={styles["card-suit-center"]}>?</div>
-            <div className={styles["card-suit-bottom"]}></div>
-          </div>
-        </div>
-      </div>
-
-      <div className={styles["buttons-container"]}>
-        <div className={styles["epic-title"]}>
-          <h1>MEME CARD BATTLE</h1>
-          {/*<p>Meme card battle</p>*/}
-        </div>
-
-        <br />
-
-        {!isGameFound ? (
-          <div className={styles["btn"]} onClick={toggleMenu}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-play-icon lucide-play"
-            >
-              <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />
-            </svg>
-
-            <span>Начать играть</span>
-          </div>
-        ) : (
-          <div className={`${styles["btn"]} ${styles["btn-disable"]}`}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-play-off-icon lucide-play-off"
-            >
-              <path d="m10.215 4.56 9.79 5.71a2 2 0 0 1 .003 3.458l-.393.23" />
-              <path d="m16.042 16.042-8.034 4.686A2 2 0 0 1 5 19V5" />
-              <path d="m2 2 20 20" />
-            </svg>
-
-            <span>Начать играть</span>
-          </div>
-        )}
-
-        {data?.id && (
-          <>
-            <div className={styles["btn"]} onClick={() => navigate("/profile")}>
-              {/*<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-layout-grid-icon lucide-layout-grid">*/}
-              {/*    <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>*/}
-              {/*</svg>*/}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-gamepad-directional-icon lucide-gamepad-directional"
-              >
-                <path d="M11.146 15.854a1.207 1.207 0 0 1 1.708 0l1.56 1.56A2 2 0 0 1 15 18.828V21a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2.172a2 2 0 0 1 .586-1.414z" />
-                <path d="M18.828 15a2 2 0 0 1-1.414-.586l-1.56-1.56a1.207 1.207 0 0 1 0-1.708l1.56-1.56A2 2 0 0 1 18.828 9H21a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z" />
-                <path d="M6.586 14.414A2 2 0 0 1 5.172 15H3a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h2.172a2 2 0 0 1 1.414.586l1.56 1.56a1.207 1.207 0 0 1 0 1.708z" />
-                <path d="M9 3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2.172a2 2 0 0 1-.586 1.414l-1.56 1.56a1.207 1.207 0 0 1-1.708 0l-1.56-1.56A2 2 0 0 1 9 5.172z" />
-              </svg>
-              <span>Мой профиль</span>
-            </div>
-
-            <div className={styles["btn"]} onClick={() => navigate("/cases")}>
-              <svg
-                xmlns="http://w3.org"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M3 10h18v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9Z" />
-                <path d="M21 10V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3" />
-                <path d="M3 10h18v3H3z" />
-                <path d="M10 13h4v4h-4z" />
-              </svg>
-              <span>Кейсы</span>
-            </div>
-
-            <div className={styles["btn"]} onClick={() => navigate("/shop")}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-shopping-cart-icon lucide-shopping-cart"
-              >
-                <path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18" />
-                <path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25" />
-                <circle cx="18" cy="20" r="2" />
-                <circle cx="8" cy="20" r="2" />
-              </svg>
-              <span>Магазин</span>
-            </div>
-
-            <div
-              className={styles["btn"]}
-              onClick={() => navigate("/settings")}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-settings-icon lucide-settings"
-              >
-                <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              <span>Настройки</span>
-            </div>
-          </>
-        )}
-
-        {/* <div className={styles["btn"]} onClick={() => navigate("/how-to-play")}>
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            className={`${styles["lightning"]} ${styles["lightning-right"]}`}
             viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-message-circle-question-mark-icon lucide-message-circle-question-mark"
           >
-            <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-            <path d="M12 17h.01" />
+            <path d="M19 9h-6l3-7L5 13h6l-3 9z" />
           </svg>
-          <span>Как играть</span>
-        </div> */}
-      </div>
 
-      <div className={styles["actions-menu"]}>
-        <div className={styles["actions-menu-container"]}>
-          <div className={styles["actions-menu-tool"]}>
-            <div
-              className={`${styles["actions-menu-icon"]} ${isActionOpen === "navigation" ? styles["active"] : null}`}
-              onClick={() => toggleActionsMenu("navigation")}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-text-align-justify-icon lucide-text-align-justify"
-              >
-                <path d="M3 5h18" />
-                <path d="M3 12h18" />
-                <path d="M3 19h18" />
-              </svg>
+          <div className={styles["card-layer"]}>
+            <div className={`${styles["premium-card"]} ${styles["card-king"]}`}>
+              <div></div>
+              <div className={styles["card-suit-center"]}>?</div>
+              <div className={styles["card-suit-bottom"]}></div>
             </div>
 
-            {isActionOpen === "navigation" && (
-              <div
-                className={`${styles["actions-menu-top"]} ${isActionOpen === null ? styles["closing"] : ""}`}
-              >
-                <div className={styles["actions-menu-header"]}>
-                  <span className={styles["actions-menu-title"]}>
-                    Навигация
-                  </span>
-                  <div
-                    className={styles["close-btn"]}
-                    onClick={() => setIsActionOpen(null)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-x-icon lucide-x"
-                    >
-                      <path d="M18 6 6 18" />
-                      <path d="m6 6 12 12" />
-                    </svg>
-                  </div>
-                </div>
+            <div
+              className={`${styles["premium-card"]} ${styles["card-ace-spades"]}`}
+            >
+              <div></div>
+              <div className={styles["card-suit-center"]}>?</div>
+              <div className={styles["card-suit-bottom"]}></div>
+            </div>
 
-                <ul className={styles["actions-menu-list"]}>
-                  <li>
-                    <Link
-                      to="/privacy-policy"
-                      className={styles["actions-menu-btn"]}
-                      onClick={() => navigate("/")}
-                    >
-                      <span>Политика конфиденциальности</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/terms-of-use"
-                      className={styles["actions-menu-btn"]}
-                    >
-                      <span>Условия использования</span>
-                    </Link>
-                  </li>
-                  <br />
-                  <li>
-                    <Link
-                      to="/help-center"
-                      className={styles["actions-menu-btn"]}
-                      onClick={() => navigate("/")}
-                    >
-                      <span>Справочный центр</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/support" className={styles["actions-menu-btn"]}>
-                      <span>Поддержка</span>
-                    </Link>
-                  </li>
-                  <br />
-                  <li>
-                    <Link to="/blog" className={styles["actions-menu-btn"]}>
-                      <span>Блог</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/news" className={styles["actions-menu-btn"]}>
-                      <span>Новости</span>
-                    </Link>
-                  </li>
-                  <br />
-                  <li>
-                    <Link to="/about-us" className={styles["actions-menu-btn"]}>
-                      <span>О нас</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/company-information"
-                      className={styles["actions-menu-btn"]}
-                    >
-                      <span>Информация о компании</span>
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            )}
+            <div
+              className={`${styles["premium-card"]} ${styles["card-ace-diamonds"]}`}
+            >
+              <div></div>
+              <div className={styles["card-suit-center"]}>?</div>
+              <div className={styles["card-suit-bottom"]}></div>
+            </div>
           </div>
+        </div>
 
-          {/*<div className={styles["actions-menu-tool"]}>*/}
-
-          {/*    <div className={`${styles["actions-menu-icon"]} ${isActionOpen === "other" ? styles["active"] : null }`}*/}
-          {/*         onClick={() => toggleActionsMenu("other")}*/}
-          {/*    >*/}
-          {/*        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-menu-icon lucide-square-menu">*/}
-          {/*            <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10"/><path d="M7 12h10"/><path d="M7 16h10"/>*/}
-          {/*        </svg>*/}
-          {/*    </div>*/}
-
-          {/*    {(isActionOpen === "other") && (*/}
-          {/*        <div className={`${styles["actions-menu-top"]} ${!isActionOpen === null ? styles["closing"] : null}`}>*/}
-          {/*            <div className={styles["actions-menu-header"]}>*/}
-          {/*                <span className={styles["actions-menu-title"]}>Другое</span>*/}
-          {/*                <div className={styles["close-btn"]} onClick={() => setIsActionOpen(null)}>*/}
-          {/*                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-icon lucide-x">*/}
-          {/*                        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>*/}
-          {/*                    </svg>*/}
-          {/*                </div>*/}
-          {/*            </div>*/}
-
-          {/*            <ul className={styles["actions-menu-list"]}>*/}
-          {/*                <li>*/}
-          {/*                    <Link to="/blog" className={styles["actions-menu-btn"]}>*/}
-          {/*                        <span>Блог</span>*/}
-          {/*                    </Link>*/}
-          {/*                </li>*/}
-          {/*            </ul>*/}
-          {/*        </div>*/}
-          {/*    )}*/}
-
-          {/*</div>*/}
-
-          <div className={styles["actions-menu-tool"]}>
-            <div
-              className={`${styles["actions-menu-icon"]} ${isActionOpen === "player" ? styles["active"] : null}`}
-              onClick={() => toggleActionsMenu("player")}
+        <div className={styles["hero-content"]}>
+          <h1>
+            MEME CARD <span>BATTLE</span>
+          </h1>
+          <p>Захватывающе и интересные карточные бои!</p>
+          <div className={styles["btn-group"]}>
+            <Link
+              to="/play"
+              className={`${styles["btn"]} ${styles["btn-primary"]}`}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-square-user-icon lucide-square-user"
-              >
-                <rect width="18" height="18" x="3" y="3" rx="2" />
-                <circle cx="12" cy="10" r="3" />
-                <path d="M7 21v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" />
-              </svg>
-            </div>
+              Играть в браузере
+            </Link>
+            {/* <a
+              href="#"
+              className={`${styles["btn"]} ${styles["btn-secondary"]}`}
+            >
+              Скачать для Windows
+            </a> */}
+          </div>
+        </div>
+      </section>
 
-            {isActionOpen === "player" && (
-              <div
-                className={`${styles["actions-menu-top"]} ${isActionOpen === null ? styles["closing"] : ""}`}
-              >
-                <div className={styles["actions-menu-header"]}>
-                  <span className={styles["actions-menu-title"]}>Аккаунт</span>
-                  <div
-                    className={styles["close-btn"]}
-                    onClick={() => setIsActionOpen(null)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-x-icon lucide-x"
-                    >
-                      <path d="M18 6 6 18" />
-                      <path d="m6 6 12 12" />
-                    </svg>
-                  </div>
-                </div>
+      <div className={styles["line"]}></div>
 
-                <ul className={styles["actions-menu-list"]}>
-                  {data?.role === "Admin" && (
-                    <>
-                      <li>
-                        <div
-                          className={styles["actions-menu-btn"]}
-                          onClick={() => navigate("/admin/panel")}
-                        >
-                          <span>Админка</span>
-                        </div>
-                      </li>
-                      <li>
-                        <div
-                          className={styles["actions-menu-btn"]}
-                          onClick={() => getRandomCards()}
-                        >
-                          <span>Получить случайную карту</span>
-                        </div>
-                      </li>
-                      <br />
-                    </>
-                  )}
-                  <li>
-                    <div
-                      className={styles["actions-menu-btn"]}
-                      onClick={() => navigate("/how-to-play")}
-                    >
-                      <span>Как играть</span>
+      <section className={styles["news-section"]}>
+        <h2 className={styles["section-title"]}>Новости и события</h2>
+
+        <div className={styles["news-grid"]}>
+          {mainBlog && mainBlog.length > 0
+            ? mainBlog.map((blog) => {
+                return (
+                  <div className={styles["news-card"]} key={blog.id}>
+                    {blog.cover.length > 0 ? (
+                      <img
+                        src={`${api.API_BASE_URL}/${blog.cover}`}
+                        loading="lazy"
+                        className={`${styles["news-img"]} ${styles["img-blockopolis"]}`}
+                      />
+                    ) : (
+                      <div
+                        className={`${styles["news-img"]} ${styles["img-blockopolis"]}`}
+                      ></div>
+                    )}
+                    {/* <img
+                      src={`${api.API_BASE_URL}/${blog.cover}`}
+                      className={`${styles["news-img"]} ${styles["img-blockopolis"]}`}
+                    /> */}
+                    <div className={styles["news-content"]}>
+                      <div className={styles["news-meta"]}>
+                        <span>{dateSettings(blog.date)}</span>
+                        <span className={styles["tag"]}>{blog.category}</span>
+                      </div>
+                      <h3>
+                        {blog.title.length > 50
+                          ? blog.title.slice(0, 50) + "..."
+                          : blog.title}
+                      </h3>
+                      <p>
+                        {blog.description.length > 140
+                          ? blog.description.slice(0, 140) + "..."
+                          : blog.description}
+                      </p>
+                      <a
+                        href={`/blog/${blog.id.toString()}`}
+                        target="_blank"
+                        className={styles["news-href"]}
+                      >
+                        Читать подробнее →
+                      </a>
                     </div>
-                  </li>
-                  {!data?.id ? (
-                    <li>
-                      <div
-                        className={styles["actions-menu-btn"]}
-                        onClick={() => navigate("/auth/sign-in")}
-                      >
-                        <span>Войти в аккаунт</span>
-                      </div>
-                    </li>
-                  ) : (
-                    <li>
-                      <div
-                        className={styles["actions-menu-btn"]}
-                        onClick={logout}
-                      >
-                        <span>Выйти</span>
-                      </div>
-                    </li>
-                  )}
-                </ul>
+                  </div>
+                );
+              })
+            : "Новых новостей пока нет"}
+        </div>
+      </section>
+      <div className={styles["footer-wrapper"]}>
+        <div className={styles["footer-container"]}>
+          <div className={styles["social-title"]}>Следи за новостями игры</div>
+
+          <div className={styles["social-grid"]}>
+            <a href="#" className={styles["social-card"]}>
+              <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
+                <path
+                  fill="none"
+                  d="M5 19L19 5M19 5H10M19 5V14"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <svg className={styles["platform-icon"]} viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1 .22-1.62.15-.15 2.7-2.46 2.75-2.67.01-.03.01-.15-.06-.21a.25.25 0 0 0-.22-.04c-.3.07-5.02 3.19-5.12 3.26-.2.13-.39.2-.57.19-.2 0-.58-.1-.86-.2-.35-.11-.63-.17-.6-.36.02-.1.15-.2.38-.3 1.48-.65 4.93-2.12 10.35-4.46.94-.38 1.13-.35 1.25-.13.04.07.05.17.02.32z" />
+              </svg>
+              <span>Telegram</span>
+            </a>
+
+            <a href="#" className={styles["social-card"]}>
+              <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
+                <path
+                  fill="none"
+                  d="M5 19L19 5M19 5H10M19 5V14"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <svg className={styles["platform-icon"]} viewBox="0 0 24 24">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2.4 9.1c.3.3.7.6 1.1.9.4.4.5.8.2.9-.3.1-.7.1-1.1.1-.4 0-.8-.1-1.1-.3-.3-.2-.5-.5-.8-.8-.4-.4-.7-.5-1-.5h-.3v2c0 .3-.1.4-.4.4h-.6c-1.3 0-2.4-.5-3.3-1.4-.9-.9-1.5-2.1-1.8-3.5 0-.2.1-.3.3-.3h1.2c.3 0 .4.1.4.3.2.7.5 1.3.9 1.8.3.3.6.5.8.5.1 0 .2-.1.2-.3v-2.1c0-.4-.2-.5-.5-.5h-.3c-.1 0-.2-.1-.1-.2.1-.2.4-.4.8-.4h1.2c.3 0 .4.1.4.4v2.5c0 .2.1.3.2.3.1 0 .2-.1.3-.2.5-.7.8-1.4 1-2.2 0-.2.2-.3.4-.3h1.2c.2 0 .3 0 .3.2-.2.8-.6 1.5-1.1 2.1-.2.2-.2.3 0 .5z" />
+              </svg>
+              <span>Вконтакте</span>
+            </a>
+
+            <a href="#" className={styles["social-card"]}>
+              <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
+                <path
+                  fill="none"
+                  d="M5 19L19 5M19 5H10M19 5V14"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <svg className={styles["platform-icon"]} viewBox="0 0 24 24">
+                <path d="M19.27 4.73a16.13 16.13 0 0 0-3.97-1.23.08.08 0 0 0-.08.04c-.17.31-.36.71-.49 1.03a14.86 14.86 0 0 0-4.46 0c-.13-.32-.33-.72-.51-1.03a.08.08 0 0 0-.08-.04 16.09 16.09 0 0 0-3.97 1.23.05.05 0 0 0-.02.02A16.17 16.17 0 0 0 2.1 16.63a.08.08 0 0 0 .03.06 16.18 16.18 0 0 0 4.86 2.45.08.08 0 0 0 .09-.03c.38-.51.71-1.07.99-1.65a.08.08 0 0 0-.04-.11 10.43 10.43 0 0 1-1.52-.73.08.08 0 0 1-.01-.13c.1-.07.2-.15.3-.23a.08.08 0 0 1 .08-.01 11.44 11.44 0 0 0 10.6 0 .08.08 0 0 1 .09.01c.1.08.2.16.3.23a.08.08 0 0 1-.01.13 10.64 10.64 0 0 1-1.52.73.08.08 0 0 0-.04.11c.29.58.61 1.14.99 1.65a.08.08 0 0 0 .09.03 16.16 16.16 0 0 0 4.87-2.45.08.08 0 0 0 .03-.06 16.23 16.23 0 0 0-3.66-11.88.06.06 0 0 0-.02-.02zM8.52 12.05c-.96 0-1.75-.88-1.75-1.96s.77-1.96 1.75-1.96c.99 0 1.77.89 1.75 1.96 0 1.08-.77 1.96-1.75 1.96zm6.97 0c-.96 0-1.75-.88-1.75-1.96s.77-1.96 1.75-1.96c.99 0 1.77.89 1.75 1.96 0 1.08-.77 1.96-1.75 1.96z" />
+              </svg>
+              <span>Discord</span>
+            </a>
+
+            <a href="#" className={styles["social-card"]}>
+              <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
+                <path
+                  fill="none"
+                  d="M5 19L19 5M19 5H10M19 5V14"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <svg className={styles["platform-icon"]} viewBox="0 0 24 24">
+                <path d="M23.5 12.4c0 1.5-.1 3-.3 4.4-.2 1.4-1.1 2.4-2.4 2.6-2.9.4-8.8.4-8.8.4s-5.9 0-8.8-.4c-1.3-.2-2.2-1.2-2.4-2.6-.2-1.4-.3-2.9-.3-4.4s.1-3 .3-4.4c.2-1.4 1.1-2.4 2.4-2.6 2.9-.4 8.8-.4 8.8-.4s5.9 0 8.8.4c1.3.2 2.2 1.2 2.4 2.6.2 1.4.3 2.9.3 4.4zM9.5 8.5V15.5L15.5 12L9.5 8.5z" />
+              </svg>
+              <span>Youtube</span>
+            </a>
+
+            <a href="#" className={styles["social-card"]}>
+              <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
+                <path
+                  fill="none"
+                  d="M5 19L19 5M19 5H10M19 5V14"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <svg className={styles["platform-icon"]} viewBox="0 0 24 24">
+                <path d="M11.6 3L4 9.6V21h5.3v2.6h2.7L14.7 21h4L21 14.4V3H11.6zm8.1 10.2L17.1 16H13.1l-2.7 2.7V16H7.8V4.3h11.9v8.9zm-2.7-5.8h-1.4v4.5h1.4V7.4zm-3.3 0h-1.4v4.5h1.4V7.4z" />
+              </svg>
+              <span>Twitch</span>
+            </a>
+
+            <a href="#" className={styles["social-card"]}>
+              <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
+                <path
+                  fill="none"
+                  d="M5 19L19 5M19 5H10M19 5V14"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <svg className={styles["platform-icon"]} viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
+              </svg>
+              <span>Дзен</span>
+            </a>
+
+            <a href="#" className={styles["social-card"]}>
+              <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
+                <path
+                  fill="none"
+                  d="M5 19L19 5M19 5H10M19 5V14"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <svg className={styles["platform-icon"]} viewBox="0 0 24 24">
+                <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z" />
+              </svg>
+              <span>Max</span>
+            </a>
+          </div>
+
+          <div className={styles["footer-middle-bar"]}>
+            <div className={styles["support-info"]}>
+              <div className={styles["support-icon"]}>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
               </div>
-            )}
+              <div className={styles["support-text"]}>
+                <span className={styles["label"]}>Служба поддержки:</span>
+                <span className={styles["email"]}>help@example.com</span>
+              </div>
+            </div>
+
+            <Link to="/play" className={styles["btn-play-footer"]}>
+              Играть в браузере
+            </Link>
+
+            {/* <div className={styles["alternativa-logo"]}>
+              <span className={styles["brand"]}>test</span>
+              <span className={styles["subtext"]}>test</span>
+            </div> */}
+          </div>
+
+          <div className={styles["footer-bottom-bar"]}>
+            <div className={styles["copyright-block"]}>
+              <div className={styles["cookie-icon"]}></div>
+              <span>
+                &copy; <strong>Все права защищены</strong>. Полное или частичное
+                копирование сайта запрещено.
+              </span>
+            </div>
+
+            <div className={styles["legal-links"]}>
+              <a href="/rules" target="_blank">Правила игры</a>
+              <a href="/how-to-play" target="_blank">
+                Как играть?
+              </a>
+              <a href="/support" target="_blank">Поддежрка</a>
+            </div>
+
+            <div className={styles["age-rating"]}>0+</div>
           </div>
         </div>
       </div>
 
-      {isOpen && (
-        <div className={styles["menu-wrapper"]}>
-          <div className={styles["bg-glow"]}></div>
-          <div
-            className={`${styles["menu-card"]} ${isClosing ? styles["closing"] : ""}`}
-          >
-            <span className={styles["close-menu-btn"]} onClick={closeMenu}>
-              <div className={styles["close-menu-svg"]}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-x-icon lucide-x"
-                >
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
-              </div>
-            </span>
-            <h2>Выберите режим</h2>
-            <div className={styles["options"]}>
-              <div
-                className={styles["menu-btn"]}
-                onClick={() => foundGame("search")}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-square-user-icon lucide-square-user"
-                >
-                  <rect width="18" height="18" x="3" y="3" rx="2" />
-                  <circle cx="12" cy="10" r="3" />
-                  <path d="M7 21v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" />
-                </svg>
-
-                <span>Игрок против игрока</span>
-              </div>
-
-              <div
-                className={styles["menu-btn"]}
-                onClick={() => navigate("/bot-settings")}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 8V4H8" />
-                  <rect width="16" height="12" x="4" y="8" rx="2" />
-                  <path d="M2 14h2" />
-                  <path d="M20 14h2" />
-                  <path d="M15 13v2" />
-                  <path d="M9 13v2" />
-                </svg>
-                <span>Игрок против бота</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {isGameFound && (
-        <div className={styles["game-search-container"]}>
-          <div className={styles["game-search-content"]}>
-            <div className={styles["game-search-info"]}>
-              <div className={styles["game-search-info-content"]}>
-                <div className={styles["game-search-search-type"]}>
-                  <span className={styles["text"]}>Поиск игроков</span>
-                </div>
-
-                <div
-                  className={`${styles["game-search-info-text"]} ${styles["waiting-time"]}`}
-                >
-                  <span className={styles["search-text"]}>
-                    Среднее время ожидания
-                  </span>
-                  <span className={styles["search-timer"]}>50 с</span>
-                </div>
-
-                <div
-                  className={`${styles["game-search-info-text"]} ${styles["current-waiting-time"]}`}
-                >
-                  <span className={styles["search-text"]}>
-                    Текущее время ожидания
-                  </span>
-                  <span className={styles["search-timer"]}>
-                    {gameFountTimerFormat(seconds)}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className={styles["game-search-actions"]}>
-              <button onClick={() => foundGame("cancel")}>Отмена</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Footer />
     </div>
   );
 };

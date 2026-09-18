@@ -66,6 +66,9 @@ export default function usePageRender<T extends Record<string, any>>(
       .then((response) => {
         setData(response.data);
         setError(null);
+        if (window.location.pathname !== "/play") {
+          sessionStorage.setItem("active_tab", "play:main");
+        }
         if (!active_session) {
           setLoading(true);
           return;
@@ -159,7 +162,7 @@ export default function usePageRender<T extends Record<string, any>>(
       socket.off("user_register");
       socket.off("error_handler");
       socket.disconnect();
-      console.log("Сокет отключен, подписки сняты");
+      console.log("Сокет PageRender отключен, подписки сняты");
     };
   }, [data]);
 

@@ -3,16 +3,16 @@ import { Toaster } from "react-hot-toast";
 
 import { SignInPage } from "./pages/AuthPage/SignIn.tsx";
 
-import { MainPage } from "./pages/MainPage/Main";
+import { MainPage } from "./pages/MainPage/Main.tsx";
 
 import { HelpCenterPage } from "./pages/HelpCenterPage/HelpCenter.tsx";
 
-import { ProfilePage } from "./pages/ProfilePage/Profile.tsx";
+// import { ProfilePage } from "./pages/PlayPage/ProfilePage/Profile.tsx";
 
 import { BotSettingsPage } from "./pages/BotSettingsPage/BotSettings.tsx";
 
 import { GameSettingsPage } from "./pages/GameSettingsPage/GameSettings.tsx";
-import { GamePage } from "./pages/GamePage/Game.tsx";
+import { GamePage } from "./pages/PlayPage/GamePage/Game.tsx";
 
 import { HowToPlayPage } from "./pages/RulePages/HowToPlay.tsx";
 import { TermsOfUsePage } from "./pages/RulePages/TermsOfUse.tsx";
@@ -28,13 +28,19 @@ import { AdminPanelPage } from "./pages/AdminPages/AdminPanel/AdminPanel.tsx";
 // import { EditBlogPage } from "./pages/AdminPages/BlogRedaction/EditBlog/EditBlogPage.tsx";
 
 import { ErrorPage } from "./pages/ErrorPage/Error.tsx";
-import { ShopPage } from "./pages/ShopPage/Shop.tsx";
-import { CasesPage } from "./pages/CasesPage/Cases.tsx";
+// import { ShopPage } from "./pages/PlayPage/ShopPage/Shop.tsx";
+// import { CasesPage } from "./pages/PlayPage/CasesPage/Cases.tsx";
+// import { SettingsPage } from "./pages/SettingsPage/SettingsPanel/SettingsPanel.tsx";
+import { PlayPage } from "./pages/PlayPage/Play/Play.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainPage title="MCB | Главная" />,
+  },
+  {
+    path: "/play",
+    element: <PlayPage title="Meme Card Battle" />,
   },
   {
     path: "/auth/sign-in",
@@ -44,18 +50,22 @@ const router = createBrowserRouter([
     path: "/help-center",
     element: <HelpCenterPage title="MCB | Справочный центр" />,
   },
-  {
-    path: "/profile",
-    element: <ProfilePage title="MCB | Профиль" />,
-  },
-  {
-    path: "/cases",
-    element: <CasesPage title="MCB | Кейсы" />,
-  },
-  {
-    path: "/shop",
-    element: <ShopPage title="MCB | Магазин" />,
-  },
+  // {
+  //   path: "/profile",
+  //   element: <ProfilePage title="MCB | Профиль" />,
+  // },
+  // {
+  //   path: "/cases",
+  //   element: <CasesPage title="MCB | Кейсы" />,
+  // },
+  // {
+  //   path: "/shop",
+  //   element: <ShopPage title="MCB | Магазин" />,
+  // },
+  // {
+  //   path: "/settings",
+  //   element: <SettingsPage title="MCB | Настройки" />,
+  // },
   {
     path: "/how-to-play",
     element: <HowToPlayPage title="MCB | Как играть" />,

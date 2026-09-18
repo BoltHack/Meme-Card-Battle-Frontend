@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import CardDesk_styles from "./Card.Desk_styles.module.css";
 import Menus_styles from "./Card.Menu_styles.module.css";
 
-import api from "../../api/api.ts";
+import api from "../../../api/api.ts";
 
 import { ActionData } from "./Game_Menus.tsx";
 

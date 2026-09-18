@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.Cases.module.css";
-import CardsDesign_styles from "../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
+import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../api/api.ts";
-import usePageRender from "../../tools/PageRender.ts";
-import { LoadingPage } from "../LoadingPage/Loading.tsx";
-import { ErrorPage } from "../ErrorPage/Error.tsx";
+import api from "../../../api/api.ts";
+import usePageRender from "../../../tools/PageRender.ts";
+import { LoadingPage } from "../../LoadingPage/Loading.tsx";
+import { ErrorPage } from "../../ErrorPage/Error.tsx";
 
-// import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
-import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
 import toast from "react-hot-toast";
 
 interface CardsPost {
@@ -26,11 +23,7 @@ interface CardsPost {
   keys: string;
 }
 
-interface TitleSettings {
-  title: string;
-}
-
-export const CasesPage = ({ title }: TitleSettings) => {
+export const CasesPage = () => {
   const [cases, setCases] = useState<CardsPost[]>([]);
 
   const [isOpenCase, setIsOpenCase] = useState<string | "">("");
@@ -131,13 +124,7 @@ export const CasesPage = ({ title }: TitleSettings) => {
   if (error) return <ErrorPage error={error} />;
 
   return (
-    <div className={styles["body-wrapper"]}>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
-
-      <Header />
-
+    <>
       <div className={styles["animation-wrapper"]}>
         {cases && cases.length > 0
           ? cases.map((cs) => {
@@ -254,6 +241,6 @@ export const CasesPage = ({ title }: TitleSettings) => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };

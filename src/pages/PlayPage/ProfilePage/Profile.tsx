@@ -1,25 +1,19 @@
 import { ChangeEvent, useRef, useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.Profile.module.css";
-import CardsDesign_styles from "../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
+import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../api/api.ts";
+import api from "../../../api/api.ts";
 
-import usePageRender from "../../tools/PageRender.ts";
-import { LoadingPage } from "../LoadingPage/Loading.tsx";
-import { DefaultLoading } from "../LoadingPage/DefaultLoading.tsx";
-import { ErrorPage } from "../ErrorPage/Error.tsx";
+import usePageRender from "../../../tools/PageRender.ts";
+import { LoadingPage } from "../../LoadingPage/Loading.tsx";
+import { DefaultLoading } from "../../LoadingPage/DefaultLoading.tsx";
+import { ErrorPage } from "../../ErrorPage/Error.tsx";
 
-import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
-import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
-
-interface TitleSettings {
-  title: string;
-}
+// import { Header } from "../Header/Header.tsx";
 
 interface RenderData {
   card_id: string;
@@ -49,7 +43,7 @@ interface PlayerData {
   stats: StatsData;
 }
 
-export const ProfilePage = ({ title }: TitleSettings) => {
+export const ProfilePage = () => {
   const [cards, setCards] = useState<RenderData[]>([]);
   const [cardsCount, setCardsCount] = useState<number>(0);
 
@@ -69,15 +63,15 @@ export const ProfilePage = ({ title }: TitleSettings) => {
     `${api.API_BASE_URL}/api/profile`,
   );
 
-  const formattedCurrency = (count: number): string => {
-    const formattedCount = new Intl.NumberFormat("en-US", {
-      notation: "compact",
-      compactDisplay: "short",
-      maximumFractionDigits: 1,
-    }).format(count);
+  // const formattedCurrency = (count: number): string => {
+  //   const formattedCount = new Intl.NumberFormat("en-US", {
+  //     notation: "compact",
+  //     compactDisplay: "short",
+  //     maximumFractionDigits: 1,
+  //   }).format(count);
 
-    return formattedCount.toLowerCase();
-  };
+  //   return formattedCount.toLowerCase();
+  // };
 
   let updatedState = {
     search_value: "",
@@ -190,13 +184,7 @@ export const ProfilePage = ({ title }: TitleSettings) => {
   if (error) return <ErrorPage error={error} />;
 
   return (
-    <div className={styles["body-wrapper"]}>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
-
-      <Header />
-
+    <div className={styles["body"]}>
       <div className={styles["container"]}>
         <header className={styles["header-panel"]}>
           <div className={styles["user-block"]}>
@@ -209,19 +197,19 @@ export const ProfilePage = ({ title }: TitleSettings) => {
                 <div className={styles["username"]}>{data?.name}</div>
               </div>
 
-              <div className={styles["user-level"]}>
+              {/* <div className={styles["user-level"]}>
                 <span className={styles["level-badge"]}>LVL {stats?.lvl}</span>
                 <div
                   className={styles["level-bar-bg"]}
                   title="Опыт до следующего уровня"
                 >
-                  {/*<div className={styles["level-bar-fill"]} style={{ width: "65%" }}></div>*/}
+                  <div className={styles["level-bar-fill"]} style={{ width: "65%" }}></div>
                   <div
                     className={styles["level-bar-fill"]}
                     style={{ width: `${stats?.lvl}%` }}
                   ></div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className={styles["progress-container-row"]}>
@@ -249,7 +237,7 @@ export const ProfilePage = ({ title }: TitleSettings) => {
           </div>
 
           <div className={styles["balance-container"]}>
-            <div className={`${styles["balance-item"]} ${styles["coins"]}`}>
+            {/* <div className={`${styles["balance-item"]} ${styles["coins"]}`}>
               <span className={styles["currency-icon"]}>
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://w3.org">
                   <defs>
@@ -330,7 +318,7 @@ export const ProfilePage = ({ title }: TitleSettings) => {
               <span className={styles["currency-amount"]}>
                 {formattedCurrency(stats?.money)}
               </span>
-            </div>
+            </div> */}
 
             <div className={`${styles["balance-item"]} ${styles["power"]}`}>
               <span className={styles["currency-icon"]}>
@@ -563,8 +551,6 @@ export const ProfilePage = ({ title }: TitleSettings) => {
           )}
         </main>
       </div>
-
-      <Footer />
     </div>
   );
 };

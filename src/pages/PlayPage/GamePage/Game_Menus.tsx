@@ -5,9 +5,9 @@ import { Game_CardDesk } from "./Game_CardDesk.tsx";
 
 import Menus_styles from "./Card.Menu_styles.module.css";
 import CardDesk_styles from "./Card.Desk_styles.module.css";
-import CardsDesign_styles from "../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
+import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 
-import api from "../../api/api.ts";
+import api from "../../../api/api.ts";
 import toast from "react-hot-toast";
 
 interface CardData {
@@ -71,6 +71,8 @@ interface TitleSettings {
   damageAnimation: string | null;
 }
 
+import { playFunctions } from "../Play/Play.tsx";
+
 export const Game_Menus = ({
   playerCard,
   socket,
@@ -91,8 +93,6 @@ export const Game_Menus = ({
   setIsBlock,
   damageAnimation,
 }: TitleSettings) => {
-  const navigate = useNavigate();
-
   const [isOpen, setIsOpen] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
 
@@ -137,7 +137,8 @@ export const Game_Menus = ({
 
   const leaveGame = () => {
     setIsBlock(false);
-    setTimeout(() => navigate("/"), 500);
+    playFunctions.handleChangeTab("play:main");
+    setTimeout(() => window.location.reload(), 100);
   };
 
   const toggleMenu = () => {

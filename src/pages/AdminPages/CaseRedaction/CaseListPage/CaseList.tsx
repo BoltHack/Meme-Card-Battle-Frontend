@@ -21,6 +21,7 @@ interface CasePost {
   _id: string;
   name: string;
   rarity: string;
+  priority: string;
 }
 
 // interface CardResponse {
@@ -134,56 +135,58 @@ export const CaseListPage = () => {
 
       <section className={styles["posts-grid-section"]}>
         {caseList && caseList.length > 0 ? (
-          caseList.map((caseItem, index) => {
-            return (
-              <article key={index} className={styles["grid-card"]}>
-                <div className={styles["card-body"]}>
-                  <h3>{caseItem.name}</h3>
-                  <p>Тип: {caseItem.rarity}</p>
-                  <p>id: {caseItem._id}</p>
-                  <ul className={styles["actions-menu"]}>
-                    <li className={styles["actions-menu-btn"]}>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          adminNavigator.handleChangeTab(
-                            `case:editData:id_${caseItem._id.toString()}`,
-                          )
-                        }
-                      >
-                        Данные
-                      </button>
-                    </li>
-                    <li className={styles["actions-menu-btn"]}>
-                      <button
-                        type="button"
-                        onClick={
-                          () =>
+          caseList
+            .sort((a, b) => a.priority.localeCompare(b.priority))
+            .map((caseItem, index) => {
+              return (
+                <article key={index} className={styles["grid-card"]}>
+                  <div className={styles["card-body"]}>
+                    <h3>{caseItem.name}</h3>
+                    <p>Тип: {caseItem.rarity}</p>
+                    <p>id: {caseItem._id}</p>
+                    <p>Приоритет: {caseItem.priority}</p>
+                    <ul className={styles["actions-menu"]}>
+                      <li className={styles["actions-menu-btn"]}>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            adminNavigator.handleChangeTab(
+                              `case:editData:id_${caseItem._id.toString()}`,
+                            )
+                          }
+                        >
+                          Данные
+                        </button>
+                      </li>
+                      <li className={styles["actions-menu-btn"]}>
+                        <button
+                          type="button"
+                          onClick={() =>
                             adminNavigator.handleChangeTab(
                               `case:editContent:id_${caseItem._id.toString()}`,
                             )
-                        }
+                          }
+                        >
+                          Содержимое
+                        </button>
+                      </li>
+                      <li
+                        className={`${styles["actions-menu-btn"]} ${styles["remove-case-btn"]}`}
                       >
-                        Содержимое
-                      </button>
-                    </li>
-                    <li
-                      className={`${styles["actions-menu-btn"]} ${styles["remove-case-btn"]}`}
-                    >
-                      <button
-                        type="button"
-                        onClick={(e) =>
-                          setIsCaseDelete(caseItem._id.toString())
-                        }
-                      >
-                        Удалить
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </article>
-            );
-          })
+                        <button
+                          type="button"
+                          onClick={(e) =>
+                            setIsCaseDelete(caseItem._id.toString())
+                          }
+                        >
+                          Удалить
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </article>
+              );
+            })
         ) : (
           <p>База данных кейсов пуста.</p>
         )}

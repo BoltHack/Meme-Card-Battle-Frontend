@@ -13,7 +13,7 @@ import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 import toast from "react-hot-toast";
-import { CardSettingsPage } from "../CardSettingsPage/CardSettings.tsx";
+// import { CardSettingsPage } from "../CardSettingsPage/CardSettings.tsx";
 
 interface CardPost {
   card_id: string;

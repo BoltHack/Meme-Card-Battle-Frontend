@@ -1,24 +1,18 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.Shop.module.css";
-import CardsDesign_styles from "../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
+// import CardsDesign_styles from "../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../api/api.ts";
-import usePageRender from "../../tools/PageRender.ts";
-import { LoadingPage } from "../LoadingPage/Loading.tsx";
-import { ErrorPage } from "../ErrorPage/Error.tsx";
+import api from "../../../api/api.ts";
+import usePageRender from "../../../tools/PageRender.ts";
+import { LoadingPage } from "../../LoadingPage/Loading.tsx";
+import { ErrorPage } from "../../ErrorPage/Error.tsx";
 
-import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
-import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
 import toast from "react-hot-toast";
-
-interface TitleSettings {
-  title: string;
-}
+import { playFunctions } from "../Play/Play.tsx";
 
 interface CaseFormat {
   id: string;
@@ -26,14 +20,24 @@ interface CaseFormat {
   description: string;
   icon: string;
   rarity: string;
+  quantity: string;
   price: string;
+  prioriry: string;
 }
 
-export const ShopPage = ({ title }: TitleSettings) => {
+export const ShopPage = () => {
   const [cases, setCases] = useState<CaseFormat[]>([]);
+
+  const initialShopDataState = {
+    product: "",
+    quantity: 0,
+  };
+
+  const [shopData, setShopData] = useState(initialShopDataState);
+
   // const [caseContent, setCaseContent] = useState<[]>([]);
 
-  const [isCaseMenuOpen, setIsCaseMenuOpen] = useState<boolean | false>(false);
+  // const [isCaseMenuOpen, setIsCaseMenuOpen] = useState<boolean | false>(false);
 
   const [isCaseLoading, setIsCaseLoading] = useState<string | null>(null);
 
@@ -54,6 +58,11 @@ export const ShopPage = ({ title }: TitleSettings) => {
       if (response.data?.success) {
         toast.success(response.data?.success);
         setIsCaseLoading(null);
+        setShopData({
+          product: response.data.shopData.product,
+          quantity: response.data.shopData.quantity,
+        });
+        playFunctions.updateUserInfo(response.data.coins);
       }
       return response.data;
     } catch (error) {
@@ -110,13 +119,7 @@ export const ShopPage = ({ title }: TitleSettings) => {
   if (error) return <ErrorPage error={error} />;
 
   return (
-    <div className={styles["body-wrapper"]}>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
-
-      <Header />
-
+    <div className={styles["body"]}>
       <div className={styles["shop-container"]}>
         <header className={styles["shop-header"]}>
           <h1>Магазин</h1>
@@ -130,110 +133,119 @@ export const ShopPage = ({ title }: TitleSettings) => {
 
           <div className={styles["grid-content"]}>
             {cases && cases.length > 0
-              ? cases.map((cs, index) => {
-                  return (
-                    <section
-                      key={index}
-                      className={`${styles["case-card"]} ${styles["case-" + cs.rarity.toLowerCase(0)]}`}
-                    >
-                      <div className={styles["case-visual"]}>
-                        <div className={styles["glow-source"]}></div>
-                        <div className={styles["card-pack-3d"]}>
-                          <div
-                            className={`${styles["layer"]} ${styles["layer-3"]}`}
-                          ></div>
-                          <div
-                            className={`${styles["layer"]} ${styles["layer-2"]}`}
-                          ></div>
-                          <div
-                            className={`${styles["layer"]} ${styles["layer-1"]}`}
-                          >
+              ? cases
+                  .sort((a, b) => a.priority.localeCompare(b.priority))
+                  // .sort((a, b) => a.prioriry.localeCompare(b.prioriry))
+                  .map((cs, index) => {
+                    return (
+                      <section
+                        key={index}
+                        className={`${styles["case-card"]} ${styles["case-" + cs.rarity.toLowerCase()]}`}
+                      >
+                        <div className={styles["case-visual"]}>
+                          <div className={styles["glow-source"]}></div>
+                          <div className={styles["card-pack-3d"]}>
                             <div
-                              data-icon={cs.icon}
-                              className={`${styles["card-pattern"]} after:content-[attr(data-icon)]`}
+                              className={`${styles["layer"]} ${styles["layer-3"]}`}
                             ></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className={styles["case-info"]}>
-                        <span className={styles["badge"]}>{cs.rarity}</span>
-                        <h3>{cs.name}</h3>
-                        <p className={styles["case-desc"]}>{cs.description}</p>
-                        <div className={styles["case-footer"]}>
-                          <div className={styles["price-block"]}>
-                            <svg
-                              className={styles["currency-svg"]}
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://w3.org"
+                            <div
+                              className={`${styles["layer"]} ${styles["layer-2"]}`}
+                            ></div>
+                            <div
+                              className={`${styles["layer"]} ${styles["layer-1"]}`}
                             >
-                              <defs>
-                                <linearGradient
-                                  id="coinGrad"
-                                  x1="0%"
-                                  y1="0%"
-                                  x2="100%"
-                                  y2="100%"
-                                >
-                                  <stop offset="0%" stopColor="#fcd34d" />
-                                  <stop offset="50%" stopColor="#fbbf24" />
-                                  <stop offset="100%" stopColor="#b45309" />
-                                </linearGradient>
-                                <linearGradient
-                                  id="symbolGrad"
-                                  x1="0%"
-                                  y1="0%"
-                                  x2="0%"
-                                  y2="100%"
-                                >
-                                  <stop offset="0%" stopColor="#ffffff" />
-                                  <stop offset="100%" stopColor="#f59e0b" />
-                                </linearGradient>
-                              </defs>
-                              <circle
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="url(#coinGrad)"
-                                strokeWidth="2"
-                                fill="rgba(21, 9, 49, 0.6)"
-                              />
-                              <circle
-                                cx="12"
-                                cy="12"
-                                r="7"
-                                stroke="url(#coinGrad)"
-                                strokeWidth="1"
-                                strokeDasharray="2 1"
-                                fill="none"
-                              />
-                              <path
-                                d="M12 6L15 12L12 18L9 12L12 6Z"
-                                fill="url(#symbolGrad)"
-                              />
-                              <path
-                                d="M12 8L14 12L12 16L10 12L12 8Z"
-                                fill="#b45309"
-                                opacity="0.5"
-                              />
-                            </svg>
-                            <span className={styles["price"]}>{cs.price}</span>
+                              <div
+                                data-icon={cs.icon}
+                                className={`${styles["card-pattern"]} after:content-[attr(data-icon)]`}
+                              ></div>
+                            </div>
                           </div>
-                          <button
-                            className={styles["buy-btn"]}
-                            onClick={() => buyCase(cs.id)}
-                          >
-                            <span>
-                              {isCaseLoading === cs.id
-                                ? "Загрузка..."
-                                : "Купить"}
-                            </span>
-                          </button>
                         </div>
-                      </div>
-                    </section>
-                  );
-                })
+                        <div className={styles["case-info"]}>
+                          <span className={styles["badge"]}>{cs.rarity}</span>
+                          <h3>
+                            {cs.name} {cs.quantity} шт.
+                          </h3>
+                          <p className={styles["case-desc"]}>
+                            {cs.description}
+                          </p>
+                          <div className={styles["case-footer"]}>
+                            <div className={styles["price-block"]}>
+                              <svg
+                                className={styles["currency-svg"]}
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://w3.org"
+                              >
+                                <defs>
+                                  <linearGradient
+                                    id="coinGrad"
+                                    x1="0%"
+                                    y1="0%"
+                                    x2="100%"
+                                    y2="100%"
+                                  >
+                                    <stop offset="0%" stopColor="#fcd34d" />
+                                    <stop offset="50%" stopColor="#fbbf24" />
+                                    <stop offset="100%" stopColor="#b45309" />
+                                  </linearGradient>
+                                  <linearGradient
+                                    id="symbolGrad"
+                                    x1="0%"
+                                    y1="0%"
+                                    x2="0%"
+                                    y2="100%"
+                                  >
+                                    <stop offset="0%" stopColor="#ffffff" />
+                                    <stop offset="100%" stopColor="#f59e0b" />
+                                  </linearGradient>
+                                </defs>
+                                <circle
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="url(#coinGrad)"
+                                  strokeWidth="2"
+                                  fill="rgba(21, 9, 49, 0.6)"
+                                />
+                                <circle
+                                  cx="12"
+                                  cy="12"
+                                  r="7"
+                                  stroke="url(#coinGrad)"
+                                  strokeWidth="1"
+                                  strokeDasharray="2 1"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M12 6L15 12L12 18L9 12L12 6Z"
+                                  fill="url(#symbolGrad)"
+                                />
+                                <path
+                                  d="M12 8L14 12L12 16L10 12L12 8Z"
+                                  fill="#b45309"
+                                  opacity="0.5"
+                                />
+                              </svg>
+                              <span className={styles["price"]}>
+                                {cs.price}
+                              </span>
+                            </div>
+                            <button
+                              className={styles["buy-btn"]}
+                              onClick={() => buyCase(cs.id)}
+                            >
+                              <span>
+                                {isCaseLoading === cs.id
+                                  ? "Загрузка..."
+                                  : "Купить"}
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </section>
+                    );
+                  })
               : null}
 
             {/* <section
@@ -614,7 +626,7 @@ export const ShopPage = ({ title }: TitleSettings) => {
         })
       ): null} */}
 
-      {isCaseMenuOpen && (
+      {/* {isCaseMenuOpen && (
         <div
           className={`${styles["modal-overlay"]} ${styles["active"]}`}
           id="caseModal"
@@ -746,9 +758,65 @@ export const ShopPage = ({ title }: TitleSettings) => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
-      <Footer />
+      {shopData.product && (
+        <div className={styles["menu-wrapper"]}>
+          <div className={styles["shop-modal"]}>
+            <div className={styles["shop-modal-aside"]}>
+              <div className={styles["cart-icon-container"]}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-shopping-cart"
+                >
+                  <path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18" />
+                  <path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25" />
+                  <circle cx="18" cy="20" r="2" />
+                  <circle cx="8" cy="20" r="2" />
+                </svg>
+              </div>
+            </div>
+
+            <div className={styles["shop-modal-main"]}>
+              <button
+                className={styles["close-btn"]}
+                onClick={() => setShopData(initialShopDataState)}
+              >
+                &times;
+              </button>
+
+              <h2 className={styles["shop-modal-title"]}>
+                ПОКУПКА ПРОИЗВЕДЕНА УСПЕШНО
+              </h2>
+
+              <p className={styles["subtitle"]}>Вы приобрели:</p>
+
+              <div className={styles["purchase-item"]}>
+                <span className={styles["item-name"]}>{shopData.product}</span>
+                <span className={styles["item-count"]}>
+                  {shopData.quantity}
+                </span>
+              </div>
+
+              <div className={styles["button-container"]}>
+                <button
+                  className={styles["shop-action-btn"]}
+                  onClick={() => setShopData(initialShopDataState)}
+                >
+                  {/* <span className={styles["key-hin"]}>ENTER</span> */}
+                  ЗАКРЫТЬ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

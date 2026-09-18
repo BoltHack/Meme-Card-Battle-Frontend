@@ -19,7 +19,9 @@ interface CaseFormat {
   case_description: string;
   case_icon: string;
   case_rarity: string;
+  case_quantity: string;
   case_price: string;
+  case_priority: string;
 }
 
 export const CreateCasePage = () => {
@@ -28,7 +30,9 @@ export const CreateCasePage = () => {
     case_description: "",
     case_icon: "",
     case_rarity: "DEFAULT",
+    case_quantity: "",
     case_price: "",
+    case_priority: "",
   });
 
   const [back, setBack] = useState<boolean | false>(false);
@@ -60,7 +64,9 @@ export const CreateCasePage = () => {
     dataToSend.append("description", formData.case_description);
     dataToSend.append("icon", formData.case_icon);
     dataToSend.append("rarity", formData.case_rarity);
+    dataToSend.append("quantity", formData.case_quantity);
     dataToSend.append("price", formData.case_price);
+    dataToSend.append("priority", formData.case_priority);
 
     try {
       const response = await axios.post(
@@ -78,7 +84,9 @@ export const CreateCasePage = () => {
         case_description: "",
         case_icon: "",
         case_rarity: "DEFAULT",
+        case_quantity: "",
         case_price: "",
+        case_priority: "",
       });
 
       toast.success(response.data.success);
@@ -189,6 +197,25 @@ export const CreateCasePage = () => {
                 <option value="LEGENDARY">Легендарный</option>
               </select>
             </div>
+          </div>
+          <div className={styles["editor-right-side"]} style={{ marginTop: "0" }}>
+            <div className={styles["form-group"]}>
+              <label className={styles["form-label"]} htmlFor="case_quantity">
+                Количество
+              </label>
+              <input
+                type="number"
+                name="case_quantity"
+                id="case_quantity"
+                min="1"
+                onKeyDown={handleMinusNumber}
+                onChange={handleChange}
+                value={formData.case_quantity}
+                className={styles["form-input"]}
+                placeholder="Заполните форму..."
+                required
+              />
+            </div>
 
             <div className={styles["form-group"]}>
               <label className={styles["form-label"]} htmlFor="case_price">
@@ -202,6 +229,23 @@ export const CreateCasePage = () => {
                 onKeyDown={handleMinusNumber}
                 onChange={handleChange}
                 value={formData.case_price}
+                className={styles["form-input"]}
+                placeholder="Заполните форму..."
+                required
+              />
+            </div>
+            <div className={styles["form-group"]}>
+              <label className={styles["form-label"]} htmlFor="case_priority">
+                Приоритет
+              </label>
+              <input
+                type="number"
+                name="case_priority"
+                id="case_priority"
+                min="1"
+                onKeyDown={handleMinusNumber}
+                onChange={handleChange}
+                value={formData.case_priority}
                 className={styles["form-input"]}
                 placeholder="Заполните форму..."
                 required
