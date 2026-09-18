@@ -67,7 +67,7 @@ export const MainPage = ({ title }: TitleSettings) => {
       <Header />
 
       <section className={styles["hero"]}>
-        <div className={styles["parallax-body"]}></div>
+        {/* <div className={styles["parallax-body"]}></div> */}
         <div className={styles["parallax-wrapper"]}>
           <div className={styles["smoke-glow smoke-red"]}></div>
           <div className={styles["smoke-glow smoke-blue"]}></div>

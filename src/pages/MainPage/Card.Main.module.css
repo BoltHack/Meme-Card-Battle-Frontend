@@ -516,8 +516,8 @@
 .parallax-wrapper {
   font-family: "Impact", "Arial Black", sans-serif;
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 110%;
+  height: 110%;
   top: -5%;
   left: -5%;
   display: flex;
