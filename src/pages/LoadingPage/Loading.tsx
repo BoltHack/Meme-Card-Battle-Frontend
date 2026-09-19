@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import Cookies from "js-cookie";
 
 import styles from "./Card.Loading.module.css";
 
@@ -22,6 +23,9 @@ export const LoadingPage = () => {
     currentUrl.current !== null ? currentUrl.current : targetUrl!,
   );
 
+  const active_session = sessionStorage.getItem("active_session");
+  const active_session_cookies = Cookies.get("active_session");
+
   currentUrl.current = url;
 
   useEffect(() => {
@@ -38,8 +42,15 @@ export const LoadingPage = () => {
 
     const interval = setInterval(() => {
       refetch();
-      if (!sessionStorage.getItem("active_session")) {
-        sessionStorage.setItem("active_session", crypto.randomUUID());
+      if (!active_session && !active_session_cookies) {
+        const session_id = crypto.randomUUID();
+        sessionStorage.setItem("active_session", session_id);
+        Cookies.set("active_session", session_id, {
+          expires: new Date(new Date().getTime() + 15 * 60 * 1000),
+          path: "/",
+          secure: true,
+          sameSite: "strict",
+        });
       }
     }, 5000);
 

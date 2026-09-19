@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { io, Socket } from "socket.io-client";
+import Cookies from "js-cookie";
 
 import api from "../api/api.ts";
 
@@ -22,6 +23,7 @@ export default function usePageRender<T extends Record<string, any>>(
   // options: { enabled: boolean } = { enabled: true }
 ) {
   const active_session = sessionStorage.getItem("active_session");
+  const active_session_cookies = Cookies.get("active_session");
 
   const navigate = useNavigate();
 
@@ -69,7 +71,7 @@ export default function usePageRender<T extends Record<string, any>>(
         if (window.location.pathname !== "/play") {
           sessionStorage.setItem("active_tab", "play:main");
         }
-        if (!active_session) {
+        if (!active_session && !active_session_cookies) {
           setLoading(true);
           return;
         }
