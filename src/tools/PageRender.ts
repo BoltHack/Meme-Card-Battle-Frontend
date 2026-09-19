@@ -22,9 +22,6 @@ export default function usePageRender<T extends Record<string, any>>(
   url: string,
   // options: { enabled: boolean } = { enabled: true }
 ) {
-  const active_session = sessionStorage.getItem("active_session");
-  const active_session_cookies = Cookies.get("active_session");
-
   const navigate = useNavigate();
 
   const [data, setData] = useState<T | null>(null);
@@ -59,7 +56,11 @@ export default function usePageRender<T extends Record<string, any>>(
     // console.log("requestKey", requestKey);
     // console.log("\nrequestKey\n", requestKey);
 
+    const active_session = sessionStorage.getItem("active_session");
+    const active_session_cookies = Cookies.get("active_session");
     const controller = new AbortController();
+
+    setLoading(true);
 
     axios
       .get<T>(url, {
@@ -72,7 +73,7 @@ export default function usePageRender<T extends Record<string, any>>(
           sessionStorage.setItem("active_tab", "play:main");
         }
         if (!active_session && !active_session_cookies) {
-          setLoading(true);
+          // setLoading(true);
           return;
         }
         setLoading(false);
@@ -93,10 +94,11 @@ export default function usePageRender<T extends Record<string, any>>(
 
         setLoading(false);
 
-        const errorMessage = err.response.data.error;
-        // const errorStatus = err.response.status;
+        const errorMessage =
+          err.response?.data?.error || err.message || "Unknown error";
+        const status = err.response?.status;
 
-        if (err.response?.status === 401) {
+        if (status === 401) {
           if (!window.location.pathname.startsWith("/admin/")) {
             navigate("/auth/sign-in");
           } else {
@@ -106,11 +108,11 @@ export default function usePageRender<T extends Record<string, any>>(
           return;
           // if (localStorage.getItem("token")) localStorage.removeItem("token");
         }
-        if (err.response?.status === 403) {
+        if (status === 403) {
           navigate("/");
           return;
         }
-        if (err.response?.status === 404) {
+        if (status === 404) {
           setLoading(false);
           setError({ code: 404, message: errorMessage });
           if (trigger > 0) {
@@ -118,11 +120,10 @@ export default function usePageRender<T extends Record<string, any>>(
           }
           return;
         }
-        if (err.response?.status) {
-          console.log("err.response?.status", err.response?.status);
+        if (status) {
           setLoading(false);
           setError({
-            code: Number(err.response?.status),
+            code: status,
             message: errorMessage,
           });
           return;
@@ -138,7 +139,9 @@ export default function usePageRender<T extends Record<string, any>>(
   }, [url, navigate, trigger]);
 
   useEffect(() => {
-    if (!data || !data.id) return;
+    // if (!data || !data.id) return;
+    const dataObj = data as Record<string, any> | null;
+    if (!dataObj || !dataObj.id) return;
 
     socket.connect();
 

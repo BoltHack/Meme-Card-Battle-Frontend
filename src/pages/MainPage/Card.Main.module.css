@@ -19,6 +19,8 @@
 }
 
 .news-href {
+  max-width: 155px;
+  width: 100%;
   text-transform: uppercase;
   text-decoration: none;
   color: #fff;

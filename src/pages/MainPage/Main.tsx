@@ -177,8 +177,8 @@ export const MainPage = ({ title }: TitleSettings) => {
                           : blog.title}
                       </h3>
                       <p>
-                        {blog.description.length > 140
-                          ? blog.description.slice(0, 140) + "..."
+                        {blog.description.length > 155
+                          ? blog.description.slice(0, 155) + "..."
                           : blog.description}
                       </p>
                       <a
