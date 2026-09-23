@@ -117,7 +117,12 @@ export const LoadingPage = () => {
 
         <div className={styles["epic-title"]}>
           <h1>MCB</h1>
-          <p>Загрузка данных...</p>
+          <p>
+            {!active_session && !active_session_cookies
+              ? "Проверка браузера"
+              : "Загрузка данных"}
+            ...
+          </p>
           <div className={styles["loader"]}></div>
         </div>
       </div>
