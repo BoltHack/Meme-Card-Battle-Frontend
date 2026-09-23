@@ -26,7 +26,11 @@ interface CardsPost {
 export const CasesPage = () => {
   const [cases, setCases] = useState<CardsPost[]>([]);
 
+  const [currentCase, setCurrentCase] = useState<string | "">("default");
+
+  const [loadingBtn, setLoadingBtn] = useState<boolean | false>(false);
   const [isOpenCase, setIsOpenCase] = useState<string | "">("");
+
   const [reward, setReward] = useState<boolean | false>(false);
   const [menuType, setMenuType] = useState<string | "">("");
 
@@ -47,8 +51,7 @@ export const CasesPage = () => {
   );
 
   const openCase = async (case_id: string) => {
-    console.log("case_id", case_id);
-    // setIsCaseLoading(case_id);
+    setLoadingBtn(true);
     if (isOpenCase !== "") return;
     try {
       const response = await axios.post(
@@ -59,6 +62,7 @@ export const CasesPage = () => {
       );
 
       if (response.data?.success) {
+        setLoadingBtn(false);
         const card = response.data.card;
         const updatedCase = cases.map((cs) => {
           if (cs.id.toString() === case_id.toString()) {
@@ -124,44 +128,96 @@ export const CasesPage = () => {
   if (error) return <ErrorPage error={error} />;
 
   return (
-    <>
+    <div style={{ userSelect: "none" }}>
+      {!isOpenCase && (
+        <header className={styles["header-container"]}>
+          <div className={styles["header-content"]}>
+            {cases && cases.length > 0
+              ? cases.map((cs, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className={styles["header-btn"]}
+                      onClick={() => setCurrentCase(cs.rarity.toLowerCase())}
+                    >
+                      <div className={styles["case-btn-info"]}>
+                        <span
+                          className={`${styles["case-name"]} ${styles[currentCase === cs.rarity.toLowerCase() ? "case-selected" : ""]}`}
+                        >
+                          {cs?.name.replace("кейс", "")}
+                        </span>
+                        <span className={styles["case-count"]}>{cs?.keys}</span>
+                      </div>
+                      {currentCase === cs.rarity.toLowerCase() && (
+                        <div className={styles["case-btn-line"]}></div>
+                      )}
+                      {/* <span
+                      className={`${styles["case-btn-info"]} ${styles["case-count"]}`}
+                    >
+                      {cs?.keys}
+                    </span> */}
+                    </div>
+                  );
+                })
+              : null}
+          </div>
+        </header>
+      )}
+
       <div className={styles["animation-wrapper"]}>
         {cases && cases.length > 0
-          ? cases.map((cs) => {
-              return (
-                <div
-                  key={cs?.id}
-                  className={`${styles["scene"]} ${styles[isOpenCase === cs?.id ? "opened" : ""]}`}
-                >
-                  <div className={styles["platform"]}>
-                    <span>Ключей: {cs?.keys}</span>
-                    <div className={styles["platform-line"]}></div>
-                  </div>
+          ? cases
+              .filter((cs) => cs.rarity.toLowerCase() === currentCase)
+              .map((cs) => {
+                return (
                   <div
-                    className={styles["light-beam"]}
-                    style={{
-                      background: `var(--${isOpenCase === cs?.id ? rewardCard?.lvl_name.toLowerCase() : ""}-light)`,
-                    }}
-                  ></div>
-
-                  <div
-                    className={styles["container-box"]}
-                    onClick={() => openCase(cs?.id)}
+                    key={cs?.id}
+                    className={`${styles["scene"]} ${styles[isOpenCase === cs?.id ? "opened" : ""]}`}
                   >
-                    <div className={styles["badge"]}>
-                      <div className={styles["badge-icon"]}>{cs?.icon}</div>
-                    </div>
-                    <div className={`${styles["gate"]} ${styles["gate-top"]}`}>
-                      <div className={styles["neon-line"]}></div>
+                    <div className={styles["platform"]}>
+                      <div className={styles["platform-info"]}>
+                        {/* <span>{cs?.name}</span> */}
+                        {/* <span>Ключей: {cs?.keys}</span> */}
+                        {!isOpenCase &&
+                          (Number(cs.keys) > 0 ? (
+                            <button
+                              className={styles["open-case-btn"]}
+                              disabled={isOpenCase ? true : false}
+                              onClick={() => openCase(cs?.id)}
+                            >
+                              {loadingBtn ? "Загрузка..." : "Открыть кейс"}
+                            </button>
+                          ) : (
+                            <span>Ключи отсутствуют</span>
+                          ))}
+                        <br />
+                      </div>
+                      <div className={styles["platform-line"]}></div>
                     </div>
                     <div
-                      className={`${styles["gate"]} ${styles["gate-bottom"]}`}
+                      className={styles["light-beam"]}
+                      style={{
+                        background: `var(--${isOpenCase === cs?.id ? rewardCard?.lvl_name.toLowerCase() : ""}-light)`,
+                      }}
                     ></div>
-                    <div className={styles["neon-line"]}></div>
+
+                    <div className={styles["container-box"]}>
+                      <div className={styles["badge"]}>
+                        <div className={styles["badge-icon"]}>{cs?.icon}</div>
+                      </div>
+                      <div
+                        className={`${styles["gate"]} ${styles["gate-top"]}`}
+                      >
+                        <div className={styles["neon-line"]}></div>
+                      </div>
+                      <div
+                        className={`${styles["gate"]} ${styles["gate-bottom"]}`}
+                      ></div>
+                      <div className={styles["neon-line"]}></div>
+                    </div>
                   </div>
-                </div>
-              );
-            })
+                );
+              })
           : null}
       </div>
 
@@ -241,6 +297,6 @@ export const CasesPage = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };

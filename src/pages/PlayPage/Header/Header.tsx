@@ -66,12 +66,12 @@ export const Header = ({ activeTab, userInfo }: Props) => {
   };
 
   const formattedCurrency = (count: number): string => {
-    const formattedCount = new Intl.NumberFormat("en-US", {
+    const formattedCount = new Intl.NumberFormat("de-DE", {
       notation: "standard",
-      compactDisplay: "short",
+      // compactDisplay: "short",
       maximumFractionDigits: 1,
-    }).format(count);
-
+    })
+      .format(count);
     return formattedCount.toLowerCase();
   };
 
