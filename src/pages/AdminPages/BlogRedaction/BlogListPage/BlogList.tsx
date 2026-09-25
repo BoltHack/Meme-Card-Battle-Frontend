@@ -232,7 +232,7 @@ export const BlogListPage = () => {
                       Редактировать
                     </button>
                   </li>
-                  <li>
+                  <li className={styles["remove-blog-btn"]}>
                     <button
                       type="button"
                       onClick={() =>
@@ -311,7 +311,7 @@ export const BlogListPage = () => {
                           Редактировать
                         </button>
                       </li>
-                      <li>
+                      <li className={styles["remove-blog-btn"]}>
                         <button
                           type="button"
                           onClick={() =>

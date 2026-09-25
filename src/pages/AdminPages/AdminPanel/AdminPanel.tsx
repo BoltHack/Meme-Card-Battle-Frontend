@@ -33,6 +33,11 @@ import { EditDataPage } from "../CaseRedaction/EditCasePage/EditData.tsx";
 import { EditContentPage } from "../CaseRedaction/EditCasePage/EditContent.tsx";
 import { EditBlogPage } from "../BlogRedaction/EditBlogPage/EditBlog.tsx";
 
+import { LinksSettingsPage } from "../LinksRedaction/LinksSettingsPage/LinksSettings.tsx";
+import { CreateLinkPage } from "../LinksRedaction/CreateLinkPage/CreateLink.tsx";
+import { LinksListPage } from "../LinksRedaction/LinksListPage/LinksList.tsx";
+import { EditLinkPage } from "../LinksRedaction/EditLinkPage/EditLink.tsx";
+
 interface titleSettings {
   title: string;
 }
@@ -66,6 +71,7 @@ const CaseRedaction = [
   "case:editData",
   "case:editContent",
 ];
+const LinksRedaction = ["links:settings", "links:list", "links:create", "links:edit"];
 
 export const adminNavigator = {
   handleChangeTab: (tab: string) => {},
@@ -213,6 +219,29 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
             </li>
             <li>
               <div
+                className={`${styles["menu-link"]} ${LinksRedaction.includes(activeTab) && styles["active"]}`}
+                onClick={() => setActiveTab(LinksRedaction[0])}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-link preview-icon"
+                >
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                </svg>
+                Ссылки (Настройка)
+              </div>
+            </li>
+            <li>
+              <div
                 className={`${styles["menu-link"]} ${activeTab === "LogsPage" && styles["active"]}`}
                 onClick={() => setActiveTab("LogsPage")}
               >
@@ -292,6 +321,11 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
         {activeTab === CaseRedaction[4] && (
           <EditContentPage case_id={edit_id} />
         )}
+
+        {activeTab === LinksRedaction[0] && <LinksSettingsPage />}
+        {activeTab === LinksRedaction[1] && <LinksListPage />}
+        {activeTab === LinksRedaction[2] && <CreateLinkPage />}
+        {activeTab === LinksRedaction[3] && <EditLinkPage link_id={edit_id} />}
 
         {activeTab === "LogsPage" && <LogsPage />}
         {activeTab === "SettingsPage" && <SettingsPage />}

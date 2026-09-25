@@ -1,0 +1,20 @@
+.remove-link-btn {
+  margin-left: auto;
+}
+.remove-link-btn button:hover {
+  color: #a52525;
+}
+
+.link-container {
+  margin: 0;
+  padding: 0;
+}
+.link-container ul {
+  margin-top: -60px;
+  padding: 50px;
+}
+.link-card {
+  display: flex;
+  flex-direction: row-reverse;
+  width: 100%;
+}

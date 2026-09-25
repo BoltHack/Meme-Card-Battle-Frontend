@@ -126,7 +126,6 @@ export const CardListPage = () => {
       </header>
 
       <a
-        href="#"
         className={admin_styles["on-back"]}
         onClick={() => adminNavigator.handleChangeTab("card:settings")}
       >

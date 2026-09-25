@@ -118,7 +118,6 @@ export const CreateCasePage = () => {
       </header>
 
       <a
-        href="#"
         className={admin_styles["on-back"]}
         onClick={() => setBack(true)}
       >

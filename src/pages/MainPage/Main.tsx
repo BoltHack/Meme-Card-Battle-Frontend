@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { sanitize } from "isomorphic-dompurify";
 
 import styles from "./Card.Main.module.css";
 
@@ -13,7 +14,6 @@ import usePageRender from "../../tools/PageRender.ts";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
-import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 
 interface BlogPost {
   author: string;
@@ -25,12 +25,22 @@ interface BlogPost {
   id: string;
 }
 
+interface LinksPost {
+  id: string;
+  name: string;
+  link: string;
+  icon: string;
+  priority: number;
+  mainpriority: boolean;
+}
+
 interface TitleSettings {
   title: string;
 }
 
 export const MainPage = ({ title }: TitleSettings) => {
   const [mainBlog, setMainBlog] = useState<BlogPost[]>([]);
+  const [mainLinks, setMainLinks] = useState<LinksPost[]>([]);
 
   const { data, loading, error } = usePageRender(`${api.API_BASE_URL}/api/`);
 
@@ -51,7 +61,8 @@ export const MainPage = ({ title }: TitleSettings) => {
       );
     }
 
-    setMainBlog(data?.renderData);
+    setMainBlog(data?.renderData.blogData);
+    setMainLinks(data?.renderData.linksData);
     console.log("data", data);
   }, [data]);
 
@@ -199,7 +210,47 @@ export const MainPage = ({ title }: TitleSettings) => {
           <div className={styles["social-title"]}>Следи за новостями игры</div>
 
           <div className={styles["social-grid"]}>
-            <a href="#" className={styles["social-card"]}>
+            {mainLinks && mainLinks.length > 0
+              ? mainLinks
+                  .sort((a, b) =>
+                    a.priority.toString().localeCompare(b.priority.toString()),
+                  )
+                  .map((lk) => {
+                    return (
+                      <a
+                        key={lk.id}
+                        href={lk.link}
+                        target="_blank"
+                        className={styles["social-card"]}
+                      >
+                        <svg
+                          className={styles["arrow-icon"]}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="none"
+                            d="M5 19L19 5M19 5H10M19 5V14"
+                            stroke="#fff"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+
+                        {lk.icon && (
+                          <img
+                            className={styles["platform-icon"]}
+                            src={`${api.API_BASE_URL}/${lk.icon}`}
+                            alt="Platform icon"
+                          />
+                        )}
+
+                        <span>{lk.name}</span>
+                      </a>
+                    );
+                  })
+              : null}
+            {/* <a href="#" target="_blank" className={styles["social-card"]}>
               <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
                 <path
                   fill="none"
@@ -210,9 +261,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                   strokeLinejoin="round"
                 />
               </svg>
-              {/* <svg className={styles["platform-icon"]} viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1 .22-1.62.15-.15 2.7-2.46 2.75-2.67.01-.03.01-.15-.06-.21a.25.25 0 0 0-.22-.04c-.3.07-5.02 3.19-5.12 3.26-.2.13-.39.2-.57.19-.2 0-.58-.1-.86-.2-.35-.11-.63-.17-.6-.36.02-.1.15-.2.38-.3 1.48-.65 4.93-2.12 10.35-4.46.94-.38 1.13-.35 1.25-.13.04.07.05.17.02.32z" />
-              </svg> */}
+
               <svg
                 className={styles["platform-icon"]}
                 xmlns="http://www.w3.org/2000/svg"
@@ -228,10 +277,10 @@ export const MainPage = ({ title }: TitleSettings) => {
                   fill="#BFD5FF"
                 />
               </svg>
-              <span>Telegram</span>
-            </a>
+              <span className={styles["card-name"]}>Telegram</span>
+            </a> */}
 
-            <a href="#" className={styles["social-card"]}>
+            {/* <a href="#" target="_blank" className={styles["social-card"]}>
               <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
                 <path
                   fill="none"
@@ -242,9 +291,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                   strokeLinejoin="round"
                 />
               </svg>
-              {/* <svg className={styles["platform-icon"]} viewBox="0 0 24 24">
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2.4 9.1c.3.3.7.6 1.1.9.4.4.5.8.2.9-.3.1-.7.1-1.1.1-.4 0-.8-.1-1.1-.3-.3-.2-.5-.5-.8-.8-.4-.4-.7-.5-1-.5h-.3v2c0 .3-.1.4-.4.4h-.6c-1.3 0-2.4-.5-3.3-1.4-.9-.9-1.5-2.1-1.8-3.5 0-.2.1-.3.3-.3h1.2c.3 0 .4.1.4.3.2.7.5 1.3.9 1.8.3.3.6.5.8.5.1 0 .2-.1.2-.3v-2.1c0-.4-.2-.5-.5-.5h-.3c-.1 0-.2-.1-.1-.2.1-.2.4-.4.8-.4h1.2c.3 0 .4.1.4.4v2.5c0 .2.1.3.2.3.1 0 .2-.1.3-.2.5-.7.8-1.4 1-2.2 0-.2.2-.3.4-.3h1.2c.2 0 .3 0 .3.2-.2.8-.6 1.5-1.1 2.1-.2.2-.2.3 0 .5z" />
-              </svg> */}
+
               <svg
                 className={styles["platform-icon"]}
                 xmlns="http://www.w3.org/2000/svg"
@@ -261,9 +308,9 @@ export const MainPage = ({ title }: TitleSettings) => {
                 />
               </svg>
               <span>Вконтакте</span>
-            </a>
+            </a> */}
 
-            <a href="#" className={styles["social-card"]}>
+            {/* <a href="#" target="_blank" className={styles["social-card"]}>
               <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
                 <path
                   fill="none"
@@ -274,9 +321,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                   strokeLinejoin="round"
                 />
               </svg>
-              {/* <svg className={styles["platform-icon"]} viewBox="0 0 24 24">
-                <path d="M19.27 4.73a16.13 16.13 0 0 0-3.97-1.23.08.08 0 0 0-.08.04c-.17.31-.36.71-.49 1.03a14.86 14.86 0 0 0-4.46 0c-.13-.32-.33-.72-.51-1.03a.08.08 0 0 0-.08-.04 16.09 16.09 0 0 0-3.97 1.23.05.05 0 0 0-.02.02A16.17 16.17 0 0 0 2.1 16.63a.08.08 0 0 0 .03.06 16.18 16.18 0 0 0 4.86 2.45.08.08 0 0 0 .09-.03c.38-.51.71-1.07.99-1.65a.08.08 0 0 0-.04-.11 10.43 10.43 0 0 1-1.52-.73.08.08 0 0 1-.01-.13c.1-.07.2-.15.3-.23a.08.08 0 0 1 .08-.01 11.44 11.44 0 0 0 10.6 0 .08.08 0 0 1 .09.01c.1.08.2.16.3.23a.08.08 0 0 1-.01.13 10.64 10.64 0 0 1-1.52.73.08.08 0 0 0-.04.11c.29.58.61 1.14.99 1.65a.08.08 0 0 0 .09.03 16.16 16.16 0 0 0 4.87-2.45.08.08 0 0 0 .03-.06 16.23 16.23 0 0 0-3.66-11.88.06.06 0 0 0-.02-.02zM8.52 12.05c-.96 0-1.75-.88-1.75-1.96s.77-1.96 1.75-1.96c.99 0 1.77.89 1.75 1.96 0 1.08-.77 1.96-1.75 1.96zm6.97 0c-.96 0-1.75-.88-1.75-1.96s.77-1.96 1.75-1.96c.99 0 1.77.89 1.75 1.96 0 1.08-.77 1.96-1.75 1.96z" />
-              </svg> */}
+
               <svg
                 className={styles["platform-icon"]}
                 xmlns="http://www.w3.org/2000/svg"
@@ -293,7 +338,7 @@ export const MainPage = ({ title }: TitleSettings) => {
               <span>Discord</span>
             </a>
 
-            <a href="#" className={styles["social-card"]}>
+            <a href="#" target="_blank" className={styles["social-card"]}>
               <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
                 <path
                   fill="none"
@@ -304,9 +349,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                   strokeLinejoin="round"
                 />
               </svg>
-              {/* <svg className={styles["platform-icon"]} viewBox="0 0 24 24">
-                <path d="M23.5 12.4c0 1.5-.1 3-.3 4.4-.2 1.4-1.1 2.4-2.4 2.6-2.9.4-8.8.4-8.8.4s-5.9 0-8.8-.4c-1.3-.2-2.2-1.2-2.4-2.6-.2-1.4-.3-2.9-.3-4.4s.1-3 .3-4.4c.2-1.4 1.1-2.4 2.4-2.6 2.9-.4 8.8-.4 8.8-.4s5.9 0 8.8.4c1.3.2 2.2 1.2 2.4 2.6.2 1.4.3 2.9.3 4.4zM9.5 8.5V15.5L15.5 12L9.5 8.5z" />
-              </svg> */}
+
               <svg
                 className={styles["platform-icon"]}
                 xmlns="http://www.w3.org/2000/svg"
@@ -323,7 +366,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                 />
               </svg>
               <span>Youtube</span>
-            </a>
+            </a> */}
           </div>
 
           <div className={styles["footer-middle-bar"]}>
@@ -351,10 +394,10 @@ export const MainPage = ({ title }: TitleSettings) => {
             </Link>
 
             <span className={styles["alternativa-logo"]}>
-              <Link to="https://github.com/">
+              <a href="https://github.com/" target="_blank">
                 <span className={styles["brand"]}>Git</span>
                 <span className={styles["subtext"]}>Hub</span>
-              </Link>
+              </a>
             </span>
           </div>
 
@@ -368,15 +411,10 @@ export const MainPage = ({ title }: TitleSettings) => {
             </div>
 
             <div className={styles["legal-links"]}>
-              <a href="/rules" target="_blank">
-                Правила игры
-              </a>
-              <a href="/how-to-play" target="_blank">
-                Как играть?
-              </a>
-              <a href="/support" target="_blank">
-                Поддежрка
-              </a>
+              <Link to="/rules">Правила игры</Link>
+              <Link to="/how-to-play">Как играть?</Link>
+              <Link to="/help-center">Справочный центр</Link>
+              <Link to="/support">Поддежрка</Link>
             </div>
 
             <div className={styles["age-rating"]}>0+</div>
@@ -384,7 +422,7 @@ export const MainPage = ({ title }: TitleSettings) => {
         </div>
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

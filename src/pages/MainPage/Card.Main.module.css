@@ -306,9 +306,10 @@
   height: 36px;
   fill: #ffffff;
   opacity: 0.8;
+  object-fit: contain;
 }
 
-.social-card span {
+.social-card {
   color: #ffffff;
   font-size: 11px;
   font-weight: 700;
