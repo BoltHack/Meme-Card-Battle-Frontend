@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import settings_styles from "../SettingsPanel/Card.Settings.module.css";
 
@@ -9,19 +9,101 @@ import api from "../../../../api/api.ts";
 import usePageRender from "../../../../tools/PageRender.ts";
 import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
+import toast from "react-hot-toast";
 
 // import { settingsNavigator } from "../SettingsPanel/SettingsPanel.tsx";
 
 export const ProfilePage = () => {
-  const [userInfo, setUserInfo] = useState({
-    name: "",
-    avatar: "",
-    role: "",
+  // const [userInfo, setUserInfo] = useState({
+  //   avatar: "",
+  //   aboutMe: "",
+  // });
+
+  const [formData, setFormData] = useState({
+    aboutMe: "",
   });
+  const [file, setFile] = useState<File | null>(null);
+  const [isDeleteFile, setIsDeleteFile] = useState<boolean | false>(false);
+
+  const dir_about_me_ref = useRef<HTMLTextAreaElement>(null);
 
   const { data, loading, error } = usePageRender(
     `${api.API_BASE_URL}/api/settings/profile`,
   );
+
+  const [idolFile, setIdolFile] = useState<File | string>("");
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      setFile(file);
+      setIsDeleteFile(false);
+
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setIdolFile(`${reader.result}`);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileDelete = () => {
+    setFile(null);
+    setIdolFile("");
+    setIsDeleteFile(true);
+  };
+
+  const handleSubmit = async (e: ChangeEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const dataToSend = new FormData();
+
+    dataToSend.append("aboutMe", formData.aboutMe);
+
+    if (file && !isDeleteFile) {
+      dataToSend.append("avatar", file);
+    }
+    if (file === null && isDeleteFile) {
+      dataToSend.append("isDelete", String(isDeleteFile));
+    }
+    try {
+      const response = await axios.post(
+        `${api.API_BASE_URL}/api/save-settings/profile`,
+        dataToSend,
+        {
+          withCredentials: true,
+        },
+      );
+
+      console.log("Данные успешно добавлены:", response.data);
+
+      if (response.data.success) {
+        setFormData({
+          aboutMe: "",
+        });
+
+        setFile(null);
+
+        toast.success(response.data.success);
+      }
+
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   useEffect(() => {
     if (!data || !data.renderData) {
@@ -32,11 +114,19 @@ export const ProfilePage = () => {
       return;
     }
 
-    setUserInfo({
-      name: data.renderData.name,
-      avatar: data.renderData.avatar,
-      role: data.renderData.role,
-    });
+    // setUserInfo({
+    //   avatar: data.renderData.avatar,
+    //   aboutMe: data.renderData.aboutMe,
+    // });
+
+    setFormData({
+      aboutMe: data.renderData.aboutMe
+    })
+
+    setIdolFile(
+      data?.renderData?.avatar !== "" &&
+        `${api.API_BASE_URL}/${data.renderData.avatar}`,
+    );
 
     console.log("data", data);
   }, [data]);
@@ -57,10 +147,12 @@ export const ProfilePage = () => {
         <h2>Личная информация</h2>
 
         <div className={settings_styles["avatar-upload-block"]}>
-          <img
-            src={`${api.API_BASE_URL}/${userInfo.avatar}`}
-            className={settings_styles["avatar-preview"]}
-          />
+          {idolFile ? (
+            <img src={idolFile} className={settings_styles["avatar-preview"]} />
+          ) : (
+            <div className={settings_styles["avatar-preview"]}></div>
+          )}
+
           <div className={settings_styles["upload-controls"]}>
             <span className={settings_styles["setting-title"]}>
               Фото профиля
@@ -73,10 +165,15 @@ export const ProfilePage = () => {
                 className={`${settings_styles["btn"]} ${settings_styles["btn-secondary"]} ${settings_styles["btn-sm"]}`}
               >
                 Выбрать файл
-                <input type="file" style={{ display: "none" }} />
+                <input
+                  type="file"
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                />
               </label>
               <button
                 className={`${settings_styles["btn"]} ${settings_styles["btn-text-danger"]} ${settings_styles["btn-sm"]}`}
+                onClick={handleFileDelete}
               >
                 Удалить
               </button>
@@ -85,6 +182,7 @@ export const ProfilePage = () => {
         </div>
 
         <div className={settings_styles["grid-form"]}>
+          {/* <span>Дата регистрации</span> */}
           {/* <div className={settings_styles["input-group"]}>
             <label>Имя пользователя</label>
             <input type="text" placeholder="@username" />
@@ -100,14 +198,34 @@ export const ProfilePage = () => {
           <div
             className={`${settings_styles["input-group"]} ${settings_styles["full-width"]}`}
           >
-            <label>О себе</label>
+            <label htmlFor="aboutMe">О себе</label>
             <textarea
+              ref={dir_about_me_ref}
+              onInput={handleChange}
+              name="aboutMe"
+              value={formData.aboutMe}
+              maxLength={200}
               rows={3}
-              placeholder="Расскажите немного о себе..."
+              placeholder="Краткая биография появится рядом с вашим аватаром."
             ></textarea>
+            <span>{dir_about_me_ref.current?.value.length}/200</span>
           </div>
         </div>
       </section>
+
+      <footer className={settings_styles["content-footer"]}>
+        <button
+          className={`${settings_styles["btn"]} ${settings_styles["btn-secondary"]}`}
+        >
+          Сбросить
+        </button>
+        <button
+          className={`${settings_styles["btn"]} ${settings_styles["btn-primary"]}`}
+          onClick={handleSubmit}
+        >
+          Сохранить изменения
+        </button>
+      </footer>
     </>
   );
 };

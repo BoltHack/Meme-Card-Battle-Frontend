@@ -1,6 +1,6 @@
 // import { useEffect, useState } from "react";
 
-// import settings_styles from "../SettingsPanel/Card.Settings.module.css";
+import settings_styles from "../SettingsPanel/Card.Settings.module.css";
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
@@ -44,5 +44,45 @@ export const SafetyPage = () => {
   //   if (loading || !data) return <LoadingPage />;
   //   if (error) return <ErrorPage error={error} />;
 
-  return <></>;
+  return (
+    <>
+      <header className={settings_styles["content-header"]}>
+        <h1>Настройки безопасности</h1>
+        <p>Управляйте паролями и двухфакторной аутентификацией</p>
+      </header>
+
+      <section className={settings_styles["settings-section"]}>
+        <h2>Безопасность</h2>
+        <div className={settings_styles["grid-form"]}>
+          <div className={settings_styles["input-group"]}>
+            <label>Текущий пароль</label>
+            <input type="password" placeholder="••••••••" />
+          </div>
+          <div className={settings_styles["input-group"]}>
+            <label>Новый пароль</label>
+            <input type="password" placeholder="Минимум 8 символов" />
+          </div>
+        </div>
+
+        <div
+          className={`${settings_styles["setting-row"]} ${settings_styles["mt-20"]}`}
+        >
+          <div className={settings_styles["setting-info"]}>
+            <span className={settings_styles["setting-title"]}>
+              Двухфакторная аутентификация (2FA)
+            </span>
+            <span className={settings_styles["setting-desc"]}>
+              Защитите аккаунт одноразовыми кодами из приложения вроде Google
+              Authenticator
+            </span>
+          </div>
+          <button
+            className={`${settings_styles["btn"]} ${settings_styles["btn-secondary"]}`}
+          >
+            Подключить
+          </button>
+        </div>
+      </section>
+    </>
+  );
 };

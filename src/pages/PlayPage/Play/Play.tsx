@@ -64,6 +64,10 @@ export const PlayPage = ({ title }: TitleSettings) => {
   );
 
   useEffect(() => {
+    // const active_tab_state = JSON.parse(
+    //   sessionStorage.getItem("active_tab_state") || "{}",
+    // );
+
     playFunctions.handleChangeTab = (tab: string) => {
       // console.log("edit_id 1", edit_id);
       setActiveTab((prevTab) => {
@@ -88,6 +92,15 @@ export const PlayPage = ({ title }: TitleSettings) => {
         //   setTab = tab;
         // }
 
+        // const updatedState = {
+        //   ...active_tab_state,
+        //   previousTab: prevTab,
+        //   currentTab: tab,
+        // };
+        // sessionStorage.setItem(
+        //   "active_tab_state",
+        //   JSON.stringify(updatedState),
+        // );
         sessionStorage.setItem("active_tab", tab);
         return tab;
       });
@@ -117,9 +130,17 @@ export const PlayPage = ({ title }: TitleSettings) => {
       } else if (type === "cancel") {
         setIsGameFound(false);
         gameFoundTimerReset();
+        socket.emit("search_game", {
+          type: false,
+          player_id: data?.id,
+        });
       } else {
         setIsGameFound(false);
         gameFoundTimerReset();
+        socket.emit("search_game", {
+          type: false,
+          player_id: data?.id,
+        });
       }
     };
 
@@ -296,7 +317,7 @@ export const PlayPage = ({ title }: TitleSettings) => {
       if (timerId.current) clearInterval(timerId.current);
       console.log("Сокет (play) отключен, подписки сняты");
     };
-  }, [data]);
+  }, [data, socket]);
 
   if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;

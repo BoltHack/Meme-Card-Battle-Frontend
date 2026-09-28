@@ -13,8 +13,10 @@ import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ProfilePage } from "../ProfilePage/Profile.tsx";
 import { GraphicsPage } from "../GraphicsPage/Graphics.tsx";
 import { SafetyPage } from "../SafetyPage/Safety.tsx";
+import { NotificationsPage } from "../NotificationsPage/Notifications.tsx";
+import { AccountPage } from "../AccountPage/Account.tsx";
 
-const Settings = ["settings:profile", "settings:graphics", "settings:safety"];
+const Settings = ["settings:profile", "settings:graphics", "settings:notifications"];
 
 export const settingsNavigator = {
   handleChangeTab: (tab: string) => {},
@@ -26,12 +28,17 @@ export const SettingsPage = () => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     avatar: "",
-    role: "",
+    createdAt: "",
   });
 
   const { data, loading, error } = usePageRender(
-    `${api.API_BASE_URL}/api/settings/profile`,
+    `${api.API_BASE_URL}/api/settings`,
   );
+
+  const getRegisterDate = (date: string) => {
+    const registerDate = new Date(date).toLocaleString();
+    return registerDate;
+  };
 
   useEffect(() => {
     settingsNavigator.handleChangeTab = (tab: string) => {
@@ -61,7 +68,7 @@ export const SettingsPage = () => {
     setUserInfo({
       name: data.renderData.name,
       avatar: data.renderData.avatar,
-      role: data.renderData.role,
+      createdAt: data.renderData.createdAt,
     });
 
     console.log("data", data);
@@ -76,13 +83,18 @@ export const SettingsPage = () => {
         <aside className={styles["sidebar"]}>
           <div className={styles["profile-section"]}>
             {/* <div className={styles["avatar"]}></div> */}
-            <img
-              src={`${api.API_BASE_URL}/${userInfo.avatar}`}
-              className={styles["avatar"]}
-            />
+            {userInfo.avatar !== "" ? (
+              <img
+                src={`${api.API_BASE_URL}/${userInfo.avatar}`}
+                className={styles["avatar"]}
+              />
+            ) : (
+              <div className={styles["avatar"]}></div>
+            )}
+
             <div className={styles["profile-info"]}>
               <h3>{userInfo.name}</h3>
-              <p>{userInfo.role}</p>
+              <p>{getRegisterDate(userInfo.createdAt)}</p>
             </div>
           </div>
           <nav className={styles["menu"]}>
@@ -124,7 +136,7 @@ export const SettingsPage = () => {
               </svg>
               Графика
             </a>
-            <a
+            {/* <a
               className={`${styles["menu-item"]} ${activeTab === Settings[2] && styles["active"]}`}
               onClick={() => setActiveTab(Settings[2])}
             >
@@ -140,8 +152,11 @@ export const SettingsPage = () => {
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
               Безопасность
-            </a>
-            <a className={styles["menu-item"]}>
+            </a> */}
+            <a
+              className={`${styles["menu-item"]} ${activeTab === Settings[2] && styles["active"]}`}
+              onClick={() => setActiveTab(Settings[2])}
+            >
               <svg
                 viewBox="0 0 24 24"
                 width="18"
@@ -155,7 +170,10 @@ export const SettingsPage = () => {
               </svg>
               Уведомления
             </a>
-            <a className={styles["menu-item"]}>
+            <a
+              className={`${styles["menu-item"]} ${activeTab === Settings[3] && styles["active"]}`}
+              onClick={() => setActiveTab(Settings[3])}
+            >
               <svg
                 viewBox="0 0 24 24"
                 width="18"
@@ -168,7 +186,7 @@ export const SettingsPage = () => {
                 <polyline points="2 17 12 22 22 17"></polyline>
                 <polyline points="2 12 12 17 22 12"></polyline>
               </svg>
-              Интеграции
+              Аккаунт
             </a>
           </nav>
         </aside>
@@ -176,7 +194,8 @@ export const SettingsPage = () => {
         <main className={styles["settings-content"]}>
           {activeTab === Settings[0] && <ProfilePage />}
           {activeTab === Settings[1] && <GraphicsPage />}
-          {activeTab === Settings[2] && <SafetyPage />}
+          {activeTab === Settings[2] && <NotificationsPage />}
+          {activeTab === Settings[3] && <AccountPage />}
           {/* <header className={styles["content-header"]}>
           <h1>Настройки профиля</h1>
           <p>
@@ -322,6 +341,14 @@ export const SettingsPage = () => {
             </label>
           </div>
         </section> */}
+          {/* <footer className={styles["content-footer"]}>
+            <button className={`${styles["btn"]} ${styles["btn-secondary"]}`}>
+              Сбросить
+            </button>
+            <button className={`${styles["btn"]} ${styles["btn-primary"]}`}>
+              Сохранить изменения
+            </button>
+          </footer> */}
         </main>
       </div>
     </>

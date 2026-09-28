@@ -318,7 +318,7 @@ export const BlogReadPage = () => {
         id: blog?.author?.id,
         name: blog?.author?.name,
         role: blog?.author?.role,
-        avatar: blog?.author?.avatar
+        avatar: blog?.author?.avatar,
       },
       title: blog?.title || "",
       description: blog?.description || "",
@@ -374,10 +374,15 @@ export const BlogReadPage = () => {
               <div className={styles["post-page-meta"]}>
                 <div className={styles["author-info"]}>
                   {/*<div className={styles["avatar"]}></div>*/}
-                  <img
-                    src={`${api.API_BASE_URL}/${blog?.author?.avatar}`}
-                    className={styles["avatar"]}
-                  />
+                  {blog?.author?.avatar ? (
+                    <img
+                      src={`${api.API_BASE_URL}/${blog?.author?.avatar}`}
+                      className={styles["avatar"]}
+                    />
+                  ) : (
+                    <div className={styles["avatar"]}></div>
+                  )}
+
                   <div>
                     <div className={styles["name"]}>{blog?.author?.name}</div>
                     <div className={styles["role"]}>{blog?.author?.role}</div>

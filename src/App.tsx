@@ -98,10 +98,10 @@ const router = createBrowserRouter([
     path: "/blog/:blog_id",
     element: <BlogReadPage />,
   },
-  {
-    path: "/game/:game_type/:game_key",
-    element: <GamePage />,
-  },
+  // {
+  //   path: "/game/:game_type/:game_key",
+  //   element: <GamePage />,
+  // },
   {
     path: "/admin/panel",
     element: <AdminPanelPage title="Админ панель" />,

@@ -1,0 +1,423 @@
+.laser-btn {
+  position: absolute;
+  top: 5%;
+  left: 3%;
+  z-index: 100;
+  padding: 14px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: #d1226e;
+  border: 3px solid #3d051c;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow:
+    0 5px 0 #3d051c,
+    0 8px 20px rgba(209, 34, 110, 0.4);
+  transition: all 0.1s ease-in-out;
+}
+
+.laser-btn:hover {
+  background-color: #e63984;
+  transform: translateY(-2px);
+  box-shadow:
+    0 7px 0 #3d051c,
+    0 12px 25px rgba(230, 57, 132, 0.6);
+}
+
+.laser-btn:active {
+  transform: translateY(5px);
+  box-shadow:
+    0 0px 0 #3d051c,
+    0 0px 0px rgba(0, 0, 0, 0);
+}
+
+.laser-btn:disabled {
+  background-color: #3b232e;
+  border-color: #1a0a11;
+  color: #777;
+  cursor: not-allowed;
+  transform: translateY(5px);
+  box-shadow: none;
+}
+
+.laser-scene {
+  position: fixed;
+  width: 100%;
+  height: 100dvh;
+  z-index: 1000;
+}
+
+.laser-scene.active {
+  animation: screenShake 6.5s ease-in-out forwards;
+}
+
+.sky-glow {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.5);
+  width: 700px;
+  height: 350px;
+  background: radial-gradient(
+    circle,
+    rgba(220, 50, 130, 0.5) 0%,
+    rgba(100, 20, 60, 0.3) 50%,
+    rgba(0, 0, 0, 0) 80%
+  );
+  filter: blur(15px);
+  opacity: 0;
+}
+.laser-scene.active .sky-glow {
+  animation: skyGlowAnim 6.5s ease-in-out forwards;
+}
+
+.laser-beam {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleY(0);
+  transform-origin: top center;
+  width: 90px;
+  height: 100%;
+
+  background: linear-gradient(
+    to right,
+    rgba(70, 10, 30, 0.4) 0%,
+    rgba(180, 40, 100, 0.7) 20%,
+    rgba(255, 120, 180, 0.9) 45%,
+    rgba(255, 120, 180, 0.9) 55%,
+    rgba(180, 40, 100, 0.7) 80%,
+    rgba(70, 10, 30, 0.4) 100%
+  );
+
+  box-shadow:
+    0 0 20px rgba(220, 50, 130, 0.6),
+    0 0 50px rgba(130, 20, 70, 0.4);
+
+  opacity: 0;
+}
+.laser-scene.active .laser-beam {
+  animation: laserStrike 6.5s cubic-bezier(0.15, 0.85, 0.3, 1) forwards;
+}
+
+.impact-zone {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.impact-flash {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 230, 240, 1) 0%,
+    rgba(230, 80, 150, 0.95) 40%,
+    rgba(120, 20, 70, 0.9) 75%,
+    rgba(11, 2, 10, 1) 100%
+  );
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 50;
+  pointer-events: none;
+}
+.laser-scene.active .impact-flash {
+  animation: flashFullScreen 6.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.impact-wave {
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 12px;
+  background: rgba(255, 130, 180, 0.8);
+  border: 3px solid rgba(120, 20, 60, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(220, 50, 130, 0.8);
+  opacity: 0;
+}
+.laser-scene.active .impact-wave {
+  animation: waveAnim 6.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.result-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 60;
+  opacity: 0;
+  /* pointer-events: none; */
+  transition: opacity 0.5s ease;
+  background: rgba(11, 2, 10, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.result-overlay.visible {
+  opacity: 1;
+  /* pointer-events: auto; */
+}
+
+@keyframes screenShake {
+  0%,
+  18% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(6px, -5px) rotate(0.8deg);
+  }
+  23% {
+    transform: translate(-6px, 5px) rotate(-0.8deg);
+  }
+  26% {
+    transform: translate(5px, 6px) rotate(1deg);
+  }
+  30% {
+    transform: translate(-5px, -4px) rotate(-0.6deg);
+  }
+  35% {
+    transform: translate(4px, 3px) rotate(0.4deg);
+  }
+  42% {
+    transform: translate(-3px, -3px) rotate(-0.3deg);
+  }
+  50% {
+    transform: translate(2px, 2px) rotate(0.2deg);
+  }
+  60% {
+    transform: translate(-1px, 1px) rotate(0deg);
+  }
+  70%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+@keyframes skyGlowAnim {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.4);
+  }
+  18% {
+    opacity: 0.9;
+    transform: translateX(-50%) scale(1.1);
+  }
+  25%,
+  55% {
+    opacity: 0.5;
+  }
+  70%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes laserStrike {
+  0%,
+  18% {
+    opacity: 0;
+    transform: translateX(-50%) scaleY(0) scaleX(1);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(-50%) scaleY(1) scaleX(1.2);
+  }
+  28% {
+    transform: translateX(-50%) scaleY(1) scaleX(0.9);
+  }
+  36% {
+    transform: translateX(-50%) scaleY(1) scaleX(1.1);
+  }
+  48% {
+    transform: translateX(-50%) scaleY(1) scaleX(0.95);
+  }
+  58% {
+    opacity: 1;
+    transform: translateX(-50%) scaleY(1) scaleX(0);
+  }
+  60%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes flashFullScreen {
+  0%,
+  18% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  40% {
+    transform: translate(-50%, -50%) scale(8);
+    opacity: 0.9;
+  }
+  55% {
+    transform: translate(-50%, -50%) scale(25);
+    opacity: 1;
+  }
+  70%,
+  90% {
+    transform: translate(-50%, -50%) scale(35);
+    opacity: 1;
+  }
+  100% {
+    background: radial-gradient(
+      circle,
+      rgba(255, 230, 240, 1) 0%,
+      rgba(230, 80, 150, 1) 40%,
+      rgba(120, 20, 70, 1) 75%,
+      rgba(11, 2, 10, 1) 100%
+    );
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(35);
+  }
+}
+
+@keyframes waveAnim {
+  0%,
+  20% {
+    opacity: 0;
+    width: 0;
+    height: 8px;
+  }
+  23% {
+    opacity: 1;
+    height: 16px;
+  }
+  60% {
+    opacity: 0.7;
+    width: 850px;
+    height: 4px;
+  }
+  75% {
+    opacity: 0;
+    width: 1300px;
+    height: 0px;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.card-container {
+  background-color: rgba(24, 24, 27, 0.9);
+  border: 2px solid rgba(236, 72, 153, 0.5);
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 28rem;
+  width: 100%;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(131, 24, 67, 0.4);
+  transform: scale(0.95);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  background-color: rgba(219, 39, 119, 0.2);
+  color: #f472b6;
+  border-radius: 9999px;
+  font-size: 1.875rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.card-description {
+  color: #a1a1aa;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.results-table {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #27272a;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.result-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #71717a;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.text-pink {
+  color: #f472b6;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.stat-divider {
+  height: 2rem;
+  width: 1px;
+  background-color: #27272a;
+}
+
+.card-button {
+  width: 100%;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  background: linear-gradient(to right, #db2777, #e11d48);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  border: none;
+  box-shadow: 0 10px 15px -3px rgba(219, 39, 119, 0.3);
+  transition: all 200ms ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.card-button:hover {
+  background: linear-gradient(to right, #ec4899, #f43f5e);
+}

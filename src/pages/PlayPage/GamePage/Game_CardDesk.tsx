@@ -2,11 +2,12 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import CardDesk_styles from "./Card.Desk_styles.module.css";
+import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 import Menus_styles from "./Card.Menu_styles.module.css";
 
 import api from "../../../api/api.ts";
 
-import { ActionData } from "./Game_Menus.tsx";
+// import { ActionData } from "./Game_Menus.tsx";
 
 interface CardData {
   menu_id: string;
@@ -23,13 +24,15 @@ interface CardData {
   _id: string;
 }
 
+import { GameFunctions } from "./Game.tsx";
+
 interface TitleSettings {
-  useCard: (
-    type: "open" | "close" | "useCard",
-    data?: ActionData | undefined,
-  ) => void;
-  onToggleMenu: () => void;
-  onActionsMenu: () => void;
+  // useCard: (
+  //   type: "open" | "close" | "useCard",
+  //   data?: ActionData | undefined,
+  // ) => void;
+  // onToggleMenu: () => void;
+  // onActionsMenu: () => void;
 
   isCardSelectAnimationEnemy: boolean;
   setIsCardSelectAnimationEnemy: Dispatch<SetStateAction<boolean>>;
@@ -40,8 +43,6 @@ interface TitleSettings {
   activePlayerCard: string | null;
   activeEnemyCard: boolean | false;
 
-  // activeAnimationCardId: string | null;
-
   setActivePlayerCard: Dispatch<SetStateAction<string | null>>;
 
   playersInfo: any;
@@ -50,16 +51,14 @@ interface TitleSettings {
 }
 
 export const Game_CardDesk = ({
-  onToggleMenu,
-  onActionsMenu,
-  useCard,
-  // isCardSelectAnimationEnemy,
+  // onToggleMenu,
+  // onActionsMenu,
+  // useCard,
   setIsCardSelectAnimationEnemy,
   handList,
   enemyHandList,
   activePlayerCard,
   activeEnemyCard,
-  // activeAnimationCardId,
   playersInfo,
   damageAnimation,
 }: TitleSettings) => {
@@ -198,7 +197,7 @@ export const Game_CardDesk = ({
 
             <div
               className={CardDesk_styles["game-tools-action"]}
-              onClick={onActionsMenu}
+              onClick={() => GameFunctions.leaveGame_menu(true)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -233,7 +232,15 @@ export const Game_CardDesk = ({
                             `}
               >
                 <div className={CardDesk_styles["avatar-wrapper"]}>
-                  <div className={CardDesk_styles["avatar-image"]}>😈</div>
+                  {/* <div className={CardDesk_styles["avatar-image"]}>😈</div> */}
+                  {playersInfo.enemyInfo.avatar ? (
+                    <img
+                      src={`${api.API_BASE_URL}/${playersInfo.enemyInfo.avatar}`}
+                      className={CardDesk_styles["avatar-image"]}
+                    />
+                  ) : (
+                    <div className={CardDesk_styles["avatar-image"]}>😈</div>
+                  )}
                   <div className={CardDesk_styles["player-level"]}>
                     Lv.{playersInfo.enemyInfo.lvl}
                   </div>
@@ -301,37 +308,111 @@ export const Game_CardDesk = ({
             <div className={CardDesk_styles["vs-light"]}></div>
 
             <div className={CardDesk_styles["arena-center"]}>
-              {/*{isCardSelectAnimationEnemy && (*/}
-              {/*    <motion.div*/}
-              {/*        layoutId="shared-EnemyCard">*/}
-              {/*        <div className={`${CardDesk_styles["game-card"]} ${CardDesk_styles["legendary"]}`} onClick={testEnemu}>*/}
-              {/*            <div className={CardDesk_styles["card-shine"]}></div>*/}
-              {/*            <div className={CardDesk_styles["card-header"]}>*/}
-              {/*                <span className={CardDesk_styles["card-cost"]}>5</span>*/}
-              {/*                <span className={CardDesk_styles["card-rarity"]}>⭐ Legendary</span>*/}
-              {/*            </div>*/}
-              {/*            <div className={CardDesk_styles["card-artwork"]}>*/}
-              {/*                <img src="../../../src/assets/Default_Background.png" />*/}
-              {/*            </div>*/}
-              {/*            <div className={CardDesk_styles["card-body"]}>*/}
-              {/*                <div className={CardDesk_styles["card-title"]}>Кибер-Ассасин</div>*/}
-              {/*                <div className={CardDesk_styles["card-description"]}>*/}
-              {/*                    <strong>Крик души:</strong> Наносит 30 ед. урона случайному врагу при появлении.*/}
-              {/*                </div>*/}
-              {/*            </div>*/}
-              {/*            <div className={CardDesk_styles["card-footer"]}>*/}
-              {/*                <div className={`${CardDesk_styles["stat-badge"]} ${CardDesk_styles["attack-badge"]}`}>*/}
-              {/*                    <span className={CardDesk_styles["stat-icon"]}>⚔️</span>*/}
-              {/*                    <span className={CardDesk_styles["stat-value"]}>75</span>*/}
-              {/*                </div>*/}
-              {/*                <div className={`${CardDesk_styles["stat-badge"]} ${CardDesk_styles["protection-badge"]}`}>*/}
-              {/*                    <span className={CardDesk_styles["stat-icon"]}>🛡️</span>*/}
-              {/*                    <span className={CardDesk_styles["stat-value"]}>140</span>*/}
-              {/*                </div>*/}
-              {/*            </div>*/}
-              {/*        </div>*/}
-              {/*    </motion.div>*/}
-              {/*)}*/}
+              <div
+                // id={selectCard?.menu_id}
+                className={CardsDesign_styles["card-3d-wrapper"]}
+              >
+                <div className={CardsDesign_styles["card-inner"]}>
+                  <div
+                    className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles["hand_card"]} ${CardsDesign_styles["legendary"]}`}
+                  >
+                    <div className={CardsDesign_styles["card-shine"]}></div>
+                    <div className={CardsDesign_styles["card-header"]}>
+                      <span
+                        className={CardsDesign_styles["card-cost"]}
+                        title="Занимает 15 слотов силы"
+                      >
+                        power_slot
+                      </span>
+                      <span
+                        className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles["legendary"]}`}
+                      >
+                        rarity
+                      </span>
+                    </div>
+                    <div className={CardsDesign_styles["card-artwork"]}>
+                      <img
+                        // src={`${api.API_BASE_URL}/${selectCard.avatar}`}
+                        alt="artwork"
+                      />
+                    </div>
+                    <div className={CardsDesign_styles["card-body"]}>
+                      <div
+                        className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles["legendary"]}`}
+                      >
+                        name
+                      </div>
+                      <div className={CardsDesign_styles["card-description"]}>
+                        description
+                      </div>
+                    </div>
+                    <div className={CardsDesign_styles["card-footer"]}>
+                      <div
+                        className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}
+                      >
+                        <span className={CardsDesign_styles["stat-icon"]}>
+                          ⚔️
+                        </span>
+                        <span className={CardsDesign_styles["stat-value"]}>
+                          damage
+                        </span>
+                      </div>
+                      <div
+                        className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
+                      >
+                        <span className={CardsDesign_styles["stat-icon"]}>
+                          🛡️
+                        </span>
+                        <span className={CardsDesign_styles["stat-value"]}>
+                          protection
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* {isCardSelectAnimationEnemy && (
+                 <motion.div
+                     layoutId="shared-EnemyCard"> */}
+              {/* <div
+                className={`${CardDesk_styles["game-card"]} ${CardDesk_styles["legendary"]}`}
+              >
+                <div className={CardDesk_styles["card-shine"]}></div>
+                <div className={CardDesk_styles["card-header"]}>
+                  <span className={CardDesk_styles["card-cost"]}>5</span>
+                  <span className={CardDesk_styles["card-rarity"]}>
+                    ⭐ Legendary
+                  </span>
+                </div>
+                <div className={CardDesk_styles["card-artwork"]}>
+                  <img src="../../../src/assets/Default_Background.png" />
+                </div>
+                <div className={CardDesk_styles["card-body"]}>
+                  <div className={CardDesk_styles["card-title"]}>
+                    Кибер-Ассасин
+                  </div>
+                  <div className={CardDesk_styles["card-description"]}>
+                    <strong>Крик души:</strong> Наносит 30 ед. урона случайному
+                    врагу при появлении.
+                  </div>
+                </div>
+                <div className={CardDesk_styles["card-footer"]}>
+                  <div
+                    className={`${CardDesk_styles["stat-badge"]} ${CardDesk_styles["attack-badge"]}`}
+                  >
+                    <span className={CardDesk_styles["stat-icon"]}>⚔️</span>
+                    <span className={CardDesk_styles["stat-value"]}>75</span>
+                  </div>
+                  <div
+                    className={`${CardDesk_styles["stat-badge"]} ${CardDesk_styles["protection-badge"]}`}
+                  >
+                    <span className={CardDesk_styles["stat-icon"]}>🛡️</span>
+                    <span className={CardDesk_styles["stat-value"]}>140</span>
+                  </div>
+                </div>
+              </div> */}
+              {/* </motion.div> */}
+              {/* )} */}
             </div>
 
             <div className={CardDesk_styles["blind-strike-zone"]}>
@@ -466,7 +547,7 @@ export const Game_CardDesk = ({
                             onClick={() => {
                               // if (activeAnimationCardId || activePlayerCard !== null) return;
                               if (activePlayerCard !== null) return;
-                              useCard("open", {
+                              GameFunctions.useCard_menu("open", {
                                 cardInfo: {
                                   id: cardId,
                                   lvl: card?.lvl,
@@ -478,7 +559,7 @@ export const Game_CardDesk = ({
                                   protection: card?.protection,
                                   power_slot: card?.power_slot,
                                 },
-                              } as ActionData);
+                              });
                             }}
                           >
                             <div className={CardDesk_styles["h-cost"]}>
@@ -544,7 +625,7 @@ export const Game_CardDesk = ({
                                  ${damageAnimation === "player_damage" ? CardDesk_styles["damage-received"] : null}
                                  `}
                 style={!isGameStart ? { cursor: "pointer" } : {}}
-                onClick={onToggleMenu}
+                onClick={() => GameFunctions.gameCards_menu(true)}
               >
                 <div className={CardDesk_styles["player-status"]}>
                   <div className={CardDesk_styles["player-name"]}>
@@ -564,7 +645,15 @@ export const Game_CardDesk = ({
                   ></meter>
                 </div>
                 <div className={CardDesk_styles["avatar-wrapper"]}>
-                  <div className={CardDesk_styles["avatar-image"]}>🛡️</div>
+                  {/* <div className={CardDesk_styles["avatar-image"]}>🛡️</div> */}
+                  {playersInfo.playerInfo.avatar ? (
+                    <img
+                      src={`${api.API_BASE_URL}/${playersInfo.playerInfo.avatar}`}
+                      className={CardDesk_styles["avatar-image"]}
+                    />
+                  ) : (
+                    <div className={CardDesk_styles["avatar-image"]}>🛡️</div>
+                  )}
                   <div className={CardDesk_styles["player-level"]}>
                     Lv.{playersInfo.playerInfo.lvl}
                   </div>

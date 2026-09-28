@@ -121,7 +121,6 @@ export const LoadingPage = () => {
             {!active_session && !active_session_cookies
               ? "Проверка браузера"
               : "Загрузка данных"}
-            ...
           </p>
           <div className={styles["loader"]}></div>
         </div>

@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import toast from "react-hot-toast";
 import { io, Socket } from "socket.io-client";
 import Cookies from "js-cookie";
 
 import api from "../api/api.ts";
 
-const socket: Socket = io(api.API_BASE_URL, {
-  autoConnect: false,
-});
-
-import axios from "axios";
 axios.defaults.withCredentials = true;
+
+// const socket: Socket = io(api.API_BASE_URL, {
+//   autoConnect: false,
+// });
+
 
 interface ErrorState {
   code: number;
@@ -20,7 +21,7 @@ interface ErrorState {
 
 export default function usePageRender<T extends Record<string, any>>(
   url: string,
-  // options: { enabled: boolean } = { enabled: true }
+  options: { enabled: boolean } = { enabled: true }
 ) {
   const navigate = useNavigate();
 
@@ -30,20 +31,22 @@ export default function usePageRender<T extends Record<string, any>>(
 
   const [trigger, setTrigger] = useState(0);
 
-  //   const lastFetchedUrl = useRef<string | null>(null);
+    // const lastFetchedUrl = useRef<string | null>(null);
 
-  // const socket = useMemo(() => {
-  //   return io(api.API_BASE_URL, { autoConnect: false });
-  // }, []);
+  const socket = useMemo(() => {
+    return io(api.API_BASE_URL, { autoConnect: false });
+  }, []);
 
   const refetch = () => {
     // lastFetchedUrl.current = null;
     setTrigger((prev) => prev + 1);
   };
 
+  const isEnabled = options.enabled;
+
   useEffect(() => {
-    // if (!options.enabled) return;
-    if (!url) return;
+    if (!isEnabled || !url) return;
+    // if (!url) return;
 
     // const requestKey = url + `_trig_${trigger}`;
 
@@ -69,12 +72,12 @@ export default function usePageRender<T extends Record<string, any>>(
       .then((response) => {
         setData(response.data);
         setError(null);
-        if (window.location.pathname !== "/play") {
-          sessionStorage.setItem("active_tab", "play:main");
-        }
         if (!active_session && !active_session_cookies) {
           // setLoading(true);
           return;
+        }
+        if (window.location.pathname !== "/play") {
+          sessionStorage.setItem("active_tab", "play:main");
         }
         setLoading(false);
         console.log("trigger", trigger);
@@ -136,7 +139,7 @@ export default function usePageRender<T extends Record<string, any>>(
     return () => {
       controller.abort();
     };
-  }, [url, navigate, trigger]);
+  }, [url, navigate, trigger, isEnabled]);
 
   useEffect(() => {
     // if (!data || !data.id) return;
@@ -146,8 +149,8 @@ export default function usePageRender<T extends Record<string, any>>(
     socket.connect();
 
     const sendInitialData = () => {
-      console.log("Автоматическая отправка данных на бэк для ID:", data.id);
-      socket.emit("user_register", { player_id: data.id });
+      console.log("Автоматическая отправка данных на бэк для ID:", data?.id);
+      socket.emit("user_register", { player_id: data?.id });
     };
 
     socket.on("connect", sendInitialData);
@@ -164,12 +167,12 @@ export default function usePageRender<T extends Record<string, any>>(
 
     return () => {
       socket.off("connect", sendInitialData);
-      socket.off("user_register");
+      // socket.off("user_register");
       socket.off("error_handler");
       socket.disconnect();
-      console.log("Сокет PageRender отключен, подписки сняты");
+      // console.log("Сокет (PageRender) отключен, подписки сняты");
     };
-  }, [data]);
+  }, [data, socket]);
 
   return { data, loading, error, socket, url, refetch };
 }

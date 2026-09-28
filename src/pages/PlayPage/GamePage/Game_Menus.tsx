@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
 
-import { Game_CardDesk } from "./Game_CardDesk.tsx";
+// import { Game_CardDesk } from "./Game_CardDesk.tsx";
 
 import Menus_styles from "./Card.Menu_styles.module.css";
 import CardDesk_styles from "./Card.Desk_styles.module.css";
@@ -43,6 +43,17 @@ export interface ActionData {
 
 interface TitleSettings {
   playerCard: CardData[];
+
+  selectCard: any;
+
+  isOpenCardActionsMenu: boolean;
+
+  isOpenLeaveMenu: boolean;
+
+  isOpenGameCardsMenu: boolean;
+
+  isClosingGameCardsMenu: boolean;
+
   socket: any;
 
   player_id: string | undefined;
@@ -72,68 +83,73 @@ interface TitleSettings {
 }
 
 import { playFunctions } from "../Play/Play.tsx";
+import { GameFunctions } from "./Game.tsx";
 
 export const Game_Menus = ({
   playerCard,
+  selectCard,
+  isOpenCardActionsMenu,
+  isOpenLeaveMenu,
+  isOpenGameCardsMenu,
+  isClosingGameCardsMenu,
   socket,
   player_id,
   game_key,
   list,
   setList,
-  handList,
+  // handList,
   setHandList,
-  enemyHandList,
-  activePlayerCard,
-  activeEnemyCard,
-  setActivePlayerCard,
-  // loading,
+  // enemyHandList,
+  // activePlayerCard,
+  // activeEnemyCard,
+  // setActivePlayerCard,
   setBodyLoader,
   loading,
   playersInfo,
   setIsBlock,
-  damageAnimation,
+  // damageAnimation,
 }: TitleSettings) => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [isClosing, setIsClosing] = useState(false);
+  // const [isOpen, setIsOpen] = useState(true);
+  // const [isClosing, setIsClosing] = useState(false);
 
-  const [isOpenCardActions, setIsOpenCardActions] = useState(false);
+  // const [isOpenCardActions, setIsOpenCardActions] = useState(false);
 
-  const initialCardState = {
-    menu_id: "",
-    rarity: "",
-    avatar: "",
-    name: "",
-    description: "",
-    damage: 0,
-    protection: 0,
-    power_slot: 0,
-  };
-  const [selectCard, setSelectCard] = useState(initialCardState);
+  // const initialCardState = {
+  //   menu_id: "",
+  //   rarity: "",
+  //   avatar: "",
+  //   name: "",
+  //   description: "",
+  //   damage: 0,
+  //   protection: 0,
+  //   power_slot: 0,
+  // };
+  // const [selectCard, setSelectCard] = useState(initialCardState);
 
-  const [isOpenLeaveMenu, setIsOpenLeaveMenu] = useState(false);
+  // const [isOpenLeaveMenu, setIsOpenLeaveMenu] = useState(false);
 
   // const [activePlayerCard, setActivePlayerCard] = useState<string | null>(null);
   // const [isCardSelectAnimationPlayer, setIsCardSelectAnimationPlayer] = useState<boolean>(false);
-  const [isCardSelectAnimationEnemy, setIsCardSelectAnimationEnemy] = useState<
-    boolean | false
-  >(false);
+  // const [isCardSelectAnimationEnemy, setIsCardSelectAnimationEnemy] = useState<
+  //   boolean | false
+  // >(false);
   // const [activeAnimationCardId, setActiveAnimationCardId] = useState<string | null>(null);
 
   // const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const useCardIdRef = useRef<string | null>(null);
-  const timeoutRef = useRef<number | null>(null);
+  // const useCardIdRef = useRef<string | null>(null);
+  // const timeoutRef = useRef<number | null>(null);
 
-  const closeMenu = () => {
-    setIsClosing(true);
-    timeoutRef.current = window.setTimeout(() => {
-      setIsOpen(false);
-      setIsClosing(false);
-    }, 200);
-  };
+  // const closeMenu = () => {
+  //   setIsClosing(true);
+  //   timeoutRef.current = window.setTimeout(() => {
+  //     setIsOpen(false);
+  //     setIsClosing(false);
+  //   }, 200);
+  // };
 
-  const actionsMenu = () => {
-    setIsOpenLeaveMenu(!isOpenLeaveMenu);
-  };
+  // const actionsMenu = () => {
+  //   setIsOpenLeaveMenu(!isOpenLeaveMenu);
+  // };
 
   const leaveGame = () => {
     setIsBlock(false);
@@ -141,18 +157,18 @@ export const Game_Menus = ({
     setTimeout(() => window.location.reload(), 100);
   };
 
-  const toggleMenu = () => {
-    console.log("toggle menu");
-    if (timeoutRef.current) window.clearTimeout(timeoutRef.current as number);
-    setIsClosing(false);
-    setIsOpen(true);
-  };
+  // const toggleMenu = () => {
+  //   console.log("toggle menu");
+  //   if (timeoutRef.current) window.clearTimeout(timeoutRef.current as number);
+  //   setIsClosing(false);
+  //   setIsOpen(true);
+  // };
 
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) window.clearTimeout(timeoutRef.current as number);
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     if (timeoutRef.current) window.clearTimeout(timeoutRef.current as number);
+  //   };
+  // }, []);
 
   const checkBattleCard = (card_id: string, menu_id: string) => {
     const cardsList = list.map((c) => c.menu_id);
@@ -191,77 +207,77 @@ export const Game_Menus = ({
 
   // const useCardIdRef = useRef<string | undefined>(undefined);
 
-  const useCard = (
-    type: "open" | "close" | "useCard",
-    data?: ActionData | undefined,
-  ) => {
-    console.log("type", type);
-    // if (type !== 'open' || type !== 'close' || type !== 'useCard') return;
+  // const useCard = (
+  //   type: "open" | "close" | "useCard",
+  //   data?: ActionData | undefined,
+  // ) => {
+  //   console.log("type", type);
+  //   // if (type !== 'open' || type !== 'close' || type !== 'useCard') return;
 
-    if (type === "open") {
-      const cardInfo = data?.cardInfo;
-      if (!cardInfo) return;
-      useCardIdRef.current = cardInfo?.id;
+  //   if (type === "open") {
+  //     const cardInfo = data?.cardInfo;
+  //     if (!cardInfo) return;
+  //     useCardIdRef.current = cardInfo?.id;
 
-      console.log("useCardIdRef", useCardIdRef.current);
+  //     console.log("useCardIdRef", useCardIdRef.current);
 
-      setSelectCard({
-        menu_id: cardInfo.id,
-        rarity: cardInfo.rarity,
-        avatar: cardInfo.avatar,
-        name: cardInfo.name,
-        description: cardInfo.description,
-        damage: cardInfo.damage,
-        protection: cardInfo.protection,
-        power_slot: cardInfo.power_slot,
-      });
-      // setSelectCard(cardInfo);
+  //     setSelectCard({
+  //       menu_id: cardInfo.id,
+  //       rarity: cardInfo.rarity,
+  //       avatar: cardInfo.avatar,
+  //       name: cardInfo.name,
+  //       description: cardInfo.description,
+  //       damage: cardInfo.damage,
+  //       protection: cardInfo.protection,
+  //       power_slot: cardInfo.power_slot,
+  //     });
+  //     // setSelectCard(cardInfo);
 
-      setIsOpenCardActions(true);
-    } else if (type === "useCard") {
-      const useCardId = useCardIdRef.current;
-      console.log("useCardId 2", useCardId);
-      if (activePlayerCard === useCardId || !useCardId) return;
+  //     setIsOpenCardActions(true);
+  //   } else if (type === "useCard") {
+  //     const useCardId = useCardIdRef.current;
+  //     console.log("useCardId 2", useCardId);
+  //     if (activePlayerCard === useCardId || !useCardId) return;
 
-      console.log("useCardId", useCardId);
+  //     console.log("useCardId", useCardId);
 
-      setIsOpenCardActions(false);
+  //     setIsOpenCardActions(false);
 
-      const updatedHandList = handList.filter(
-        (item) => item.menu_id !== useCardId,
-      );
-      setHandList(updatedHandList);
+  //     const updatedHandList = handList.filter(
+  //       (item) => item.menu_id !== useCardId,
+  //     );
+  //     setHandList(updatedHandList);
 
-      setActivePlayerCard(useCardId);
+  //     setActivePlayerCard(useCardId);
 
-      socket.emit("select_card", {
-        game_key: game_key,
-        player_id: player_id,
-        // enemy_name: playersInfo[0].enemyInfo.name,
-        enemy_id: playersInfo?.enemyInfo.id,
-        card_id: useCardId,
-      });
-      setSelectCard(initialCardState);
+  //     socket.emit("select_card", {
+  //       game_key: game_key,
+  //       player_id: player_id,
+  //       // enemy_name: playersInfo[0].enemyInfo.name,
+  //       enemy_id: playersInfo?.enemyInfo.id,
+  //       card_id: useCardId,
+  //     });
+  //     setSelectCard(initialCardState);
 
-      console.log("activePlayerCard", activePlayerCard);
+  //     console.log("activePlayerCard", activePlayerCard);
 
-      // if (activePlayerCard !== null) return;
-      //
-      // const removeId = handList.filter(item => item.menu_id !== useCardId);
-      //
-      // setHandList(removeId);
-    } else if (type === "close") {
-      setSelectCard(initialCardState);
-      setIsOpenCardActions(false);
-    } else {
-      setSelectCard(initialCardState);
-      setIsOpenCardActions(false);
-    }
-  };
+  //     // if (activePlayerCard !== null) return;
+  //     //
+  //     // const removeId = handList.filter(item => item.menu_id !== useCardId);
+  //     //
+  //     // setHandList(removeId);
+  //   } else if (type === "close") {
+  //     setSelectCard(initialCardState);
+  //     setIsOpenCardActions(false);
+  //   } else {
+  //     setSelectCard(initialCardState);
+  //     setIsOpenCardActions(false);
+  //   }
+  // };
 
   return (
     <>
-      <Game_CardDesk
+      {/* <Game_CardDesk
         onToggleMenu={toggleMenu}
         useCard={(
           type: "open" | "close" | "useCard",
@@ -281,9 +297,9 @@ export const Game_Menus = ({
         // setActiveAnimationCardId={setActiveAnimationCardId}
         playersInfo={playersInfo}
         damageAnimation={damageAnimation}
-      />
+      /> */}
 
-      {isOpenCardActions && (
+      {isOpenCardActionsMenu && (
         <div
           className={Menus_styles["menu-wrapper"]}
           style={{
@@ -294,7 +310,7 @@ export const Game_Menus = ({
         >
           <div className={CardDesk_styles["bg-glow"]}></div>
           <div
-            className={`${Menus_styles["actions-menu-card"]} ${isClosing ? Menus_styles["closing"] : ""}`}
+            className={`${Menus_styles["actions-menu-card"]} ${isClosingGameCardsMenu ? Menus_styles["closing"] : ""}`}
           >
             <h2>Использовать карту?</h2>
             <div className={Menus_styles["actions-options"]}>
@@ -372,14 +388,14 @@ export const Game_Menus = ({
               <div className={Menus_styles["actions-buttons"]}>
                 <button
                   className={Menus_styles["menu-btn"]}
-                  onClick={() => useCard("useCard")}
+                  onClick={() => GameFunctions.useCard_menu("useCard")}
                 >
                   <span>Использовать</span>
                 </button>
 
                 <button
                   className={Menus_styles["menu-btn"]}
-                  onClick={() => useCard("close")}
+                  onClick={() => GameFunctions.useCard_menu("close")}
                 >
                   <span>Отмена</span>
                 </button>
@@ -389,11 +405,11 @@ export const Game_Menus = ({
         </div>
       )}
 
-      {isOpen && !loading && (
+      {isOpenGameCardsMenu && !loading && (
         <div className={Menus_styles["menu-wrapper"]}>
           <div className={CardDesk_styles["bg-glow"]}></div>
           <div
-            className={`${Menus_styles["menu-card"]} ${isClosing ? Menus_styles["closing"] : ""}`}
+            className={`${Menus_styles["menu-card"]} ${isClosingGameCardsMenu ? Menus_styles["closing"] : ""}`}
           >
             <h2>Соберите свою колоду</h2>
             <div className={Menus_styles["options"]}>
@@ -491,7 +507,10 @@ export const Game_Menus = ({
             </div>
 
             <div className={Menus_styles["btn-options"]}>
-              <button className={Menus_styles["menu-btn"]} onClick={closeMenu}>
+              <button
+                className={Menus_styles["menu-btn"]}
+                onClick={() => GameFunctions.gameCards_menu(false)}
+              >
                 {/*<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-check-big-icon lucide-square-check-big">*/}
                 {/*    <path d="M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344"/><path d="m9 11 3 3L22 4"/>*/}
                 {/*</svg>*/}
@@ -515,7 +534,7 @@ export const Game_Menus = ({
           </div>
 
           <div
-            className={`${Menus_styles["player-cards-menu"]} ${isClosing ? Menus_styles["closing"] : ""}`}
+            className={`${Menus_styles["player-cards-menu"]} ${isClosingGameCardsMenu ? Menus_styles["closing"] : ""}`}
           >
             <h2>Ваши карты</h2>
             <div className={Menus_styles["choosing-cards"]}>
@@ -632,7 +651,7 @@ export const Game_Menus = ({
               <button onClick={leaveGame}>
                 <span>Выйти</span>
               </button>
-              <button onClick={actionsMenu}>
+              <button onClick={() => GameFunctions.leaveGame_menu(false)}>
                 <span>Отмена</span>
               </button>
             </div>

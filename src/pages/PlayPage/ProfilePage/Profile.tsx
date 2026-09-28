@@ -162,7 +162,7 @@ export const ProfilePage = () => {
   }, [cardsCategory]);
 
   useEffect(() => {
-    if (!data?.id) return;
+    if (!data || !data?.id) return;
 
     // handleGetCards("all");
     // setCards(data.renderData || []);
