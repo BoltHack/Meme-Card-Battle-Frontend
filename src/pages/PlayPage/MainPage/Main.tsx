@@ -1,7 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 // import { Helmet } from "react-helmet-async";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 import styles from "./Card.Main.module.css";
 
@@ -9,9 +9,9 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../api/api.ts";
-// import usePageRender from "../../../tools/PageRender.ts";
-// import { LoadingPage } from "../../LoadingPage/Loading.tsx";
-// import { ErrorPage } from "../../ErrorPage/Error.tsx";
+import usePageRender from "../../../tools/PageRender.ts";
+import { LoadingPage } from "../../LoadingPage/Loading.tsx";
+import { ErrorPage } from "../../ErrorPage/Error.tsx";
 
 // interface PlayerData {
 //   name: string;
@@ -36,13 +36,9 @@ export const MainPage = ({ isGameFound }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // const timeoutRef = useRef<number | null>(null);
-  const [isActionOpen, setIsActionOpen] = useState<string | null>(null);
 
-  // const [isGameFound, setIsGameFound] = useState(false);
-
-  // const { data, loading, error, socket } = usePageRender(
-  //   `${api.API_BASE_URL}/api/`,
+  // const { loading, error } = usePageRender(
+  //   `${api.API_BASE_URL}/play/`,
   // );
 
   const findGame = (type: string) => {
@@ -51,10 +47,6 @@ export const MainPage = ({ isGameFound }: Props) => {
   };
 
   const toggleMenu = () => {
-    // if (!data?.id) {
-    //   navigate("/auth/sign-in");
-    //   return;
-    // }
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setIsClosing(false);
     setIsOpen(true);
@@ -70,32 +62,9 @@ export const MainPage = ({ isGameFound }: Props) => {
     }, 200);
   };
 
-  const toggleActionsMenu = (type: string) => {
-    if (isActionOpen !== null && isActionOpen === type) {
-      setIsActionOpen(null);
-    } else {
-      setIsActionOpen(type);
-    }
-  };
-
-  const getRandomCards = async () => {
-    try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/get-random-card`,
-      );
-
-      const data = response.data;
-
-      toast.dismiss();
-      toast.success(data.success);
-
-      return response.data;
-    } catch (error: any) {
-      const errorMessage =
-        error?.response?.data?.error || "Произошла ошибка при выходе";
-      console.log("Ошибка:", errorMessage);
-    }
-  };
+  useEffect(() => {
+    playFunctions.handleChangeHeaderState(true);
+  }, []);
 
   // useEffect(() => {
   //   if (!data || !data.id) return;
@@ -108,10 +77,6 @@ export const MainPage = ({ isGameFound }: Props) => {
 
   return (
     <div className={styles["body-wrapper"]}>
-      {/* <Helmet>
-        <title>{title}</title>
-      </Helmet> */}
-
       <div className={styles["parallax-body"]}></div>
       <div className={styles["parallax-wrapper"]}>
         <div className={styles["smoke-glow smoke-red"]}></div>
@@ -224,14 +189,13 @@ export const MainPage = ({ isGameFound }: Props) => {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="lucide lucide-gamepad-directional-icon lucide-gamepad-directional"
+            className="lucide lucide-playing-cards-fan-icon lucide-playing-cards-fan"
           >
-            <path d="M11.146 15.854a1.207 1.207 0 0 1 1.708 0l1.56 1.56A2 2 0 0 1 15 18.828V21a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2.172a2 2 0 0 1 .586-1.414z" />
-            <path d="M18.828 15a2 2 0 0 1-1.414-.586l-1.56-1.56a1.207 1.207 0 0 1 0-1.708l1.56-1.56A2 2 0 0 1 18.828 9H21a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z" />
-            <path d="M6.586 14.414A2 2 0 0 1 5.172 15H3a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h2.172a2 2 0 0 1 1.414.586l1.56 1.56a1.207 1.207 0 0 1 0 1.708z" />
-            <path d="M9 3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2.172a2 2 0 0 1-.586 1.414l-1.56 1.56a1.207 1.207 0 0 1-1.708 0l-1.56-1.56A2 2 0 0 1 9 5.172z" />
+            <path d="M12.65 7.65a2 2 0 012.629-1.046l5.51 2.374a2 2 0 011.046 2.628l-3.957 9.184a2 2 0 01-2.628 1.046l-5.51-2.374a2 2 0 01-1.046-2.628z" />
+            <path d="M18 7.777V4a2 2 0 00-2-2h-6a2 2 0 00-2 2v10a2 2 0 001.137 1.805" />
+            <path d="m8 4.389-4.364.809a2 2 0 00-1.602 2.33l1.822 9.833a2 2 0 002.331 1.602l2.542-.47" />
           </svg>
-          <span>Профиль</span>
+          <span>Коллекция</span>
         </div>
 
         <div
@@ -257,7 +221,10 @@ export const MainPage = ({ isGameFound }: Props) => {
           <span>Кейсы</span>
         </div>
 
-        <div className={styles["btn"]} onClick={() => playFunctions.handleChangeTab("play:shop")}>
+        <div
+          className={styles["btn"]}
+          onClick={() => playFunctions.handleChangeTab("play:shop")}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -278,7 +245,11 @@ export const MainPage = ({ isGameFound }: Props) => {
           <span>Магазин</span>
         </div>
 
-        <div className={styles["btn"]} onClick={() => playFunctions.handleChangeTab("play:settings")}>
+        <div
+          className={styles["btn"]}
+          onClick={() => playFunctions.handleChangeTab("play:settings")}
+          // onClick={() => SoundPlayer("btn_move")}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -318,7 +289,7 @@ export const MainPage = ({ isGameFound }: Props) => {
         </div> */}
       </div>
 
-      <div className={styles["actions-menu"]}>
+      {/* <div className={styles["actions-menu"]}>
         <div className={styles["actions-menu-container"]}>
           <div className={styles["actions-menu-tool"]}>
             <div
@@ -434,42 +405,42 @@ export const MainPage = ({ isGameFound }: Props) => {
                 </ul>
               </div>
             )}
-          </div>
+          </div> */}
 
-          {/*<div className={styles["actions-menu-tool"]}>*/}
+      {/*<div className={styles["actions-menu-tool"]}>*/}
 
-          {/*    <div className={`${styles["actions-menu-icon"]} ${isActionOpen === "other" ? styles["active"] : null }`}*/}
-          {/*         onClick={() => toggleActionsMenu("other")}*/}
-          {/*    >*/}
-          {/*        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-menu-icon lucide-square-menu">*/}
-          {/*            <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10"/><path d="M7 12h10"/><path d="M7 16h10"/>*/}
-          {/*        </svg>*/}
-          {/*    </div>*/}
+      {/*    <div className={`${styles["actions-menu-icon"]} ${isActionOpen === "other" ? styles["active"] : null }`}*/}
+      {/*         onClick={() => toggleActionsMenu("other")}*/}
+      {/*    >*/}
+      {/*        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-menu-icon lucide-square-menu">*/}
+      {/*            <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10"/><path d="M7 12h10"/><path d="M7 16h10"/>*/}
+      {/*        </svg>*/}
+      {/*    </div>*/}
 
-          {/*    {(isActionOpen === "other") && (*/}
-          {/*        <div className={`${styles["actions-menu-top"]} ${!isActionOpen === null ? styles["closing"] : null}`}>*/}
-          {/*            <div className={styles["actions-menu-header"]}>*/}
-          {/*                <span className={styles["actions-menu-title"]}>Другое</span>*/}
-          {/*                <div className={styles["close-btn"]} onClick={() => setIsActionOpen(null)}>*/}
-          {/*                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-icon lucide-x">*/}
-          {/*                        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>*/}
-          {/*                    </svg>*/}
-          {/*                </div>*/}
-          {/*            </div>*/}
+      {/*    {(isActionOpen === "other") && (*/}
+      {/*        <div className={`${styles["actions-menu-top"]} ${!isActionOpen === null ? styles["closing"] : null}`}>*/}
+      {/*            <div className={styles["actions-menu-header"]}>*/}
+      {/*                <span className={styles["actions-menu-title"]}>Другое</span>*/}
+      {/*                <div className={styles["close-btn"]} onClick={() => setIsActionOpen(null)}>*/}
+      {/*                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-icon lucide-x">*/}
+      {/*                        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>*/}
+      {/*                    </svg>*/}
+      {/*                </div>*/}
+      {/*            </div>*/}
 
-          {/*            <ul className={styles["actions-menu-list"]}>*/}
-          {/*                <li>*/}
-          {/*                    <Link to="/blog" className={styles["actions-menu-btn"]}>*/}
-          {/*                        <span>Блог</span>*/}
-          {/*                    </Link>*/}
-          {/*                </li>*/}
-          {/*            </ul>*/}
-          {/*        </div>*/}
-          {/*    )}*/}
+      {/*            <ul className={styles["actions-menu-list"]}>*/}
+      {/*                <li>*/}
+      {/*                    <Link to="/blog" className={styles["actions-menu-btn"]}>*/}
+      {/*                        <span>Блог</span>*/}
+      {/*                    </Link>*/}
+      {/*                </li>*/}
+      {/*            </ul>*/}
+      {/*        </div>*/}
+      {/*    )}*/}
 
-          {/*</div>*/}
+      {/*</div>*/}
 
-          <div className={styles["actions-menu-tool"]}>
+      {/* <div className={styles["actions-menu-tool"]}>
             <div
               className={`${styles["actions-menu-icon"]} ${isActionOpen === "player" ? styles["active"] : null}`}
               onClick={() => toggleActionsMenu("player")}
@@ -518,9 +489,9 @@ export const MainPage = ({ isGameFound }: Props) => {
                       <path d="m6 6 12 12" />
                     </svg>
                   </div>
-                </div>
+                </div> */}
 
-                {/* <ul className={styles["actions-menu-list"]}>
+      {/* <ul className={styles["actions-menu-list"]}>
                   {data?.role === "Admin" && (
                     <>
                       <li>
@@ -570,11 +541,11 @@ export const MainPage = ({ isGameFound }: Props) => {
                     </li>
                   )}
                 </ul> */}
-              </div>
+      {/* </div>
             )}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {isOpen && (
         <div className={styles["menu-wrapper"]}>

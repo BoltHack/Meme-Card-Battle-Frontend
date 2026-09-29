@@ -12,7 +12,6 @@ import { LoadingPage } from "../../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../../ErrorPage/Error.tsx";
 
 import toast from "react-hot-toast";
-import { playFunctions } from "../Play/Play.tsx";
 
 interface CaseFormat {
   id: string;
@@ -24,6 +23,8 @@ interface CaseFormat {
   price: string;
   prioriry: string;
 }
+
+import { playFunctions } from "../Play/Play.tsx";
 
 export const ShopPage = () => {
   const [cases, setCases] = useState<CaseFormat[]>([]);
@@ -42,7 +43,7 @@ export const ShopPage = () => {
   const [isCaseLoading, setIsCaseLoading] = useState<string | null>(null);
 
   const { data, loading, error } = usePageRender(
-    `${api.API_BASE_URL}/api/shop`,
+    `${api.API_BASE_URL}/play/shop`,
   );
 
   const buyCase = async (case_id: string) => {
@@ -50,7 +51,7 @@ export const ShopPage = () => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/api/case/${case_id}/buy`,
+        `${api.API_BASE_URL}/play/case/${case_id}/buy`,
         {
           withCredentials: true,
         },
@@ -81,7 +82,7 @@ export const ShopPage = () => {
 
   //   try {
   //     const response = await axios.post(
-  //       `${api.API_BASE_URL}/api/case/${case_id}/content/get`,
+  //       `${api.API_BASE_URL}/play/case/${case_id}/content/get`,
   //       {
   //         withCredentials: true,
   //       },
@@ -110,6 +111,8 @@ export const ShopPage = () => {
       );
       return;
     }
+
+    playFunctions.handleChangeHeaderState(true);
 
     setCases(data.renderData);
     console.log("data", data);

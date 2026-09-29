@@ -9,7 +9,7 @@ axios.defaults.withCredentials = true;
 import api from "../../../../api/api.ts";
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
 
 interface PlayerData {
@@ -128,7 +128,7 @@ export const CreateCardPage = () => {
     }
   };
 
-  if (loading) return <DefaultLoading />;
+  if (loading) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
 
   return (

@@ -10,7 +10,7 @@ import api from "../../../api/api.ts";
 
 import usePageRender from "../../../tools/PageRender.ts";
 import { LoadingPage } from "../../LoadingPage/Loading.tsx";
-import { DefaultLoading } from "../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../LoadingPage/ContentLoading.tsx";
 import { ErrorPage } from "../../ErrorPage/Error.tsx";
 
 // import { Header } from "../Header/Header.tsx";
@@ -28,11 +28,11 @@ interface RenderData {
   power_slot: number;
 }
 
-interface StatsData {
-  lvl: number;
-  money: number;
-  coins: number;
-}
+// interface StatsData {
+//   lvl: number;
+//   money: number;
+//   coins: number;
+// }
 
 interface PlayerData {
   id: string;
@@ -40,14 +40,16 @@ interface PlayerData {
   role: string;
   cards_count: number;
   renderData: RenderData[];
-  stats: StatsData;
+  // stats: StatsData;
 }
+
+import { playFunctions } from "../Play/Play.tsx";
 
 export const ProfilePage = () => {
   const [cards, setCards] = useState<RenderData[]>([]);
   const [cardsCount, setCardsCount] = useState<number>(0);
 
-  const [stats, setStats] = useState<StatsData>({} as StatsData);
+  // const [stats, setStats] = useState<StatsData>({} as StatsData);
 
   const [cardsCategory, setCardsCategory] = useState<string | "all">("all");
 
@@ -60,7 +62,7 @@ export const ProfilePage = () => {
   );
 
   const { data, loading, error } = usePageRender<PlayerData>(
-    `${api.API_BASE_URL}/api/profile`,
+    `${api.API_BASE_URL}/play/profile`,
   );
 
   // const formattedCurrency = (count: number): string => {
@@ -140,7 +142,7 @@ export const ProfilePage = () => {
   const handleGetCards = async (cards_category: string) => {
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/api/cards/get/${cards_category}`,
+        `${api.API_BASE_URL}/play/cards/get/${cards_category}`,
         {
           withCredentials: true,
         },
@@ -164,9 +166,11 @@ export const ProfilePage = () => {
   useEffect(() => {
     if (!data || !data?.id) return;
 
+    playFunctions.handleChangeHeaderState(true);
+
     // handleGetCards("all");
     // setCards(data.renderData || []);
-    setStats(data.stats || ({} as StatsData));
+    // setStats(data.stats || ({} as StatsData));
 
     const searchTimer = setTimeout(() => {
       if (profile_state?.search_value?.length > 0) {
@@ -547,7 +551,7 @@ export const ProfilePage = () => {
               );
             })
           ) : (
-            <DefaultLoading />
+            <ContentLoading />
           )}
         </main>
       </div>

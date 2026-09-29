@@ -11,7 +11,7 @@ axios.defaults.withCredentials = true;
 import api from "../../../../api/api.ts";
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
 // import { CaseListPage } from "../CaseListPage/CaseList.tsx";
 
@@ -170,7 +170,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
     // }
   }, [data]);
 
-  if (loading) return <DefaultLoading />;
+  if (loading) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
 
   // if (back) return <CaseListPage />;

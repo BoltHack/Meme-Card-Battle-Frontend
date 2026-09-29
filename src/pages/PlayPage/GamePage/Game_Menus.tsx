@@ -62,14 +62,14 @@ interface TitleSettings {
   list: CardData[];
   setList: Dispatch<SetStateAction<CardData[]>>;
 
-  handList: CardData[];
+  // handList: CardData[];
   setHandList: Dispatch<SetStateAction<CardData[]>>;
 
-  enemyHandList: any;
+  // enemyHandList: any;
 
-  activePlayerCard: string | null;
-  setActivePlayerCard: Dispatch<SetStateAction<string | null>>;
-  activeEnemyCard: boolean | false;
+  // activePlayerCard: string | null;
+  // setActivePlayerCard: Dispatch<SetStateAction<string | null>>;
+  // activeEnemyCard: boolean | false;
 
   loading: boolean | false;
 
@@ -79,7 +79,7 @@ interface TitleSettings {
 
   setIsBlock: Dispatch<SetStateAction<boolean>>;
 
-  damageAnimation: string | null;
+  // damageAnimation: string | null;
 }
 
 import { playFunctions } from "../Play/Play.tsx";

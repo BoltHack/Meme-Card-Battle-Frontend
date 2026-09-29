@@ -9,7 +9,7 @@ axios.defaults.withCredentials = true;
 import api from "../../../../api/api.ts";
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
 
 interface LinkFormat {
@@ -43,7 +43,7 @@ export const EditLinkPage = ({ link_id }: ResponseProps) => {
     name: "",
     link: "",
     icon: "",
-    priority: 1
+    priority: 1,
   });
   const [mainPriority, setMainPriority] = useState<boolean | false>(false);
 
@@ -114,7 +114,7 @@ export const EditLinkPage = ({ link_id }: ResponseProps) => {
 
   useEffect(() => {
     if (!data || !Array.from(data.renderData)) {
-        return;
+      return;
     }
 
     setFormData({
@@ -126,7 +126,7 @@ export const EditLinkPage = ({ link_id }: ResponseProps) => {
     setMainPriority(data.renderData.main_priority);
   }, [data]);
 
-  if (loading) return <DefaultLoading />;
+  if (loading) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
 
   return (
@@ -226,7 +226,10 @@ export const EditLinkPage = ({ link_id }: ResponseProps) => {
               </label>
             </div>
           </div>
-          <div className={styles["editor-left-side"]} style={{ maxWidth: "600px" }}>
+          <div
+            className={styles["editor-left-side"]}
+            style={{ maxWidth: "600px" }}
+          >
             <div className={styles["form-group"]}>
               <label className={styles["form-label"]} htmlFor="icon">
                 Иконка (svg)

@@ -11,12 +11,12 @@ import api from "../../../../api/api.ts";
 
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 
 import { Pagination } from "../../../../tools/PageTools/Pagination/Pagination.tsx";
-import { EditBlogPage } from "../EditBlogPage/EditBlog.tsx";
+// import { EditBlogPage } from "../EditBlogPage/EditBlog.tsx";
 import toast from "react-hot-toast";
-import { BlogSettingsPage } from "../BlogSettingsPage/BlogSettings.tsx";
+// import { BlogSettingsPage } from "../BlogSettingsPage/BlogSettings.tsx";
 
 interface BlogPost {
   author: string;
@@ -158,7 +158,7 @@ export const BlogListPage = () => {
     };
   }, [data]);
 
-  if (loading) return <DefaultLoading />;
+  if (loading) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
 
   return (

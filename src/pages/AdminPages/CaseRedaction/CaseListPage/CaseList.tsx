@@ -10,7 +10,7 @@ import api from "../../../../api/api.ts";
 
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 // import { EditDataPage } from "../EditCasePage/EditData.tsx";
 // import { EditContentPage } from "../EditCasePage/EditContent.tsx";
 import toast from "react-hot-toast";
@@ -99,7 +99,7 @@ export const CaseListPage = () => {
     setCaseList(data.renderData.cases);
   }, [data]);
 
-  if (loading) return <DefaultLoading />;
+  if (loading) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
 
   // if (editCase.id !== null && editCase.type === "EditData") {

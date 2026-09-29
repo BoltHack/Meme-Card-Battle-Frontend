@@ -22,6 +22,8 @@ export const settingsNavigator = {
   handleChangeTab: (tab: string) => {},
 };
 
+import { playFunctions } from "../../Play/Play.tsx";
+
 export const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState<string>(Settings[0]);
 
@@ -32,7 +34,7 @@ export const SettingsPage = () => {
   });
 
   const { data, loading, error } = usePageRender(
-    `${api.API_BASE_URL}/api/settings`,
+    `${api.API_BASE_URL}/play/settings`,
   );
 
   const getRegisterDate = (date: string) => {
@@ -64,6 +66,8 @@ export const SettingsPage = () => {
       );
       return;
     }
+
+    playFunctions.handleChangeHeaderState(true);
 
     setUserInfo({
       name: data.renderData.name,

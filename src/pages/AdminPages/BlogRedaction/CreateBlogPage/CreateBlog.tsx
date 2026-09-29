@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 
 interface PlayerData {
   name: string;
@@ -252,7 +252,7 @@ export const CreateBlogPage = () => {
     }
   };
 
-  if (loading) return <DefaultLoading />;
+  if (loading) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
 
   return (

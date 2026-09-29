@@ -6,7 +6,7 @@ import api from "../../../api/api.ts";
 
 import usePageRender from "../../../tools/PageRender.ts";
 import { ErrorPage } from "../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../LoadingPage/ContentLoading.tsx";
 
 interface TeamData {
   id: string;
@@ -32,7 +32,7 @@ export const TeamPage = () => {
     }
   }, [data]);
 
-  if (loading) return <DefaultLoading />;
+  if (loading) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
 
   return (

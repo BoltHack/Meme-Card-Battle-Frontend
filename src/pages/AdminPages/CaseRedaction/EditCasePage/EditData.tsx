@@ -9,7 +9,7 @@ axios.defaults.withCredentials = true;
 import api from "../../../../api/api.ts";
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
 
 interface CaseFormat {
@@ -116,7 +116,7 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
     });
   }, [data]);
 
-  if (loading) return <DefaultLoading />;
+  if (loading) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
 
   return (
@@ -209,7 +209,10 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
               </select>
             </div>
           </div>
-          <div className={styles["editor-right-side"]} style={{ marginTop: "0" }}>
+          <div
+            className={styles["editor-right-side"]}
+            style={{ marginTop: "0" }}
+          >
             <div className={styles["form-group"]}>
               <label className={styles["form-label"]} htmlFor="case_quantity">
                 Количество

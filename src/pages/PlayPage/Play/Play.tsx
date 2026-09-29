@@ -29,6 +29,8 @@ interface TitleSettings {
   title: string;
 }
 
+// import { SoundPlayer } from "../../../tools/global_scripts/SoundPlayer/SoundPlayer.ts";
+
 let play_game_type = "";
 let play_game_key = "";
 
@@ -45,6 +47,9 @@ export const playFunctions = {
   handleChangeTab: (tab: string) => {
     console.log(tab);
   },
+  handleChangeHeaderState: (type: boolean) => {
+    console.log(type);
+  },
   foundGame: (type: string) => {
     console.log(type);
   },
@@ -58,49 +63,22 @@ export const playFunctions = {
 
 export const PlayPage = ({ title }: TitleSettings) => {
   const [activeTab, setActiveTab] = useState<string>(PlayNavigation[0]);
+  const [headerState, setHeaderState] = useState<boolean | true>(true);
 
   const { data, loading, error, socket } = usePageRender(
-    `${api.API_BASE_URL}/api/play`,
+    `${api.API_BASE_URL}/play/play`,
   );
 
   useEffect(() => {
-    // const active_tab_state = JSON.parse(
-    //   sessionStorage.getItem("active_tab_state") || "{}",
-    // );
-
     playFunctions.handleChangeTab = (tab: string) => {
-      // console.log("edit_id 1", edit_id);
+      if (tab !== "play:main") {
+        playFunctions.handleChangeHeaderState(false);
+      }
+      // SoundPlayer("btn_move");
       setActiveTab((prevTab) => {
         console.log("Предыдущая вкладка:", prevTab);
         console.log("Новая вкладка:", tab);
-        // let setTab = "";
 
-        // const regex = /play:game:type_([^/]+)\/key_(.+)/;
-        // const match = tab.match(regex);
-
-        // if (match) {
-        //   console.log("yes");
-
-        //   const gameType = match[1];
-        //   const gameKey = match[2];
-
-        //   game_type = gameType;
-        //   game_key = gameKey;
-        //   setTab = "play:game";
-        // } else {
-        //   console.log("no");
-        //   setTab = tab;
-        // }
-
-        // const updatedState = {
-        //   ...active_tab_state,
-        //   previousTab: prevTab,
-        //   currentTab: tab,
-        // };
-        // sessionStorage.setItem(
-        //   "active_tab_state",
-        //   JSON.stringify(updatedState),
-        // );
         sessionStorage.setItem("active_tab", tab);
         return tab;
       });
@@ -112,6 +90,16 @@ export const PlayPage = ({ title }: TitleSettings) => {
       play_game_key = "";
     };
   }, [activeTab]);
+
+  useEffect(() => {
+    playFunctions.handleChangeHeaderState = (type: boolean) => {
+      setHeaderState(type);
+    };
+
+    return () => {
+      playFunctions.handleChangeHeaderState = () => {};
+    };
+  }, []);
 
   useEffect(() => {
     playFunctions.foundGame = (type: string) => {
@@ -307,6 +295,8 @@ export const PlayPage = ({ title }: TitleSettings) => {
       toast.error(message);
     });
 
+    // setTimeout(() => SoundPlayer("background_music"), 500);
+
     return () => {
       sessionStorage.setItem("active_tab", "play:main");
       socket.off("connect", sendInitialData);
@@ -373,7 +363,7 @@ export const PlayPage = ({ title }: TitleSettings) => {
       )}
 
       <div className={body_styles["body-wrapper"]}>
-        <Header userInfo={userInfo} activeTab={activeTab} />
+        {headerState && <Header userInfo={userInfo} activeTab={activeTab} />}
         {activeTab === PlayNavigation[0] && (
           <MainPage isGameFound={isGameFound} />
         )}

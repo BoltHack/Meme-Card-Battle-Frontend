@@ -11,7 +11,7 @@ import api from "../../../../api/api.ts";
 
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
 // import { CardSettingsPage } from "../CardSettingsPage/CardSettings.tsx";
 
@@ -37,7 +37,6 @@ interface CardResponse {
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 
 export const CardListPage = () => {
-
   const [cards, setCards] = useState<CardPost[]>([]);
 
   const initialCardState = {
@@ -112,9 +111,9 @@ export const CardListPage = () => {
     setCards(data.renderData.card);
   }, [data]);
 
-  if (loading) return <DefaultLoading />;
+  if (loading) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
-  
+
   return (
     <div
       id="card-list-page"

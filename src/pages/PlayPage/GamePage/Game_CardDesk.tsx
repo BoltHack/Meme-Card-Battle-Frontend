@@ -228,7 +228,7 @@ export const Game_CardDesk = ({
                 className={`
                             ${CardDesk_styles["player-profile"]}
                             ${CardDesk_styles["enemy-profile"]}
-                            ${damageAnimation === "enemy_damage" ? CardDesk_styles["damage-received"] : null}
+                            ${damageAnimation === "player_damage" ? CardDesk_styles["damage-received"] : null}
                             `}
               >
                 <div className={CardDesk_styles["avatar-wrapper"]}>
@@ -622,7 +622,7 @@ export const Game_CardDesk = ({
                 className={`
                                  ${CardDesk_styles["player-profile"]}
                                  ${CardDesk_styles["user-profile"]}
-                                 ${damageAnimation === "player_damage" ? CardDesk_styles["damage-received"] : null}
+                                 ${damageAnimation === "enemy_damage" ? CardDesk_styles["damage-received"] : null}
                                  `}
                 style={!isGameStart ? { cursor: "pointer" } : {}}
                 onClick={() => GameFunctions.gameCards_menu(true)}

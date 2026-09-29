@@ -7,25 +7,26 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
 import usePageRender from "../../../../tools/PageRender.ts";
-import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import toast from "react-hot-toast";
 
 export const NotificationsPage = () => {
   const settings = JSON.parse(localStorage.getItem("settings") || "{}");
 
-  const [notifications, setNotifications] = useState({
-    push: settings.push ?? false,
-    marketing_and_functions: settings.marketing_and_functions ?? false,
+  const [settingsList, setSettingsList] = useState({
+    push: true,
+    marketing_and_functions:
+      true,
   });
 
   const { data, loading, error } = usePageRender(
-    `${api.API_BASE_URL}/api/settings/notifications`,
+    `${api.API_BASE_URL}/play/settings/notifications`,
   );
 
   const handleCheckBoxCheck = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
-    setNotifications((prev) => ({
+    setSettingsList((prev) => ({
       ...prev,
       [name]: checked,
     }));
@@ -36,8 +37,10 @@ export const NotificationsPage = () => {
 
     const updateSettings = {
       ...settings,
-      push: notifications.push,
-      marketing_and_functions: notifications.marketing_and_functions,
+      notifications: {
+        push: settingsList.push,
+        marketing_and_functions: settingsList.marketing_and_functions,
+      },
     };
     localStorage.setItem("settings", JSON.stringify(updateSettings));
 
@@ -45,7 +48,7 @@ export const NotificationsPage = () => {
   };
 
   useEffect(() => {
-    if (!data || !settings || !settings.notifications) {
+    if (!data) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
         data,
@@ -53,14 +56,14 @@ export const NotificationsPage = () => {
       return;
     }
 
-    setNotifications({
-      push: settings?.notifications?.push ?? false,
+    setSettingsList({
+      push: settings?.notifications?.push ?? true,
       marketing_and_functions:
-        settings?.notifications?.marketing_and_functions ?? false,
+        settings?.notifications?.marketing_and_functions ?? true,
     });
-  }, [data, settings]);
+  }, [data]);
 
-  if (loading || !settings) return <DefaultLoading />;
+  if (loading || !data) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
 
   return (
@@ -76,7 +79,7 @@ export const NotificationsPage = () => {
         <div className={settings_styles["setting-row"]}>
           <div className={settings_styles["setting-info"]}>
             <span className={settings_styles["setting-title"]}>
-              В push-уведомления в браузере
+              Push-уведомления в браузере
             </span>
             <span className={settings_styles["setting-desc"]}>
               Получать важные системные алерты в реальном времени
@@ -86,7 +89,7 @@ export const NotificationsPage = () => {
             <input
               type="checkbox"
               name="push"
-              checked={notifications.push}
+              checked={settingsList.push}
               onChange={handleCheckBoxCheck}
             />
             <span className={settings_styles["slider"]}></span>
@@ -121,7 +124,7 @@ export const NotificationsPage = () => {
             <input
               type="checkbox"
               name="marketing_and_functions"
-              checked={notifications.marketing_and_functions}
+              checked={settingsList.marketing_and_functions}
               onChange={handleCheckBoxCheck}
             />
             <span className={settings_styles["slider"]}></span>

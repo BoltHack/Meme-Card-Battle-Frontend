@@ -1,6 +1,6 @@
-import styles from "./Card.DefaultLoading.module.css";
+import styles from "./Card.ContentLoading.module.css";
 
-export const DefaultLoading = () => {
+export const ContentLoading = () => {
 
     return (
         <div className={styles["loader"]}>

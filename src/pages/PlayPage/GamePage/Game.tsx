@@ -99,7 +99,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
   // const { game_type, game_key } = useParams();
 
   const { data, loading, error } = usePageRender<PlayerData>(
-    `${api.API_BASE_URL}/api/game/${game_type}/${game_key}`,
+    `${api.API_BASE_URL}/play/game/${game_type}/${game_key}`,
   );
 
   const [isOpenLeaveMenu, setIsOpenLeaveMenu] = useState(false);
@@ -293,7 +293,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
   // CardDesk
 
   const [winnerInfo, setWinnerInfo] = useState({
-    name: ""
+    name: "",
   });
 
   const blocker = useBlocker(
@@ -561,16 +561,18 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     socket.on("game_cards_selected_result", (data) => {
       const { type, gameData } = data;
 
+      console.log("game_cards_selected_result");
+
       if (type === "timer") {
         if (gameData.timer === 0) {
           console.log("Время вскрываться!");
           console.log("winnerIdRef", winnerIdRef.current);
           if (id === winnerIdRef.current) {
             console.log("дамаг нанес ты", gameData.winnerId);
-            setDamageState("enemy_damage");
+            setDamageState("player_damage");
           } else {
             console.log("дамаг нанес враг", gameData.winnerId);
-            setDamageState("player_damage");
+            setDamageState("enemy_damage");
           }
         }
 
@@ -580,14 +582,24 @@ export const GamePage = ({ game_type, game_key }: Props) => {
         const res = gameData.result;
         const winnerPlayer = playersInfoRef.current;
         winnerIdRef.current = gameData.winnerId;
+
+        const winner =
+          res.winnerId === winnerPlayer.playerInfo.id
+            ? winnerPlayer.playerInfo.name
+            : winnerPlayer.enemyInfo.name;
+
         if (res.status === "win") {
           setWinnerInfo({
-            name:
-              res.winnerId === winnerPlayer.playerInfo.id
-                ? winnerPlayer.playerInfo.name
-                : winnerPlayer.enemyInfo.name,
+            name: winner,
           });
           setTimeout(() => handleGameOver(), 12500);
+        }
+        if (res.status === "autowin") {
+          setDamageState("player_damage");
+          setWinnerInfo({
+            name: winner,
+          });
+          setTimeout(() => handleGameOver(), 2000);
         }
         return;
       }

@@ -52,8 +52,52 @@ export const AccountPage = () => {
       </header>
 
       <section className={settings_styles["settings-section"]}>
+        <h2>Аккаунт</h2>
+
+        <div
+          className={`${settings_styles["setting-row"]} ${settings_styles["mt-20"]}`}
+        >
+          <div className={settings_styles["setting-info"]}>
+            <span className={settings_styles["setting-title"]}>
+              Смена пароля
+            </span>
+            <span className={settings_styles["setting-desc"]}>
+              Поменяйте ваш текущий пароль от аккаунта, если прошлый показался
+              вам небезопасным
+            </span>
+          </div>
+          <button
+            className={`${settings_styles["btn"]} ${settings_styles["btn-secondary"]}`}
+          >
+            Изменить
+          </button>
+        </div>
+
+        <div
+          className={`${settings_styles["setting-row"]} ${settings_styles["mt-20"]}`}
+        >
+          <div className={settings_styles["setting-info"]}>
+            <span className={settings_styles["setting-title"]}>
+              Выйти со всех устройств
+            </span>
+            <span className={settings_styles["setting-desc"]}>
+              Завершить все активные сеансы на других устройствах, кроме
+              текущего. Для входа потребуется заново ввести пароль.
+            </span>
+          </div>
+          <button
+            className={`${settings_styles["btn"]} ${settings_styles["btn-secondary"]}`}
+          >
+            Выйти
+          </button>
+        </div>
+      </section>
+
+      <section
+        className={`${settings_styles["settings-section"]} ${settings_styles["bottom-section"]}`}
+      >
         <h2>Безопасность</h2>
-        <div className={settings_styles["grid-form"]}>
+        {/* <div className={settings_styles["grid-form"]}>
           <div className={settings_styles["input-group"]}>
             <label>Текущий пароль</label>
             <input type="password" placeholder="••••••••" />
@@ -62,7 +106,7 @@ export const AccountPage = () => {
             <label>Новый пароль</label>
             <input type="password" placeholder="Минимум 8 символов" />
           </div>
-        </div>
+        </div> */}
 
         <div
           className={`${settings_styles["setting-row"]} ${settings_styles["mt-20"]}`}
@@ -85,7 +129,7 @@ export const AccountPage = () => {
       </section>
 
       <section
-        className={`${settings_styles["settings-section"]} ${settings_styles["border-danger"]}`}
+        className={`${settings_styles["settings-section"]} ${settings_styles["border-danger"]} ${settings_styles["bottom-section"]}`}
       >
         <h2 className={settings_styles["text-danger"]}>Опасная зона</h2>
         <div className={settings_styles["setting-row"]}>

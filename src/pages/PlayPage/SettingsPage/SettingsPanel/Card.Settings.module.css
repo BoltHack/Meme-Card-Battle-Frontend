@@ -173,6 +173,10 @@
   color: #fff;
 }
 
+.bottom-section {
+  margin-top: -100px;
+}
+
 .full-width {
   grid-column: 1 / -1;
 }
@@ -364,7 +368,6 @@
 }
 
 .border-danger {
-  margin-top: -100px;
   border: 1px solid rgba(239, 68, 68, 0.2) !important;
   background: rgba(239, 68, 68, 0.02) !important;
 }

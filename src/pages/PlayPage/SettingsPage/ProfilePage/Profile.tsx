@@ -7,7 +7,7 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
 import usePageRender from "../../../../tools/PageRender.ts";
-import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import toast from "react-hot-toast";
 
@@ -23,15 +23,14 @@ export const ProfilePage = () => {
     aboutMe: "",
   });
   const [file, setFile] = useState<File | null>(null);
+  const [idolFile, setIdolFile] = useState<File | string>("");
   const [isDeleteFile, setIsDeleteFile] = useState<boolean | false>(false);
 
   const dir_about_me_ref = useRef<HTMLTextAreaElement>(null);
 
   const { data, loading, error } = usePageRender(
-    `${api.API_BASE_URL}/api/settings/profile`,
+    `${api.API_BASE_URL}/play/settings/profile`,
   );
-
-  const [idolFile, setIdolFile] = useState<File | string>("");
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -80,7 +79,7 @@ export const ProfilePage = () => {
     }
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/api/save-settings/profile`,
+        `${api.API_BASE_URL}/play/save-settings/profile`,
         dataToSend,
         {
           withCredentials: true,
@@ -114,14 +113,9 @@ export const ProfilePage = () => {
       return;
     }
 
-    // setUserInfo({
-    //   avatar: data.renderData.avatar,
-    //   aboutMe: data.renderData.aboutMe,
-    // });
-
     setFormData({
-      aboutMe: data.renderData.aboutMe
-    })
+      aboutMe: data.renderData.aboutMe,
+    });
 
     setIdolFile(
       data?.renderData?.avatar !== "" &&
@@ -131,7 +125,7 @@ export const ProfilePage = () => {
     console.log("data", data);
   }, [data]);
 
-  if (loading || !data) return <DefaultLoading />;
+  if (loading) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
 
   return (

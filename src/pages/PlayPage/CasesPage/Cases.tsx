@@ -23,6 +23,8 @@ interface CardsPost {
   keys: string;
 }
 
+import { playFunctions } from "../Play/Play.tsx";
+
 export const CasesPage = () => {
   const [cases, setCases] = useState<CardsPost[]>([]);
 
@@ -47,7 +49,7 @@ export const CasesPage = () => {
   const [rewardCard, setRewardCard] = useState(initialCardState);
 
   const { data, loading, error } = usePageRender(
-    `${api.API_BASE_URL}/api/cases`,
+    `${api.API_BASE_URL}/play/cases`,
   );
 
   const openCase = async (case_id: string) => {
@@ -55,7 +57,7 @@ export const CasesPage = () => {
     if (isOpenCase !== "") return;
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/api/case/${case_id}/open`,
+        `${api.API_BASE_URL}/play/case/${case_id}/open`,
         {
           withCredentials: true,
         },
@@ -117,6 +119,8 @@ export const CasesPage = () => {
       );
       return;
     }
+
+    playFunctions.handleChangeHeaderState(true);
 
     setCases(data.renderData.cases);
 

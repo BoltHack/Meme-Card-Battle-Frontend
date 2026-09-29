@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 
 import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { DefaultLoading } from "../../../LoadingPage/DefaultLoading.tsx";
+import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 
 // interface BlogId {
 //     blog_id: string
@@ -275,7 +275,7 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
     setTimeout(() => getBlogData(formattedBlogs.post_cover), 100);
   }, [data]);
 
-  if (loading) return <DefaultLoading />;
+  if (loading) return <ContentLoading />;
   if (error) return <ErrorPage error={error} />;
 
   return (
@@ -523,7 +523,11 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
                     )
                   </td>
                   <td>
-                    <a href="/" target="_blank" className={styles["preview-link"]}>
+                    <a
+                      href="/"
+                      target="_blank"
+                      className={styles["preview-link"]}
+                    >
                       Текст
                     </a>
                   </td>

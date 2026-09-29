@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -13,7 +13,6 @@ axios.defaults.withCredentials = true;
 //   autoConnect: false,
 // });
 
-
 interface ErrorState {
   code: number;
   message: string;
@@ -21,7 +20,7 @@ interface ErrorState {
 
 export default function usePageRender<T extends Record<string, any>>(
   url: string,
-  options: { enabled: boolean } = { enabled: true }
+  options: { enabled: boolean } = { enabled: true },
 ) {
   const navigate = useNavigate();
 
@@ -31,7 +30,9 @@ export default function usePageRender<T extends Record<string, any>>(
 
   const [trigger, setTrigger] = useState(0);
 
-    // const lastFetchedUrl = useRef<string | null>(null);
+  // const hasSent = useRef(false);
+
+  // const lastFetchedUrl = useRef<string | null>(null);
 
   const socket = useMemo(() => {
     return io(api.API_BASE_URL, { autoConnect: false });
@@ -72,6 +73,10 @@ export default function usePageRender<T extends Record<string, any>>(
       .then((response) => {
         setData(response.data);
         setError(null);
+
+        // if (!hasSent.current && data?.id) return;
+        // hasSent.current = true;
+
         if (!active_session && !active_session_cookies) {
           // setLoading(true);
           return;
