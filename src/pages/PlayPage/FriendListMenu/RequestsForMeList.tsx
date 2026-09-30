@@ -55,7 +55,12 @@ export const RequestsForMeList = ({ friendList, contentLoading }: Props) => {
               </div>
             );
           })
-        : !contentLoading && <p>Тут пусто</p>}
+        : !contentLoading && (
+            <p>
+              Тут будут появляться игроки, которые отправили вам запрос в
+              друзья.
+            </p>
+          )}
     </>
   );
 };

@@ -37,7 +37,7 @@ export const IsOnlineList = ({ friendList, contentLoading }: Props) => {
                   </div>
                 </div>
                 <div className={styles["actions"]}>
-                  <button className={styles["btn"]}>Пригласить</button>
+                  <button className={styles["btn"]}>Позвать в битву</button>
                   <button
                     className={`${styles["btn"]} ${styles["btn-remove"]}`}
                     onClick={() => friendListTools.handleRemoveFriend(fr.id)}
@@ -48,7 +48,9 @@ export const IsOnlineList = ({ friendList, contentLoading }: Props) => {
               </div>
             );
           })
-        : !contentLoading && <p>Тут пусто</p>}
+        : !contentLoading && (
+            <p>Тут будут появляться игроки, которые на данный момент в сети.</p>
+          )}
     </>
   );
 };

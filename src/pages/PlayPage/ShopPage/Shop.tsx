@@ -46,12 +46,17 @@ export const ShopPage = () => {
     `${api.API_BASE_URL}/play/shop`,
   );
 
-  const buyCase = async (case_id: string) => {
+  const buyCase = async (case_id: string, case_quantity: string) => {
     setIsCaseLoading(case_id);
+
+    const dataToSend = new FormData();
+
+    dataToSend.append("case_quantity", case_quantity);
 
     try {
       const response = await axios.post(
         `${api.API_BASE_URL}/play/case/${case_id}/buy`,
+        dataToSend,
         {
           withCredentials: true,
         },
@@ -102,6 +107,28 @@ export const ShopPage = () => {
   //     setIsCaseLoading(null);
   //   }
   // };
+
+  const updatePrice = (case_id: string, count: number) => {
+    setCases((prevState) =>
+      prevState.map((cs) =>
+        cs.id === case_id
+          ? {
+              ...cs,
+              quantity: String(count),
+            }
+          : cs,
+      ),
+    );
+  };
+
+  const formattedCPrice = (count: number): string => {
+    const formattedCount = new Intl.NumberFormat("de-DE", {
+      notation: "standard",
+      // compactDisplay: "short",
+      maximumFractionDigits: 1,
+    }).format(count);
+    return formattedCount.toLowerCase();
+  };
 
   useEffect(() => {
     if (!data || !Array.isArray(data.renderData)) {
@@ -172,6 +199,41 @@ export const ShopPage = () => {
                           <p className={styles["case-desc"]}>
                             {cs.description}
                           </p>
+                          <div className={styles["quantity-selector"]}>
+                            <label
+                              className={`${styles["quantity-option"]} ${styles[Number(cs.quantity) === 1 ? "checked" : ""]}`}
+                            >
+                              <input
+                                type="radio"
+                                name="quantity"
+                                value="1"
+                                onChange={() => updatePrice(cs.id, 1)}
+                              />
+                              <span>x1</span>
+                            </label>
+                            <label
+                              className={`${styles["quantity-option"]} ${styles[Number(cs.quantity) === 15 ? "checked" : ""]}`}
+                            >
+                              <input
+                                type="radio"
+                                name="quantity"
+                                value="15"
+                                onChange={() => updatePrice(cs.id, 15)}
+                              />
+                              <span>x15</span>
+                            </label>
+                            <label
+                              className={`${styles["quantity-option"]} ${styles[Number(cs.quantity) === 30 ? "checked" : ""]}`}
+                            >
+                              <input
+                                type="radio"
+                                name="quantity"
+                                value="30"
+                                onChange={() => updatePrice(cs.id, 30)}
+                              />
+                              <span>x30</span>
+                            </label>
+                          </div>
                           <div className={styles["case-footer"]}>
                             <div className={styles["price-block"]}>
                               <svg
@@ -231,13 +293,15 @@ export const ShopPage = () => {
                                 />
                               </svg>
                               <span className={styles["price"]}>
-                                {cs.price}
+                                {formattedCPrice(
+                                  Number(cs.price) * Number(cs.quantity),
+                                )}
                               </span>
                             </div>
                             <button
                               className={styles["buy-btn"]}
                               disabled={shopData.product ? true : false}
-                              onClick={() => buyCase(cs.id)}
+                              onClick={() => buyCase(cs.id, cs.quantity)}
                             >
                               <span>
                                 {isCaseLoading === cs.id

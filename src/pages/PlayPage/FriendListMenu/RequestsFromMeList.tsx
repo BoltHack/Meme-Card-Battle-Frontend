@@ -37,9 +37,7 @@ export const RequestsFromMeList = ({ friendList, contentLoading }: Props) => {
                 <div className={styles["actions"]}>
                   <button
                     className={`${styles["btn"]} ${styles["btn-remove"]}`}
-                    onClick={(e) =>
-                      friendListTools.handleCancelRequest(fr.id)
-                    }
+                    onClick={(e) => friendListTools.handleCancelRequest(fr.id)}
                   >
                     Отменить
                   </button>
@@ -47,7 +45,11 @@ export const RequestsFromMeList = ({ friendList, contentLoading }: Props) => {
               </div>
             );
           })
-        : !contentLoading && <p>Тут пусто</p>}
+        : !contentLoading && (
+            <p>
+              Тут будут появляться игроки, которым вы отправили запрос в друзья.
+            </p>
+          )}
 
       {/* <div className={styles["window-footer"]}>
             <input

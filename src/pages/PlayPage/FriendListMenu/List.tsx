@@ -28,9 +28,7 @@ export const List = ({ friendList, contentLoading }: Props) => {
                   <div>
                     <div className={styles["player-name"]}>{fr.name}</div>
                     {fr.gameInfo === "InGame" ? (
-                      <div className={styles["status-fight"]}>
-                        В битве
-                      </div>
+                      <div className={styles["status-fight"]}>В битве</div>
                     ) : fr.isOnline ? (
                       <div className={styles["status-online"]}>В сети</div>
                     ) : (
@@ -39,7 +37,9 @@ export const List = ({ friendList, contentLoading }: Props) => {
                   </div>
                 </div>
                 <div className={styles["actions"]}>
-                  <button className={styles["btn"]}>Позвать в битву</button>
+                  {fr.isOnline && (
+                    <button className={styles["btn"]}>Позвать в битву</button>
+                  )}
                   <button
                     className={`${styles["btn"]} ${styles["btn-remove"]}`}
                     onClick={() => friendListTools.handleRemoveFriend(fr.id)}
@@ -50,7 +50,7 @@ export const List = ({ friendList, contentLoading }: Props) => {
               </div>
             );
           })
-        : !contentLoading && <p>Тут пусто</p>}
+        : !contentLoading && <p>Тут буду появляться ваши друзья.</p>}
     </>
   );
 };
