@@ -38,8 +38,12 @@ export const SettingsPage = () => {
   );
 
   const getRegisterDate = (date: string) => {
-    const registerDate = new Date(date).toLocaleString();
-    return registerDate;
+    return new Date(date).toLocaleString("ru-RU", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour12: false,
+    });
   };
 
   useEffect(() => {

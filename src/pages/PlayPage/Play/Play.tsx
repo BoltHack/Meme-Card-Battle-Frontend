@@ -25,6 +25,16 @@ import { ShopPage } from "../ShopPage/Shop.tsx";
 import { SettingsPage } from "../SettingsPage/SettingsPanel/SettingsPanel.tsx";
 import { GamePage } from "../GamePage/Game.tsx";
 
+import { FriendListMenu } from "../FriendListMenu/Menu.tsx";
+
+// interface FriendsPost {
+//   id: string;
+//   name: string;
+//   lvl: number;
+//   gameInfo: string;
+//   isOnline: boolean;
+// }
+
 interface TitleSettings {
   title: string;
 }
@@ -59,11 +69,16 @@ export const playFunctions = {
   updateUserInfo: (coins: number) => {
     console.log(coins);
   },
+  toggleFriendsMenu: (type: boolean) => {
+    console.log(type);
+  },
 };
 
 export const PlayPage = ({ title }: TitleSettings) => {
   const [activeTab, setActiveTab] = useState<string>(PlayNavigation[0]);
   const [headerState, setHeaderState] = useState<boolean | true>(true);
+
+  const [friendsMenu, setFriendsMenu] = useState<boolean | false>(false);
 
   const { data, loading, error, socket } = usePageRender(
     `${api.API_BASE_URL}/play/play`,
@@ -168,6 +183,7 @@ export const PlayPage = ({ title }: TitleSettings) => {
       playFunctions.logout = () => {};
     };
   }, []);
+
   useEffect(() => {
     playFunctions.updateUserInfo = (coins: number) => {
       setUserInfo((prev) => ({
@@ -180,6 +196,17 @@ export const PlayPage = ({ title }: TitleSettings) => {
       playFunctions.updateUserInfo = () => {};
     };
   }, []);
+
+  useEffect(() => {
+    playFunctions.toggleFriendsMenu = (type: boolean) => {
+      // handleChangeFriendsCategory("list");
+      setFriendsMenu(type);
+    };
+
+    return () => {
+      playFunctions.toggleFriendsMenu = () => {};
+    };
+  });
 
   const navigate = useNavigate();
 
@@ -361,6 +388,8 @@ export const PlayPage = ({ title }: TitleSettings) => {
           </div>
         </div>
       )}
+
+      {friendsMenu && <FriendListMenu />}
 
       <div className={body_styles["body-wrapper"]}>
         {headerState && <Header userInfo={userInfo} activeTab={activeTab} />}

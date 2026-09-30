@@ -1,7 +1,6 @@
-import styles from "./Card.Header.module.css";
-
-import { playFunctions } from "../Play/Play";
 import { useEffect, useState } from "react";
+
+import styles from "./Card.Header.module.css";
 
 interface userInfo {
   name: string;
@@ -14,6 +13,8 @@ interface Props {
   activeTab: string;
   userInfo: userInfo;
 }
+
+import { playFunctions } from "../Play/Play";
 
 export const Header = ({ activeTab, userInfo }: Props) => {
   const [isFullScreen, setIsFullScreen] = useState<boolean | false>(false);
@@ -70,8 +71,7 @@ export const Header = ({ activeTab, userInfo }: Props) => {
       notation: "standard",
       // compactDisplay: "short",
       maximumFractionDigits: 1,
-    })
-      .format(count);
+    }).format(count);
     return formattedCount.toLowerCase();
   };
 
@@ -126,6 +126,7 @@ export const Header = ({ activeTab, userInfo }: Props) => {
             </div>
             <div
               className={`${styles["header-btn"]} ${styles["btn-right-border"]}`}
+              onClick={() => playFunctions.toggleFriendsMenu(true)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
