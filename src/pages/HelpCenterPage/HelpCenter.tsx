@@ -11,7 +11,6 @@ import { ErrorPage } from "../ErrorPage/Error.tsx";
 
 import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
-import useContentRender from "../../tools/ContentRender.ts";
 
 interface PlayerData {
   name: string;
@@ -42,13 +41,13 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
   const [searchInput, setSearchInput] = useState("");
   const [searchURL, setSearchURL] = useState("");
 
-  const categoryFound = useRef<Boolean | false>(false);
-  const anotherCategoryFound = useRef<Boolean | false>(false);
+  const categoryFound = useRef<boolean | false>(false);
+  const anotherCategoryFound = useRef<boolean | false>(false);
 
   // const searchSettings = JSON.parse(sessionStorage.getItem('searchSettings') || '{}');
   const searchSettings = sessionStorage.getItem("searchSettings");
 
-  const { contentData, contentLoading, contentError } = useContentRender<PlayerData>(
+  const { data, loading, error, socket } = usePageRender<PlayerData>(
     `${api.API_BASE_URL}/api/help-center`,
   );
 
@@ -150,12 +149,8 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
   }, []);
 
   useEffect(() => {
-    if (
-      !contentLoading &&
-      contentData?.renderData &&
-      contentData.renderData?.length > 0
-    ) {
-      const formattedCategories = contentData?.renderData.map((cat: any) => ({
+    if (!loading && data?.renderData && data.renderData?.length > 0) {
+      const formattedCategories = data?.renderData.map((cat: any) => ({
         title: cat.title || "",
         summary: cat.summary || "",
         icon: {
@@ -171,10 +166,16 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
 
       setCategoriesList(formattedCategories);
     }
-  }, [contentLoading, contentData]);
+  }, [loading, data]);
 
-  if (contentLoading) return <LoadingPage />;
-  if (contentError) return <ErrorPage error={contentError} />;
+  useEffect(() => {
+    if (!data) return;
+
+    socket.disconnect();
+  }, [data, socket]);
+
+  if (loading) return <LoadingPage />;
+  if (error) return <ErrorPage error={error} />;
 
   return (
     <div className={styles["body-wrapper"]}>

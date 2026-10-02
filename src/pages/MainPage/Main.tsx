@@ -8,10 +8,10 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
-
-import useContentRender from "../../tools/ContentRender.ts";
+import usePageRender from "../../tools/PageRender.ts";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
+
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
 
 interface BlogPost {
@@ -41,7 +41,9 @@ export const MainPage = ({ title }: TitleSettings) => {
   const [mainBlog, setMainBlog] = useState<BlogPost[]>([]);
   const [mainLinks, setMainLinks] = useState<LinksPost[]>([]);
 
-  const { contentData, contentLoading, contentError } = useContentRender(`${api.API_BASE_URL}/api/`);
+  const { data, loading, error, socket } = usePageRender(
+    `${api.API_BASE_URL}/api/`,
+  );
 
   const dateSettings = (date: string) => {
     return new Date(date).toLocaleString("ru-RU", {
@@ -53,20 +55,26 @@ export const MainPage = ({ title }: TitleSettings) => {
   };
 
   useEffect(() => {
-    if (!contentData || !contentData.renderData) {
+    if (!data || !data.renderData) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        contentData,
+        data,
       );
     }
 
-    setMainBlog(contentData?.renderData.blogData);
-    setMainLinks(contentData?.renderData.linksData);
-    console.log("contentData", contentData);
-  }, [contentData]);
+    setMainBlog(data?.renderData.blogData);
+    setMainLinks(data?.renderData.linksData);
+    console.log("data", data);
+  }, [data]);
 
-  if (contentLoading) return <LoadingPage />;
-  if (contentError) return <ErrorPage error={contentError} />;
+  useEffect(() => {
+    if (!data) return;
+
+    socket.disconnect();
+  }, [data, socket]);
+
+  if (loading) return <LoadingPage />;
+  if (error) return <ErrorPage error={error} />;
 
   return (
     <div className={styles["body-wrapper"]}>
@@ -76,7 +84,7 @@ export const MainPage = ({ title }: TitleSettings) => {
 
       <Header />
 
-      {contentData?.role === "Admin" && (
+      {data?.role === "Admin" && (
         <Link to="/admin/panel" className={styles["admin-panel-btn"]}>
           Админка
         </Link>

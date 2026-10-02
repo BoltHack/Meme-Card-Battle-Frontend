@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import styles from "./Card.Rules.module.css";
 
 import api from "../../api/api.ts";
-import useContentRender from "../../tools/ContentRender.ts";
+import usePageRender from "../../tools/PageRender.ts";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
 
@@ -30,15 +30,12 @@ export const HowToPlayPage = ({ title }: TitleSettings) => {
   const [articleList, setArticleList] = useState<ArticleNavigationItem[]>([]);
   // const [articleList, setArticleList] = useState<ArticlesData | []>([]);
 
-  const { contentData, contentLoading, contentError } =
-    useContentRender<ArticlesData>(`${api.API_BASE_URL}/api/how-to-play`);
+  const { data, loading, error, socket } = usePageRender<ArticlesData>(
+    `${api.API_BASE_URL}/api/how-to-play`,
+  );
 
   useEffect(() => {
-    if (
-      !contentLoading &&
-      contentData?.renderData &&
-      articleSectionsContainer.current
-    ) {
+    if (!loading && data?.renderData && articleSectionsContainer.current) {
       setTimeout(() => {
         if (!articleSectionsContainer.current) return;
 
@@ -62,10 +59,16 @@ export const HowToPlayPage = ({ title }: TitleSettings) => {
         setArticleList(tempArticles);
       }, 0);
     }
-  }, [contentLoading, contentData?.renderData]);
+  }, [loading, data]);
 
-  if (contentLoading) return <LoadingPage />;
-  if (contentError) return <ErrorPage error={contentError} />;
+  useEffect(() => {
+    if (!data) return;
+
+    socket.disconnect();
+  }, [data, socket]);
+
+  if (loading) return <LoadingPage />;
+  if (error) return <ErrorPage error={error} />;
 
   return (
     <div className={styles["body-wrapper"]}>
@@ -98,9 +101,9 @@ export const HowToPlayPage = ({ title }: TitleSettings) => {
               </p>
             </header>
 
-            {contentData?.renderData && contentData?.renderData.length > 0 ? (
+            {data?.renderData && data?.renderData.length > 0 ? (
               <section className={styles["article-section"]}>
-                <ReactMarkdown>{contentData?.renderData}</ReactMarkdown>
+                <ReactMarkdown>{data?.renderData}</ReactMarkdown>
               </section>
             ) : null}
           </article>

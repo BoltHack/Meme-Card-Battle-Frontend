@@ -6,7 +6,7 @@ import styles from "./Card.Rules.module.css";
 
 import api from "../../api/api.ts";
 
-import useContentRender from "../../tools/ContentRender.ts";
+import usePageRender from "../../tools/PageRender.ts";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
 
@@ -30,15 +30,12 @@ export const PrivacyPolicy = ({ title }: TitleSettings) => {
   const articleSectionsContainer = useRef<HTMLDivElement>(null);
   const [articleList, setArticleList] = useState<ArticleNavigationItem[]>([]);
 
-  const { contentData, contentLoading, contentError } =
-    useContentRender<ArticlesData>(`${api.API_BASE_URL}/api/privacy-policy`);
+  const { data, loading, error, socket } = usePageRender<ArticlesData>(
+    `${api.API_BASE_URL}/api/privacy-policy`,
+  );
 
   useEffect(() => {
-    if (
-      !contentLoading &&
-      contentData?.renderData &&
-      articleSectionsContainer.current
-    ) {
+    if (!loading && data?.renderData && articleSectionsContainer.current) {
       setTimeout(() => {
         if (!articleSectionsContainer.current) return;
 
@@ -62,10 +59,16 @@ export const PrivacyPolicy = ({ title }: TitleSettings) => {
         setArticleList(tempArticles);
       }, 0);
     }
-  }, [contentLoading, contentData?.renderData]);
+  }, [loading, data]);
 
-  if (contentLoading) return <LoadingPage />;
-  if (contentError) return <ErrorPage error={contentError} />;
+  useEffect(() => {
+    if (!data) return;
+
+    socket.disconnect();
+  }, [data, socket]);
+
+  if (loading) return <LoadingPage />;
+  if (error) return <ErrorPage error={error} />;
 
   return (
     <div className={styles["body-wrapper"]}>
@@ -94,9 +97,9 @@ export const PrivacyPolicy = ({ title }: TitleSettings) => {
               </p>
             </header>
 
-            {contentData?.renderData && contentData?.renderData.length > 0 ? (
+            {data?.renderData && data?.renderData.length > 0 ? (
               <section className={styles["article-section"]}>
-                <ReactMarkdown>{contentData?.renderData}</ReactMarkdown>
+                <ReactMarkdown>{data?.renderData}</ReactMarkdown>
               </section>
             ) : null}
           </article>

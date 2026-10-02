@@ -10,12 +10,12 @@ import styles from "../AuthPage/Card.Auth.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import useContentRender from "../../tools/ContentRender.ts";
 import api from "../../api/api.ts";
+import toast from "react-hot-toast";
+import usePageRender from "../../tools/PageRender.ts";
+
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
-
-import toast from "react-hot-toast";
 
 interface TitleSettings {
   title: string;
@@ -28,9 +28,7 @@ export const SignInPage = ({ title }: TitleSettings) => {
 
   const [modalType, setModalType] = useState("main");
 
-  const { contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/auth/sign-in`,
-  );
+  const { loading, error } = usePageRender(`${api.API_BASE_URL}/auth/sign-in`);
 
   const toggleModal = (type: string) => {
     setModalType(type);
@@ -39,8 +37,8 @@ export const SignInPage = ({ title }: TitleSettings) => {
     setPasswordVisible(!passwordVisible);
   };
 
-  if (contentLoading) return <LoadingPage />;
-  if (contentError) return <ErrorPage error={contentError} />;
+  if (loading) return <LoadingPage />;
+  if (error) return <ErrorPage error={error} />;
 
   return (
     <div className={styles["body-wrapper"]}>

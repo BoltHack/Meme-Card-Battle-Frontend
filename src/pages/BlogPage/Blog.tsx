@@ -9,7 +9,7 @@ axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
 
-import useContentRender from "../../tools/ContentRender.ts";
+import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 
@@ -54,10 +54,9 @@ export const BlogPage = ({ title }: BlogPageProps) => {
   const blog_state = JSON.parse(sessionStorage.getItem("blog_state") || "{}");
   // const [isBlogState, setIsBlogState] = useState<boolean | false>(false);
 
-  const { contentData, contentLoading, contentError } =
-    useContentRender<BlogResponse>(
-      `${api.API_BASE_URL}/api/blog?page=${currentPage}`,
-    );
+  const { data, loading, error, socket } = usePageRender<BlogResponse>(
+    `${api.API_BASE_URL}/api/blog?page=${currentPage}`,
+  );
 
   const dateSettings = (date: string) => {
     return new Date(date).toLocaleString("ru-RU", {
@@ -90,18 +89,18 @@ export const BlogPage = ({ title }: BlogPageProps) => {
   }, []);
 
   useEffect(() => {
-    if (!contentData || !Array.isArray(contentData.renderData.blog)) {
+    if (!data || !Array.isArray(data.renderData.blog)) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        contentData,
+        data,
       );
       return;
     }
 
-    setBlog(contentData.renderData.blog);
+    setBlog(data.renderData.blog);
 
     setCurrentPage(getCurrentPage);
-    setTotalPages(contentData.renderData.totalPages);
+    setTotalPages(data.renderData.totalPages);
 
     handleScrollToTop();
 
@@ -116,10 +115,16 @@ export const BlogPage = ({ title }: BlogPageProps) => {
         sessionStorage.removeItem("blog_state");
       }
     };
-  }, [contentData]);
+  }, [data]);
 
-  if (contentLoading) return <LoadingPage />;
-  if (contentError) return <ErrorPage error={contentError} />;
+  useEffect(() => {
+    if (!data) return;
+
+    socket.disconnect();
+  }, [data, socket]);
+
+  if (loading) return <LoadingPage />;
+  if (error) return <ErrorPage error={error} />;
 
   return (
     <div className={styles["body-wrapper"]} ref={bodyWrapperRef}>

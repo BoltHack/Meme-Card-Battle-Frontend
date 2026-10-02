@@ -12,7 +12,6 @@ import { ErrorPage } from "../ErrorPage/Error.tsx";
 
 import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
-import useContentRender from "../../tools/ContentRender.ts";
 
 interface ArticlesData {
   renderData: string;
@@ -31,17 +30,14 @@ export const TermsOfUsePage = ({ title }: TitleSettings) => {
   const articleSectionsContainer = useRef<HTMLDivElement>(null);
   const [articleList, setArticleList] = useState<ArticleNavigationItem[]>([]);
 
-  const { contentData, contentLoading, contentError } =
-    useContentRender<ArticlesData>(`${api.API_BASE_URL}/api/terms-of-use`);
+  const { data, loading, error, socket } = usePageRender<ArticlesData>(
+    `${api.API_BASE_URL}/api/terms-of-use`,
+  );
 
   useEffect(() => {
-    console.log("contentData", contentData);
+    console.log("data", data);
 
-    if (
-      !contentLoading &&
-      contentData?.renderData &&
-      articleSectionsContainer.current
-    ) {
+    if (!loading && data?.renderData && articleSectionsContainer.current) {
       setTimeout(() => {
         if (!articleSectionsContainer.current) return;
 
@@ -65,10 +61,16 @@ export const TermsOfUsePage = ({ title }: TitleSettings) => {
         setArticleList(tempArticles);
       }, 0);
     }
-  }, [contentLoading, contentData?.renderData]);
+  }, [loading, data]);
 
-  if (contentLoading) return <LoadingPage />;
-  if (contentError) return <ErrorPage error={contentError} />;
+  useEffect(() => {
+    if (!data) return;
+
+    socket.disconnect();
+  }, [data, socket]);
+
+  if (loading) return <LoadingPage />;
+  if (error) return <ErrorPage error={error} />;
 
   return (
     <div className={styles["body-wrapper"]}>
@@ -97,9 +99,9 @@ export const TermsOfUsePage = ({ title }: TitleSettings) => {
               </p>
             </header>
 
-            {contentData?.renderData && contentData?.renderData.length > 0 ? (
+            {data?.renderData && data?.renderData.length > 0 ? (
               <section className={styles["article-section"]}>
-                <ReactMarkdown>{contentData?.renderData}</ReactMarkdown>
+                <ReactMarkdown>{data?.renderData}</ReactMarkdown>
               </section>
             ) : null}
           </article>

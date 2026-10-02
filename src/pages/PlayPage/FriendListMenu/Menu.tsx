@@ -257,7 +257,7 @@ export const FriendListMenu = ({ playerID }: Props) => {
       }
     }
   };
-
+  
   useEffect(() => {
     if (!contentData || !Array.isArray(contentData.renderData.list)) {
       return;
@@ -269,6 +269,7 @@ export const FriendListMenu = ({ playerID }: Props) => {
     });
 
     setFriendsList(contentData.renderData.list);
+
   }, [contentData]);
 
   // useEffect(() => {
