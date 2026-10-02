@@ -71,7 +71,10 @@ export const Footer = () => {
                     <Link to="/">Главная</Link>
                   </li>
                   <li>
-                    <Link to="#">Документация</Link>
+                    <Link to="/rules">Правила игры</Link>
+                  </li>
+                  <li>
+                    <Link to="/how-to-play">Как играть</Link>
                   </li>
                   {/* <li>
                     <Link to="/shop">Магазин</Link>
@@ -126,9 +129,6 @@ export const Footer = () => {
                   <li>
                     <Link to="/cookie-policy">Политика Cookie файлов</Link>
                   </li>
-                  <li>
-                    <Link to="/rules">Правила</Link>
-                  </li>
                 </ul>
               </div>
 
@@ -170,7 +170,11 @@ export const Footer = () => {
 
           <div className={styles["footer-bottom"]}>
             {/*<p>&copy; 2026 MEME CARD BATTLE | Все права защищены.</p>*/}
-            <h1>MEME CARD BATTLE</h1>
+            {/* <h1>MEME CARD BATTLE</h1> */}
+            <span>
+              &copy; <strong>Все права защищены</strong>. Полное или частичное
+              копирование сайта запрещено.
+            </span>
           </div>
         </div>
       </footer>

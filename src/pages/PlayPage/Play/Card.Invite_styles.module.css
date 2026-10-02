@@ -45,6 +45,8 @@
   max-width: 420px;
   color: #ffffff;
   z-index: 9999;
+
+  user-select: none;
 }
 
 .game-notification.show {

@@ -13,6 +13,7 @@ import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
 
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
+import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 
 interface BlogPost {
   author: string;
@@ -408,9 +409,9 @@ export const MainPage = ({ title }: TitleSettings) => {
             </span>
           </div>
 
-          <div className={styles["footer-bottom-bar"]}>
+          {/* <div className={styles["footer-bottom-bar"]}>
             <div className={styles["copyright-block"]}>
-              {/* <div className={styles["cookie-icon"]}></div> */}
+              <div className={styles["cookie-icon"]}></div>
               <span>
                 &copy; <strong>Все права защищены</strong>. Полное или частичное
                 копирование сайта запрещено.
@@ -425,11 +426,11 @@ export const MainPage = ({ title }: TitleSettings) => {
             </div>
 
             <div className={styles["age-rating"]}>0+</div>
-          </div>
+          </div> */}
         </div>
       </div>
 
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };

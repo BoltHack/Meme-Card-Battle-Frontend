@@ -148,11 +148,8 @@
   margin: 40px 0 25px;
 }
 
-.footer-bottom {
+/* .footer-bottom {
   text-align: center;
-  /*color: #64748b;*/
-  /*font-size: 13px;*/
-  /*font-size: 25px;*/
   font-size: 40px;
   font-family: "Segoe UI Script", "Comic Sans MS", "Apple Chancery", cursive;
   color: #801de2;
@@ -165,6 +162,19 @@
     0px 8px 13px rgba(0, 0, 0, 0.1),
     0px 18px 23px rgba(0, 0, 0, 0.1);
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+} */
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 11px;
+  color: #727b84;
+}
+
+.footer-bottom strong {
+  color: #929ba4;
 }
 
 @media (max-width: 768px) {
