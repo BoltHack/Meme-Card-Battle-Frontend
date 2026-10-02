@@ -169,7 +169,8 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  font-size: 11px;
+  /* font-size: 11px; */
+  font-size: 13px;
   color: #727b84;
 }
 
