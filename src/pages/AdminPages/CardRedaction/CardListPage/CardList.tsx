@@ -9,9 +9,8 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
 
-import usePageRender from "../../../../tools/PageRender.ts";
-import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
+import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import toast from "react-hot-toast";
 // import { CardSettingsPage } from "../CardSettingsPage/CardSettings.tsx";
 
@@ -35,6 +34,7 @@ interface CardResponse {
 }
 
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
+import useContentRender from "../../../../tools/ContentRender.ts";
 
 export const CardListPage = () => {
   const [cards, setCards] = useState<CardPost[]>([]);
@@ -54,7 +54,7 @@ export const CardListPage = () => {
 
   const [cardsCategory, setCardsCategory] = useState<string | "all">("all");
 
-  const { data, loading, error } = usePageRender<CardResponse>(
+  const { contentData, contentLoading, contentError } = useContentRender<CardResponse>(
     `${api.API_BASE_URL}/admin/card/list/${cardsCategory}`,
   );
 
@@ -100,19 +100,19 @@ export const CardListPage = () => {
   };
 
   useEffect(() => {
-    if (!data || !Array.isArray(data.renderData.card)) {
+    if (!contentData || !Array.isArray(contentData.renderData.card)) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
-    setCards(data.renderData.card);
-  }, [data]);
+    setCards(contentData.renderData.card);
+  }, [contentData]);
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div

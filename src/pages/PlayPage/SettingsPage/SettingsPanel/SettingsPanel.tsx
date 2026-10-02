@@ -23,6 +23,7 @@ export const settingsNavigator = {
 };
 
 import { playFunctions } from "../../Play/Play.tsx";
+import useContentRender from "../../../../tools/ContentRender.ts";
 
 export const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState<string>(Settings[0]);
@@ -33,7 +34,7 @@ export const SettingsPage = () => {
     createdAt: "",
   });
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/play/settings`,
   );
 
@@ -63,10 +64,10 @@ export const SettingsPage = () => {
 
   useEffect(() => {
     // if (!data || !Array.isArray(data.renderData)) {
-    if (!data || !data.renderData) {
+    if (!contentData || !contentData.renderData) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
@@ -74,16 +75,16 @@ export const SettingsPage = () => {
     playFunctions.handleChangeHeaderState(true);
 
     setUserInfo({
-      name: data.renderData.name,
-      avatar: data.renderData.avatar,
-      createdAt: data.renderData.createdAt,
+      name: contentData.renderData.name,
+      avatar: contentData.renderData.avatar,
+      createdAt: contentData.renderData.createdAt,
     });
 
-    console.log("data", data);
-  }, [data]);
+    console.log("contentData", contentData);
+  }, [contentData]);
 
-  if (loading || !data) return <LoadingPage />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading || !contentData) return <LoadingPage />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <>

@@ -8,7 +8,7 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
 
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 // import { EditDataPage } from "../EditCasePage/EditData.tsx";
@@ -50,7 +50,7 @@ export const CaseListPage = () => {
 
   // const [back, setBack] = useState<boolean | false>(false);
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/case/list`,
   );
 
@@ -86,21 +86,21 @@ export const CaseListPage = () => {
   };
 
   useEffect(() => {
-    if (!data || !Array.isArray(data.renderData.cases)) {
+    if (!contentData || !Array.isArray(contentData.renderData.cases)) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
-    console.log("data", data);
+    console.log("contentData", contentData);
 
-    setCaseList(data.renderData.cases);
-  }, [data]);
+    setCaseList(contentData.renderData.cases);
+  }, [contentData]);
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   // if (editCase.id !== null && editCase.type === "EditData") {
   //   adminNavigator.handleChangeTab(`case:editData:${editCase.id}`);

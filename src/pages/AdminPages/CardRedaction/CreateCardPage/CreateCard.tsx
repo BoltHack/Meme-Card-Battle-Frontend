@@ -27,11 +27,12 @@ interface CardsFormat {
 }
 
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
+import useContentRender from "../../../../tools/ContentRender.ts";
 
 export const CreateCardPage = () => {
   // const navigate = useNavigate();
 
-  const { loading, error } = usePageRender<PlayerData>(
+  const { contentLoading, contentError } = useContentRender<PlayerData>(
     `${api.API_BASE_URL}/admin/card/create`,
   );
 
@@ -128,8 +129,8 @@ export const CreateCardPage = () => {
     }
   };
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div

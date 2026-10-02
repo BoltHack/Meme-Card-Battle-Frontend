@@ -8,10 +8,10 @@ import styles from "./Card.Main.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
-import usePageRender from "../../../tools/PageRender.ts";
-import { LoadingPage } from "../../LoadingPage/Loading.tsx";
-import { ErrorPage } from "../../ErrorPage/Error.tsx";
+// import api from "../../../api/api.ts";
+// import usePageRender from "../../../tools/PageRender.ts";
+// import { LoadingPage } from "../../LoadingPage/Loading.tsx";
+// import { ErrorPage } from "../../ErrorPage/Error.tsx";
 
 // interface PlayerData {
 //   name: string;

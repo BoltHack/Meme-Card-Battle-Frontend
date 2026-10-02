@@ -4,7 +4,7 @@ import styles from "../AdminPanel/Card.AdminPanel.module.css";
 
 import api from "../../../api/api.ts";
 
-import usePageRender from "../../../tools/PageRender.ts";
+import useContentRender from "../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../LoadingPage/ContentLoading.tsx";
 
@@ -18,22 +18,22 @@ interface TeamData {
 export const TeamPage = () => {
   const [team, setTeam] = useState<TeamData[]>([]);
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/team`,
   );
 
   useEffect(() => {
-    if (data && data?.renderData) {
+    if (contentData && contentData?.renderData) {
       setTimeout(() => {
-        setTeam(data?.renderData);
+        setTeam(contentData?.renderData);
 
-        console.log("team", data?.renderData);
+        console.log("team", contentData?.renderData);
       }, 0);
     }
-  }, [data]);
+  }, [contentData]);
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div id="team-page" className={`${styles["page"]} ${styles["active"]}`}>
@@ -64,7 +64,7 @@ export const TeamPage = () => {
                   <h3 className={styles["team-name"]}>
                     {tm.name}{" "}
                     <span style={{ fontSize: "16px" }}>
-                      {tm.id === data?.id && " (Вы)"}
+                      {tm.id === contentData?.id && " (Вы)"}
                     </span>
                   </h3>
                   <span

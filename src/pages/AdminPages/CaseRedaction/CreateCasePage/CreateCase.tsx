@@ -7,7 +7,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
@@ -37,7 +37,7 @@ export const CreateCasePage = () => {
 
   const [back, setBack] = useState<boolean | false>(false);
 
-  const { loading, error } = usePageRender(
+  const { contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/case/create`,
   );
 
@@ -102,8 +102,8 @@ export const CreateCasePage = () => {
     }
   };
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   if (back) return <CaseSettingsPage />;
 

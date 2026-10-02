@@ -7,7 +7,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
@@ -39,7 +39,7 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
     case_priority: "",
   });
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/case/${case_id}/edit/data`,
   );
 
@@ -97,27 +97,27 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
   };
 
   useEffect(() => {
-    if (!data || !data.renderData) {
+    if (!contentData || !contentData.renderData) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
     setFormData({
-      case_name: data.renderData.name,
-      case_description: data.renderData.description,
-      case_icon: data.renderData.icon,
-      case_rarity: data.renderData.rarity,
-      case_quantity: data.renderData.quantity,
-      case_price: data.renderData.price,
-      case_priority: data.renderData.priority,
+      case_name: contentData.renderData.name,
+      case_description: contentData.renderData.description,
+      case_icon: contentData.renderData.icon,
+      case_rarity: contentData.renderData.rarity,
+      case_quantity: contentData.renderData.quantity,
+      case_price: contentData.renderData.price,
+      case_priority: contentData.renderData.priority,
     });
-  }, [data]);
+  }, [contentData]);
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div

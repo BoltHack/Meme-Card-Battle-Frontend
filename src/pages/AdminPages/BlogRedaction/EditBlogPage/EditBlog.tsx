@@ -12,7 +12,7 @@ axios.defaults.withCredentials = true;
 import api from "../../../../api/api.ts";
 import toast from "react-hot-toast";
 
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 
@@ -58,9 +58,9 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
 
   const [symbolsMenu, setSymbolsMenu] = useState<boolean | false>(false);
 
-  const { data, loading, error } = usePageRender<{ blog: BlogPost }>(
-    `${api.API_BASE_URL}/admin/blog/${blog_id}/edit`,
-  );
+  const { contentData, contentLoading, contentError } = useContentRender<{
+    renderData: BlogPost;
+  }>(`${api.API_BASE_URL}/admin/blog/${blog_id}/edit`);
 
   const cleanHTMLText = (rawHTML: string) => {
     return rawHTML
@@ -251,15 +251,15 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
   };
 
   useEffect(() => {
-    if (!data) {
+    if (!contentData || !contentData.renderData) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
-    const blog = (data as { blog: BlogPost }).blog;
+    const blog = (contentData as { renderData: BlogPost }).renderData;
 
     const formattedBlogs = {
       post_title: blog?.title || "",
@@ -267,16 +267,18 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
       post_cover: blog?.cover || "",
       post_category: blog?.category || "",
       // content: (blog.content || "").replace(/\r\n|\n|\r/g, '\n')
-      content: blog.content.replace(/<[^>]*>/g, ""),
+      content: blog?.content.replace(/<[^>]*>/g, ""),
     };
 
     setFormData(formattedBlogs);
 
     setTimeout(() => getBlogData(formattedBlogs.post_cover), 100);
-  }, [data]);
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+    console.log("contentData", contentData);
+  }, [contentData]);
+
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     // <div id="edit-blog-page" className={`${admin_styles["page"]} ${admin_styles["active"]}`}>

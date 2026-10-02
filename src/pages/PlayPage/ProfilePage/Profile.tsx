@@ -8,7 +8,7 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../api/api.ts";
 
-import usePageRender from "../../../tools/PageRender.ts";
+import useContentRender from "../../../tools/ContentRender.ts";
 import { LoadingPage } from "../../LoadingPage/Loading.tsx";
 import { ContentLoading } from "../../LoadingPage/ContentLoading.tsx";
 import { ErrorPage } from "../../ErrorPage/Error.tsx";
@@ -38,6 +38,7 @@ interface PlayerData {
   id: string;
   name: string;
   role: string;
+  avatar: string;
   cards_count: number;
   renderData: RenderData[];
   // stats: StatsData;
@@ -61,7 +62,7 @@ export const ProfilePage = () => {
     sessionStorage.getItem("profile_state") || "{}",
   );
 
-  const { data, loading, error } = usePageRender<PlayerData>(
+  const { contentData, contentLoading, contentError } = useContentRender<PlayerData>(
     `${api.API_BASE_URL}/play/profile`,
   );
 
@@ -164,7 +165,13 @@ export const ProfilePage = () => {
   }, [cardsCategory]);
 
   useEffect(() => {
-    if (!data || !data?.id) return;
+    if (!contentData) {
+      console.log(
+        "Данные еще не загрузились или структура не совпадает:",
+        contentData,
+      );
+      return;
+    }
 
     playFunctions.handleChangeHeaderState(true);
 
@@ -178,28 +185,33 @@ export const ProfilePage = () => {
       }
     }, 100);
 
+    console.log("contentData", contentData);
+    
+
     return () => {
       clearTimeout(searchTimer);
       sessionStorage.removeItem("profile_state");
     };
-  }, [data]);
+  }, [contentData]);
 
-  if (loading) return <LoadingPage />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading || !contentData) return <LoadingPage />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div className={styles["body"]}>
       <div className={styles["container"]}>
         <header className={styles["header-panel"]}>
           <div className={styles["user-block"]}>
-            <div className={styles["user-main-info"]}>
-              <div className={styles["user-profile"]}>
+            {/* <div className={styles["user-main-info"]}> */}
+              {/* <div className={styles["user-profile"]}>
                 <img
-                  src={`${api.API_BASE_URL}/uploads/UserCovers/${data?.id}/UserProfile.jpg`}
+                  src={`${api.API_BASE_URL}/${contentData.renderData.avatar}`}
                   className={styles["avatar"]}
                 />
-                <div className={styles["username"]}>{data?.name}</div>
-              </div>
+                <div className={styles["username"]}>
+                  {contentData?.renderData.name}
+                </div>
+              </div> */}
 
               {/* <div className={styles["user-level"]}>
                 <span className={styles["level-badge"]}>LVL {stats?.lvl}</span>
@@ -214,7 +226,7 @@ export const ProfilePage = () => {
                   ></div>
                 </div>
               </div> */}
-            </div>
+            {/* </div> */}
 
             <div className={styles["progress-container-row"]}>
               <div className={styles["collection-progress-box"]}>

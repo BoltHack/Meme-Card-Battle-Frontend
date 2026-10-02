@@ -9,7 +9,7 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
 
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
@@ -30,7 +30,7 @@ export const LinksListPage = () => {
 
   const [isLinkDelete, setIsListDelete] = useState<string | null>(null);
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/links/list`,
   );
 
@@ -66,21 +66,21 @@ export const LinksListPage = () => {
   };
 
   useEffect(() => {
-    if (!data || !Array.isArray(data.renderData)) {
+    if (!contentData || !Array.isArray(contentData.renderData)) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
-    console.log("data", data);
+    console.log("contentData", contentData);
 
-    setLinksList(data.renderData);
-  }, [data]);
+    setLinksList(contentData.renderData);
+  }, [contentData]);
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div

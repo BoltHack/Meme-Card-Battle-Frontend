@@ -7,7 +7,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
@@ -35,7 +35,7 @@ import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 export const EditLinkPage = ({ link_id }: ResponseProps) => {
   // const navigate = useNavigate();
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/links/${link_id}/edit`,
   );
 
@@ -113,21 +113,21 @@ export const EditLinkPage = ({ link_id }: ResponseProps) => {
   };
 
   useEffect(() => {
-    if (!data || !Array.from(data.renderData)) {
+    if (!contentData || !Array.from(contentData.renderData)) {
       return;
     }
 
     setFormData({
-      name: data.renderData.name,
-      link: data.renderData.link,
-      icon: data.renderData.icon,
-      priority: data.renderData.priority,
+      name: contentData.renderData.name,
+      link: contentData.renderData.link,
+      icon: contentData.renderData.icon,
+      priority: contentData.renderData.priority,
     });
-    setMainPriority(data.renderData.main_priority);
-  }, [data]);
+    setMainPriority(contentData.renderData.main_priority);
+  }, [contentData]);
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div

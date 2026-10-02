@@ -8,7 +8,7 @@ axios.defaults.withCredentials = true;
 import api from "../../../api/api.ts";
 import toast from "react-hot-toast";
 
-import usePageRender from "../../../tools/PageRender.ts";
+import useContentRender from "../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../LoadingPage/ContentLoading.tsx";
 
@@ -20,7 +20,7 @@ interface AppSettings {
 export const SettingsPage = () => {
   const [settings, setSettings] = useState<AppSettings | null>(null);
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/settings`,
   );
 
@@ -70,14 +70,14 @@ export const SettingsPage = () => {
   };
 
   useEffect(() => {
-    if (data && data?.renderData) {
-      setSettings(data?.renderData);
-      console.log("data?.renderData", data?.renderData);
+    if (contentData && contentData?.renderData) {
+      setSettings(contentData?.renderData);
+      console.log("contentData", contentData?.renderData);
     }
-  }, [data]);
+  }, [contentData]);
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div id="settings-page" className={`${styles["page"]} ${styles["active"]}`}>

@@ -20,6 +20,7 @@ interface PlayerData {
 }
 
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
+import useContentRender from "../../../../tools/ContentRender.ts";
 
 export const CreateBlogPage = () => {
   const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ export const CreateBlogPage = () => {
 
   const [symbolsMenu, setSymbolsMenu] = useState<boolean | false>(false);
 
-  const { loading, error } = usePageRender<PlayerData>(
+  const { contentLoading, contentError } = useContentRender<PlayerData>(
     `${api.API_BASE_URL}/admin/blog/create`,
   );
 
@@ -252,8 +253,8 @@ export const CreateBlogPage = () => {
     }
   };
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div

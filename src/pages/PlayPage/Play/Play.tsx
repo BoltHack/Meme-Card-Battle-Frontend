@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 
 import styles from "./Card.Play.module.css";
+import invite_styles from "./Card.Invite_styles.module.css";
 import body_styles from "../../../tools/global_stylesheets/Card.Body_styles.module.css";
 
 import axios from "axios";
@@ -71,6 +72,9 @@ export const playFunctions = {
   },
   toggleFriendsMenu: (type: boolean) => {
     console.log(type);
+  },
+  inviteGame: (friendID: string) => {
+    console.log(friendID);
   },
 };
 
@@ -201,12 +205,29 @@ export const PlayPage = ({ title }: TitleSettings) => {
     playFunctions.toggleFriendsMenu = (type: boolean) => {
       // handleChangeFriendsCategory("list");
       setFriendsMenu(type);
+      // if (!type && data?.id) {
+      //   socket.emit("user_register", { player_id: data?.id });
+      // }
     };
 
     return () => {
       playFunctions.toggleFriendsMenu = () => {};
     };
-  });
+  }, []);
+
+  useEffect(() => {
+    playFunctions.inviteGame = (friendID: string) => {
+      socket.emit("invite_game_server", {
+        type: "invite",
+        action: "waiting",
+        friendID: friendID,
+      });
+    };
+
+    return () => {
+      playFunctions.inviteGame = () => {};
+    };
+  }, []);
 
   const navigate = useNavigate();
 
@@ -217,6 +238,16 @@ export const PlayPage = ({ title }: TitleSettings) => {
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [inviteMenu, setInviteMenu] = useState<boolean | false>(false);
+
+  const initialGameInviteState = {
+    id: "",
+    name: "",
+    lvl: 0,
+    avatar: "",
+  };
+  const [gameInvite, setGameInvite] = useState(initialGameInviteState);
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -237,7 +268,7 @@ export const PlayPage = ({ title }: TitleSettings) => {
       type: false,
       player_id: data?.id,
     });
-  }, [data?.id]);
+  }, []);
 
   const gameFoundTimerStart = useCallback(() => {
     if (isRunning) return;
@@ -265,6 +296,15 @@ export const PlayPage = ({ title }: TitleSettings) => {
       getSeconds > 0 || getMinutes === 0 ? `${getSeconds} с` : " 0 с";
 
     return (minutesStr + secondsStr).trim();
+  };
+
+  const toggleInviteMenu = (type: boolean) => {
+    if (type) {
+      setInviteMenu(true);
+    } else {
+      setInviteMenu(false);
+      setTimeout(() => setGameInvite(initialGameInviteState), 500);
+    }
   };
 
   useEffect(() => {
@@ -315,6 +355,24 @@ export const PlayPage = ({ title }: TitleSettings) => {
       play_game_key = game_key;
     });
 
+    socket.on("invite_game_client", (data: any) => {
+      const { type, action, inviterData } = data;
+
+      console.log("вам отправили запрос");
+
+      if (type === "invite") {
+        if (action === "waiting") {
+          setGameInvite({
+            id: inviterData.id,
+            name: inviterData.name,
+            lvl: inviterData.lvl,
+            avatar: inviterData.avatar,
+          });
+          setInviteMenu(true);
+        }
+      }
+    });
+
     socket.on("game_error_handler", (message) => {
       playFunctions.foundGame("cancel");
 
@@ -329,6 +387,7 @@ export const PlayPage = ({ title }: TitleSettings) => {
       socket.off("connect", sendInitialData);
       socket.off("search_game");
       socket.off("found_game");
+      socket.off("invite_game_client");
       socket.disconnect();
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (timerId.current) clearInterval(timerId.current);
@@ -389,7 +448,51 @@ export const PlayPage = ({ title }: TitleSettings) => {
         </div>
       )}
 
-      {friendsMenu && <FriendListMenu />}
+      {gameInvite.id && (
+        <div
+          className={`${invite_styles["game-notification"]} ${invite_styles[inviteMenu ? "show" : "hide"]}`}
+        >
+          <div className={invite_styles["avatar-container"]}>
+            {gameInvite.avatar ? (
+              <img
+                src={`${api.API_BASE_URL}/${gameInvite.avatar}`}
+                className={invite_styles["player-avatar"]}
+              />
+            ) : (
+              <div className={invite_styles["player-avatar"]}></div>
+            )}
+            <span className={invite_styles["player-level"]}>
+              {gameInvite.lvl} LVL
+            </span>
+          </div>
+
+          <div className={invite_styles["notification-content"]}>
+            <h4 className={invite_styles["player-name"]}>{gameInvite.name}</h4>
+            <p className={invite_styles["notification-text"]}>
+              бросил вам вызов и пригласил в битву!
+            </p>
+          </div>
+
+          <div className={invite_styles["notification-actions"]}>
+            <button
+              className={`${invite_styles["btn"]} ${invite_styles["btn-accept"]}`}
+              title="Принять"
+              onClick={() => toggleInviteMenu(false)}
+            >
+              ✔
+            </button>
+            <button
+              className={`${invite_styles["btn"]} ${invite_styles["btn-decline"]}`}
+              title="Отклонить"
+              onClick={() => toggleInviteMenu(false)}
+            >
+              ✖
+            </button>
+          </div>
+        </div>
+      )}
+
+      {friendsMenu && <FriendListMenu playerID={data?.id} />}
 
       <div className={body_styles["body-wrapper"]}>
         {headerState && <Header userInfo={userInfo} activeTab={activeTab} />}

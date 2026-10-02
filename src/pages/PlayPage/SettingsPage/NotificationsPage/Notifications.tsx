@@ -6,7 +6,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import toast from "react-hot-toast";
@@ -20,7 +20,7 @@ export const NotificationsPage = () => {
       true,
   });
 
-  const { data, loading, error } = usePageRender(
+  const { contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/play/settings/notifications`,
   );
 
@@ -48,10 +48,10 @@ export const NotificationsPage = () => {
   };
 
   useEffect(() => {
-    if (!data) {
+    if (!settings?.notifications) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        settings?.notifications,
       );
       return;
     }
@@ -61,10 +61,10 @@ export const NotificationsPage = () => {
       marketing_and_functions:
         settings?.notifications?.marketing_and_functions ?? true,
     });
-  }, [data]);
+  }, []);
 
-  if (loading || !data) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading || !settings?.notifications) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <>

@@ -7,7 +7,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
@@ -31,7 +31,7 @@ import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 export const CreateLinkPage = () => {
   // const navigate = useNavigate();
 
-  const { loading, error } = usePageRender(
+  const { contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/links/create`,
   );
 
@@ -107,8 +107,8 @@ export const CreateLinkPage = () => {
     }
   };
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div

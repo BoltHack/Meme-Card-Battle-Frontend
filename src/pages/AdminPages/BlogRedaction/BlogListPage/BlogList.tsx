@@ -9,14 +9,12 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
 
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 
 import { Pagination } from "../../../../tools/PageTools/Pagination/Pagination.tsx";
-// import { EditBlogPage } from "../EditBlogPage/EditBlog.tsx";
 import toast from "react-hot-toast";
-// import { BlogSettingsPage } from "../BlogSettingsPage/BlogSettings.tsx";
 
 interface BlogPost {
   author: string;
@@ -63,7 +61,7 @@ export const BlogListPage = () => {
   };
   const [removeBlogData, setRemoveBlogData] = useState(initialBlogState);
 
-  const { data, loading, error } = usePageRender<BlogResponse>(
+  const { contentData, contentLoading, contentError } = useContentRender<BlogResponse>(
     `${api.API_BASE_URL}/api/blog?page=${currentPage}`,
   );
 
@@ -130,18 +128,18 @@ export const BlogListPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!data || !Array.isArray(data.renderData.blog)) {
+    if (!contentData || !Array.isArray(contentData.renderData.blog)) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
-    setBlog(data.renderData.blog);
+    setBlog(contentData.renderData.blog);
 
     setCurrentPage(getCurrentPage);
-    setTotalPages(data.renderData.totalPages);
+    setTotalPages(contentData.renderData.totalPages);
 
     handleScrollToTop();
 
@@ -156,10 +154,10 @@ export const BlogListPage = () => {
         sessionStorage.removeItem("blog_state");
       }
     };
-  }, [data]);
+  }, [contentData]);
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div

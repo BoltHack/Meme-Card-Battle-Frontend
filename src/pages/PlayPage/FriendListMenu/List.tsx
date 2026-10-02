@@ -8,6 +8,7 @@ interface Props {
   contentLoading: boolean;
 }
 
+import { playFunctions } from "../Play/Play"; 
 import { friendListTools } from "./Menu";
 
 export const List = ({ friendList, contentLoading }: Props) => {
@@ -38,7 +39,7 @@ export const List = ({ friendList, contentLoading }: Props) => {
                 </div>
                 <div className={styles["actions"]}>
                   {fr.isOnline && (
-                    <button className={styles["btn"]}>Позвать в битву</button>
+                    <button className={styles["btn"]} onClick={() => playFunctions.inviteGame(fr.id)}>Бросить вызов</button>
                   )}
                   <button
                     className={`${styles["btn"]} ${styles["btn-remove"]}`}

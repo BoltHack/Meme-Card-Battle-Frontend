@@ -23,6 +23,10 @@ interface FriendsPost {
   isOnline: boolean;
 }
 
+interface Props {
+  playerID?: string;
+}
+
 export const friendListTools = {
   handleRequestAction: (action: string, requesterID: string) => {
     console.log(action, requesterID);
@@ -38,8 +42,10 @@ export const friendListTools = {
 import { playFunctions } from "../Play/Play.tsx";
 import { IsOnlineList } from "./IsOnlineList.tsx";
 import { RequestsFromMeList } from "./RequestsFromMeList.tsx";
+import useContentRender from "../../../tools/ContentRender.ts";
 
-export const FriendListMenu = () => {
+export const FriendListMenu = ({ playerID }: Props) => {
+  // const [data, setData] = useState([]);
   const [friendsCategory, setFriendsCategory] = useState<string | "">("list");
   const [friendList, setFriendsList] = useState<FriendsPost[]>([]);
   const [listsLength, setListsLength] = useState({
@@ -52,9 +58,41 @@ export const FriendListMenu = () => {
 
   const [contentLoading, setContentLoading] = useState<boolean | true>(true);
 
-  const { data } = usePageRender(
+  const { contentData } = useContentRender(
     `${api.API_BASE_URL}/play/friends/${friendsCategory}`,
   );
+
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   setContentLoading(true);
+
+  //   axios
+  //     .get(`${api.API_BASE_URL}/play/friends/${friendsCategory}`, {
+  //       withCredentials: true,
+  //     })
+  //     .then((response) => {
+  //       if (!isMounted) return;
+  //       const responseData = response.data;
+  //       if (responseData && responseData.renderData) {
+  //         setListsLength({
+  //           friendListLength: responseData.renderData.friendListLength || 0,
+  //           requestsForMeListLength:
+  //             responseData.renderData.requestsForMeListLength || 0,
+  //         });
+  //         setFriendsList(responseData.renderData.list || []);
+  //       }
+  //       setContentLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       if (!isMounted) return;
+  //       console.log("Ошибка загрузки друзей:", error);
+  //       setContentLoading(false);
+  //     });
+
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [friendsCategory]);
 
   useEffect(() => {
     friendListTools.handleRequestAction = async (
@@ -186,32 +224,13 @@ export const FriendListMenu = () => {
 
   const handleChangeFriendsCategory = async (category: string) => {
     setContentLoading(true);
-    // if (String(category) === String(friendsCategory)) return;
     setFriendsCategory(category);
-    // try {
-    //   const response = await axios.post(
-    //     `${api.API_BASE_URL}/play/friends/${category}`,
-    //     {
-    //       withCredentials: true,
-    //     },
-    //   );
-
-    //   if (Number(response.status) === 200) {
-    //     setFriends(response.data.renderData);
-    //     console.log("renderData", response.data.renderData);
-    //     setTimeout(() => setContentLoading(false), 500);
-    //   }
-
-    //   return response.data;
-    // } catch (error) {
-    //   console.log("error", error);
-    // }
   };
 
   const handleSendRequest = async (e: ChangeEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (!formData.requestName || !data?.id) return;
+    if (!formData.requestName || !playerID) return;
     setFormData({
       requestName: "",
     });
@@ -221,7 +240,7 @@ export const FriendListMenu = () => {
     const dataToSend = new FormData();
 
     dataToSend.append("requestName", formData.requestName);
-    dataToSend.append("requesterID", data?.id);
+    dataToSend.append("requesterID", playerID);
 
     try {
       const response = await axios.post(
@@ -248,26 +267,29 @@ export const FriendListMenu = () => {
       }
     }
   };
-
+  
   useEffect(() => {
-    if (!data || !Array.isArray(data.renderData.list)) {
+    if (!contentData || !Array.isArray(contentData.renderData.list)) {
       return;
     }
 
     setListsLength({
-      friendListLength: data.renderData.friendListLength,
-      requestsForMeListLength: data.renderData.requestsForMeListLength,
+      friendListLength: contentData.renderData.friendListLength,
+      requestsForMeListLength: contentData.renderData.requestsForMeListLength,
     });
 
-    setFriendsList(data.renderData.list);
+    setFriendsList(contentData.renderData.list);
 
     setTimeout(() => setContentLoading(false), 500);
+  }, [contentData]);
 
-    console.log("friends render", data.renderData.list);
-  }, [data]);
-
-  // if (loading) return <ContentLoading />
-  // if (error) return <ErrorPage error={error} />
+  // useEffect(() => {
+  //   return () => {
+  //     if (playerID) {
+  //       socket.emit("user_register", { player_id: playerID });
+  //     }
+  //   };
+  // }, [playerID, socket]);
 
   return (
     <>

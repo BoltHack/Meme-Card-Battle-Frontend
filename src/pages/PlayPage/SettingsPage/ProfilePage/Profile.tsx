@@ -6,7 +6,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import toast from "react-hot-toast";
@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 // import { settingsNavigator } from "../SettingsPanel/SettingsPanel.tsx";
 
 export const ProfilePage = () => {
+  // const [contentLoading, setContentLoading] = useState<boolean | false>(false);
   // const [userInfo, setUserInfo] = useState({
   //   avatar: "",
   //   aboutMe: "",
@@ -28,7 +29,7 @@ export const ProfilePage = () => {
 
   const dir_about_me_ref = useRef<HTMLTextAreaElement>(null);
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/play/settings/profile`,
   );
 
@@ -89,9 +90,9 @@ export const ProfilePage = () => {
       console.log("Данные успешно добавлены:", response.data);
 
       if (response.data.success) {
-        setFormData({
-          aboutMe: "",
-        });
+        // setFormData({
+        //   aboutMe: "",
+        // });
 
         setFile(null);
 
@@ -105,28 +106,26 @@ export const ProfilePage = () => {
   };
 
   useEffect(() => {
-    if (!data || !data.renderData) {
+    if (!contentData || !contentData.renderData) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
     setFormData({
-      aboutMe: data.renderData.aboutMe,
+      aboutMe: contentData.renderData.aboutMe,
     });
 
     setIdolFile(
-      data?.renderData?.avatar !== "" &&
-        `${api.API_BASE_URL}/${data.renderData.avatar}`,
+      contentData?.renderData?.avatar !== "" &&
+        `${api.API_BASE_URL}/${contentData.renderData.avatar}`,
     );
+  }, [contentData]);
 
-    console.log("data", data);
-  }, [data]);
-
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <>

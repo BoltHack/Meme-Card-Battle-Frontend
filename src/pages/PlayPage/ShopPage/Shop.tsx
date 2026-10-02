@@ -7,7 +7,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../api/api.ts";
-import usePageRender from "../../../tools/PageRender.ts";
+import useContentRender from "../../../tools/ContentRender.ts";
 import { LoadingPage } from "../../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../../ErrorPage/Error.tsx";
 
@@ -42,7 +42,7 @@ export const ShopPage = () => {
 
   const [isCaseLoading, setIsCaseLoading] = useState<string | null>(null);
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/play/shop`,
   );
 
@@ -131,22 +131,22 @@ export const ShopPage = () => {
   };
 
   useEffect(() => {
-    if (!data || !Array.isArray(data.renderData)) {
+    if (!contentData || !Array.isArray(contentData.renderData)) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
     playFunctions.handleChangeHeaderState(true);
 
-    setCases(data.renderData);
-    console.log("data", data);
-  }, [data]);
+    setCases(contentData.renderData);
+    console.log("contentData", contentData);
+  }, [contentData]);
 
-  if (loading || cases.length < 1) return <LoadingPage />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading || cases.length < 1) return <LoadingPage />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div className={styles["body"]}>

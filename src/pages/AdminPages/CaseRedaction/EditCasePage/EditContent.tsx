@@ -9,7 +9,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
@@ -59,7 +59,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
 
   // const [back, setBack] = useState<boolean | false>(false);
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/case/${case_id}/edit/content`,
   );
 
@@ -156,22 +156,22 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
   };
 
   useEffect(() => {
-    if (!data || !Array.isArray(data.renderData)) {
+    if (!contentData || !Array.isArray(contentData.renderData)) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
-    setCardList(data.renderData);
+    setCardList(contentData.renderData);
     // if (data?.renderData?.card && Array.isArray(data.renderData.card)) {
     //   setCardList(data.renderData.card);
     // }
-  }, [data]);
+  }, [contentData]);
 
-  if (loading) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   // if (back) return <CaseListPage />;
 
