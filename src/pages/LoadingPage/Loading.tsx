@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 
 import styles from "./Card.Loading.module.css";
 
-import usePageRender from "../../tools/PageRender.ts";
+import useContentRender from "../../tools/ContentRender.ts";
 import api from "../../api/api.ts";
 
 export const LoadingPage = () => {
@@ -19,7 +19,7 @@ export const LoadingPage = () => {
     ? `${api.API_BASE_URL}/api${pageLocation.pathname}`
     : null;
 
-  const { data, loading, url, refetch } = usePageRender(
+  const { contentData, contentLoading, url, refetch } = useContentRender(
     currentUrl.current !== null ? currentUrl.current : targetUrl!,
   );
 
@@ -58,10 +58,10 @@ export const LoadingPage = () => {
   }, [isRefetch, refetch]);
 
   useEffect(() => {
-    if (data && !loading) {
+    if (contentData && !contentLoading) {
       navigate(0);
     }
-  }, [data, loading]);
+  }, [contentData, contentLoading]);
 
   return (
     <div className={styles["body-wrapper"]}>

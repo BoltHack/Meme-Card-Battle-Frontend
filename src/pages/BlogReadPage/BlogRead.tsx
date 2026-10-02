@@ -12,7 +12,7 @@ axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
 
-import usePageRender from "../../tools/PageRender.ts";
+import useContentRender from "../../tools/ContentRender.ts";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 
@@ -60,7 +60,7 @@ export const BlogReadPage = () => {
 
   const blog_state = JSON.parse(sessionStorage.getItem("blog_state") || "{}");
 
-  const { data, loading, error } = usePageRender<BlogResponse>(
+  const { contentData, contentLoading, contentError } = useContentRender<BlogResponse>(
     `${api.API_BASE_URL}/api/blog/${blog_id}`,
   );
 
@@ -299,17 +299,17 @@ export const BlogReadPage = () => {
   // }
 
   useEffect(() => {
-    if (!data) {
+    if (!contentData) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
-    const blog = data.renderData;
+    const blog = contentData.renderData;
 
-    const title = data.renderData.title;
+    const title = contentData.renderData.title;
 
     setTitle(title);
 
@@ -344,10 +344,10 @@ export const BlogReadPage = () => {
     //         console.log('test');
     //     });
     // }
-  }, [data]);
+  }, [contentData]);
 
-  if (loading) return <LoadingPage />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <LoadingPage />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div className={styles["body-wrapper"]}>

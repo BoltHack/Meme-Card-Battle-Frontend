@@ -9,7 +9,7 @@ axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
 
-import usePageRender from "../../tools/PageRender.ts";
+import useContentRender from "../../tools/ContentRender.ts";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 
@@ -54,9 +54,10 @@ export const BlogPage = ({ title }: BlogPageProps) => {
   const blog_state = JSON.parse(sessionStorage.getItem("blog_state") || "{}");
   // const [isBlogState, setIsBlogState] = useState<boolean | false>(false);
 
-  const { data, loading, error } = usePageRender<BlogResponse>(
-    `${api.API_BASE_URL}/api/blog?page=${currentPage}`,
-  );
+  const { contentData, contentLoading, contentError } =
+    useContentRender<BlogResponse>(
+      `${api.API_BASE_URL}/api/blog?page=${currentPage}`,
+    );
 
   const dateSettings = (date: string) => {
     return new Date(date).toLocaleString("ru-RU", {
@@ -89,18 +90,18 @@ export const BlogPage = ({ title }: BlogPageProps) => {
   }, []);
 
   useEffect(() => {
-    if (!data || !Array.isArray(data.renderData.blog)) {
+    if (!contentData || !Array.isArray(contentData.renderData.blog)) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
-    setBlog(data.renderData.blog);
+    setBlog(contentData.renderData.blog);
 
     setCurrentPage(getCurrentPage);
-    setTotalPages(data.renderData.totalPages);
+    setTotalPages(contentData.renderData.totalPages);
 
     handleScrollToTop();
 
@@ -115,10 +116,10 @@ export const BlogPage = ({ title }: BlogPageProps) => {
         sessionStorage.removeItem("blog_state");
       }
     };
-  }, [data]);
+  }, [contentData]);
 
-  if (loading) return <LoadingPage />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <LoadingPage />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div className={styles["body-wrapper"]} ref={bodyWrapperRef}>

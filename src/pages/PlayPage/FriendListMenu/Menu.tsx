@@ -56,15 +56,12 @@ export const FriendListMenu = ({ playerID }: Props) => {
     requestName: "",
   });
 
-  const [contentLoading, setContentLoading] = useState<boolean | true>(true);
-
-  const { contentData } = useContentRender(
+  const { contentData, contentLoading } = useContentRender(
     `${api.API_BASE_URL}/play/friends/${friendsCategory}`,
   );
 
   // useEffect(() => {
   //   let isMounted = true;
-  //   setContentLoading(true);
 
   //   axios
   //     .get(`${api.API_BASE_URL}/play/friends/${friendsCategory}`, {
@@ -81,12 +78,10 @@ export const FriendListMenu = ({ playerID }: Props) => {
   //         });
   //         setFriendsList(responseData.renderData.list || []);
   //       }
-  //       setContentLoading(false);
   //     })
   //     .catch((error) => {
   //       if (!isMounted) return;
   //       console.log("Ошибка загрузки друзей:", error);
-  //       setContentLoading(false);
   //     });
 
   //   return () => {
@@ -223,7 +218,6 @@ export const FriendListMenu = ({ playerID }: Props) => {
   };
 
   const handleChangeFriendsCategory = async (category: string) => {
-    setContentLoading(true);
     setFriendsCategory(category);
   };
 
@@ -234,8 +228,6 @@ export const FriendListMenu = ({ playerID }: Props) => {
     setFormData({
       requestName: "",
     });
-
-    setContentLoading(true);
 
     const dataToSend = new FormData();
 
@@ -256,18 +248,16 @@ export const FriendListMenu = ({ playerID }: Props) => {
         setFriendsList((prevState) => [...prevState, response.data.renderData]);
       }
 
-      setContentLoading(false);
       return response.data;
     } catch (error: any) {
       console.log("error", error);
-      setContentLoading(false);
       const errorMessage = error?.response?.data?.error;
       if (errorMessage) {
         toast.error(errorMessage);
       }
     }
   };
-  
+
   useEffect(() => {
     if (!contentData || !Array.isArray(contentData.renderData.list)) {
       return;
@@ -279,8 +269,6 @@ export const FriendListMenu = ({ playerID }: Props) => {
     });
 
     setFriendsList(contentData.renderData.list);
-
-    setTimeout(() => setContentLoading(false), 500);
   }, [contentData]);
 
   // useEffect(() => {

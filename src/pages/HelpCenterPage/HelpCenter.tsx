@@ -11,6 +11,7 @@ import { ErrorPage } from "../ErrorPage/Error.tsx";
 
 import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
+import useContentRender from "../../tools/ContentRender.ts";
 
 interface PlayerData {
   name: string;
@@ -47,7 +48,7 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
   // const searchSettings = JSON.parse(sessionStorage.getItem('searchSettings') || '{}');
   const searchSettings = sessionStorage.getItem("searchSettings");
 
-  const { data, loading, error } = usePageRender<PlayerData>(
+  const { contentData, contentLoading, contentError } = useContentRender<PlayerData>(
     `${api.API_BASE_URL}/api/help-center`,
   );
 
@@ -149,8 +150,12 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
   }, []);
 
   useEffect(() => {
-    if (!loading && data?.renderData && data.renderData?.length > 0) {
-      const formattedCategories = data?.renderData.map((cat: any) => ({
+    if (
+      !contentLoading &&
+      contentData?.renderData &&
+      contentData.renderData?.length > 0
+    ) {
+      const formattedCategories = contentData?.renderData.map((cat: any) => ({
         title: cat.title || "",
         summary: cat.summary || "",
         icon: {
@@ -166,10 +171,10 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
 
       setCategoriesList(formattedCategories);
     }
-  }, [loading, data]);
+  }, [contentLoading, contentData]);
 
-  if (loading) return <LoadingPage />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <LoadingPage />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div className={styles["body-wrapper"]}>

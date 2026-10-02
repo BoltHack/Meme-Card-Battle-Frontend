@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { sanitize } from "isomorphic-dompurify";
 
 import styles from "./Card.Main.module.css";
 
@@ -10,7 +9,7 @@ axios.defaults.withCredentials = true;
 
 import api from "../../api/api.ts";
 
-import usePageRender from "../../tools/PageRender.ts";
+import useContentRender from "../../tools/ContentRender.ts";
 import { LoadingPage } from "../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../ErrorPage/Error.tsx";
 import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
@@ -42,7 +41,7 @@ export const MainPage = ({ title }: TitleSettings) => {
   const [mainBlog, setMainBlog] = useState<BlogPost[]>([]);
   const [mainLinks, setMainLinks] = useState<LinksPost[]>([]);
 
-  const { data, loading, error } = usePageRender(`${api.API_BASE_URL}/api/`);
+  const { contentData, contentLoading, contentError } = useContentRender(`${api.API_BASE_URL}/api/`);
 
   const dateSettings = (date: string) => {
     return new Date(date).toLocaleString("ru-RU", {
@@ -54,20 +53,20 @@ export const MainPage = ({ title }: TitleSettings) => {
   };
 
   useEffect(() => {
-    if (!data || !data.renderData) {
+    if (!contentData || !contentData.renderData) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
     }
 
-    setMainBlog(data?.renderData.blogData);
-    setMainLinks(data?.renderData.linksData);
-    console.log("data", data);
-  }, [data]);
+    setMainBlog(contentData?.renderData.blogData);
+    setMainLinks(contentData?.renderData.linksData);
+    console.log("contentData", contentData);
+  }, [contentData]);
 
-  if (loading) return <LoadingPage />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading) return <LoadingPage />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div className={styles["body-wrapper"]}>
@@ -77,7 +76,7 @@ export const MainPage = ({ title }: TitleSettings) => {
 
       <Header />
 
-      {data?.role === "Admin" && (
+      {contentData?.role === "Admin" && (
         <Link to="/admin/panel" className={styles["admin-panel-btn"]}>
           Админка
         </Link>
