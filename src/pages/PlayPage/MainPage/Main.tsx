@@ -147,7 +147,8 @@ export const MainPage = ({ isGameFound }: Props) => {
               {/* <div className={styles["play-halftone-overlay"]}></div> */}
               {/* <div className={styles["play-star-particles"]}></div> */}
 
-              <div className={styles["play-magic-shard"]}></div>
+              <div className={styles["play-magic-shard"]} style={{ top: "30%", left: "22%" }}></div>
+              <div className={styles["play-magic-shard"]} style={{ top: "65%", right: "20%" }}></div>
 
               {/* <svg
                 className={`${styles["play-lightning"]} ${styles["play-lightning-right"]}`}

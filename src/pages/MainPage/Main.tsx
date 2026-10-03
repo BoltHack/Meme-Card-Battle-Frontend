@@ -141,7 +141,7 @@ export const MainPage = ({ title }: TitleSettings) => {
           <h1>
             MEME CARD <span>BATTLE</span>
           </h1>
-          <p>Захватывающе и интересные карточные бои!</p>
+          <p>Захватывающе и интересные карточные баталии</p>
           <div className={styles["btn-group"]}>
             <Link
               to="/play"

@@ -17,20 +17,15 @@ import { BotSettingsPage } from "./pages/BotSettingsPage/BotSettings.tsx";
 import { HowToPlayPage } from "./pages/RulePages/HowToPlay.tsx";
 import { TermsOfUsePage } from "./pages/RulePages/TermsOfUse.tsx";
 import { PrivacyPolicy } from "./pages/RulePages/PrivacyPolicy.tsx";
+import { CookiePolicy } from "./pages/RulePages/CookiePolicy.tsx";
 
 import { BlogPage } from "./pages/BlogPage/Blog.tsx";
 import { BlogReadPage } from "./pages/BlogReadPage/BlogRead.tsx";
 import { BlogCategoryPage } from "./pages/BlogPage/BlogCategory.tsx";
 
 import { AdminPanelPage } from "./pages/AdminPages/AdminPanel/AdminPanel.tsx";
-// import { CreateCardPage } from "./pages/AdminPages/CreateCard/CreateCardPage.tsx";
-// import { CreateBlogPage } from "./pages/AdminPages/CreateBlog/CreateBlogPage.tsx";
-// import { EditBlogPage } from "./pages/AdminPages/BlogRedaction/EditBlog/EditBlogPage.tsx";
 
 import { ErrorPage } from "./pages/ErrorPage/Error.tsx";
-// import { ShopPage } from "./pages/PlayPage/ShopPage/Shop.tsx";
-// import { CasesPage } from "./pages/PlayPage/CasesPage/Cases.tsx";
-// import { SettingsPage } from "./pages/SettingsPage/SettingsPanel/SettingsPanel.tsx";
 import { PlayPage } from "./pages/PlayPage/Play/Play.tsx";
 
 const router = createBrowserRouter([
@@ -50,22 +45,6 @@ const router = createBrowserRouter([
     path: "/help-center",
     element: <HelpCenterPage title="MCB | Справочный центр" />,
   },
-  // {
-  //   path: "/profile",
-  //   element: <ProfilePage title="MCB | Профиль" />,
-  // },
-  // {
-  //   path: "/cases",
-  //   element: <CasesPage title="MCB | Кейсы" />,
-  // },
-  // {
-  //   path: "/shop",
-  //   element: <ShopPage title="MCB | Магазин" />,
-  // },
-  // {
-  //   path: "/settings",
-  //   element: <SettingsPage title="MCB | Настройки" />,
-  // },
   {
     path: "/how-to-play",
     element: <HowToPlayPage title="MCB | Как играть" />,
@@ -74,10 +53,6 @@ const router = createBrowserRouter([
     path: "/bot-settings",
     element: <BotSettingsPage title="MCB | Настройки бота" />,
   },
-  // {
-  //   path: "/game-settings",
-  //   element: <GameSettingsPage title="MCB | Настройки игры" />,
-  // },
   {
     path: "/terms-of-use",
     element: <TermsOfUsePage title="MCB | Условия использования" />,
@@ -85,6 +60,10 @@ const router = createBrowserRouter([
   {
     path: "/privacy-policy",
     element: <PrivacyPolicy title="MCB | Политика конфиденциальности" />,
+  },
+  {
+    path: "/cookie-policy",
+    element: <CookiePolicy title="MCB | Политика Cookie файлов" />,
   },
   {
     path: "/blog",
@@ -98,26 +77,10 @@ const router = createBrowserRouter([
     path: "/blog/:blog_id",
     element: <BlogReadPage />,
   },
-  // {
-  //   path: "/game/:game_type/:game_key",
-  //   element: <GamePage />,
-  // },
   {
     path: "/admin/panel",
     element: <AdminPanelPage title="Админ панель" />,
   },
-  // {
-  //     path: "/admin/create/card",
-  //     element: <CreateCardPage />
-  // },
-  // {
-  //     path: "/admin/create/blog",
-  //     element: <CreateBlogPage />
-  // },
-  // {
-  //     path: "/admin/blog/:blog_id/edit",
-  //     element: <EditBlogPage />
-  // },
   {
     path: "*",
     element: <ErrorPage error={{ code: 404, message: "not found" }} />,
