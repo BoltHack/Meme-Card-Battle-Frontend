@@ -57,8 +57,6 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
   };
   const [cardDeleteMenu, setCardDeleteMenu] = useState(initialCardState);
 
-  // const [back, setBack] = useState<boolean | false>(false);
-
   const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/case/${case_id}/edit/content`,
   );

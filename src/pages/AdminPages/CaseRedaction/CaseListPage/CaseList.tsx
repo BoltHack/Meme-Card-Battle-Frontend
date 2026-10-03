@@ -39,16 +39,10 @@ interface CasePost {
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 
 export const CaseListPage = () => {
-  // const [editCase, setEditCase] = useState<EditCaseType>({
-  //   id: "",
-  //   type: "",
-  // });
-
+  
   const [caseList, setCaseList] = useState<CasePost[]>([]);
 
   const [isCaseDelete, setIsCaseDelete] = useState<string | null>(null);
-
-  // const [back, setBack] = useState<boolean | false>(false);
 
   const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/case/list`,
@@ -101,16 +95,6 @@ export const CaseListPage = () => {
 
   if (contentLoading) return <ContentLoading />;
   if (contentError) return <ErrorPage error={contentError} />;
-
-  // if (editCase.id !== null && editCase.type === "EditData") {
-  //   adminNavigator.handleChangeTab(`case:editData:${editCase.id}`);
-  //   return <EditDataPage case_id={editCase.id} />;
-  // }
-  // if (editCase.id !== null && editCase.type === "EditContent") {
-  //   adminNavigator.handleChangeTab(`case:editContent:${editCase.id}`);
-  //   return <EditContentPage case_id={editCase.id} />;
-  // }
-  // if (back) return <CaseSettingsPage />;
 
   return (
     <div

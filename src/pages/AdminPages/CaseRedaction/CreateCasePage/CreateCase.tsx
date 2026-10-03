@@ -12,8 +12,6 @@ import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
 
-import { CaseSettingsPage } from "../CaseSettingsPage/CaseSettings.tsx";
-
 interface CaseFormat {
   case_name: string;
   case_description: string;
@@ -23,6 +21,8 @@ interface CaseFormat {
   case_price: string;
   case_priority: string;
 }
+
+import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 
 export const CreateCasePage = () => {
   const [formData, setFormData] = useState<CaseFormat>({
@@ -34,8 +34,6 @@ export const CreateCasePage = () => {
     case_price: "",
     case_priority: "",
   });
-
-  const [back, setBack] = useState<boolean | false>(false);
 
   const { contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/admin/case/create`,
@@ -105,8 +103,6 @@ export const CreateCasePage = () => {
   if (contentLoading) return <ContentLoading />;
   if (contentError) return <ErrorPage error={contentError} />;
 
-  if (back) return <CaseSettingsPage />;
-
   return (
     <div
       id="create-case-page"
@@ -117,7 +113,7 @@ export const CreateCasePage = () => {
         <p>Создание нового, уникального кейса.</p>
       </header>
 
-      <a className={admin_styles["on-back"]} onClick={() => setBack(true)}>
+      <a className={admin_styles["on-back"]} onClick={() => adminNavigator.handleChangeTab("case:settings")}>
         ← Назад
       </a>
 

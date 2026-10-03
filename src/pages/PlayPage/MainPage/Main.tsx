@@ -123,16 +123,41 @@ export const MainPage = ({ isGameFound }: Props) => {
       </div>
 
       <div className={styles["buttons-container"]}>
-        <div className={styles["epic-title"]}>
-          <h1>MEME CARD BATTLE</h1>
-          {/*<p>Meme card battle</p>*/}
-        </div>
+        {/* <div className={styles["epic-title"]}> */}
+        {/* <h1>MEME CARD BATTLE</h1> */}
+        {/*<p>Meme card battle</p>*/}
+        {/* </div> */}
 
         <br />
 
-        {!isGameFound ? (
-          <div className={styles["btn"]} onClick={toggleMenu}>
-            <svg
+        <div
+          className={`${styles["btn"]} ${styles["play-btn"]} ${styles[isGameFound ? "btn-disable" : ""]}`}
+          onClick={toggleMenu}
+        >
+          <div className={styles["play-card-mini-container"]}>
+            <div className={styles["play-parallax-body"]}></div>
+            <div className={styles["play-parallax-wrapper"]}>
+              <div
+                className={`${styles["play-smoke-glow"]} ${styles["play-smoke-red"]}`}
+              ></div>
+              <div
+                className={`${styles["play-smoke-glow"]} ${styles["play-smoke-blue"]}`}
+              ></div>
+
+              <div className={styles["play-halftone-overlay"]}></div>
+              <div className={styles["play-star-particles"]}></div>
+
+              <div className={styles["play-magic-shard"]}></div>
+
+              <svg
+                className={`${styles["play-lightning"]} ${styles["play-lightning-right"]}`}
+                viewBox="0 0 24 24"
+              >
+                <path d="M19 9h-6l3-7L5 13h6l-3 9z" />
+              </svg>
+            </div>
+          </div>
+          {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -145,32 +170,11 @@ export const MainPage = ({ isGameFound }: Props) => {
               className="lucide lucide-play-icon lucide-play"
             >
               <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />
-            </svg>
+            </svg> */}
 
-            <span>Начать играть</span>
-          </div>
-        ) : (
-          <div className={`${styles["btn"]} ${styles["btn-disable"]}`}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-play-off-icon lucide-play-off"
-            >
-              <path d="m10.215 4.56 9.79 5.71a2 2 0 0 1 .003 3.458l-.393.23" />
-              <path d="m16.042 16.042-8.034 4.686A2 2 0 0 1 5 19V5" />
-              <path d="m2 2 20 20" />
-            </svg>
-
-            <span>Начать играть</span>
-          </div>
-        )}
+          {/* <span>Играть</span> */}
+          <span>Играть</span>
+        </div>
 
         <div
           className={styles["btn"]}
