@@ -144,17 +144,17 @@ export const MainPage = ({ isGameFound }: Props) => {
                 className={`${styles["play-smoke-glow"]} ${styles["play-smoke-blue"]}`}
               ></div>
 
-              <div className={styles["play-halftone-overlay"]}></div>
-              <div className={styles["play-star-particles"]}></div>
+              {/* <div className={styles["play-halftone-overlay"]}></div> */}
+              {/* <div className={styles["play-star-particles"]}></div> */}
 
               <div className={styles["play-magic-shard"]}></div>
 
-              <svg
+              {/* <svg
                 className={`${styles["play-lightning"]} ${styles["play-lightning-right"]}`}
                 viewBox="0 0 24 24"
               >
                 <path d="M19 9h-6l3-7L5 13h6l-3 9z" />
-              </svg>
+              </svg> */}
             </div>
           </div>
           {/* <svg
