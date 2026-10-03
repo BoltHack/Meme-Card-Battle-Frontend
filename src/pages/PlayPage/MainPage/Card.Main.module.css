@@ -456,12 +456,14 @@
     "Segoe UI",
     Roboto,
     sans-serif;
-  color: #801de2;
+  /* color: #801de2; */
+  /* color: #a79393; */
+  color: #ecf1fd;
   font-size: 25px;
   font-weight: bold;
   text-transform: uppercase;
   /*background: linear-gradient(135deg, #ff7b00 0%, #ffae00 100%);*/
-  background: linear-gradient(135deg, #801de2 0%, #801de2 100%);
+  background: linear-gradient(135deg, #ecf1fd 0%, #ecf1fd 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow:
