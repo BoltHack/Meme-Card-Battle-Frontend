@@ -132,7 +132,7 @@ export const MainPage = ({ isGameFound }: Props) => {
 
         <div
           className={`${styles["btn"]} ${styles["play-btn"]} ${styles[isGameFound ? "btn-disable" : ""]}`}
-          onClick={toggleMenu}
+          onClick={isGameFound ? undefined : toggleMenu}
         >
           <div className={styles["play-card-mini-container"]}>
             <div className={styles["play-parallax-body"]}></div>

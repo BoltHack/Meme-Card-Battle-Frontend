@@ -427,7 +427,7 @@
   opacity: 0.5;
 }
 .btn.btn-disable:hover {
-  box-shadow: 0 0 0 0.5px #801de2;
+  box-shadow: 0 0 0 2px #801de2;
 }
 
 .play-btn {
