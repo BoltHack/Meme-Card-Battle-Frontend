@@ -427,7 +427,7 @@
   opacity: 0.5;
 }
 .btn.btn-disable:hover {
-  box-shadow: none;
+  box-shadow: 0 0 0 0.35px #801de2;
   background: none;
 }
 
