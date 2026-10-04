@@ -144,7 +144,7 @@ export const LinksListPage = () => {
                             )
                           }
                         >
-                          Изменить
+                          Редактировать
                         </button>
                       </li>
                       <li
