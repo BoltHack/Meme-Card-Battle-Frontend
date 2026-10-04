@@ -86,11 +86,6 @@
   z-index: 5;
 }
 
-.card-3d-wrapper:hover .game-card {
-  transform: translateY(-15px) scale(1.03) rotateZ(1deg);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
-}
-
 .card-3d-wrapper:hover .card-shine {
   background: linear-gradient(
     135deg,
@@ -98,6 +93,14 @@
     transparent 60%,
     transparent 100%
   );
+}
+
+.card-3d-wrapper-anim .game-card {
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.card-3d-wrapper-anim .game-card:hover {
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+  transform: translateY(-15px) scale(1.03) rotateZ(1deg);
 }
 
 .card-shine {

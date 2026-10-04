@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import styles from "./Card.Friends.module.css";
 
 import axios from "axios";
@@ -8,9 +10,18 @@ interface Props {
   contentLoading: boolean;
 }
 
+import { playFunctions } from "../Play/Play";
 import { friendListTools } from "./Menu";
 
 export const IsOnlineList = ({ friendList, contentLoading }: Props) => {
+  const [toChallenge, setToChallenge] = useState<boolean | false>(false);
+
+  const handleToChallenge = (friendID: string) => {
+    playFunctions.inviteGame(friendID);
+    setToChallenge(true);
+    setTimeout(() => setToChallenge(false), 1000);
+  };
+
   return (
     <>
       {!contentLoading && friendList && friendList.length > 0
@@ -37,7 +48,13 @@ export const IsOnlineList = ({ friendList, contentLoading }: Props) => {
                   </div>
                 </div>
                 <div className={styles["actions"]}>
-                  <button className={styles["btn"]}>Позвать в битву</button>
+                  <button
+                    className={styles["btn"]}
+                    onClick={() => handleToChallenge(fr.id)}
+                    // onClick={() => playFunctions.inviteGame(fr.id)}
+                  >
+                    {toChallenge ? "Запрос отправлен" : "Бросить вызов"}
+                  </button>
                   <button
                     className={`${styles["btn"]} ${styles["btn-remove"]}`}
                     onClick={() => friendListTools.handleRemoveFriend(fr.id)}

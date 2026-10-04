@@ -242,12 +242,20 @@ export const PlayPage = ({ title }: TitleSettings) => {
   const [inviteMenu, setInviteMenu] = useState<boolean | false>(false);
 
   const initialGameInviteState = {
+    action: "",
+    message: "",
     id: "",
     name: "",
     lvl: 0,
     avatar: "",
   };
   const [gameInvite, setGameInvite] = useState(initialGameInviteState);
+  const gameInviteTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const notificationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -301,9 +309,27 @@ export const PlayPage = ({ title }: TitleSettings) => {
   const toggleInviteMenu = (type: boolean) => {
     if (type) {
       setInviteMenu(true);
+      setTimeout(() => setGameInvite(initialGameInviteState), 500);
     } else {
       setInviteMenu(false);
       setTimeout(() => setGameInvite(initialGameInviteState), 500);
+    }
+  };
+
+  const handleInviteRequest = (type: string, action: string) => {
+    socket.emit("invite_game_server", {
+      type: type,
+      action: action,
+      friendID: gameInvite.id,
+    });
+
+    setInviteMenu(false);
+    gameInviteTimeoutRef.current = setTimeout(
+      () => setGameInvite(initialGameInviteState),
+      500,
+    );
+    if (gameInviteTimeoutRef.current) {
+      clearTimeout(gameInviteTimeoutRef.current);
     }
   };
 
@@ -356,21 +382,28 @@ export const PlayPage = ({ title }: TitleSettings) => {
     });
 
     socket.on("invite_game_client", (data: any) => {
-      const { type, action, inviterData } = data;
+      const { type, action, message, inviterData } = data;
 
       console.log("вам отправили запрос");
 
       if (type === "invite") {
-        if (action === "waiting") {
-          setGameInvite({
-            id: inviterData.id,
-            name: inviterData.name,
-            lvl: inviterData.lvl,
-            avatar: inviterData.avatar,
-          });
-          setInviteMenu(true);
-        }
+        setGameInvite({
+          action: action,
+          message: message,
+          id: inviterData.id,
+          name: inviterData.name,
+          lvl: inviterData.lvl,
+          avatar: inviterData.avatar,
+        });
+        setInviteMenu(true);
       }
+
+      if (notificationTimeoutRef.current) clearTimeout(notificationTimeoutRef.current);
+      notificationTimeoutRef.current = setTimeout(() => {
+        if (!inviteMenu) return;
+        toggleInviteMenu(false);
+      }, 5000);
+
     });
 
     socket.on("game_error_handler", (message) => {
@@ -469,26 +502,28 @@ export const PlayPage = ({ title }: TitleSettings) => {
           <div className={invite_styles["notification-content"]}>
             <h4 className={invite_styles["player-name"]}>{gameInvite.name}</h4>
             <p className={invite_styles["notification-text"]}>
-              бросил вам вызов и пригласил в битву!
+              {gameInvite.message}
             </p>
           </div>
 
-          <div className={invite_styles["notification-actions"]}>
-            <button
-              className={`${invite_styles["btn"]} ${invite_styles["btn-accept"]}`}
-              title="Принять"
-              onClick={() => toggleInviteMenu(false)}
-            >
-              ✔
-            </button>
-            <button
-              className={`${invite_styles["btn"]} ${invite_styles["btn-decline"]}`}
-              title="Отклонить"
-              onClick={() => toggleInviteMenu(false)}
-            >
-              ✖
-            </button>
-          </div>
+          {gameInvite.action === "waiting" && (
+            <div className={invite_styles["notification-actions"]}>
+              <button
+                className={`${invite_styles["btn"]} ${invite_styles["btn-accept"]}`}
+                title="Принять"
+                onClick={() => handleInviteRequest("game", "accept")}
+              >
+                ✔
+              </button>
+              <button
+                className={`${invite_styles["btn"]} ${invite_styles["btn-decline"]}`}
+                title="Отклонить"
+                onClick={() => handleInviteRequest("invite", "reject")}
+              >
+                ✖
+              </button>
+            </div>
+          )}
         </div>
       )}
 

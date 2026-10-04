@@ -521,6 +521,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
       setBodyLoader(false);
     });
+
     socket.on("game_error", (type) => {
       if (type.toString() === "already_InGame") {
         leaveGame();
@@ -623,20 +624,21 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       socket.off("game_cards_selected");
       socket.off("game_cards_selected_result");
       socket.off("connect", sendInitialData);
+      socket.disconnect();
       clearTimeout(joinTimer);
       clearTimeout(cardsTimer);
-      console.log("Все слушатели игры успешно удалены при размонтировании.");
+      console.log("Сокет (game) отключен, подписки сняты.");
     };
   }, [data]);
 
-  useEffect(() => {
-    if (!socket.connected) {
-      socket.connect();
-    }
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  // useEffect(() => {
+  //   if (!socket.connected) {
+  //     socket.connect();
+  //   }
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
 
   (function () {
     const fpsDiv = document.createElement("div");

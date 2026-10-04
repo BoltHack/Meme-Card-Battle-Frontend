@@ -62,9 +62,8 @@ export const ProfilePage = () => {
     sessionStorage.getItem("profile_state") || "{}",
   );
 
-  const { contentData, contentLoading, contentError } = useContentRender<PlayerData>(
-    `${api.API_BASE_URL}/play/profile`,
-  );
+  const { contentData, contentLoading, contentError } =
+    useContentRender<PlayerData>(`${api.API_BASE_URL}/play/profile`);
 
   // const formattedCurrency = (count: number): string => {
   //   const formattedCount = new Intl.NumberFormat("en-US", {
@@ -186,7 +185,6 @@ export const ProfilePage = () => {
     }, 100);
 
     console.log("contentData", contentData);
-    
 
     return () => {
       clearTimeout(searchTimer);
@@ -203,7 +201,7 @@ export const ProfilePage = () => {
         <header className={styles["header-panel"]}>
           <div className={styles["user-block"]}>
             {/* <div className={styles["user-main-info"]}> */}
-              {/* <div className={styles["user-profile"]}>
+            {/* <div className={styles["user-profile"]}>
                 <img
                   src={`${api.API_BASE_URL}/${contentData.renderData.avatar}`}
                   className={styles["avatar"]}
@@ -213,7 +211,7 @@ export const ProfilePage = () => {
                 </div>
               </div> */}
 
-              {/* <div className={styles["user-level"]}>
+            {/* <div className={styles["user-level"]}>
                 <span className={styles["level-badge"]}>LVL {stats?.lvl}</span>
                 <div
                   className={styles["level-bar-bg"]}
@@ -491,7 +489,9 @@ export const ProfilePage = () => {
               return (
                 <section
                   key={card.card_id}
-                  className={CardsDesign_styles["card-3d-wrapper"]}
+                  className={`${
+                    CardsDesign_styles["card-3d-wrapper"]
+                  } ${CardsDesign_styles["card-3d-wrapper-anim"]}`}
                 >
                   <div className={CardsDesign_styles["card-inner"]}>
                     <div

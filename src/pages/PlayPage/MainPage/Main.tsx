@@ -25,7 +25,6 @@ axios.defaults.withCredentials = true;
 
 interface Props {
   isGameFound: boolean;
-  actibeTab: string;
 }
 
 import { playFunctions } from "../Play/Play.tsx";
