@@ -23,7 +23,8 @@ export function SoundPlayer(soundPath: string) {
   audio.pause();
   audio.currentTime = 0;
   
-  audio.volume = 0.2;
+  // audio.volume = 0.2;
+  audio.volume = 1;
 
   audio.play().catch((err) => {
     console.error("Ошибка воспроизведения аудио:", err);

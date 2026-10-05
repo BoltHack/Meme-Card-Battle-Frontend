@@ -395,6 +395,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       }, 1000);
 
       console.log("playersInfo", playersInfo);
+      console.log("playersInfoRef", playersInfoRef.current);
 
       socket.emit("game_start", game_type);
 
@@ -406,15 +407,15 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       // }
     };
 
-    // if (!socket.connected) {
-    //   socket.connect();
-    // } else {
-    //   sendInitialData();
-    // }
-
-    if (socket.connected) {
+    if (!socket.connected) {
+      socket.connect();
+    } else {
       sendInitialData();
     }
+
+    // if (socket.connected) {
+    //   sendInitialData();
+    // }
 
     socket.on("connect", sendInitialData);
 

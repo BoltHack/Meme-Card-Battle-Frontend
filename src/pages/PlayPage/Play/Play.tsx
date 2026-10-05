@@ -27,6 +27,7 @@ import { SettingsPage } from "../SettingsPage/SettingsPanel/SettingsPanel.tsx";
 import { GamePage } from "../GamePage/Game.tsx";
 
 import { FriendListMenu } from "../FriendListMenu/Menu.tsx";
+import { SoundPlayer } from "../../../tools/global_scripts/SoundPlayer/SoundPlayer.ts";
 
 // interface FriendsPost {
 //   id: string;
@@ -396,6 +397,7 @@ export const PlayPage = ({ title }: TitleSettings) => {
           avatar: inviterData.avatar,
         });
         setInviteMenu(true);
+        SoundPlayer("battle_invite");
       }
 
       if (notificationTimeoutRef.current) clearTimeout(notificationTimeoutRef.current);
@@ -484,6 +486,7 @@ export const PlayPage = ({ title }: TitleSettings) => {
       {gameInvite.id && (
         <div
           className={`${invite_styles["game-notification"]} ${invite_styles[inviteMenu ? "show" : "hide"]}`}
+          onClick={() => toggleInviteMenu(false)}
         >
           <div className={invite_styles["avatar-container"]}>
             {gameInvite.avatar ? (
