@@ -407,15 +407,15 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       // }
     };
 
-    if (!socket.connected) {
-      socket.connect();
-    } else {
-      sendInitialData();
-    }
-
-    // if (socket.connected) {
+    // if (!socket.connected) {
+    //   socket.connect();
+    // } else {
     //   sendInitialData();
     // }
+
+    if (socket.connected) {
+      sendInitialData();
+    }
 
     socket.on("connect", sendInitialData);
 
@@ -625,21 +625,21 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       socket.off("game_cards_selected");
       socket.off("game_cards_selected_result");
       socket.off("connect", sendInitialData);
-      socket.disconnect();
+      // socket.disconnect();
       clearTimeout(joinTimer);
       clearTimeout(cardsTimer);
       console.log("Сокет (game) отключен, подписки сняты.");
     };
   }, [data]);
 
-  // useEffect(() => {
-  //   if (!socket.connected) {
-  //     socket.connect();
-  //   }
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.connect();
+    }
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   (function () {
     const fpsDiv = document.createElement("div");
@@ -709,6 +709,9 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       {/* <button className={laser_styles["laser-btn"]} onClick={test}>
         ⚡ Запустить лазер
       </button> */}
+      <button className={styles["ready-btn"]}>
+        ГОТОВ К БОЮ
+      </button>
 
       {activeScene && (
         <div

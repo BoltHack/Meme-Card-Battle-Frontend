@@ -272,14 +272,6 @@ export const FriendListMenu = ({ playerID }: Props) => {
 
   }, [contentData]);
 
-  // useEffect(() => {
-  //   return () => {
-  //     if (playerID) {
-  //       socket.emit("user_register", { player_id: playerID });
-  //     }
-  //   };
-  // }, [playerID, socket]);
-
   return (
     <>
       <div className={styles["menu-wrapper"]}>

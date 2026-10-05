@@ -66,3 +66,47 @@
         transform: rotate(360deg);
     }
 }
+
+.ready-btn {
+  position: absolute;
+  bottom: 0%;
+  left: 0%;
+  z-index: 100;
+  padding: 14px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: #d1226e;
+  border: 3px solid #3d051c;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow:
+    0 5px 0 #3d051c,
+    0 8px 20px rgba(209, 34, 110, 0.4);
+  transition: all 0.1s ease-in-out;
+}
+
+.ready-btn:hover {
+  background-color: #e63984;
+  transform: translateY(-2px);
+  box-shadow:
+    0 7px 0 #3d051c,
+    0 12px 25px rgba(230, 57, 132, 0.6);
+}
+
+.ready-btn:active {
+  transform: translateY(5px);
+  box-shadow:
+    0 0px 0 #3d051c,
+    0 0px 0px rgba(0, 0, 0, 0);
+}
+
+.ready-btn:disabled {
+  background-color: #3b232e;
+  border-color: #1a0a11;
+  color: #777;
+  cursor: not-allowed;
+  transform: translateY(5px);
+  box-shadow: none;
+}

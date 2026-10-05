@@ -35,7 +35,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/play",
-    element: <PlayPage title="Meme Card Battle" />,
+    element: <PlayPage />,
   },
   {
     path: "/auth/sign-in",

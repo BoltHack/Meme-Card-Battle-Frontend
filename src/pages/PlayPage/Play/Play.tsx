@@ -27,21 +27,10 @@ import { SettingsPage } from "../SettingsPage/SettingsPanel/SettingsPanel.tsx";
 import { GamePage } from "../GamePage/Game.tsx";
 
 import { FriendListMenu } from "../FriendListMenu/Menu.tsx";
+
+import { ScreenClickPage } from "../ScreenClickPage/ScreenClick.tsx";
+
 import { SoundPlayer } from "../../../tools/global_scripts/SoundPlayer/SoundPlayer.ts";
-
-// interface FriendsPost {
-//   id: string;
-//   name: string;
-//   lvl: number;
-//   gameInfo: string;
-//   isOnline: boolean;
-// }
-
-interface TitleSettings {
-  title: string;
-}
-
-// import { SoundPlayer } from "../../../tools/global_scripts/SoundPlayer/SoundPlayer.ts";
 
 let play_game_type = "";
 let play_game_key = "";
@@ -79,7 +68,9 @@ export const playFunctions = {
   },
 };
 
-export const PlayPage = ({ title }: TitleSettings) => {
+export const PlayPage = () => {
+  const screen_click = sessionStorage.getItem("screen_click");
+  
   const [activeTab, setActiveTab] = useState<string>(PlayNavigation[0]);
   const [headerState, setHeaderState] = useState<boolean | true>(true);
 
@@ -206,9 +197,6 @@ export const PlayPage = ({ title }: TitleSettings) => {
     playFunctions.toggleFriendsMenu = (type: boolean) => {
       // handleChangeFriendsCategory("list");
       setFriendsMenu(type);
-      // if (!type && data?.id) {
-      //   socket.emit("user_register", { player_id: data?.id });
-      // }
     };
 
     return () => {
@@ -428,10 +416,18 @@ export const PlayPage = ({ title }: TitleSettings) => {
       if (timerId.current) clearInterval(timerId.current);
       console.log("Сокет (play) отключен, подписки сняты");
     };
-  }, [data, socket]);
+  }, [data]);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.removeItem("screen_click");
+    })
+  }, []);
 
   if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;
+
+  if (!screen_click) return <ScreenClickPage />
 
   if (activeTab === PlayNavigation[5])
     return <GamePage game_type={play_game_type} game_key={play_game_key} />;
@@ -439,7 +435,7 @@ export const PlayPage = ({ title }: TitleSettings) => {
   return (
     <>
       <Helmet>
-        <title>{title}</title>
+        <title>Meme Card Battle</title>
       </Helmet>
 
       {/* <Header /> */}

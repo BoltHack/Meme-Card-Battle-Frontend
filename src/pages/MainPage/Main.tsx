@@ -68,11 +68,23 @@ export const MainPage = ({ title }: TitleSettings) => {
     console.log("data", data);
   }, [data]);
 
-  useEffect(() => {
-    if (!data) return;
+  // useEffect(() => {
+  //   if (!data) return;
 
-    socket.disconnect();
-  }, [data, socket]);
+  //   socket.disconnect();
+  // }, [data, socket]);
+
+  useEffect(() => {
+    const socketDisconnect = () => {
+      if (socket.connected) socket.disconnect();
+    };
+
+    const timerId = setTimeout(socketDisconnect, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [socket]);
 
   if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;

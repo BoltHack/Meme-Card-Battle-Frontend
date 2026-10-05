@@ -347,10 +347,16 @@ export const BlogReadPage = () => {
   }, [data]);
 
   useEffect(() => {
-    if (!data) return;
+    const socketDisconnect = () => {
+      if (socket.connected) socket.disconnect();
+    };
 
-    socket.disconnect();
-  }, [data, socket]);
+    const timerId = setTimeout(socketDisconnect, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [socket]);
 
   if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;

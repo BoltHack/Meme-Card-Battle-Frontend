@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { LoginPage } from "./Login.tsx";
@@ -28,7 +28,7 @@ export const SignInPage = ({ title }: TitleSettings) => {
 
   const [modalType, setModalType] = useState("main");
 
-  const { loading, error } = usePageRender(`${api.API_BASE_URL}/auth/sign-in`);
+  const { loading, error, socket } = usePageRender(`${api.API_BASE_URL}/auth/sign-in`);
 
   const toggleModal = (type: string) => {
     setModalType(type);
@@ -36,6 +36,18 @@ export const SignInPage = ({ title }: TitleSettings) => {
   const toggleVisible = () => {
     setPasswordVisible(!passwordVisible);
   };
+
+  useEffect(() => {
+    const socketDisconnect = () => {
+      if (socket.connected) socket.disconnect();
+    };
+
+    const timerId = setTimeout(socketDisconnect, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [socket]);
 
   if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;

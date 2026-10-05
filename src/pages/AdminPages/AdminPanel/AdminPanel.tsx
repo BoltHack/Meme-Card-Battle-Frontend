@@ -71,7 +71,12 @@ const CaseRedaction = [
   "case:editData",
   "case:editContent",
 ];
-const LinksRedaction = ["links:settings", "links:list", "links:create", "links:edit"];
+const LinksRedaction = [
+  "links:settings",
+  "links:list",
+  "links:create",
+  "links:edit",
+];
 
 export const adminNavigator = {
   handleChangeTab: (tab: string) => {},
@@ -82,7 +87,7 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
 
   const [activeTab, setActiveTab] = useState<string>("ToolsPage");
 
-  const { loading, error } = usePageRender(`${api.API_BASE_URL}/admin/panel`);
+  const { loading, error, socket } = usePageRender(`${api.API_BASE_URL}/admin/panel`);
 
   useEffect(() => {
     adminNavigator.handleChangeTab = (tab: string) => {
@@ -105,6 +110,18 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
       edit_id = "";
     };
   }, [activeTab]);
+
+  useEffect(() => {
+    const socketDisconnect = () => {
+      if (socket.connected) socket.disconnect();
+    };
+
+    const timerId = setTimeout(socketDisconnect, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [socket]);
 
   if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;
