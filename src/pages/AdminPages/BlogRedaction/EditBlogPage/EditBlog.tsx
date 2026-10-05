@@ -453,7 +453,7 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
                 <div className={styles["file-tool-text"]}>
                   <span>
                     Загрузить изображение в формате:{" "}
-                    <strong>galleryItem</strong>
+                    <strong>[I]</strong>
                   </span>
                 </div>
               </label>
@@ -468,7 +468,7 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
                 <div className={styles["file-tool-text"]}>
                   <span>
                     Загрузить изображение в формате:{" "}
-                    <strong>postInlineImage</strong>
+                    <strong>[F]</strong>
                   </span>
                 </div>
               </label>

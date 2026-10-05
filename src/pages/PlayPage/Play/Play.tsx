@@ -375,6 +375,11 @@ export const PlayPage = () => {
 
       console.log("вам отправили запрос");
 
+      if (type === "alert") {
+        toast.error(message);
+        return;
+      }
+
       if (type === "invite") {
         setGameInvite({
           action: action,

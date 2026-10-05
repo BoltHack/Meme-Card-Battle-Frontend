@@ -1,5 +1,4 @@
 import { ChangeEvent, useRef, useState } from "react";
-// import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.CreateBlog.module.css";
 import blog_styles from "../../../BlogReadPage/Card.BlogRead.module.css";
@@ -11,7 +10,6 @@ axios.defaults.withCredentials = true;
 import api from "../../../../api/api.ts";
 import toast from "react-hot-toast";
 
-import usePageRender from "../../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 
@@ -418,7 +416,7 @@ export const CreateBlogPage = () => {
                 <div className={styles["file-tool-text"]}>
                   <span>
                     Загрузить изображение в формате:{" "}
-                    <strong>galleryItem</strong>
+                    <strong>[I]</strong>
                   </span>
                 </div>
               </label>
@@ -433,7 +431,7 @@ export const CreateBlogPage = () => {
                 <div className={styles["file-tool-text"]}>
                   <span>
                     Загрузить изображение в формате:{" "}
-                    <strong>postInlineImage</strong>
+                    <strong>[F]</strong>
                   </span>
                 </div>
               </label>
