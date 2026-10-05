@@ -48,10 +48,10 @@ export const NotificationsPage = () => {
   };
 
   useEffect(() => {
-    if (!settings?.notifications) {
+    if (!settings.notifications) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        settings?.notifications,
+        settings.notifications,
       );
       return;
     }
@@ -63,7 +63,7 @@ export const NotificationsPage = () => {
     });
   }, []);
 
-  if (contentLoading || !settings?.notifications) return <ContentLoading />;
+  if (contentLoading) return <ContentLoading />;
   if (contentError) return <ErrorPage error={contentError} />;
 
   return (

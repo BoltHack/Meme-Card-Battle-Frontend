@@ -19,7 +19,7 @@ export const GraphicsPage = () => {
     particles: true,
   });
 
-  const { contentData, contentLoading, contentError } = useContentRender(
+  const { contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/play/settings/graphics`,
   );
 
@@ -47,10 +47,10 @@ export const GraphicsPage = () => {
   };
 
   useEffect(() => {
-    if (!contentData) {
+    if (!settings.graphics) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        contentData,
+        settings.graphics,
       );
       return;
     }
@@ -59,9 +59,9 @@ export const GraphicsPage = () => {
       effects: settings?.graphics?.effects ?? true,
       particles: settings?.graphics?.particles ?? true,
     });
-  }, [contentData]);
+  }, []);
 
-  if (contentLoading || !contentData) return <ContentLoading />;
+  if (contentLoading) return <ContentLoading />;
   if (contentError) return <ErrorPage error={contentError} />;
 
   return (
