@@ -6,13 +6,12 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { LoadingPage } from "../../../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 
 import { ProfilePage } from "../ProfilePage/Profile.tsx";
 import { GraphicsPage } from "../GraphicsPage/Graphics.tsx";
-import { SafetyPage } from "../SafetyPage/Safety.tsx";
 import { NotificationsPage } from "../NotificationsPage/Notifications.tsx";
 import { AccountPage } from "../AccountPage/Account.tsx";
 
@@ -23,7 +22,6 @@ export const settingsNavigator = {
 };
 
 import { playFunctions } from "../../Play/Play.tsx";
-import useContentRender from "../../../../tools/ContentRender.ts";
 
 export const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState<string>(Settings[0]);

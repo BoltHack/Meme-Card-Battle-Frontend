@@ -6,12 +6,10 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
-import usePageRender from "../../../../tools/PageRender.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import toast from "react-hot-toast";
-
-// import { settingsNavigator } from "../SettingsPanel/SettingsPanel.tsx";
 
 export const GraphicsPage = () => {
   const settings = JSON.parse(localStorage.getItem("settings") || "{}");
@@ -19,10 +17,9 @@ export const GraphicsPage = () => {
   const [settingsList, setSettingsList] = useState({
     effects: true,
     particles: true,
-    // marketing_and_functions: settings.marketing_and_functions ?? false,
   });
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/play/settings/graphics`,
   );
 
@@ -50,10 +47,10 @@ export const GraphicsPage = () => {
   };
 
   useEffect(() => {
-    if (!data) {
+    if (!contentData) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
@@ -62,10 +59,10 @@ export const GraphicsPage = () => {
       effects: settings?.graphics?.effects ?? true,
       particles: settings?.graphics?.particles ?? true,
     });
-  }, [data]);
+  }, [contentData]);
 
-  if (loading || !data) return <ContentLoading />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading || !contentData) return <ContentLoading />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <>

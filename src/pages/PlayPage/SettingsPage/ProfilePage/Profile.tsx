@@ -11,15 +11,7 @@ import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import toast from "react-hot-toast";
 
-// import { settingsNavigator } from "../SettingsPanel/SettingsPanel.tsx";
-
 export const ProfilePage = () => {
-  // const [contentLoading, setContentLoading] = useState<boolean | false>(false);
-  // const [userInfo, setUserInfo] = useState({
-  //   avatar: "",
-  //   aboutMe: "",
-  // });
-
   const [formData, setFormData] = useState({
     aboutMe: "",
   });
