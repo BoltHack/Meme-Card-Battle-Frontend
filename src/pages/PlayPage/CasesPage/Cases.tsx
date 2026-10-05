@@ -7,7 +7,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../api/api.ts";
-import usePageRender from "../../../tools/PageRender.ts";
+import useContentRender from "../../../tools/ContentRender.ts";
 import { LoadingPage } from "../../LoadingPage/Loading.tsx";
 import { ErrorPage } from "../../ErrorPage/Error.tsx";
 
@@ -48,7 +48,7 @@ export const CasesPage = () => {
   };
   const [rewardCard, setRewardCard] = useState(initialCardState);
 
-  const { data, loading, error } = usePageRender(
+  const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/play/cases`,
   );
 
@@ -112,24 +112,23 @@ export const CasesPage = () => {
   };
 
   useEffect(() => {
-    if (!data || !Array.isArray(data.renderData.cases)) {
+    if (!contentData || !Array.isArray(contentData.renderData.cases)) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
-        data,
+        contentData,
       );
       return;
     }
 
     playFunctions.handleChangeHeaderState(true);
 
-    setCases(data.renderData.cases);
+    setCases(contentData.renderData.cases);
 
-    // setCases(data.renderData);
-    console.log("data", data);
-  }, [data]);
+    console.log("data", contentData);
+  }, [contentData]);
 
-  if (loading || !data) return <LoadingPage />;
-  if (error) return <ErrorPage error={error} />;
+  if (contentLoading || !contentData) return <LoadingPage />;
+  if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div style={{ userSelect: "none" }}>

@@ -67,7 +67,7 @@ export const LoadingPage = () => {
     <div className={styles["body-wrapper"]}>
       <div className={styles["parallax-wrapper"]}>
         <Helmet>
-          <title>Загрузка</title>
+          <title>{window.location.pathname === "/play" ? "Meme Card Battle" : "Загрузка"}</title>
         </Helmet>
 
         <div className={styles["smoke-glow smoke-red"]}></div>

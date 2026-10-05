@@ -36,7 +36,7 @@ export const ScreenClickPage = () => {
   return (
     <div className={styles["body-wrapper"]}>
       <Helmet>
-        <title>Проверка</title>
+        <title>Meme Card Battle</title>
       </Helmet>
       <div className={styles["parallax-body"]}></div>
       <div className={styles["parallax-wrapper"]}></div>
