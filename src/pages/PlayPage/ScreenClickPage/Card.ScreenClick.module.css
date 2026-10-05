@@ -49,6 +49,8 @@
 }
 
 .screen-container h1 {
+  display: grid;
+  line-height: 1.1;
   /* font-family: "Impact", "Arial Black", sans-serif; */
   font-family: "Segoe UI Script", "Comic Sans MS", "Apple Chancery", cursive;
   color: #801de2;

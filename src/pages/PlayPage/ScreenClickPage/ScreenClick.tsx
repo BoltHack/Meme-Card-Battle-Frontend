@@ -42,9 +42,7 @@ export const ScreenClickPage = () => {
       <div className={styles["parallax-wrapper"]}></div>
       <div className={styles["screen-container"]}>
         <h1>
-          MEME CARD
-          <br />
-          <span>BATTLE</span>
+          MEME CARD <span>BATTLE</span>
         </h1>
         <br />
         <div className={styles["screen-content"]}>
