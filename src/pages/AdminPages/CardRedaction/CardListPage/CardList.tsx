@@ -135,31 +135,31 @@ export const CardListPage = () => {
         <div className={styles["card-categories"]}>
           <button
             onClick={() => setCardsCategory("all")}
-            className={`${styles["card-categories-btn"]} ${cardsCategory === "all" ? styles["active"] : null}`}
+            className={`${styles["card-categorie-btn"]} ${cardsCategory === "all" ? styles["active"] : null}`}
           >
             Все
           </button>
           <button
             onClick={() => setCardsCategory("default")}
-            className={`${styles["card-categories-btn"]} ${cardsCategory === "default" ? styles["active"] : null}`}
+            className={`${styles["card-categorie-btn"]} ${cardsCategory === "default" ? styles["active"] : null}`}
           >
             Обычные
           </button>
           <button
             onClick={() => setCardsCategory("rare")}
-            className={`${styles["card-categories-btn"]} ${cardsCategory === "rare" ? styles["active"] : null}`}
+            className={`${styles["card-categorie-btn"]} ${cardsCategory === "rare" ? styles["active"] : null}`}
           >
             Редкие
           </button>
           <button
             onClick={() => setCardsCategory("epic")}
-            className={`${styles["card-categories-btn"]} ${cardsCategory === "epic" ? styles["active"] : null}`}
+            className={`${styles["card-categorie-btn"]} ${cardsCategory === "epic" ? styles["active"] : null}`}
           >
             Эпические
           </button>
           <button
             onClick={() => setCardsCategory("legendary")}
-            className={`${styles["card-categories-btn"]} ${cardsCategory === "legendary" ? styles["active"] : null}`}
+            className={`${styles["card-categorie-btn"]} ${cardsCategory === "legendary" ? styles["active"] : null}`}
           >
             Легендарные
           </button>

@@ -95,7 +95,7 @@ export const Footer = () => {
                     <Link to="/about-us">О нас</Link>
                   </li>
                   <li>
-                    <Link to="/news">Новости</Link>
+                    <Link to="/category/news">Новости</Link>
                   </li>
                 </ul>
               </div>

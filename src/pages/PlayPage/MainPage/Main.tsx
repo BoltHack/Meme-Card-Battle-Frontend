@@ -30,6 +30,15 @@ interface Props {
 import { playFunctions } from "../Play/Play.tsx";
 
 export const MainPage = ({ isGameFound }: Props) => {
+  const settings = JSON.parse(localStorage.getItem("settings") || "{}");
+
+  const settingsList = {
+    graphics: {
+      particles: settings?.graphics?.particles ?? true,
+      effects: settings?.graphics?.effects ?? true,
+    },
+  };
+
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -84,41 +93,53 @@ export const MainPage = ({ isGameFound }: Props) => {
 
         <div className={styles["halftone-overlay"]}></div>
 
-        <div className={styles["star-particles"]}></div>
+        {settingsList?.graphics?.particles ? (
+          <div className={styles["star-particles"]}></div>
+        ) : (
+          ""
+        )}
 
         <div className={styles["shard shard-1"]}></div>
         <div className={styles["shard shard-2"]}></div>
 
-        <svg
-          className={`${styles["lightning"]} ${styles["lightning-right"]}`}
-          viewBox="0 0 24 24"
-        >
-          <path d="M19 9h-6l3-7L5 13h6l-3 9z" />
-        </svg>
+        {settingsList?.graphics?.effects ? (
+          <>
+            <svg
+              className={`${styles["lightning"]} ${styles["lightning-right"]}`}
+              viewBox="0 0 24 24"
+            >
+              <path d="M19 9h-6l3-7L5 13h6l-3 9z" />
+            </svg>
 
-        <div className={styles["card-layer"]}>
-          <div className={`${styles["premium-card"]} ${styles["card-king"]}`}>
-            <div></div>
-            <div className={styles["card-suit-center"]}>?</div>
-            <div className={styles["card-suit-bottom"]}></div>
-          </div>
+            <div className={styles["card-layer"]}>
+              <div
+                className={`${styles["premium-card"]} ${styles["card-king"]}`}
+              >
+                <div></div>
+                <div className={styles["card-suit-center"]}>?</div>
+                <div className={styles["card-suit-bottom"]}></div>
+              </div>
 
-          <div
-            className={`${styles["premium-card"]} ${styles["card-ace-spades"]}`}
-          >
-            <div></div>
-            <div className={styles["card-suit-center"]}>?</div>
-            <div className={styles["card-suit-bottom"]}></div>
-          </div>
+              <div
+                className={`${styles["premium-card"]} ${styles["card-ace-spades"]}`}
+              >
+                <div></div>
+                <div className={styles["card-suit-center"]}>?</div>
+                <div className={styles["card-suit-bottom"]}></div>
+              </div>
 
-          <div
-            className={`${styles["premium-card"]} ${styles["card-ace-diamonds"]}`}
-          >
-            <div></div>
-            <div className={styles["card-suit-center"]}>?</div>
-            <div className={styles["card-suit-bottom"]}></div>
-          </div>
-        </div>
+              <div
+                className={`${styles["premium-card"]} ${styles["card-ace-diamonds"]}`}
+              >
+                <div></div>
+                <div className={styles["card-suit-center"]}>?</div>
+                <div className={styles["card-suit-bottom"]}></div>
+              </div>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
       </div>
 
       <div className={styles["buttons-container"]}>
@@ -146,8 +167,14 @@ export const MainPage = ({ isGameFound }: Props) => {
               {/* <div className={styles["play-halftone-overlay"]}></div> */}
               {/* <div className={styles["play-star-particles"]}></div> */}
 
-              <div className={styles["play-magic-shard"]} style={{ top: "30%", left: "22%" }}></div>
-              <div className={styles["play-magic-shard"]} style={{ top: "65%", right: "20%" }}></div>
+              <div
+                className={styles["play-magic-shard"]}
+                style={{ top: "30%", left: "22%" }}
+              ></div>
+              <div
+                className={styles["play-magic-shard"]}
+                style={{ top: "65%", right: "20%" }}
+              ></div>
 
               {/* <svg
                 className={`${styles["play-lightning"]} ${styles["play-lightning-right"]}`}

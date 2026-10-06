@@ -33,7 +33,7 @@
     padding: 10px 0 50px 0;
 }
 
-.card-categories button {
+.card-categorie-btn {
     cursor: pointer;
     background: transparent;
     /*background: #7d2cd3;*/
@@ -46,11 +46,11 @@
     border: 2px solid rgba(255, 255, 255, 0.1);
     text-align: center;
 }
-.card-categories-btn:hover {
+.card-categorie-btn:hover {
     background: #7d2cd3;
     /*opacity: 0.8;*/
 }
-.card-categories-btn.active {
+.card-categorie-btn.active {
     background: #7d2cd3;
 }
 

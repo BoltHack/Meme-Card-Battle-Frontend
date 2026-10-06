@@ -10,8 +10,8 @@ export const BlogSettingsPage = () => {
       className={`${admin_styles["page"]} ${admin_styles["active"]}`}
     >
       <header className={admin_styles["header"]}>
-        <h1>Настройка блогов</h1>
-        <p>Управление блогами и их данными.</p>
+        <h1>Настройка статей</h1>
+        <p>Управление статьями и их данными.</p>
       </header>
 
       <div className={admin_styles["container-grid"]}>
@@ -41,8 +41,8 @@ export const BlogSettingsPage = () => {
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
             </svg>
           </div>
-          <h3>Создать блог</h3>
-          <p>Опубликовать новый блог.</p>
+          <h3>Создать статью</h3>
+          <p>Опубликовать новую статью.</p>
         </div>
       </div>
     </div>

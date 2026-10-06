@@ -683,6 +683,11 @@ export const ShopPage = () => {
               </div>
             </section> */}
           </div>
+
+          <header>
+            <h1>Валюта</h1>
+            <p>Обменяй коины на валюту</p>
+          </header>
         </main>
       </div>
 

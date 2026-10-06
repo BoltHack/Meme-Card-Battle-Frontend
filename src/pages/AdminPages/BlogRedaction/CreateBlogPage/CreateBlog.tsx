@@ -328,6 +328,7 @@ export const CreateBlogPage = () => {
                 <option value="development">Разработка</option>
                 <option value="functions">Функции</option>
                 <option value="safety">Безопасность</option>
+                <option value="news">Новости</option>
               </select>
             </div>
 

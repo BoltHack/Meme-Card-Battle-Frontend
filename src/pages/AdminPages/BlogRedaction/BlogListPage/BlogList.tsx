@@ -40,6 +40,8 @@ import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 export const BlogListPage = () => {
   const bodyWrapperRef = useRef<HTMLDivElement | null>(null);
 
+  const [articleType, setArticleType] = useState<string | "">("blog");
+
   const [blog, setBlog] = useState<BlogPost[]>([]);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -61,14 +63,10 @@ export const BlogListPage = () => {
   };
   const [removeBlogData, setRemoveBlogData] = useState(initialBlogState);
 
-  const { contentData, contentLoading, contentError } = useContentRender<BlogResponse>(
-    `${api.API_BASE_URL}/api/blog?page=${currentPage}`,
-  );
-
-  // const blogRemoveMenu = (data: BlogPost) => {
-  //   console.log("data", data);
-  //   setRemoveBlogData((prevState) => [...prevState, data]);
-  // };
+  const { contentData, contentLoading, contentError } =
+    useContentRender<BlogResponse>(
+      `${api.API_BASE_URL}/admin/article/${articleType}/list?page=${currentPage}`,
+    );
 
   const handleRemoveBlog = async (
     id: string,
@@ -165,7 +163,7 @@ export const BlogListPage = () => {
       className={`${admin_styles["page"]} ${admin_styles["active"]}`}
     >
       <header className={admin_styles["header"]}>
-        <h1>Список публикаций (блогов)</h1>
+        <h1>Список публикаций</h1>
         <p>Просматривайте, редактируйте и удаляйте публикации.</p>
       </header>
 
@@ -177,6 +175,20 @@ export const BlogListPage = () => {
       </a>
 
       <main className={styles["discord-blog-container"]}>
+        <div className={styles["blog-articles"]}>
+          <button
+            onClick={() => setArticleType("blog")}
+            className={`${styles["blog-article-btn"]} ${articleType === "blog" ? styles["active"] : ""}`}
+          >
+            Блог
+          </button>
+          <button
+            onClick={() => setArticleType("news")}
+            className={`${styles["blog-article-btn"]} ${articleType === "news" ? styles["active"] : ""}`}
+          >
+            Новости
+          </button>
+        </div>
         <section className={styles["featured-section"]}>
           {blog && blog.length > 0 ? (
             <article className={styles["featured-card"]}>
@@ -337,36 +349,7 @@ export const BlogListPage = () => {
               <div className={styles["grid-card"]}>
                 <div className={styles["card-body"]}>
                   <h3>Что-то пошло не так!</h3>
-                  <p>
-                    На данный момент информация в этой категории отсутствует.
-                    Попробуйте поискать её в следующих категориях:
-                  </p>
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <Link
-                      to="/category/community"
-                      className={`${styles["read-more-btn"]} ${styles["small"]}`}
-                    >
-                      Сообщество
-                    </Link>
-                    <Link
-                      to="/category/development"
-                      className={`${styles["read-more-btn"]} ${styles["small"]}`}
-                    >
-                      Разработка
-                    </Link>
-                    <Link
-                      to="/category/functions"
-                      className={`${styles["read-more-btn"]} ${styles["small"]}`}
-                    >
-                      Функции
-                    </Link>
-                    <Link
-                      to="/category/safety"
-                      className={`${styles["read-more-btn"]} ${styles["small"]}`}
-                    >
-                      Безопасность
-                    </Link>
-                  </div>
+                  <p>Массив данных пуст</p>
                 </div>
               </div>
             </div>

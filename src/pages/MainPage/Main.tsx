@@ -181,7 +181,7 @@ export const MainPage = ({ title }: TitleSettings) => {
           {mainBlog && mainBlog.length > 0
             ? mainBlog.map((blog) => {
                 return (
-                  <div className={styles["news-card"]} key={blog.id}>
+                  <div className={styles["news-card"]} style={{ maxWidth: "320px" }} key={blog.id}>
                     {blog.cover.length > 0 ? (
                       <img
                         src={`${api.API_BASE_URL}/${blog.cover}`}

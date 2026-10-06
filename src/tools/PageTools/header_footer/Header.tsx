@@ -130,9 +130,9 @@ export const Header = () => {
               </li>
 
               <li>
-                <a href="/news" className={styles["nav-link"]}>
+                <Link to="/category/news" className={styles["nav-link"]}>
                   Новости
-                </a>
+                </Link>
               </li>
             </ul>
           </nav>
