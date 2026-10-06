@@ -30,7 +30,7 @@ import { FriendListMenu } from "../FriendListMenu/Menu.tsx";
 
 import { ScreenClickPage } from "../ScreenClickPage/ScreenClick.tsx";
 
-import SoundsPlayer from "../../../tools/global_scripts/SoundsPlayer/SoundsPlayer.ts";
+import SoundsPlayer from "../../../tools/global_scripts/SoundsPlayer.ts";
 
 let play_game_type = "";
 let play_game_key = "";

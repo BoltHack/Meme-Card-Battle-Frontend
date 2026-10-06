@@ -480,6 +480,7 @@
   margin-top: 5px;
   gap: 10px;
   font-family: sans-serif;
+  flex-wrap: wrap;
 }
 
 .toggle-volume input[type="range"] {
