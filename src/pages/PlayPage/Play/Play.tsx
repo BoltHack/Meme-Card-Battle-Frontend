@@ -30,7 +30,7 @@ import { FriendListMenu } from "../FriendListMenu/Menu.tsx";
 
 import { ScreenClickPage } from "../ScreenClickPage/ScreenClick.tsx";
 
-import { SoundPlayer } from "../../../tools/global_scripts/SoundPlayer/SoundPlayer.ts";
+import SoundsPlayer from "../../../tools/global_scripts/SoundsPlayer/SoundsPlayer.ts";
 
 let play_game_type = "";
 let play_game_key = "";
@@ -70,7 +70,7 @@ export const playFunctions = {
 
 export const PlayPage = () => {
   const screen_click = sessionStorage.getItem("screen_click");
-  
+
   const [activeTab, setActiveTab] = useState<string>(PlayNavigation[0]);
   const [headerState, setHeaderState] = useState<boolean | true>(true);
 
@@ -390,15 +390,15 @@ export const PlayPage = () => {
           avatar: inviterData.avatar,
         });
         setInviteMenu(true);
-        SoundPlayer("battle_invite");
+        SoundsPlayer.playSound("battle_invite");
       }
 
-      if (notificationTimeoutRef.current) clearTimeout(notificationTimeoutRef.current);
+      if (notificationTimeoutRef.current)
+        clearTimeout(notificationTimeoutRef.current);
       notificationTimeoutRef.current = setTimeout(() => {
         if (!inviteMenu) return;
         toggleInviteMenu(false);
       }, 5000);
-
     });
 
     socket.on("game_error_handler", (message) => {
@@ -407,8 +407,6 @@ export const PlayPage = () => {
       toast.dismiss();
       toast.error(message);
     });
-
-    // setTimeout(() => SoundPlayer("background_music"), 500);
 
     return () => {
       sessionStorage.setItem("active_tab", "play:main");
@@ -426,13 +424,23 @@ export const PlayPage = () => {
   useEffect(() => {
     window.addEventListener("beforeunload", () => {
       sessionStorage.removeItem("screen_click");
-    })
+    });
   }, []);
+
+  // useEffect(() => {
+  //   if (!screen_click) return;
+
+  //   setTimeout(() => SoundsPlayer.backgroundMusic(), 500);
+
+  //   return () => {
+  //     SoundsPlayer.stopBackgroundMusic();
+  //   };
+  // }, []);
 
   if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;
 
-  if (!screen_click) return <ScreenClickPage />
+  if (!screen_click) return <ScreenClickPage />;
 
   if (activeTab === PlayNavigation[5])
     return <GamePage game_type={play_game_type} game_key={play_game_key} />;

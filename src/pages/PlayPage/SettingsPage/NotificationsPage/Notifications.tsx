@@ -9,15 +9,13 @@ import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import toast from "react-hot-toast";
 
 export const NotificationsPage = () => {
   const settings = JSON.parse(localStorage.getItem("settings") || "{}");
 
   const [settingsList, setSettingsList] = useState({
     push: true,
-    marketing_and_functions:
-      true,
+    marketing_and_functions: true,
   });
 
   const { contentLoading, contentError } = useContentRender(
@@ -30,21 +28,15 @@ export const NotificationsPage = () => {
       ...prev,
       [name]: checked,
     }));
-  };
-
-  const handleSubmit = (e: ChangeEvent<HTMLButtonElement>) => {
-    e.preventDefault();
 
     const updateSettings = {
       ...settings,
       notifications: {
-        push: settingsList.push,
-        marketing_and_functions: settingsList.marketing_and_functions,
+        ...settings.notifications,
+        [name]: checked,
       },
     };
     localStorage.setItem("settings", JSON.stringify(updateSettings));
-
-    toast.success("Настройки успешно изменены.");
   };
 
   useEffect(() => {
@@ -131,20 +123,6 @@ export const NotificationsPage = () => {
           </label>
         </div>
       </section>
-
-      <footer className={settings_styles["content-footer"]}>
-        <button
-          className={`${settings_styles["btn"]} ${settings_styles["btn-secondary"]}`}
-        >
-          Сбросить
-        </button>
-        <button
-          className={`${settings_styles["btn"]} ${settings_styles["btn-primary"]}`}
-          onClick={handleSubmit}
-        >
-          Сохранить изменения
-        </button>
-      </footer>
     </>
   );
 };

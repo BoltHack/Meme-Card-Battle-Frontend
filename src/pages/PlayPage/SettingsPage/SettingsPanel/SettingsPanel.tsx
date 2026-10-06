@@ -14,8 +14,15 @@ import { ProfilePage } from "../ProfilePage/Profile.tsx";
 import { GraphicsPage } from "../GraphicsPage/Graphics.tsx";
 import { NotificationsPage } from "../NotificationsPage/Notifications.tsx";
 import { AccountPage } from "../AccountPage/Account.tsx";
+import { SoundsPage } from "../SoundsPage/Sounds.tsx";
 
-const Settings = ["settings:profile", "settings:graphics", "settings:notifications"];
+const Settings = [
+  "settings:profile",
+  "settings:graphics",
+  "settings:notifications",
+  "settings:sounds",
+  "settings:account",
+];
 
 export const settingsNavigator = {
   handleChangeTab: (tab: string) => {},
@@ -182,6 +189,28 @@ export const SettingsPage = () => {
               onClick={() => setActiveTab(Settings[3])}
             >
               <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-volume-2 preview-icon"
+              >
+                <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+                <path d="M16 9a5 5 0 0 1 0 6" />
+                <path d="M19.364 18.364a9 9 0 0 0 0-12.728" />
+              </svg>
+              Звук
+            </a>
+            <a
+              className={`${styles["menu-item"]} ${activeTab === Settings[4] && styles["active"]}`}
+              onClick={() => setActiveTab(Settings[4])}
+            >
+              <svg
                 viewBox="0 0 24 24"
                 width="18"
                 height="18"
@@ -202,7 +231,8 @@ export const SettingsPage = () => {
           {activeTab === Settings[0] && <ProfilePage />}
           {activeTab === Settings[1] && <GraphicsPage />}
           {activeTab === Settings[2] && <NotificationsPage />}
-          {activeTab === Settings[3] && <AccountPage />}
+          {activeTab === Settings[3] && <SoundsPage />}
+          {activeTab === Settings[4] && <AccountPage />}
           {/* <header className={styles["content-header"]}>
           <h1>Настройки профиля</h1>
           <p>

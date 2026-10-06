@@ -9,7 +9,6 @@ import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import toast from "react-hot-toast";
 
 export const GraphicsPage = () => {
   const settings = JSON.parse(localStorage.getItem("settings") || "{}");
@@ -29,21 +28,15 @@ export const GraphicsPage = () => {
       ...prev,
       [name]: checked,
     }));
-  };
-
-  const handleSubmit = (e: ChangeEvent<HTMLButtonElement>) => {
-    e.preventDefault();
 
     const updateSettings = {
       ...settings,
       graphics: {
-        effects: settingsList.effects,
-        particles: settingsList.particles,
+        ...settings.graphics,
+        [name]: checked,
       },
     };
     localStorage.setItem("settings", JSON.stringify(updateSettings));
-
-    toast.success("Настройки успешно изменены.");
   };
 
   useEffect(() => {
@@ -114,7 +107,7 @@ export const GraphicsPage = () => {
         </div>
       </section>
 
-      <footer className={settings_styles["content-footer"]}>
+      {/* <footer className={settings_styles["content-footer"]}>
         <button
           className={`${settings_styles["btn"]} ${settings_styles["btn-secondary"]}`}
         >
@@ -126,7 +119,7 @@ export const GraphicsPage = () => {
         >
           Сохранить изменения
         </button>
-      </footer>
+      </footer> */}
     </>
   );
 };
