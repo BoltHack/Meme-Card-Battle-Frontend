@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 
 import styles from "./Card.EditCase.module.css";
-// import CardList_styles from "../../CardRedaction/CardList/Card.CardList.module.css";
 import CardsDesign_styles from "../../../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 
@@ -13,7 +12,6 @@ import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
-// import { CaseListPage } from "../CaseListPage/CaseList.tsx";
 
 interface CardPost {
   id: string;
@@ -103,7 +101,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
         card_chance: "",
       });
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage = error?.response?.data.error;
       console.log("error", error);
       if (errorMessage) {
@@ -143,7 +141,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
       }
 
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage = error?.response?.data.error;
       console.log("error", error);
       if (errorMessage) {
@@ -154,7 +152,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
   };
 
   useEffect(() => {
-    if (!contentData || !Array.isArray(contentData.renderData)) {
+    if (!contentData || !Array.isArray(contentData.renderData.cards)) {
       console.log(
         "Данные еще не загрузились или структура не совпадает:",
         contentData,
@@ -162,16 +160,11 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
       return;
     }
 
-    setCardList(contentData.renderData);
-    // if (data?.renderData?.card && Array.isArray(data.renderData.card)) {
-    //   setCardList(data.renderData.card);
-    // }
+    setCardList(contentData.renderData?.cards);
   }, [contentData]);
 
   if (contentLoading) return <ContentLoading />;
   if (contentError) return <ErrorPage error={contentError} />;
-
-  // if (back) return <CaseListPage />;
 
   return (
     <div
@@ -180,7 +173,10 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
     >
       <header className={admin_styles["header"]}>
         <h1>Редактор содержимого</h1>
-        <p>Изменение содержимого кейса.</p>
+        <p>
+          Изменение содержимого кейса:{" "}
+          <strong>{contentData?.renderData.case_name}</strong>
+        </p>
       </header>
 
       <a

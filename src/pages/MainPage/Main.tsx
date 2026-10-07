@@ -181,7 +181,11 @@ export const MainPage = ({ title }: TitleSettings) => {
           {mainBlog && mainBlog.length > 0
             ? mainBlog.map((blog) => {
                 return (
-                  <div className={styles["news-card"]} style={{ maxWidth: "320px" }} key={blog.id}>
+                  <div
+                    className={styles["news-card"]}
+                    style={{ maxWidth: "320px" }}
+                    key={blog.id}
+                  >
                     {blog.cover.length > 0 ? (
                       <img
                         src={`${api.API_BASE_URL}/${blog.cover}`}
@@ -200,7 +204,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                     <div className={styles["news-content"]}>
                       <div className={styles["news-meta"]}>
                         <span>{dateSettings(blog.date)}</span>
-                        <span className={styles["tag"]}>{blog.category}</span>
+                        <span className={styles["tag"]}>{blog.category === "news" ? "Новости" : blog.category}</span>
                       </div>
                       <h3>
                         {blog.title.length > 50

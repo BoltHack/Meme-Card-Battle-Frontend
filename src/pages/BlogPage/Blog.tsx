@@ -68,6 +68,27 @@ export const BlogPage = ({ title }: BlogPageProps) => {
     });
   };
 
+  const categorySettings = (category: string) => {
+    let setCategory = "";
+    switch (category) {
+      case "community":
+        setCategory = "Сообщество";
+        break;
+      case "development":
+        setCategory = "Разработка";
+        break;
+      case "functions":
+        setCategory = "Функции";
+        break;
+      case "safety":
+        setCategory = "Безопасность";
+        break;
+      default:
+        setCategory = "";
+    }
+    return setCategory;
+  };
+
   const handleScrollToTop = () => {
     setTimeout(() => {
       if (bodyWrapperRef.current) {
@@ -173,7 +194,9 @@ export const BlogPage = ({ title }: BlogPageProps) => {
                 )}
               </div>
               <div className={styles["featured-content"]}>
-                <span className={styles["category"]}>{blog[0].category}</span>
+                <span className={styles["category"]}>
+                  {categorySettings(blog[0].category)}
+                </span>
                 <h2>
                   {blog[0].title.length > 62
                     ? blog[0].title.slice(0, 62) + "..."
@@ -219,7 +242,7 @@ export const BlogPage = ({ title }: BlogPageProps) => {
                     )}
                   </div>
                   <div className={styles["card-body"]}>
-                    <span className={styles["category"]}>{bd.category}</span>
+                    <span className={styles["category"]}>{categorySettings(bd.category)}</span>
                     <h3>
                       {bd.title.length > 63
                         ? bd.title.slice(0, 63) + "..."
