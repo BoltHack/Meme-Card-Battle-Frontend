@@ -82,6 +82,30 @@ export const BlogReadPage = () => {
     });
   };
 
+  const categorySettings = (category: string) => {
+    let setCategory = "";
+    switch (category) {
+      case "community":
+        setCategory = "Сообщество";
+        break;
+      case "development":
+        setCategory = "Разработка";
+        break;
+      case "functions":
+        setCategory = "Функции";
+        break;
+      case "safety":
+        setCategory = "Безопасность";
+        break;
+      case "news":
+        setCategory = "Новости";
+        break;
+      default:
+        setCategory = "";
+    }
+    return setCategory;
+  };
+
   const galleryItemSettings = (
     element: string,
     className: string,
@@ -380,7 +404,9 @@ export const BlogReadPage = () => {
         {blog ? (
           <article className={styles["full-post-container"]}>
             <header className={styles["post-page-header"]}>
-              <span className={styles["category"]}>{blog.category}</span>
+              <span className={styles["category"]}>
+                {categorySettings(blog.category)}
+              </span>
               <h1>{blog.title}</h1>
 
               <div className={styles["post-page-meta"]}>

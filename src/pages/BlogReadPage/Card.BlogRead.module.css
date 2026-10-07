@@ -51,6 +51,9 @@
 .img-placeholder.safety {
   background: linear-gradient(135deg, #9a59c9, #2f7561);
 }
+.img-placeholder.news {
+  background: linear-gradient(135deg, #1c1f8d, #2f7561);
+}
 
 .avatar {
   width: 40px;

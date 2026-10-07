@@ -197,10 +197,6 @@ export const MainPage = ({ title }: TitleSettings) => {
                         className={`${styles["news-img"]} ${styles["img-blockopolis"]}`}
                       ></div>
                     )}
-                    {/* <img
-                      src={`${api.API_BASE_URL}/${blog.cover}`}
-                      className={`${styles["news-img"]} ${styles["img-blockopolis"]}`}
-                    /> */}
                     <div className={styles["news-content"]}>
                       <div className={styles["news-meta"]}>
                         <span>{dateSettings(blog.date)}</span>
@@ -225,7 +221,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                     </div>
                   </div>
                 );
-              })
+              }).reverse()
             : "Новых новостей пока нет"}
         </div>
       </section>

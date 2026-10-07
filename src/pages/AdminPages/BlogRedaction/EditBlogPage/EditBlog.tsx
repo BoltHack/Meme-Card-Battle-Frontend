@@ -189,7 +189,7 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
   }
 
   const handleFileRemove = () => {
-    setFile(null);
+    // setFile(null);
     setIsFileDelete(true);
   };
 
@@ -203,7 +203,10 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
     dataToSend.append("post_category", formData.post_category);
     dataToSend.append("content", editorText);
 
-    if (file) {
+    console.log("isFileDelete", isFileDelete);
+    
+
+    if (file !== null && !isFileDelete) {
       console.log("cover", file);
       dataToSend.append("post_cover", file);
     }
@@ -235,8 +238,8 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
       toast.success(response.data.success);
       setIsFileDelete(false);
 
-      const cover = file?.name.toString();
-      setTimeout(() => getBlogData(cover ?? ""), 100);
+      // const cover = file?.name.toString();
+      // setTimeout(() => getBlogData(cover ?? ""), 100);
 
       return response.data;
     } catch (error) {
@@ -272,7 +275,7 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
 
     setFormData(formattedBlogs);
 
-    setTimeout(() => getBlogData(formattedBlogs.post_cover), 100);
+    // setTimeout(() => getBlogData(formattedBlogs.post_cover), 100);
 
     console.log("contentData", contentData);
   }, [contentData]);
@@ -356,6 +359,7 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
                 <option value="development">Разработка</option>
                 <option value="functions">Функции</option>
                 <option value="safety">Безопасность</option>
+                <option value="news">Новости</option>
               </select>
             </div>
 
@@ -369,9 +373,9 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
                   accept="image/*"
                 />
                 <div className={styles["file-dropzone-text"]}>
-                  {file !== null ? (
+                  {formData.post_cover && !isFileDelete ? (
                     <span>
-                      Файл выбран <strong>{file.name}</strong>
+                      Файл выбран <strong>cover.png</strong>
                     </span>
                   ) : (
                     <span>
@@ -381,7 +385,7 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
                   )}
                 </div>
               </label>
-              {file !== null && (
+              {formData.post_cover && !isFileDelete && (
                 <a
                   className={styles["delete-file-btn"]}
                   onClick={handleFileRemove}
