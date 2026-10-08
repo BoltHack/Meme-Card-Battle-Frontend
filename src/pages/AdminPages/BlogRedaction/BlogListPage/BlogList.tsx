@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import styles from "./Card.BlogList.module.css";
 import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
@@ -38,6 +38,7 @@ interface BlogResponse {
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 
 export const BlogListPage = () => {
+  const navigate = useNavigate();
   const bodyWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const [articleType, setArticleType] = useState<string | "">("blog");
@@ -103,6 +104,35 @@ export const BlogListPage = () => {
       // hour: '2-digit', minute: '2-digit',
       hour12: false,
     });
+  };
+
+  const categorySettings = (category: string) => {
+    let setCategory = "";
+    switch (category) {
+      case "community":
+        setCategory = "Сообщество";
+        break;
+      case "development":
+        setCategory = "Разработка";
+        break;
+      case "functions":
+        setCategory = "Функции";
+        break;
+      case "safety":
+        setCategory = "Безопасность";
+        break;
+      case "news":
+        setCategory = "Новости";
+        break;
+      default:
+        setCategory = "";
+    }
+    return setCategory;
+  };
+
+  const handleChangeArticleType = (article: string) => {
+    navigate("?page=1");
+    setArticleType(article);
   };
 
   const handleScrollToTop = () => {
@@ -177,13 +207,13 @@ export const BlogListPage = () => {
       <main className={styles["discord-blog-container"]}>
         <div className={styles["blog-articles"]}>
           <button
-            onClick={() => setArticleType("blog")}
+            onClick={() => handleChangeArticleType("blog")}
             className={`${styles["blog-article-btn"]} ${articleType === "blog" ? styles["active"] : ""}`}
           >
             Блог
           </button>
           <button
-            onClick={() => setArticleType("news")}
+            onClick={() => handleChangeArticleType("news")}
             className={`${styles["blog-article-btn"]} ${articleType === "news" ? styles["active"] : ""}`}
           >
             Новости
@@ -206,7 +236,9 @@ export const BlogListPage = () => {
                 )}
               </div>
               <div className={styles["featured-content"]}>
-                <span className={styles["category"]}>{blog[0].category}</span>
+                <span className={styles["category"]}>
+                  {categorySettings(blog[0].category)}
+                </span>
                 <h2>
                   {blog[0].title.length > 62
                     ? blog[0].title.slice(0, 62) + "..."
@@ -285,7 +317,9 @@ export const BlogListPage = () => {
                     )}
                   </div>
                   <div className={styles["card-body"]}>
-                    <span className={styles["category"]}>{bd.category}</span>
+                    <span className={styles["category"]}>
+                      {categorySettings(bd.category)}
+                    </span>
                     <h3>
                       {bd.title.length > 63
                         ? bd.title.slice(0, 63) + "..."

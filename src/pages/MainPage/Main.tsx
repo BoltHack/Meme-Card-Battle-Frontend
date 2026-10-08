@@ -183,7 +183,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                 return (
                   <div
                     className={styles["news-card"]}
-                    style={{ maxWidth: "320px" }}
+                    style={{ maxWidth: "370px" }}
                     key={blog.id}
                   >
                     {blog.cover.length > 0 ? (
