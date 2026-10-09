@@ -534,7 +534,8 @@
   backdrop-filter: blur(0px);
   opacity: 0;
   /* pointer-events: none; */
-  z-index: 80;
+  /* z-index: 80; */
+  z-index: 100;
 }
 
 .blur-overlay.open {
@@ -636,6 +637,10 @@
   100% {
     transform: scale(1) translateY(0);
   }
+}
+
+.modal-container h1 {
+  padding-bottom: 20px;
 }
 
 .modal-content {

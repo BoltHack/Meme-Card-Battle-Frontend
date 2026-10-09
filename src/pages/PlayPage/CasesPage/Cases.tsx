@@ -142,6 +142,7 @@ export const CasesPage = () => {
       return response.data;
     } catch (error: any) {
       console.log("error", error);
+      setLoadingBtn(false);
       const errorMessage = error?.response?.data.error;
       if (errorMessage) {
         toast.error(errorMessage);
@@ -176,46 +177,43 @@ export const CasesPage = () => {
     setCases(contentData.renderData.cases);
   }, [contentData]);
 
-
   if (contentLoading || !contentData) return <LoadingPage />;
   if (contentError) return <ErrorPage error={contentError} />;
 
   return (
-    <div style={{ userSelect: "none" }}>
-      {!isOpenCase && (
-        <header className={styles["header-container"]}>
-          <div className={styles["header-content"]}>
-            {cases && cases.length > 0
-              ? cases.map((cs, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className={styles["header-btn"]}
-                      onClick={() => setCurrentCase(cs.rarity.toLowerCase())}
-                    >
-                      <div className={styles["case-btn-info"]}>
-                        <span
-                          className={`${styles["case-name"]} ${styles[currentCase === cs.rarity.toLowerCase() ? "case-selected" : ""]}`}
-                        >
-                          {cs?.name.replace("кейс", "")}
-                        </span>
-                        <span className={styles["case-count"]}>{cs?.keys}</span>
-                      </div>
-                      {currentCase === cs.rarity.toLowerCase() && (
-                        <div className={styles["case-btn-line"]}></div>
-                      )}
-                      {/* <span
+    <>
+      <header className={styles["header-container"]}>
+        <div className={styles["header-content"]}>
+          {cases && cases.length > 0
+            ? cases.map((cs, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={styles["header-btn"]}
+                    onClick={() => setCurrentCase(cs.rarity.toLowerCase())}
+                  >
+                    <div className={styles["case-btn-info"]}>
+                      <span
+                        className={`${styles["case-name"]} ${styles[currentCase === cs.rarity.toLowerCase() ? "case-selected" : ""]}`}
+                      >
+                        {cs?.name.replace("кейс", "")}
+                      </span>
+                      <span className={styles["case-count"]}>{cs?.keys}</span>
+                    </div>
+                    {currentCase === cs.rarity.toLowerCase() && (
+                      <div className={styles["case-btn-line"]}></div>
+                    )}
+                    {/* <span
                       className={`${styles["case-btn-info"]} ${styles["case-count"]}`}
                     >
                       {cs?.keys}
                     </span> */}
-                    </div>
-                  );
-                })
-              : null}
-          </div>
-        </header>
-      )}
+                  </div>
+                );
+              })
+            : null}
+        </div>
+      </header>
 
       <div
         className={shop_styles["grid-content"]}
@@ -346,6 +344,7 @@ export const CasesPage = () => {
           </button>
           <div className={styles["modal-container"]}>
             <h1>Содержимое кейса</h1>
+            {/* <br/> */}
             <div
               className={styles["modal-content"]}
               ref={contentContainerRef}
@@ -524,6 +523,6 @@ export const CasesPage = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
