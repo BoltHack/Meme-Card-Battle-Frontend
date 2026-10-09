@@ -453,6 +453,10 @@
   box-shadow: 0 20px 45px rgba(217, 70, 239, 0.2);
   border-color: rgba(217, 70, 239, 0.4);
 }
+.case-legendary:hover {
+  box-shadow: 0 20px 45px rgba(208, 239, 70, 0.156);
+  border-color: rgba(255, 215, 0, 0.5);
+}
 
 .case-footer {
   display: flex;
@@ -647,6 +651,11 @@
 }
 .r-epic {
   background: linear-gradient(135deg, #701a75, #311042);
+  border-color: #d946ef;
+  color: #f5d0fe;
+}
+.r-legendary {
+  background: linear-gradient(135deg, #ffd700, #ffd70080);
   border-color: #d946ef;
   color: #f5d0fe;
 }

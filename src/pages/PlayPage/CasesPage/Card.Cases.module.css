@@ -91,10 +91,10 @@
   text-transform: uppercase;
 
   color: #ffffff;
-  
+
   padding: 5px 5px;
   display: inline-block;
-  border-radius: 4px; 
+  border-radius: 4px;
 }
 .case-name:hover {
   color: #ff007f;
@@ -164,7 +164,7 @@
   text-transform: uppercase;
 
   color: #ffffff;
-  
+
   display: inline-block;
   border-radius: 4px;
   width: 160px;
@@ -225,7 +225,7 @@
   display: flex;
   justify-content: center;
   /* background-color: red; */
-  animation: case-drop 0.45s cubic-bezier(0.15, 0.85, 0.35, 1.2) forwards; 
+  animation: case-drop 0.45s cubic-bezier(0.15, 0.85, 0.35, 1.2) forwards;
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -589,9 +589,86 @@
   }
 }
 
-.card-3d-wrapper {
-  width: 210px;
-  height: 300px;
-  perspective: 1000px;
-  cursor: default;
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(6, 2, 12, 0.7);
+  backdrop-filter: blur(0px);
+  z-index: 100;
+}
+
+/* .modal-overlay h1 {
+  position: absolute;
+  top: 10%;
+  z-index: 101;
+} */
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(185deg, #150931 0%, #06020c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  padding: 40px;
+  box-sizing: border-box;
+  position: relative;
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.8),
+    0 0 50px rgba(217, 70, 239, 0.05);
+  transform: scale(0.9) translateY(20px);
+  animation: content-drop 0.4s cubic-bezier(0.15, 0.85, 0.35, 1.2) forwards;
+}
+
+@keyframes content-drop {
+  0% {
+    transform: scale(0.9) translateY(20px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-content {
+  gap: 40px;
+  display: flex;
+  align-items: center;
+  max-width: 1200px;
+  height: 500px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* text-shadow: 0 0 10px rgba(234, 223, 229, 0.5); */
+  border-top: 1px solid #281556;
+  border-bottom: 1px solid #281556;
+  border-radius: 16px;
+  scrollbar-width: none;
+}
+
+.modal-close {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 1%;
+  right: 1%;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-menu:active {
+  opacity: 0.6;
+}
+.close-menu svg {
+  width: 20px;
+  height: auto;
 }

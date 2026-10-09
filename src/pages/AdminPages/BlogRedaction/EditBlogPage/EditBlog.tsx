@@ -247,11 +247,11 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
     }
   };
 
-  const getBlogData = async (cover: string) => {
-    if (cover && cover?.length > 0) {
-      await setCoverFromUrl(cover);
-    }
-  };
+  // const getBlogData = async (cover: string) => {
+  //   if (cover && cover?.length > 0) {
+  //     await setCoverFromUrl(cover);
+  //   }
+  // };
 
   useEffect(() => {
     if (!contentData || !contentData.renderData) {

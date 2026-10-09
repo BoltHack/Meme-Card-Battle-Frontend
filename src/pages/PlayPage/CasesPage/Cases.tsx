@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, ChangeEvent, WheelEvent } from "react";
 
 import styles from "./Card.Cases.module.css";
+import shop_styles from "../ShopPage/Card.Shop.module.css";
 import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 
 import axios from "axios";
@@ -13,6 +14,18 @@ import { ErrorPage } from "../../ErrorPage/Error.tsx";
 
 import toast from "react-hot-toast";
 
+interface ContentPost {
+  id: string;
+  name: string;
+  description: string;
+  avatar: string;
+  lvl: string;
+  rarity: string;
+  damage: string;
+  protection: string;
+  power_slot: string;
+  chance: string;
+}
 interface CardsPost {
   id: string;
   name: string;
@@ -26,6 +39,18 @@ interface CardsPost {
 import { playFunctions } from "../Play/Play.tsx";
 
 export const CasesPage = () => {
+  const [caseContent, setCaseContent] = useState<ContentPost[]>([]);
+  const [caseContentLoading, setCaseContentLoading] = useState<boolean | false>(
+    false,
+  );
+  const contentContainerRef = useRef(null);
+
+  const handleMouseScroll = (e: WheelEvent<HTMLDivElement>) => {
+    if (contentContainerRef.current) {
+      contentContainerRef.current.scrollLeft += e.deltaY;
+    }
+  };
+
   const [cases, setCases] = useState<CardsPost[]>([]);
 
   const [currentCase, setCurrentCase] = useState<string | "">("default");
@@ -51,6 +76,32 @@ export const CasesPage = () => {
   const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/play/cases`,
   );
+
+  const getCaseContent = async (case_id: string) => {
+    setCaseContentLoading(true);
+    try {
+      const response = await axios.post(
+        `${api.API_BASE_URL}/play/case/${case_id}/content/get`,
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (response.status === 200) {
+        setCaseContentLoading(false);
+        setCaseContent(response.data.content);
+      }
+
+      return response.data;
+    } catch (error: any) {
+      console.log("error", error);
+      const errorMessage = error?.response?.data.error;
+      if (errorMessage) {
+        toast.error(errorMessage);
+        return;
+      }
+    }
+  };
 
   const openCase = async (case_id: string) => {
     setLoadingBtn(true);
@@ -89,7 +140,7 @@ export const CasesPage = () => {
       }
 
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.log("error", error);
       const errorMessage = error?.response?.data.error;
       if (errorMessage) {
@@ -123,9 +174,8 @@ export const CasesPage = () => {
     playFunctions.handleChangeHeaderState(true);
 
     setCases(contentData.renderData.cases);
-
-    console.log("data", contentData);
   }, [contentData]);
+
 
   if (contentLoading || !contentData) return <LoadingPage />;
   if (contentError) return <ErrorPage error={contentError} />;
@@ -166,6 +216,54 @@ export const CasesPage = () => {
           </div>
         </header>
       )}
+
+      <div
+        className={shop_styles["grid-content"]}
+        style={{
+          position: "fixed",
+          top: "20%",
+          left: "2.5%",
+          maxWidth: "320px",
+        }}
+      >
+        {cases && cases.length > 0
+          ? cases
+              .filter((cs) => cs.rarity.toLowerCase() === currentCase)
+              .map((cs, index) => {
+                return (
+                  <section
+                    key={index}
+                    className={`${shop_styles["case-card"]} ${shop_styles["case-" + cs.rarity.toLowerCase()]}`}
+                    style={{ transform: "translateY(0)" }}
+                  >
+                    <br />
+                    <div className={shop_styles["case-info"]}>
+                      <span className={shop_styles["badge"]}>{cs.rarity}</span>
+                      <h3>{cs.name}</h3>
+                      <p className={shop_styles["case-desc"]}>
+                        {cs.description}
+                      </p>
+
+                      <div className={shop_styles["case-footer"]}>
+                        <button
+                          className={shop_styles["buy-btn"]}
+                          style={{ width: "100%" }}
+                          onClick={() => getCaseContent(cs.id)}
+                          disabled={isOpenCase !== "" ? true : false}
+                        >
+                          <span>
+                            {!caseContentLoading
+                              ? "Посмотреть содержимое"
+                              : "Загрузка..."}
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </section>
+                );
+              })
+          : null}
+      </div>
 
       <div className={styles["animation-wrapper"]}>
         {cases && cases.length > 0
@@ -223,6 +321,132 @@ export const CasesPage = () => {
               })
           : null}
       </div>
+
+      {caseContent && caseContent.length > 0 ? (
+        <div className={styles["modal-overlay"]}>
+          <button
+            className={styles["modal-close"]}
+            onClick={() => setCaseContent([])}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-x"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
+          <div className={styles["modal-container"]}>
+            <h1>Содержимое кейса</h1>
+            <div
+              className={styles["modal-content"]}
+              ref={contentContainerRef}
+              onWheel={handleMouseScroll}
+            >
+              {caseContent.map((cs, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={CardsDesign_styles["card-3d-wrapper"]}
+                    style={{
+                      marginBottom: "10px",
+                      cursor: "default",
+                    }}
+                  >
+                    <div className={CardsDesign_styles["card-inner"]}>
+                      <div
+                        className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles[cs.rarity.toLowerCase()]}`}
+                      >
+                        <div className={CardsDesign_styles["card-shine"]}></div>
+                        <div className={CardsDesign_styles["card-header"]}>
+                          <span
+                            className={CardsDesign_styles["card-cost"]}
+                            title="Занимает 15 слотов силы"
+                          >
+                            {cs.power_slot}
+                          </span>
+                          <span
+                            className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[cs.rarity.toLowerCase()]}`}
+                          >
+                            {cs.rarity}
+                          </span>
+                        </div>
+                        <div className={CardsDesign_styles["card-artwork"]}>
+                          <img
+                            src={`${api.API_BASE_URL}/${cs.avatar}`}
+                            alt="artwork"
+                          />
+                        </div>
+                        <div className={CardsDesign_styles["card-body"]}>
+                          <div
+                            className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[cs.rarity.toLowerCase()]}`}
+                          >
+                            {cs.name}
+                          </div>
+                          <div
+                            className={CardsDesign_styles["card-description"]}
+                          >
+                            {cs.description}
+                          </div>
+                        </div>
+                        <div className={CardsDesign_styles["card-footer"]}>
+                          <div
+                            className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}
+                          >
+                            <span className={CardsDesign_styles["stat-icon"]}>
+                              ⚔️
+                            </span>
+                            <span className={CardsDesign_styles["stat-value"]}>
+                              {cs.damage}
+                            </span>
+                          </div>
+                          <div
+                            className={`${CardsDesign_styles["stat-badge"]}`}
+                            style={{
+                              marginTop: "-300px",
+                              borderColor: "#606c38",
+                            }}
+                          >
+                            <span className={CardsDesign_styles["stat-icon"]}>
+                              %
+                            </span>
+                            <span className={CardsDesign_styles["stat-value"]}>
+                              {cs.chance}
+                            </span>
+                          </div>
+                          <div
+                            className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
+                          >
+                            <span className={CardsDesign_styles["stat-icon"]}>
+                              🛡️
+                            </span>
+                            <span className={CardsDesign_styles["stat-value"]}>
+                              {cs.protection}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className={CardsDesign_styles["game-card-back"]}>
+                        <div className={CardsDesign_styles["card-back-logo"]}>
+                          🔮
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {reward && (
         <div className={`${styles["blur-overlay"]} ${styles[menuType]}`}>

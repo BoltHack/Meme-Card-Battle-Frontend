@@ -52,7 +52,8 @@
   background: linear-gradient(135deg, #9a59c9, #2f7561);
 }
 .img-placeholder.news {
-  background: linear-gradient(135deg, #1c1f8d, #2f7561);
+  /* background: linear-gradient(135deg, #1c1f8d, #2f7561); */
+  background: linear-gradient(45deg, #3a6073, #3a7bd5);
 }
 
 .avatar {
