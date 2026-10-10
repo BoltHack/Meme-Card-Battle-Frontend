@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import ReactMarkdown from "react-markdown";
 
@@ -26,7 +27,15 @@ interface TitleSettings {
   title: string;
 }
 
+interface FooterLinksContext {
+  footerLinks?: any;
+}
+
 export const TermsOfUsePage = ({ title }: TitleSettings) => {
+  const { footerLinks } = useOutletContext<FooterLinksContext>() ?? {
+    footerLinks: [],
+  };
+
   const articleSectionsContainer = useRef<HTMLDivElement>(null);
   const [articleList, setArticleList] = useState<ArticleNavigationItem[]>([]);
 
@@ -35,8 +44,6 @@ export const TermsOfUsePage = ({ title }: TitleSettings) => {
   );
 
   useEffect(() => {
-    console.log("data", data);
-
     if (!loading && data?.renderData && articleSectionsContainer.current) {
       setTimeout(() => {
         if (!articleSectionsContainer.current) return;
@@ -130,7 +137,7 @@ export const TermsOfUsePage = ({ title }: TitleSettings) => {
         </div>
       </div>
 
-      <Footer />
+      <Footer links={footerLinks} />
     </div>
   );
 };

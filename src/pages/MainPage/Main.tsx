@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useOutletContext, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.Main.module.css";
@@ -25,22 +25,20 @@ interface BlogPost {
   id: string;
 }
 
-interface LinksPost {
-  id: string;
-  name: string;
-  link: string;
-  icon: string;
-  priority: number;
-  mainpriority: boolean;
-}
-
 interface TitleSettings {
   title: string;
 }
 
+interface FooterLinksContext {
+  footerLinks?: any;
+}
+
 export const MainPage = ({ title }: TitleSettings) => {
+  const { footerLinks } = useOutletContext<FooterLinksContext>() ?? {
+    footerLinks: [],
+  };
+
   const [mainBlog, setMainBlog] = useState<BlogPost[]>([]);
-  const [mainLinks, setMainLinks] = useState<LinksPost[]>([]);
 
   const { data, loading, error, socket } = usePageRender(
     `${api.API_BASE_URL}/api/`,
@@ -64,15 +62,11 @@ export const MainPage = ({ title }: TitleSettings) => {
     }
 
     setMainBlog(data?.renderData.blogData);
-    setMainLinks(data?.renderData.linksData);
-    console.log("data", data);
   }, [data]);
 
   // useEffect(() => {
-  //   if (!data) return;
-
-  //   socket.disconnect();
-  // }, [data, socket]);
+  //   setBodyClass(styles["body-wrapper"]);
+  // }, [setBodyClass]);
 
   useEffect(() => {
     const socketDisconnect = () => {
@@ -179,57 +173,63 @@ export const MainPage = ({ title }: TitleSettings) => {
 
         <div className={styles["news-grid"]}>
           {mainBlog && mainBlog.length > 0
-            ? mainBlog.map((blog) => {
-                return (
-                  <div
-                    className={styles["news-card"]}
-                    style={{ maxWidth: "370px" }}
-                    key={blog.id}
-                  >
-                    {blog.cover.length > 0 ? (
-                      <img
-                        src={`${api.API_BASE_URL}/${blog.cover}`}
-                        loading="lazy"
-                        className={`${styles["news-img"]} ${styles["img-blockopolis"]}`}
-                      />
-                    ) : (
-                      <div
-                        className={`${styles["news-img"]} ${styles["img-blockopolis"]}`}
-                      ></div>
-                    )}
-                    <div className={styles["news-content"]}>
-                      <div className={styles["news-meta"]}>
-                        <span>{dateSettings(blog.date)}</span>
-                        <span className={styles["tag"]}>{blog.category === "news" ? "Новости" : blog.category}</span>
+            ? mainBlog
+                .map((blog) => {
+                  return (
+                    <div
+                      className={styles["news-card"]}
+                      style={{ maxWidth: "370px" }}
+                      key={blog.id}
+                    >
+                      {blog.cover.length > 0 ? (
+                        <img
+                          src={`${api.API_BASE_URL}/${blog.cover}`}
+                          loading="lazy"
+                          className={`${styles["news-img"]} ${styles["img-blockopolis"]}`}
+                        />
+                      ) : (
+                        <div
+                          className={`${styles["news-img"]} ${styles["img-blockopolis"]}`}
+                        ></div>
+                      )}
+                      <div className={styles["news-content"]}>
+                        <div className={styles["news-meta"]}>
+                          <span>{dateSettings(blog.date)}</span>
+                          <span className={styles["tag"]}>
+                            {blog.category === "news"
+                              ? "Новости"
+                              : blog.category}
+                          </span>
+                        </div>
+                        <h3>
+                          {blog.title.length > 50
+                            ? blog.title.slice(0, 50) + "..."
+                            : blog.title}
+                        </h3>
+                        <p>
+                          {blog.description.length > 155
+                            ? blog.description.slice(0, 155) + "..."
+                            : blog.description}
+                        </p>
+                        <a
+                          href={`/blog/${blog.id.toString()}`}
+                          className={styles["news-href"]}
+                        >
+                          Читать подробнее →
+                        </a>
                       </div>
-                      <h3>
-                        {blog.title.length > 50
-                          ? blog.title.slice(0, 50) + "..."
-                          : blog.title}
-                      </h3>
-                      <p>
-                        {blog.description.length > 155
-                          ? blog.description.slice(0, 155) + "..."
-                          : blog.description}
-                      </p>
-                      <a
-                        href={`/blog/${blog.id.toString()}`}
-                        className={styles["news-href"]}
-                      >
-                        Читать подробнее →
-                      </a>
                     </div>
-                  </div>
-                );
-              }).reverse()
+                  );
+                })
+                .reverse()
             : "Новых новостей пока нет"}
         </div>
       </section>
-      <div className={styles["footer-wrapper"]}>
+      {/* <div className={styles["footer-wrapper"]}>
         <div className={styles["footer-container"]}>
-          <div className={styles["social-title"]}>Следи за новостями игры</div>
+          <div className={styles["social-title"]}>Следи за новостями игры</div> */}
 
-          <div className={styles["social-grid"]}>
+      {/* <div className={styles["social-grid"]}>
             {mainLinks && mainLinks.length > 0
               ? mainLinks
                   .sort((a, b) =>
@@ -269,8 +269,8 @@ export const MainPage = ({ title }: TitleSettings) => {
                       </a>
                     );
                   })
-              : null}
-            {/* <a href="#" target="_blank" className={styles["social-card"]}>
+              : null} */}
+      {/* <a href="#" target="_blank" className={styles["social-card"]}>
               <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
                 <path
                   fill="none"
@@ -300,7 +300,7 @@ export const MainPage = ({ title }: TitleSettings) => {
               <span className={styles["card-name"]}>Telegram</span>
             </a> */}
 
-            {/* <a href="#" target="_blank" className={styles["social-card"]}>
+      {/* <a href="#" target="_blank" className={styles["social-card"]}>
               <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
                 <path
                   fill="none"
@@ -330,7 +330,7 @@ export const MainPage = ({ title }: TitleSettings) => {
               <span>Вконтакте</span>
             </a> */}
 
-            {/* <a href="#" target="_blank" className={styles["social-card"]}>
+      {/* <a href="#" target="_blank" className={styles["social-card"]}>
               <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
                 <path
                   fill="none"
@@ -387,9 +387,9 @@ export const MainPage = ({ title }: TitleSettings) => {
               </svg>
               <span>Youtube</span>
             </a> */}
-          </div>
+      {/* </div> */}
 
-          <div className={styles["footer-middle-bar"]}>
+      {/* <div className={styles["footer-middle-bar"]}>
             <div className={styles["support-info"]}>
               <div className={styles["support-icon"]}>
                 <svg
@@ -419,9 +419,9 @@ export const MainPage = ({ title }: TitleSettings) => {
                 <span className={styles["subtext"]}>Hub</span>
               </a>
             </span>
-          </div>
+          </div> */}
 
-          {/* <div className={styles["footer-bottom-bar"]}>
+      {/* <div className={styles["footer-bottom-bar"]}>
             <div className={styles["copyright-block"]}>
               <div className={styles["cookie-icon"]}></div>
               <span>
@@ -439,10 +439,10 @@ export const MainPage = ({ title }: TitleSettings) => {
 
             <div className={styles["age-rating"]}>0+</div>
           </div> */}
-        </div>
-      </div>
+      {/* </div> */}
+      {/* </div> */}
 
-      <Footer />
+      <Footer links={footerLinks} />
     </div>
   );
 };

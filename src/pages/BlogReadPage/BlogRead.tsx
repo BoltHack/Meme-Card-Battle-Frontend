@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useOutletContext, useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Config } from "dompurify";
 import { marked, Tokens, TokenizerThis, RendererThis } from "marked";
@@ -52,7 +52,15 @@ interface BlogId {
   blog_id: string;
 }
 
+interface FooterLinksContext {
+  footerLinks?: any;
+}
+
 export const BlogReadPage = () => {
+  const { footerLinks } = useOutletContext<FooterLinksContext>() ?? {
+    footerLinks: [],
+  };
+
   const [title, setTitle] = useState("");
 
   const [blog, setBlog] = useState<BlogPost>({} as BlogPost);
@@ -551,7 +559,7 @@ export const BlogReadPage = () => {
         {/*): null}*/}
       </div>
 
-      <Footer />
+      <Footer links={footerLinks} />
     </div>
   );
 };

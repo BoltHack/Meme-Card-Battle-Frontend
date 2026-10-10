@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useOutletContext, Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.Blog.module.css";
@@ -40,7 +40,15 @@ interface BlogPageProps {
   title: string;
 }
 
+interface FooterLinksContext {
+  footerLinks?: any;
+}
+
 export const BlogPage = ({ title }: BlogPageProps) => {
+  const { footerLinks } = useOutletContext<FooterLinksContext>() ?? {
+    footerLinks: [],
+  };
+
   const bodyWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const [blog, setBlog] = useState<BlogPost[]>([]);
@@ -242,7 +250,9 @@ export const BlogPage = ({ title }: BlogPageProps) => {
                     )}
                   </div>
                   <div className={styles["card-body"]}>
-                    <span className={styles["category"]}>{categorySettings(bd.category)}</span>
+                    <span className={styles["category"]}>
+                      {categorySettings(bd.category)}
+                    </span>
                     <h3>
                       {bd.title.length > 63
                         ? bd.title.slice(0, 63) + "..."
@@ -367,7 +377,7 @@ export const BlogPage = ({ title }: BlogPageProps) => {
         />
       </main>
 
-      <Footer />
+      <Footer links={footerLinks} />
     </div>
   );
 };

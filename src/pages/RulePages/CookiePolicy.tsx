@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import ReactMarkdown from "react-markdown";
 
@@ -25,7 +26,15 @@ interface TitleSettings {
   title: string;
 }
 
+interface FooterLinksContext {
+  footerLinks?: any;
+}
+
 export const CookiePolicy = ({ title }: TitleSettings) => {
+  const { footerLinks } = useOutletContext<FooterLinksContext>() ?? {
+    footerLinks: [],
+  };
+
   const articleSectionsContainer = useRef<HTMLDivElement>(null);
   const [articleList, setArticleList] = useState<ArticleNavigationItem[]>([]);
   // const [articleList, setArticleList] = useState<ArticlesData | []>([]);
@@ -35,7 +44,11 @@ export const CookiePolicy = ({ title }: TitleSettings) => {
   );
 
   useEffect(() => {
-    if (!loading && data?.renderData && articleSectionsContainer.current) {
+    if (
+      !loading &&
+      data?.renderData &&
+      articleSectionsContainer.current
+    ) {
       setTimeout(() => {
         if (!articleSectionsContainer.current) return;
 
@@ -128,7 +141,7 @@ export const CookiePolicy = ({ title }: TitleSettings) => {
         </div>
       </div>
 
-      <Footer />
+      <Footer links={footerLinks} />
     </div>
   );
 };

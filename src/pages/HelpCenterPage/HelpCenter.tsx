@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
@@ -25,15 +25,19 @@ interface CategoryData {
   link: { title: string; href: string };
 }
 
-// interface Categories {
-//     categories: CategoryData[]
-// }
-
 interface TitleSettings {
   title: string;
 }
 
+interface FooterLinksContext {
+  footerLinks?: any;
+}
+
 export const HelpCenterPage = ({ title }: TitleSettings) => {
+  const { footerLinks } = useOutletContext<FooterLinksContext>() ?? {
+    footerLinks: [],
+  };
+
   const navigate = useNavigate();
 
   // const [category, setCategory] = useState<CategoryData | null>(null);
@@ -334,7 +338,7 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
         </div>
       </div>
 
-      <Footer />
+      <Footer links={footerLinks} />
     </div>
   );
 };

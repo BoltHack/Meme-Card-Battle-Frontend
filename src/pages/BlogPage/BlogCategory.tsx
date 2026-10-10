@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { useOutletContext, Link, useParams, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.Blog.module.css";
@@ -44,7 +44,15 @@ interface BlogCategory {
   blog_category: string;
 }
 
+interface FooterLinksContext {
+  footerLinks?: any;
+}
+
 export const BlogCategoryPage = ({ title }: BlogPageProps) => {
+  const { footerLinks } = useOutletContext<FooterLinksContext>() ?? {
+    footerLinks: [],
+  };
+
   const bodyWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const [blog, setBlog] = useState<BlogPost[]>([]);
@@ -315,7 +323,7 @@ export const BlogCategoryPage = ({ title }: BlogPageProps) => {
         />
       </main>
 
-      <Footer />
+      <Footer links={footerLinks} />
     </div>
   );
 };

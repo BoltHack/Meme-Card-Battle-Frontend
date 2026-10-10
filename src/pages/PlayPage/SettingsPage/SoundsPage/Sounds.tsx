@@ -16,10 +16,10 @@ export const SoundsPage = () => {
   const settings = JSON.parse(localStorage.getItem("settings") || "{}");
 
   const [settingsList, setSettingsList] = useState({
-    all_volume: 1,
-    background_music_volume: 1,
-    game_effects_volume: 1,
-    notifications_volume: 1,
+    all_volume: 100,
+    background_music_volume: 100,
+    game_effects_volume: 100,
+    notifications_volume: 100,
   });
 
   const { contentLoading, contentError } = useContentRender(
@@ -52,16 +52,18 @@ export const SoundsPage = () => {
       return;
     }
 
-    const all = settings.sounds.all_volume * 100;
-    const background_music = settings.sounds.background_music_volume * 100;
-    const game_effects = settings.sounds.game_effects_volume * 100;
-    const sotifications = settings.sounds.notifications_volume * 100;
+    const all = settings.sounds.all_volume;
+    const background_music = settings.sounds.background_music_volume;
+    const game_effects = settings.sounds.game_effects_volume;
+    const notifications = settings.sounds.notifications_volume;
 
     setSettingsList({
-      all_volume: all,
-      background_music_volume: background_music,
-      game_effects_volume: game_effects,
-      notifications_volume: sotifications,
+      all_volume: all === 0 ? 0 : all * 100 || 100,
+      background_music_volume:
+        background_music === 0 ? 0 : background_music * 100 || 100,
+      game_effects_volume: game_effects === 0 ? 0 : game_effects * 100 || 100,
+      notifications_volume:
+        notifications === 0 ? 0 : notifications * 100 || 100,
     });
   }, []);
 
@@ -72,9 +74,7 @@ export const SoundsPage = () => {
     <>
       <header className={settings_styles["content-header"]}>
         <h1>Настройки звука</h1>
-        <p>
-          Управляйте громкостью музыки, эффектов игры и многим другим.
-        </p>
+        <p>Управляйте громкостью музыки, эффектов игры и многим другим.</p>
       </header>
 
       <section className={settings_styles["settings-section"]}>

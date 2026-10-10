@@ -1,183 +1,129 @@
 import { Link } from "react-router-dom";
 
-import styles from "./Card.HeaderFooter.module.css";
+import styles from "./Card.Footer.module.css";
 
-export const Footer = () => {
+import api from "../../../api/api";
+
+interface Props {
+  links: any;
+}
+
+export const Footer = ({ links }: Props) => {
   return (
-    <>
-      <footer className={`${styles["site-footer"]} ${styles["glass-footer"]}`}>
+    <footer className={styles["site-footer"]}>
+      <div className={styles["footer-wrapper"]}>
         <div className={styles["footer-container"]}>
-          <div className={styles["footer-row"]}>
-            <div
-              className={`${styles["footer-col-container"]} ${styles["left"]}`}
-            >
-              <div className={`${styles["footer-col"]} ${styles["icon"]}`}>
+          <div className={styles["social-title"]}>Следи за новостями игры</div>
+
+          <div className={styles["social-grid"]}>
+            {links && links.length > 0
+              ? links
+                  .sort((a, b) =>
+                    a.priority.toString().localeCompare(b.priority.toString()),
+                  )
+                  .map((lk: any, index: number) => {
+                    return (
+                      <a
+                        key={index}
+                        href={lk.link}
+                        target="_blank"
+                        className={styles["social-card"]}
+                      >
+                        <svg
+                          className={styles["arrow-icon"]}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="none"
+                            d="M5 19L19 5M19 5H10M19 5V14"
+                            stroke="#fff"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+
+                        {lk.icon && (
+                          <img
+                            className={styles["platform-icon"]}
+                            src={`${api.API_BASE_URL}/${lk.icon}`}
+                            alt="Platform icon"
+                          />
+                        )}
+
+                        <span>{lk.name}</span>
+                      </a>
+                    );
+                  })
+              : null}
+          </div>
+
+          <div className={styles["footer-middle-bar"]}>
+            <div className={styles["support-info"]}>
+              <div className={styles["support-icon"]}>
                 <svg
-                  className={styles["logo-icon"]}
-                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  stroke="#ffffff"
+                  strokeWidth="2"
                 >
-                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                  <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                  <line x1="12" y1="22.08" x2="12" y2="12" />
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
               </div>
-
-              <div className={`${styles["footer-col"]} ${styles["about"]}`}>
-                <h3>О проекте</h3>
-                <p>
-                  Создаем современные интерфейсы с акцентом на эстетику и
-                  функциональность. Погрузитесь в мир чистого кода и стильного
-                  дизайна.
-                </p>
-              </div>
-              <div className={`${styles["footer-col"]} ${styles["about"]}`}>
-                <h3>Социальные сети</h3>
-                <div className={styles["social-links"]}>
-                  <a href="#" aria-label="Telegram">
-                    <i
-                      className={`${styles["fab"]} ${styles["fa-telegram-plane"]}`}
-                    ></i>
-                  </a>
-                  <a href="#" aria-label="VK">
-                    <i className={`${styles["fab"]} ${styles["fa-vk"]}`}></i>
-                  </a>
-                  <a href="#" aria-label="GitHub">
-                    <i
-                      className={`${styles["fab"]} ${styles["fa-github"]}`}
-                    ></i>
-                  </a>
-                  <a href="#" aria-label="Discord">
-                    <i
-                      className={`${styles["fab"]} ${styles["fa-discord"]}`}
-                    ></i>
-                  </a>
-                </div>
+              <div className={styles["support-text"]}>
+                <span className={styles["label"]}>Служба поддержки:</span>
+                <span className={styles["email"]}>help@example.com</span>
               </div>
             </div>
 
-            <div
-              className={`${styles["footer-col-container"]} ${styles["right"]}`}
-            >
-              <div className={`${styles["footer-col"]} ${styles["links"]}`}>
-                <h3>Навигация</h3>
-                <ul>
-                  <li>
-                    <Link to="/">Главная</Link>
-                  </li>
-                  <li>
-                    <Link to="/rules">Правила игры</Link>
-                  </li>
-                  <li>
-                    <Link to="/how-to-play">Как играть</Link>
-                  </li>
-                  {/* <li>
-                    <Link to="/shop">Магазин</Link>
-                  </li>
-                  <li>
-                    <Link to="#">Сундуки</Link>
-                  </li> */}
-                </ul>
-              </div>
+            <Link to="/play" className={styles["btn-play-footer"]}>
+              Играть в браузере
+            </Link>
 
-              <div className={`${styles["footer-col"]} ${styles["links"]}`}>
-                <h3>Компания</h3>
-                <ul>
-                  <li>
-                    <Link to="/company-information">Информация о компании</Link>
-                  </li>
-                  <li>
-                    <Link to="/about-us">О нас</Link>
-                  </li>
-                  <li>
-                    <Link to="/category/news">Новости</Link>
-                  </li>
-                </ul>
-              </div>
-
-              <div className={`${styles["footer-col"]} ${styles["links"]}`}>
-                <h3>Информация</h3>
-                <ul>
-                  <li>
-                    <Link to="/help-center">Справочный центр</Link>
-                  </li>
-                  <li>
-                    <Link to="/support">Поддержка</Link>
-                  </li>
-                  <li>
-                    <Link to="/blog">Блог</Link>
-                  </li>
-                </ul>
-              </div>
-
-              <div className={`${styles["footer-col"]} ${styles["links"]}`}>
-                <h3>Политика</h3>
-                <ul>
-                  <li>
-                    <Link to="/privacy-policy">
-                      Политика конфиденциальности
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/terms-of-use">Условия использования</Link>
-                  </li>
-                  <li>
-                    <Link to="/cookie-policy">Политика Cookie файлов</Link>
-                  </li>
-                </ul>
-              </div>
-
-              <div className={`${styles["footer-col"]} ${styles["contact"]}`}>
-                <h3>Контакты</h3>
-                <ul>
-                  <li>
-                    <a
-                      href="#"
-                      className={`${styles["fas"]} ${styles["fa-code"]}`}
-                    >
-                      Developer Mode
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className={`${styles["fas"]} ${styles["fa-envelope"]}`}
-                    >
-                      support@glassui.io
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className={`${styles["fas"]} ${styles["fa-shield-alt"]}`}
-                    >
-                      Конфиденциальность
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <hr className={styles["footer-divider"]} />
-
-          <br />
-
-          <div className={styles["footer-bottom"]}>
-            {/*<p>&copy; 2026 MEME CARD BATTLE | Все права защищены.</p>*/}
-            {/* <h1>MEME CARD BATTLE</h1> */}
-            <span>
-              &copy; <strong>Все права защищены</strong>. Полное или частичное
-              копирование сайта запрещено.
+            <span className={styles["github-logo"]}>
+              <a href="https://github.com/" target="_blank">
+                <span className={styles["brand"]}>Git</span>
+                <span className={styles["subtext"]}>Hub</span>
+              </a>
             </span>
           </div>
+
+          <div className={styles["footer-bottom-bar"]}>
+            <div className={styles["copyright-block"]}>
+              <div className={styles["cookie-icon"]}></div>
+              <span>
+                &copy; <strong>Все права защищены</strong>. Полное или частичное
+                копирование сайта запрещено.
+              </span>
+            </div>
+
+            <div className={styles["legal-links"]}>
+              <Link to="/rules">Правила игры</Link>
+              <Link to="/how-to-play">Как играть?</Link>
+              <Link to="/help-center">Справочный центр</Link>
+              <Link to="/support">Поддежрка</Link>
+            </div>
+
+            <div className={styles["age-rating"]}>0+</div>
+          </div>
+          <br />
+          <div className={styles["social-title"]}>Другие ссылки</div>
+          <div className={styles["footer-col-container"]}>
+            <div className={styles["footer-col"]}>
+              <Link to="/company-information">Информация о компании</Link>
+              <Link to="/about-us">О нас</Link>
+              <Link to="/category/news">Новости</Link>
+              <Link to="/support">Поддержка</Link>
+              <Link to="/blog">Блог</Link>
+              <Link to="/privacy-policy">Политика конфиденциальности</Link>
+              <Link to="/terms-of-use">Условия использования</Link>
+              <Link to="/cookie-policy">Политика Cookie файлов</Link>
+            </div>
+          </div>
         </div>
-      </footer>
-    </>
+      </div>
+    </footer>
   );
 };
