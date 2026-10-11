@@ -11,8 +11,8 @@ import api from "../../../../api/api.ts";
 import toast from "react-hot-toast";
 
 import useContentRender from "../../../../tools/ContentRender.ts";
-import { ErrorPage } from "../../../../сomponents/ErrorPage/Error.tsx";
-import { ContentLoading } from "../../../../сomponents/LoadingPage/ContentLoading.tsx";
+import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
+import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
 
 interface PlayerData {
   name: string;
@@ -416,8 +416,7 @@ export const CreateBlogPage = () => {
                 />
                 <div className={styles["file-tool-text"]}>
                   <span>
-                    Загрузить изображение в формате:{" "}
-                    <strong>[I]</strong>
+                    Загрузить изображение в формате: <strong>[I]</strong>
                   </span>
                 </div>
               </label>
@@ -431,8 +430,7 @@ export const CreateBlogPage = () => {
                 />
                 <div className={styles["file-tool-text"]}>
                   <span>
-                    Загрузить изображение в формате:{" "}
-                    <strong>[F]</strong>
+                    Загрузить изображение в формате: <strong>[F]</strong>
                   </span>
                 </div>
               </label>

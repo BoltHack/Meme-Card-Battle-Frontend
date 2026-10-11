@@ -7,8 +7,8 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
-import { ErrorPage } from "../../../../сomponents/ErrorPage/Error.tsx";
-import { LoadingPage } from "../../../../сomponents/LoadingPage/Loading.tsx";
+import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
+import { LoadingPage } from "../../../../components/LoadingPage/Loading.tsx";
 
 import { ProfilePage } from "../ProfilePage/Profile.tsx";
 import { GraphicsPage } from "../GraphicsPage/Graphics.tsx";

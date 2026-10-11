@@ -7,8 +7,8 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
-import { ErrorPage } from "../../../../сomponents/ErrorPage/Error.tsx";
-import { ContentLoading } from "../../../../сomponents/LoadingPage/ContentLoading.tsx";
+import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
+import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
 
 import toast from "react-hot-toast";
 

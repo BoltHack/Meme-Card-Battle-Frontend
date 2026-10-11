@@ -9,8 +9,8 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../api/api.ts";
 import usePageRender from "../../../tools/PageRender.ts";
-import { ErrorPage } from "../../../сomponents/ErrorPage/Error.tsx";
-import { LoadingPage } from "../../../сomponents/LoadingPage/Loading.tsx";
+import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
+import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
 
 import { TeamPage } from "../TeamPage/Team.tsx";
 import { ToolsPage } from "../ToolsPage/Tools.tsx";
@@ -87,7 +87,9 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
 
   const [activeTab, setActiveTab] = useState<string>("ToolsPage");
 
-  const { loading, error, socket } = usePageRender(`${api.API_BASE_URL}/admin/panel`);
+  const { loading, error, socket } = usePageRender(
+    `${api.API_BASE_URL}/admin/panel`,
+  );
 
   useEffect(() => {
     adminNavigator.handleChangeTab = (tab: string) => {

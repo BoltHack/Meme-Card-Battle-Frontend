@@ -9,8 +9,8 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
-import { ErrorPage } from "../../../../сomponents/ErrorPage/Error.tsx";
-import { ContentLoading } from "../../../../сomponents/LoadingPage/ContentLoading.tsx";
+import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
+import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
 
 import toast from "react-hot-toast";
 
@@ -53,9 +53,10 @@ export const CardListPage = () => {
 
   const [cardsCategory, setCardsCategory] = useState<string | "all">("all");
 
-  const { contentData, contentLoading, contentError } = useContentRender<CardResponse>(
-    `${api.API_BASE_URL}/admin/card/list/${cardsCategory}`,
-  );
+  const { contentData, contentLoading, contentError } =
+    useContentRender<CardResponse>(
+      `${api.API_BASE_URL}/admin/card/list/${cardsCategory}`,
+    );
 
   const copy = (cardId: string) => {
     navigator.clipboard

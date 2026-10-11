@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import {ChangeEvent, useState} from "react";
+import { ChangeEvent, useState } from "react";
 
 import styles from "../AuthPage/Card.Auth.module.css";
 import toast from "react-hot-toast";

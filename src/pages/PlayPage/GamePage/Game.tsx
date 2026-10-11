@@ -16,8 +16,8 @@ import { Game_Menus } from "./Game_Menus.tsx";
 import { Game_CardDesk } from "./Game_CardDesk.tsx";
 
 import usePageRender from "../../../tools/PageRender.ts";
-import { ErrorPage } from "../../../сomponents/ErrorPage/Error.tsx";
-import { LoadingPage } from "../../../сomponents/LoadingPage/Loading.tsx";
+import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
+import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
 
 const socket: Socket = io(api.API_BASE_URL, {
   autoConnect: false,
@@ -709,9 +709,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       {/* <button className={laser_styles["laser-btn"]} onClick={test}>
         ⚡ Запустить лазер
       </button> */}
-      <button className={styles["ready-btn"]}>
-        ГОТОВ К БОЮ
-      </button>
+      <button className={styles["ready-btn"]}>ГОТОВ К БОЮ</button>
 
       {activeScene && (
         <div

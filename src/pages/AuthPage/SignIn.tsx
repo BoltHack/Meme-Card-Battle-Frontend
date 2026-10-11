@@ -14,8 +14,8 @@ import api from "../../api/api.ts";
 import toast from "react-hot-toast";
 import usePageRender from "../../tools/PageRender.ts";
 
-import { ErrorPage } from "../../сomponents/ErrorPage/Error.tsx";
-import { LoadingPage } from "../../сomponents/LoadingPage/Loading.tsx";
+import { ErrorPage } from "../../components/ErrorPage/Error.tsx";
+import { LoadingPage } from "../../components/LoadingPage/Loading.tsx";
 
 interface TitleSettings {
   title: string;
@@ -28,7 +28,9 @@ export const SignInPage = ({ title }: TitleSettings) => {
 
   const [modalType, setModalType] = useState("main");
 
-  const { loading, error, socket } = usePageRender(`${api.API_BASE_URL}/auth/sign-in`);
+  const { loading, error, socket } = usePageRender(
+    `${api.API_BASE_URL}/auth/sign-in`,
+  );
 
   const toggleModal = (type: string) => {
     setModalType(type);
