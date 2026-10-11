@@ -143,17 +143,35 @@
   padding: 0 1.5rem;
 }
 
-.back-to-blog {
+.back-actions {
+  display: flex;
+  gap: 10px;
+  /* flex-direction: column; */
+  /* align-items: center; */
+  /* justify-content: center; */
+}
+
+.back-actions a {
+  
   display: inline-block;
-  color: #94a3b8;
   text-decoration: none;
   font-size: 0.95rem;
   margin-bottom: 2rem;
+}
+
+.back-action-btn {
+  color: #94a3b8;
   transition: color 0.2s;
 }
 
-.back-to-blog:hover {
+.back-action-btn:hover {
   color: #ff007f;
+}
+
+.back-action-title {
+  word-wrap: break-word;
+  max-width: 70%;
+  color: #ffffff;
 }
 
 .full-post-container {

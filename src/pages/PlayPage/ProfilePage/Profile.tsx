@@ -11,6 +11,7 @@ import api from "../../../api/api.ts";
 import useContentRender from "../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
+import { ContentLoading } from "../../../components/LoadingPage/ContentLoading.tsx";
 
 // import { Header } from "../Header/Header.tsx";
 

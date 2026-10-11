@@ -402,12 +402,31 @@ export const BlogReadPage = () => {
       <Header />
 
       <div className={styles["post-page-layout"]}>
-        <Link
-          to={`/${blog_state.category ? "category/" + blog_state.category : "blog"}${blog_state.page ? "?page=" + blog_state.page : ""}`}
-          className={styles["back-to-blog"]}
-        >
-          ← Назад
-        </Link>
+        <div className={styles["back-actions"]}>
+          <Link
+            to={`/${blog_state.category ? "category/" + blog_state.category : "blog"}${blog_state.page ? "?page=" + blog_state.page : ""}`}
+            className={styles["back-action-btn"]}
+          >
+            ← Назад
+          </Link>
+          <span>/</span>
+          {blog.category !== "news" && (
+            <>
+              <Link to="/blog" className={styles["back-action-btn"]}>
+                Блог
+              </Link>
+              <span>/</span>
+            </>
+          )}
+          <Link
+            to={`/category/${blog.category}`}
+            className={styles["back-action-btn"]}
+          >
+            {categorySettings(blog.category)}
+          </Link>
+          <span>/</span>
+          <a className={styles["back-action-title"]}>{blog.title}</a>
+        </div>
 
         {blog ? (
           <article className={styles["full-post-container"]}>
