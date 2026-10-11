@@ -15,9 +15,9 @@ import toast from "react-hot-toast";
 import { Game_Menus } from "./Game_Menus.tsx";
 import { Game_CardDesk } from "./Game_CardDesk.tsx";
 
-import { ErrorPage } from "../../ErrorPage/Error.tsx";
-import { LoadingPage } from "../../LoadingPage/Loading.tsx";
 import usePageRender from "../../../tools/PageRender.ts";
+import { ErrorPage } from "../../../сomponents/ErrorPage/Error.tsx";
+import { LoadingPage } from "../../../сomponents/LoadingPage/Loading.tsx";
 
 const socket: Socket = io(api.API_BASE_URL, {
   autoConnect: false,

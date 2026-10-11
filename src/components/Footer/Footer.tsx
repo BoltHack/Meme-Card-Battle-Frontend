@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 import styles from "./Card.Footer.module.css";
 
-import api from "../../../api/api";
+import api from "../../api/api";
 
 interface Props {
   links: any;

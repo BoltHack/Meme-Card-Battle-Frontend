@@ -8,8 +8,8 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
-import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
+import { ErrorPage } from "../../../../сomponents/ErrorPage/Error.tsx";
+import { ContentLoading } from "../../../../сomponents/LoadingPage/ContentLoading.tsx";
 import toast from "react-hot-toast";
 
 interface LinkFormat {

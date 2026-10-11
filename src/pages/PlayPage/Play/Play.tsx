@@ -16,8 +16,8 @@ import usePageRender from "../../../tools/PageRender.ts";
 
 import { Header } from "../Header/Header.tsx";
 
-import { ErrorPage } from "../../ErrorPage/Error.tsx";
-import { LoadingPage } from "../../LoadingPage/Loading.tsx";
+import { ErrorPage } from "../../../сomponents/ErrorPage/Error.tsx";
+import { LoadingPage } from "../../../сomponents/LoadingPage/Loading.tsx";
 
 import { ProfilePage } from "../ProfilePage/Profile.tsx";
 import { MainPage } from "../MainPage/Main.tsx";

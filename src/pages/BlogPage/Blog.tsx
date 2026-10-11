@@ -10,12 +10,12 @@ axios.defaults.withCredentials = true;
 import api from "../../api/api.ts";
 
 import usePageRender from "../../tools/PageRender.ts";
-import { ErrorPage } from "../ErrorPage/Error.tsx";
-import { LoadingPage } from "../LoadingPage/Loading.tsx";
+import { ErrorPage } from "../../сomponents/ErrorPage/Error.tsx";
+import { LoadingPage } from "../../сomponents/LoadingPage/Loading.tsx";
 
-import { Header } from "../../tools/PageTools/header_footer/Header.tsx";
-import { Footer } from "../../tools/PageTools/header_footer/Footer.tsx";
-import { Pagination } from "../../tools/PageTools/Pagination/Pagination.tsx";
+import { Header } from "../../сomponents/Header/Header.tsx";
+import { Footer } from "../../сomponents/Footer/Footer.tsx";
+import { Pagination } from "../../сomponents/Pagination/Pagination.tsx";
 
 interface BlogPost {
   author: string;

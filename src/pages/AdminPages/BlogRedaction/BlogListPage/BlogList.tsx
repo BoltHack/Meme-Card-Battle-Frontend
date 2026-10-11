@@ -10,10 +10,11 @@ axios.defaults.withCredentials = true;
 import api from "../../../../api/api.ts";
 
 import useContentRender from "../../../../tools/ContentRender.ts";
-import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
+import { ErrorPage } from "../../../../сomponents/ErrorPage/Error.tsx";
+import { ContentLoading } from "../../../../сomponents/LoadingPage/ContentLoading.tsx";
 
-import { Pagination } from "../../../../tools/PageTools/Pagination/Pagination.tsx";
+import { Pagination } from "../../../../сomponents/Pagination/Pagination.tsx";
+
 import toast from "react-hot-toast";
 
 interface BlogPost {

@@ -5,7 +5,7 @@ import { SignInPage } from "./pages/AuthPage/SignIn.tsx";
 
 import { AdminPanelPage } from "./pages/AdminPages/AdminPanel/AdminPanel.tsx";
 
-import { ErrorPage } from "./pages/ErrorPage/Error.tsx";
+import { ErrorPage } from "./сomponents/ErrorPage/Error.tsx";
 import { PlayPage } from "./pages/PlayPage/Play/Play.tsx";
 
 import { MainPage } from "./pages/MainPage/Main.tsx";

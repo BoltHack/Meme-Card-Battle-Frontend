@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, ChangeEvent, WheelEvent } from "react";
+import { useEffect, useState, useRef, WheelEvent } from "react";
 
 import styles from "./Card.Cases.module.css";
 import shop_styles from "../ShopPage/Card.Shop.module.css";
@@ -9,8 +9,8 @@ axios.defaults.withCredentials = true;
 
 import api from "../../../api/api.ts";
 import useContentRender from "../../../tools/ContentRender.ts";
-import { LoadingPage } from "../../LoadingPage/Loading.tsx";
-import { ErrorPage } from "../../ErrorPage/Error.tsx";
+import { ErrorPage } from "../../../сomponents/ErrorPage/Error.tsx";
+import { LoadingPage } from "../../../сomponents/LoadingPage/Loading.tsx";
 
 import toast from "react-hot-toast";
 

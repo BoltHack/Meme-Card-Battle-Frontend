@@ -8,11 +8,11 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
+import useContentRender from "../../../../tools/ContentRender.ts";
+import { ErrorPage } from "../../../../сomponents/ErrorPage/Error.tsx";
+import { ContentLoading } from "../../../../сomponents/LoadingPage/ContentLoading.tsx";
 
-import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
-import { ErrorPage } from "../../../ErrorPage/Error.tsx";
 import toast from "react-hot-toast";
-// import { CardSettingsPage } from "../CardSettingsPage/CardSettings.tsx";
 
 interface CardPost {
   card_id: string;
@@ -34,7 +34,6 @@ interface CardResponse {
 }
 
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
-import useContentRender from "../../../../tools/ContentRender.ts";
 
 export const CardListPage = () => {
   const [cards, setCards] = useState<CardPost[]>([]);

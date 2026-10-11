@@ -631,7 +631,7 @@ export const MainPage = ({ isGameFound }: Props) => {
 
               <div
                 className={styles["menu-btn"]}
-                onClick={() => navigate("/bot-settings")}
+                // onClick={() => navigate("/bot-settings")}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

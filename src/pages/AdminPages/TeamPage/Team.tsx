@@ -5,8 +5,8 @@ import styles from "../AdminPanel/Card.AdminPanel.module.css";
 import api from "../../../api/api.ts";
 
 import useContentRender from "../../../tools/ContentRender.ts";
-import { ErrorPage } from "../../ErrorPage/Error.tsx";
-import { ContentLoading } from "../../LoadingPage/ContentLoading.tsx";
+import { ErrorPage } from "../../../сomponents/ErrorPage/Error.tsx";
+import { ContentLoading } from "../../../сomponents/LoadingPage/ContentLoading.tsx";
 
 interface TeamData {
   id: string;

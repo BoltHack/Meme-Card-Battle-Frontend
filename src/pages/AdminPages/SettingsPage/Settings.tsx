@@ -9,8 +9,8 @@ import api from "../../../api/api.ts";
 import toast from "react-hot-toast";
 
 import useContentRender from "../../../tools/ContentRender.ts";
-import { ErrorPage } from "../../ErrorPage/Error.tsx";
-import { ContentLoading } from "../../LoadingPage/ContentLoading.tsx";
+import { ErrorPage } from "../../../сomponents/ErrorPage/Error.tsx";
+import { ContentLoading } from "../../../сomponents/LoadingPage/ContentLoading.tsx";
 
 interface AppSettings {
   maintenanceMode: boolean;

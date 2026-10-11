@@ -14,8 +14,8 @@ import api from "../../api/api.ts";
 import toast from "react-hot-toast";
 import usePageRender from "../../tools/PageRender.ts";
 
-import { LoadingPage } from "../LoadingPage/Loading.tsx";
-import { ErrorPage } from "../ErrorPage/Error.tsx";
+import { ErrorPage } from "../../сomponents/ErrorPage/Error.tsx";
+import { LoadingPage } from "../../сomponents/LoadingPage/Loading.tsx";
 
 interface TitleSettings {
   title: string;

@@ -7,9 +7,10 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 import api from "../../../../api/api.ts";
-import usePageRender from "../../../../tools/PageRender.ts";
-import { ErrorPage } from "../../../ErrorPage/Error.tsx";
-import { ContentLoading } from "../../../LoadingPage/ContentLoading.tsx";
+import useContentRender from "../../../../tools/ContentRender.ts";
+import { ErrorPage } from "../../../../сomponents/ErrorPage/Error.tsx";
+import { ContentLoading } from "../../../../сomponents/LoadingPage/ContentLoading.tsx";
+
 import toast from "react-hot-toast";
 
 interface PlayerData {
@@ -27,7 +28,6 @@ interface CardsFormat {
 }
 
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
-import useContentRender from "../../../../tools/ContentRender.ts";
 
 export const CreateCardPage = () => {
   // const navigate = useNavigate();
