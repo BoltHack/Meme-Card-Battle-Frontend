@@ -406,7 +406,7 @@ export const BlogReadPage = () => {
           to={`/${blog_state.category ? "category/" + blog_state.category : "blog"}${blog_state.page ? "?page=" + blog_state.page : ""}`}
           className={styles["back-to-blog"]}
         >
-          ← Назад в блог
+          ← Назад
         </Link>
 
         {blog ? (

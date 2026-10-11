@@ -93,7 +93,7 @@ export const ToolsPage = ({ setActiveTab }: TitleSettings) => {
                 <rect width="8" height="4" x="10" y="6" rx="1" />
               </svg>
             </div>
-            <h3>Журнал блога</h3>
+            <h3>Журнал публикаций</h3>
             <p>
               Редактирование и удаление опубликованных и скрытых публикаций.
             </p>
