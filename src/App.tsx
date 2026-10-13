@@ -21,6 +21,8 @@ import { BlogPage } from "./pages/BlogPage/Blog.tsx";
 import { BlogReadPage } from "./pages/BlogReadPage/BlogRead.tsx";
 import { BlogCategoryPage } from "./pages/BlogPage/BlogCategory.tsx";
 
+import { RatingsPage } from "./pages/RatingsPage/Ratings.tsx";
+
 import { PublicPanel } from "./tools/GetBasicData.tsx";
 
 const router = createBrowserRouter([
@@ -75,6 +77,10 @@ const router = createBrowserRouter([
       {
         path: "/blog/:blog_id",
         element: <BlogReadPage />,
+      },
+      {
+        path: "/ratings",
+        element: <RatingsPage title="MCB | Рейтинги" />,
       },
     ],
   },

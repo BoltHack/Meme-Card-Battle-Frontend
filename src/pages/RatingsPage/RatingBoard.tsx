@@ -1,0 +1,95 @@
+import { useEffect, useState } from "react";
+
+import styles from "./Card.Ratings.module.css";
+
+import api from "../../api/api.ts";
+import useContentRender from "../../tools/ContentRender.ts";
+import { ContentLoading } from "../../components/LoadingPage/ContentLoading.tsx";
+
+interface RatingPost {
+  lvl: number;
+  name: string;
+  value: string;
+  units: string;
+}
+
+interface Props {
+  ratingCategory: string;
+}
+
+export const RatingBoard = ({ ratingCategory }: Props) => {
+  const [ratingData, setRatingData] = useState<RatingPost[]>([]);
+
+  const { contentData, contentLoading, contentError } = useContentRender(
+    `${api.API_BASE_URL}/api/ratings/${ratingCategory}`,
+  );
+
+  const formattedBalance = (count: number): string => {
+    const formattedCount = new Intl.NumberFormat("de-DE", {
+      notation: "standard",
+      maximumFractionDigits: 1,
+    }).format(count);
+    return formattedCount.toLowerCase();
+  };
+
+  useEffect(() => {
+    if (!contentData || !Array.isArray(contentData.renderData)) return;
+
+    setRatingData(contentData.renderData);
+  }, [contentData]);
+
+  if (contentError) return <p>{contentError.message}</p>;
+
+  return (
+    <tbody>
+      {contentLoading && (
+        <div className={styles["content-result"]}>
+          <span>
+            <ContentLoading />
+          </span>
+        </div>
+      )}
+      {!contentLoading && ratingData && ratingData.length > 0
+        ? ratingData.map((rating: any, index: number) => {
+            const rank = index + 1;
+            let rowClass = "";
+
+            if (rank === 1) rowClass = "gold";
+            else if (rank === 2) rowClass = "silver";
+            else if (rank === 3) rowClass = "bronze";
+
+            return (
+              <tr
+                key={index}
+                className={`${styles["top-three"]} ${styles[rowClass]}`}
+              >
+                <td className={styles["col-rank"]}>
+                  <span className={styles["rank-badge"]}>{rank}</span>
+                </td>
+                <td className={styles["col-title"]}>
+                  <div className={styles["game-info"]}>
+                    <span className={styles["game-name"]}>{rating.name}</span>
+                    <span className={styles["game-meta"]}>
+                      Уровень {rating.lvl}
+                    </span>
+                  </div>
+                </td>
+                {/* <td className={styles["col-clan"]}>${rating.clan}</td> */}
+                <td className={styles["col-stat"]}>
+                  <span className={styles["stat-value"]}>
+                    {ratingCategory === "balance"
+                      ? formattedBalance(Number(rating.value))
+                      : rating.value + " " + rating.units}
+                  </span>
+                </td>
+              </tr>
+            );
+          })
+        : !contentLoading && (
+            <div className={styles["content-result"]}>
+              <span>Данный топ пуст</span>
+            </div>
+          )}
+    </tbody>
+  );
+};

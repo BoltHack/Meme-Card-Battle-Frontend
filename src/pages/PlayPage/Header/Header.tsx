@@ -7,6 +7,7 @@ interface userInfo {
   money: number;
   coins: number;
   lvl: number;
+  xp: number;
 }
 
 interface Props {
@@ -67,13 +68,17 @@ export const Header = ({ activeTab, userInfo }: Props) => {
   };
 
   const formattedCurrency = (count: number): string => {
-    const formattedCount = new Intl.NumberFormat("de-DE", {
+    const formattedCount = new Intl.NumberFormat("fr-FR", {
       notation: "standard",
-      // compactDisplay: "short",
       maximumFractionDigits: 1,
     }).format(count);
+
     return formattedCount.toLowerCase();
   };
+
+  const maxXP =
+    userInfo.lvl < 100 ? Math.round(Math.pow(userInfo.lvl, 1.5) * 2500) : 0;
+  // const maxXP = Math.ceil(Math.pow(userInfo.lvl, 1.5) * 2500);
 
   return (
     <>
@@ -164,8 +169,13 @@ export const Header = ({ activeTab, userInfo }: Props) => {
                 <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
               </svg>
             </div> */}
+
+            <div className={styles["lvl-info"]}>
+              <div className={styles["lvl-info-badge"]}>
+                <span>LVL</span> <strong>{userInfo.lvl}</strong>
+              </div>
+            </div>
             <div className={styles["user-level"]}>
-              {/* <span className={styles["level-badge"]}>{userInfo.name}</span> */}
               <div className={styles["user-lvl-elements"]}>
                 <span className={styles["user-name"]}>{userInfo.name}</span>
                 <div
@@ -174,11 +184,14 @@ export const Header = ({ activeTab, userInfo }: Props) => {
                 >
                   <div
                     className={styles["level-bar-fill"]}
-                    style={{ width: `${userInfo.lvl}%` }}
+                    style={{
+                      width: `${userInfo.lvl < 100 ? Math.min(Math.max((userInfo.xp / maxXP) * 100, 0), 100) : 100}%`,
+                    }}
                   ></div>
                 </div>
                 <span className={styles["level-badge"]}>
-                  LVL {userInfo.lvl}
+                  xp {formattedCurrency(userInfo.xp)}{" "}
+                  {userInfo.lvl < 100 ? "/ " + formattedCurrency(maxXP) : ""}
                 </span>
               </div>
             </div>

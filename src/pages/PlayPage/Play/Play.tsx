@@ -251,6 +251,7 @@ export const PlayPage = () => {
     money: 0,
     coins: 0,
     lvl: 0,
+    xp: 0
   });
 
   const gameFoundTimerReset = useCallback(() => {
@@ -330,6 +331,7 @@ export const PlayPage = () => {
       money: data.renderData.money,
       coins: data.renderData.coins,
       lvl: data.renderData.lvl,
+      xp: data.renderData.xp,
     });
   }, [data]);
 

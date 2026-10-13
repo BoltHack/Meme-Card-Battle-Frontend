@@ -141,15 +141,9 @@
   font-weight: bold;
 }
 
-.level-badge {
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: #a855f7;
-  text-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
-}
-
 .level-bar-bg {
-  width: 80px;
+  width: 100%;
+  /* width: 80px; */
   height: 4px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 2px;
@@ -160,4 +154,42 @@
   height: 100%;
   background: #a855f7;
   box-shadow: 0 0 6px #a855f7;
+}
+
+.level-badge {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #a855f7;
+  text-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
+}
+
+.lvl-info {
+  position: relative;
+  cursor: default;
+  display: flex;
+  justify-content: center;
+  color: #adb5bd;
+  padding: 25px 35px;
+  box-shadow: inset -0.3px 0 0 0 #ced4da;
+}
+
+.lvl-info svg {
+  width: 25px;
+  height: auto;
+}
+
+.lvl-info-badge {
+  position: absolute;
+  top: 15%;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #3dcea5;
+  text-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
+}
+
+.lvl-info-badge strong {
+  font-size: 16px;
+  font-weight: bold;
 }

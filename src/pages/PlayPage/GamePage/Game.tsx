@@ -294,6 +294,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
   const [winnerInfo, setWinnerInfo] = useState({
     name: "",
+    exp: 0
   });
 
   const blocker = useBlocker(
@@ -593,6 +594,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
         if (res.status === "win") {
           setWinnerInfo({
             name: winner,
+            exp: gameData.exp,
           });
           setTimeout(() => handleGameOver(), 12500);
         }
@@ -600,6 +602,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
           setDamageState("player_damage");
           setWinnerInfo({
             name: winner,
+            exp: 500
           });
           setTimeout(() => handleGameOver(), 2000);
         }
@@ -756,7 +759,8 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                 <div
                   className={`${laser_styles["stat-value"]} ${laser_styles["text-white"]}`}
                 >
-                  9,850 очков
+                  {/* 9,850 очков */}
+                  +{winnerInfo.exp} опыта
                 </div>
               </div>
             </div>
