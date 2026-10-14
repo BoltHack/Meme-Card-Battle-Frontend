@@ -317,10 +317,10 @@ export const ShopPage = () => {
               : null}
           </div>
 
-          <header>
+          {/* <header>
             <h1>Валюта</h1>
             <p>Обменяй коины на валюту</p>
-          </header>
+          </header> */}
         </main>
       </div>
 
