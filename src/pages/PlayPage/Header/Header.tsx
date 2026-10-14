@@ -172,7 +172,7 @@ export const Header = ({ activeTab, userInfo }: Props) => {
 
             <div className={styles["lvl-info"]}>
               <div className={styles["lvl-info-badge"]}>
-                <span>LVL</span> <strong>{userInfo.lvl}</strong>
+                <span>Уровень</span> <strong>{userInfo.lvl}</strong>
               </div>
             </div>
             <div className={styles["user-level"]}>

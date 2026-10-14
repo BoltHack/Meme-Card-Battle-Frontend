@@ -10,7 +10,7 @@ interface RatingPost {
   lvl: number;
   name: string;
   value: string;
-  units: string;
+  // units: string;
 }
 
 interface Props {
@@ -19,6 +19,8 @@ interface Props {
 
 export const RatingBoard = ({ ratingCategory }: Props) => {
   const [ratingData, setRatingData] = useState<RatingPost[]>([]);
+
+  // let categoryIcon = "";
 
   const { contentData, contentLoading, contentError } = useContentRender(
     `${api.API_BASE_URL}/api/ratings/${ratingCategory}`,
@@ -36,6 +38,8 @@ export const RatingBoard = ({ ratingCategory }: Props) => {
     if (!contentData || !Array.isArray(contentData.renderData)) return;
 
     setRatingData(contentData.renderData);
+
+    // categoryIcon = ratingCategory === "wins" ? "🏆" : ratingCategory === "balance" ? "💰" : ratingCategory === "xp" ? "⭐" : "";
   }, [contentData]);
 
   if (contentError) return <p>{contentError.message}</p>;
@@ -76,10 +80,10 @@ export const RatingBoard = ({ ratingCategory }: Props) => {
                 </td>
                 {/* <td className={styles["col-clan"]}>${rating.clan}</td> */}
                 <td className={styles["col-stat"]}>
-                  <span className={styles["stat-value"]}>
-                    {ratingCategory === "balance"
-                      ? formattedBalance(Number(rating.value))
-                      : rating.value + " " + rating.units}
+                  <span
+                    className={`${styles["stat-value"]} ${styles[ratingCategory]}`}
+                  >
+                    {formattedBalance(Number(rating.value))}
                   </span>
                 </td>
               </tr>

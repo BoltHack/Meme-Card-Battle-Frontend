@@ -60,7 +60,7 @@ export const RatingsPage = ({ title }: TitleSettings) => {
         <header className={styles["header"]}>
           <h1 className={styles["title"]}>Глобальный Топ-100</h1>
           <p className={styles["subtitle"]}>
-            Рейтинги самых топовых и лучших игроков сервера
+            Рейтинги самых лучших игроков
           </p>
         </header>
 
@@ -104,7 +104,7 @@ export const RatingsPage = ({ title }: TitleSettings) => {
                   {ratingCategory === "wins"
                     ? "Победы"
                     : ratingCategory === "balance"
-                      ? "Баланс"
+                      ? "Богатства"
                       : ratingCategory === "xp" ? "Опыт" : ""}
                 </th>
               </tr>

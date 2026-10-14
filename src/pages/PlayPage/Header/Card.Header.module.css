@@ -169,7 +169,8 @@
   display: flex;
   justify-content: center;
   color: #adb5bd;
-  padding: 25px 35px;
+  padding: 10px;
+  /* padding: 25px 35px; */
   box-shadow: inset -0.3px 0 0 0 #ced4da;
 }
 
@@ -179,10 +180,11 @@
 }
 
 .lvl-info-badge {
-  position: absolute;
-  top: 15%;
   display: flex;
   flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
   font-size: 0.8rem;
   font-weight: 800;
   color: #3dcea5;

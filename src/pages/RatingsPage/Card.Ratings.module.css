@@ -293,3 +293,13 @@
   left: 50%;
   transform: translateX(-50%);
 }
+
+.stat-value.wins::after {
+  content: " 🏆";
+}
+.stat-value.balance::after {
+  content: " 💰"
+}
+.stat-value.xp::after {
+  content: " ⭐"
+}
