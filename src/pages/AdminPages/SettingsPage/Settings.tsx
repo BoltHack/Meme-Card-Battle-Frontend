@@ -14,7 +14,7 @@ import { ContentLoading } from "../../../components/LoadingPage/ContentLoading.t
 
 interface AppSettings {
   maintenanceMode: boolean;
-  require2FA: boolean;
+  configLogger: boolean;
 }
 
 export const SettingsPage = () => {
@@ -27,11 +27,7 @@ export const SettingsPage = () => {
   const handleToggle = async (dataToChange: keyof AppSettings) => {
     if (!settings) return;
 
-    const previousSettings = { ...settings };
     const newValue = !settings[dataToChange];
-
-    console.log("newValue", newValue);
-    console.log("previousSettings", previousSettings);
 
     setSettings((prevState) => {
       if (!prevState) return null;
@@ -102,14 +98,14 @@ export const SettingsPage = () => {
         </div>
         <div className={styles["settings-row"]}>
           <div className={styles["settings-text"]}>
-            <h3>Двухфакторная аутентификация (2FA)</h3>
-            <p>Требовать одноразовый код от всех модераторов при входе.</p>
+            <h3>Логи системы (Logger mode)</h3>
+            <p>Собирать логи о состоянии сервера и его функций.</p>
           </div>
           <label className={styles["switch-toggle"]}>
             <input
               type="checkbox"
-              checked={settings?.require2FA ? true : false}
-              onChange={() => handleToggle("require2FA")}
+              checked={settings?.configLogger ? true : false}
+              onChange={() => handleToggle("configLogger")}
             />
             <span className={styles["slider"]}></span>
           </label>
