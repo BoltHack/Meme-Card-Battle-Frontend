@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 // import { Helmet } from "react-helmet-async";
 // import toast from "react-hot-toast";
@@ -9,9 +8,9 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 // import api from "../../../api/api.ts";
-// import usePageRender from "../../../tools/PageRender.ts";
-// import { LoadingPage } from "../../LoadingPage/Loading.tsx";
-// import { ErrorPage } from "../../ErrorPage/Error.tsx";
+// import useContentRender from "../../../tools/ContentRender.ts";
+// import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
+// import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 
 // interface PlayerData {
 //   name: string;
@@ -39,13 +38,13 @@ export const MainPage = ({ isGameFound }: Props) => {
     },
   };
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // const { loading, error } = usePageRender(
+  // const { contentLoading, contentError } = useContentRender(
   //   `${api.API_BASE_URL}/play/`,
   // );
 
@@ -75,13 +74,13 @@ export const MainPage = ({ isGameFound }: Props) => {
   }, []);
 
   // useEffect(() => {
-  //   if (!data || !data.id) return;
+  //   if (!contentData || !contentData.id) return;
 
-  //   console.log("Data", data);
-  // }, [data]);
+  //   console.log("Data", contentData);
+  // }, [contentData]);
 
-  // if (loading) return <LoadingPage />;
-  // if (error) return <ErrorPage error={error} />;
+  // if (contentLoading) return <LoadingPage />;
+  // if (contentError) return <ErrorPage error={contentError} />;
 
   return (
     <div className={styles["body-wrapper"]}>

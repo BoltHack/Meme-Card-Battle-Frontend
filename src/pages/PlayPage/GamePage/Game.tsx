@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { io, Socket } from "socket.io-client";
 
 import styles from "./Card.Game.module.css";
+import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 import laser_styles from "./Card.Laser_styles.module.css";
 
 import axios from "axios";
@@ -38,21 +39,7 @@ interface PlayersInfoResponse {
   data: PlayerData[];
 }
 
-// interface GameParams {
-//   game_type: string;
-//   game_key: string;
-// }
-
 interface CardData {
-  // card_name: string;
-  // card_avatar: string;
-  // card_description: string;
-  // card_damage: string;
-  // card_protection: string;
-  // lvl_number: string;
-  // lvl_name: string;
-  // _id: string;
-
   menu_id: string;
   id: string;
   name: string;
@@ -65,6 +52,18 @@ interface CardData {
   power_slot: number;
 
   _id: string;
+}
+
+interface CardsPost {
+  id: string;
+  name: string;
+  description: string;
+  avatar: string;
+  lvl: number;
+  rarity: string;
+  damage: number;
+  protection: number;
+  power_slot: number;
 }
 
 interface PlayerCardsResponse {
@@ -94,10 +93,7 @@ export const GameFunctions = {
   },
 };
 
-// export const GamePage = () => {
 export const GamePage = ({ game_type, game_key }: Props) => {
-  // const { game_type, game_key } = useParams();
-
   const { data, loading, error } = usePageRender<PlayerData>(
     `${api.API_BASE_URL}/play/game/${game_type}/${game_key}`,
   );
@@ -179,13 +175,10 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       type: "open" | "close" | "useCard",
       data?: CardData | undefined,
     ) => {
-      console.log("type", type);
       if (type === "open") {
         const cardInfo = data?.cardInfo as CardData;
         if (!cardInfo) return;
         useCardIdRef.current = cardInfo?.id;
-
-        console.log("useCardIdRef", useCardIdRef.current);
 
         setSelectCard({
           menu_id: cardInfo.id,
@@ -197,24 +190,13 @@ export const GamePage = ({ game_type, game_key }: Props) => {
           protection: cardInfo.protection,
           power_slot: cardInfo.power_slot,
         });
-        // setSelectCard(cardInfo);
 
         setIsOpenCardActionsMenu(true);
       } else if (type === "useCard") {
         const useCardId = useCardIdRef.current;
-        // console.log("useCardId 2", useCardId);
         if (activePlayerCard === useCardId || !useCardId) return;
 
-        console.log("menu_id", useCardId);
-        console.log("used cardId", useCardId);
-
         setIsOpenCardActionsMenu(false);
-
-        // const updatedHandList = handList.filter(
-        //   (item) => item.menu_id !== useCardId,
-        // );
-
-        // setHandList(updatedHandList);
 
         setHandList((prevHandList) =>
           prevHandList.filter((item) => item.menu_id !== useCardId),
@@ -223,24 +205,14 @@ export const GamePage = ({ game_type, game_key }: Props) => {
         setActivePlayerCard(useCardId);
 
         const currentPlayersInfo = playersInfoRef.current;
-        // const currentGameKey = gameKeyRef.current;
 
         socket.emit("select_card", {
           game_key: game_key,
           player_id: currentPlayersInfo?.playerInfo?.id,
-          // enemy_name: playersInfo[0].enemyInfo.name,
           enemy_id: currentPlayersInfo?.enemyInfo?.id,
           card_id: useCardId,
         });
         setSelectCard(initialCardState);
-
-        console.log("activePlayerCard", activePlayerCard);
-
-        // if (activePlayerCard !== null) return;
-        //
-        // const removeId = handList.filter(item => item.menu_id !== useCardId);
-        //
-        // setHandList(removeId);
       } else if (type === "close") {
         setSelectCard(initialCardState);
         setIsOpenCardActionsMenu(false);
@@ -255,7 +227,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     };
   }, []);
 
-  // const game_key = useParams();
   const [title, setTitle] = useState("");
 
   const [bodyLoader, setBodyLoader] = useState<boolean | false>(false);
@@ -268,14 +239,10 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     0, 1, 2, 3, 4, 5, 6, 7,
   ]);
 
-  // const [isEnemyCardSelected, setIsEnemyCardSelected] = useState(false);
   const [activePlayerCard, setActivePlayerCard] = useState<string | null>(null);
   const [activeEnemyCard, setActiveEnemyCard] = useState<boolean | false>(
     false,
   );
-
-  // const [playersInfo, setPlayersInfo] = useState<PlayerData | null>(null);
-  // const [playersInfo, setPlayersInfo] = useState([]);
 
   const winnerIdRef = useRef<string | null>(null);
 
@@ -286,15 +253,17 @@ export const GamePage = ({ game_type, game_key }: Props) => {
   const [activeScene, setActiveScene] = useState<boolean | false>(false);
   const [resultOverlay, setResultOverlay] = useState<boolean | false>(false);
 
-  // CardDesk
   const [isCardSelectAnimationEnemy, setIsCardSelectAnimationEnemy] = useState<
     boolean | false
   >(false);
-  // CardDesk
+
+  // const [versusCards, setVersusCards] = useState<CardsPost[]>([]);
+  const [versusCards, setVersusCards] = useState<any>(null);
+  const [isVersus, setIsVersus] = useState<boolean | false>(false);
 
   const [winnerInfo, setWinnerInfo] = useState({
     name: "",
-    exp: 0
+    exp: 0,
   });
 
   const blocker = useBlocker(
@@ -314,7 +283,10 @@ export const GamePage = ({ game_type, game_key }: Props) => {
   const leaveGame = () => {
     setIsBlock(false);
     playFunctions.handleChangeTab("play:main");
-    setTimeout(() => window.location.reload(), 100);
+    setTimeout(() => {
+      window.location.reload();
+      sessionStorage.setItem("screen_click", "true");
+    }, 100);
   };
 
   const setDamageState = (player: string) => {
@@ -355,19 +327,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     });
   };
 
-  // useEffect(() => {
-  //   console.log("Статус сокета:", socket.connected, "Данные:", data);
-
-  //   if (!data || !data.id) return;
-
-  //   return () => {
-  //     socket.off("connect", sendInitialData);
-  //     // socket.disconnect();
-  //     clearTimeout(joinTimer);
-  //     clearTimeout(cardsTimer);
-  //   };
-  // }, [data, socket.connected]);
-
   useEffect(() => {
     if (!data || !data.id) return;
 
@@ -375,8 +334,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     let cardsTimer: number;
 
     const sendInitialData = () => {
-      console.log("Приняты данные карт из бэка:", data);
-
       clearTimeout(joinTimer);
       clearTimeout(cardsTimer);
 
@@ -395,9 +352,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
         });
       }, 1000);
 
-      console.log("playersInfo", playersInfo);
-      console.log("playersInfoRef", playersInfoRef.current);
-
       socket.emit("game_start", game_type);
 
       // if (
@@ -407,12 +361,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       //   socket.emit("game_start", game_type);
       // }
     };
-
-    // if (!socket.connected) {
-    //   socket.connect();
-    // } else {
-    //   sendInitialData();
-    // }
 
     if (socket.connected) {
       sendInitialData();
@@ -424,8 +372,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
     socket.on("players_info", (data: PlayersInfoResponse) => {
       const updatedPlayer = data.data;
-
-      console.log("updatedPlayer", updatedPlayer);
 
       const playerInfo_index = data.data.findIndex((up) => up.id === id);
       const enemyInfo_index = data.data.findIndex((up) => up.id !== id);
@@ -454,8 +400,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
       setPlayersInfo(formattedPlayersInfo);
 
-      console.log("formattedPlayersInfo", formattedPlayersInfo.playerInfo);
-
       const title =
         formattedPlayersInfo.playerInfo.name +
         " против " +
@@ -468,8 +412,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
     socket.on("select_battle_card", (data: any) => {
       const { card, menu_id } = data;
-
-      console.log("menu_id", menu_id);
 
       if (card?.length < 1) return;
 
@@ -486,8 +428,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
         protection: card?.card_stats?.card_protection || 0,
         power_slot: card?.power_slot || 0,
       };
-
-      console.log("Formatted card to save:", formattedCard);
 
       setList((prevState) => [...prevState, formattedCard]);
       setHandList((prevState) => [...prevState, formattedCard]);
@@ -530,7 +470,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
         toast.dismiss();
         toast.error("Вы уже находитесь в игре.");
-
         return;
       }
     });
@@ -548,15 +487,54 @@ export const GamePage = ({ game_type, game_key }: Props) => {
             (_, index) => index !== lastIndex,
           );
 
-          console.log("card_selected:", updatedList.length);
-
           return updatedList;
         });
         return;
       }
     });
 
-    socket.on("game_cards_selected", () => {
+    socket.on("game_cards_selected", (data) => {
+      const { cards } = data;
+
+      const playerCard_index = cards.findIndex((c) => c.playerId === id);
+      const enemyCard_index = cards.findIndex((c) => c.playerId !== id);
+
+      const player_card = cards[playerCard_index];
+      const enemy_card = cards[enemyCard_index];
+
+      const formattedCardsInfo = {
+        playerCard: {
+          playerName: playersInfoRef.current.playerInfo.name,
+          id: player_card.id,
+          name: player_card.name,
+          description: player_card.description,
+          avatar: player_card.avatar,
+          lvl: player_card.lvl,
+          rarity: player_card.rarity.toLowerCase(),
+          damage: player_card.damage,
+          protection: player_card.protection,
+          power_slot: player_card.power_slot,
+        },
+        enemyCard: {
+          playerName: playersInfoRef.current.enemyInfo.name,
+          id: enemy_card.id,
+          name: enemy_card.name,
+          description: enemy_card.description,
+          avatar: enemy_card.avatar,
+          lvl: enemy_card.lvl,
+          rarity: enemy_card.rarity.toLowerCase(),
+          damage: enemy_card.damage,
+          protection: enemy_card.protection,
+          power_slot: enemy_card.power_slot,
+        },
+      };
+
+      setVersusCards(formattedCardsInfo);
+      setTimeout(() => setIsVersus(true), 500);
+
+      console.log("formattedCardsInfo", formattedCardsInfo);
+      
+
       toast.dismiss();
       toast.success("Игроки выбрали свои карты!");
     });
@@ -564,17 +542,13 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     socket.on("game_cards_selected_result", (data) => {
       const { type, gameData } = data;
 
-      console.log("game_cards_selected_result");
-
       if (type === "timer") {
         if (gameData.timer === 0) {
-          console.log("Время вскрываться!");
-          console.log("winnerIdRef", winnerIdRef.current);
+          setVersusCards(null);
+          setIsVersus(false);
           if (id === winnerIdRef.current) {
-            console.log("дамаг нанес ты", gameData.winnerId);
             setDamageState("player_damage");
           } else {
-            console.log("дамаг нанес враг", gameData.winnerId);
             setDamageState("enemy_damage");
           }
         }
@@ -596,13 +570,13 @@ export const GamePage = ({ game_type, game_key }: Props) => {
             name: winner,
             exp: gameData.exp,
           });
-          setTimeout(() => handleGameOver(), 12500);
+          setTimeout(() => handleGameOver(), 5000);
         }
         if (res.status === "autowin") {
           setDamageState("player_damage");
           setWinnerInfo({
             name: winner,
-            exp: 500
+            exp: 500,
           });
           setTimeout(() => handleGameOver(), 2000);
         }
@@ -759,8 +733,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                 <div
                   className={`${laser_styles["stat-value"]} ${laser_styles["text-white"]}`}
                 >
-                  {/* 9,850 очков */}
-                  +{winnerInfo.exp} опыта
+                  {/* 9,850 очков */}+{winnerInfo.exp} опыта
                 </div>
               </div>
             </div>
@@ -772,19 +745,183 @@ export const GamePage = ({ game_type, game_key }: Props) => {
         </div>
       )}
 
+      {versusCards !== null ? (
+        <div
+          className={`${styles["battle-arena"]} ${styles[isVersus ? "battle-started" : ""]}`}
+        >
+          <div className={styles["bg-wrapper"]}>
+            <div className={styles["parallax-wrapper"]}>
+              <div
+                className={`${styles["smoke-glow"]} ${styles["smoke-red"]}`}
+              ></div>
+              <div
+                className={`${styles["smoke-glow"]} ${styles["smoke-blue"]}`}
+              ></div>
+              <div
+                className={`${styles["smoke-glow"]} ${styles["smoke-purple"]}`}
+              ></div>
+
+              <div className={styles["halftone-overlay"]}></div>
+
+              <div className={styles["star-particles"]}></div>
+            </div>
+          </div>
+
+          <div className={styles["arena-vignette"]}></div>
+
+          <div className={styles["vs-logo"]}>VS</div>
+
+          <div className={`${styles["game-card"]} ${styles["player-left"]}`}>
+            <div className={styles["card-title"]}>
+              {versusCards.playerCard.playerName}
+            </div>
+            <br />
+            <div className={CardsDesign_styles["card-3d-wrapper"]}>
+              <div className={CardsDesign_styles["card-inner"]}>
+                <div
+                  className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles[versusCards.playerCard.rarity]}`}
+                >
+                  <div className={CardsDesign_styles["card-shine"]}></div>
+                  <div className={CardsDesign_styles["card-header"]}>
+                    <span
+                      className={CardsDesign_styles["card-cost"]}
+                      title={`Занимает ${versusCards.playerCard.power_slot} слотов силы`}
+                    >
+                      {versusCards.playerCard.power_slot}
+                    </span>
+                    <span
+                      className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles["legendary"]}`}
+                    >
+                      {versusCards.playerCard.rarity}
+                    </span>
+                  </div>
+                  <div className={CardsDesign_styles["card-artwork"]}>
+                    {versusCards.playerCard.avatar ? (
+                      <img
+                        src={`${api.API_BASE_URL}/${versusCards.playerCard.avatar}`}
+                        alt="artwork"
+                      />
+                    ) : (
+                      <div className={CardsDesign_styles["card-artwork"]}></div>
+                    )}
+                  </div>
+                  <div className={CardsDesign_styles["card-body"]}>
+                    <div
+                      className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[versusCards.playerCard.rarity]}`}
+                    >
+                      {versusCards.playerCard.name}
+                    </div>
+                    <div className={CardsDesign_styles["card-description"]}>
+                      {versusCards.playerCard.description}
+                    </div>
+                  </div>
+                  <div className={CardsDesign_styles["card-footer"]}>
+                    <div
+                      className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}
+                    >
+                      <span className={CardsDesign_styles["stat-icon"]}>
+                        ⚔️
+                      </span>
+                      <span className={CardsDesign_styles["stat-value"]}>
+                        {versusCards.playerCard.damage}
+                      </span>
+                    </div>
+                    <div
+                      className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
+                    >
+                      <span className={CardsDesign_styles["stat-icon"]}>
+                        🛡️
+                      </span>
+                      <span className={CardsDesign_styles["stat-value"]}>
+                        {versusCards.playerCard.protection}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={`${styles["game-card"]} ${styles["player-right"]}`}>
+            <div className={styles["card-title"]}>
+              {versusCards.enemyCard.playerName}
+            </div>
+            <br />
+            <div className={CardsDesign_styles["card-3d-wrapper"]}>
+              <div className={CardsDesign_styles["card-inner"]}>
+                <div
+                  className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles[versusCards.enemyCard.rarity]}`}
+                >
+                  <div className={CardsDesign_styles["card-shine"]}></div>
+                  <div className={CardsDesign_styles["card-header"]}>
+                    <span
+                      className={CardsDesign_styles["card-cost"]}
+                      title={`Занимает ${versusCards.enemyCard.power_slot} слотов силы`}
+                    >
+                      {versusCards.enemyCard.power_slot}
+                    </span>
+                    <span
+                      className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles["legendary"]}`}
+                    >
+                      {versusCards.enemyCard.rarity}
+                    </span>
+                  </div>
+                  <div className={CardsDesign_styles["card-artwork"]}>
+                    {versusCards.enemyCard.avatar ? (
+                      <img
+                        src={`${api.API_BASE_URL}/${versusCards.enemyCard.avatar}`}
+                        alt="artwork"
+                      />
+                    ) : (
+                      <div className={CardsDesign_styles["card-artwork"]}></div>
+                    )}
+                  </div>
+                  <div className={CardsDesign_styles["card-body"]}>
+                    <div
+                      className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[versusCards.enemyCard.rarity]}`}
+                    >
+                      {versusCards.enemyCard.name}
+                    </div>
+                    <div className={CardsDesign_styles["card-description"]}>
+                      {versusCards.enemyCard.description}
+                    </div>
+                  </div>
+                  <div className={CardsDesign_styles["card-footer"]}>
+                    <div
+                      className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}
+                    >
+                      <span className={CardsDesign_styles["stat-icon"]}>
+                        ⚔️
+                      </span>
+                      <span className={CardsDesign_styles["stat-value"]}>
+                        {versusCards.enemyCard.damage}
+                      </span>
+                    </div>
+                    <div
+                      className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
+                    >
+                      <span className={CardsDesign_styles["stat-icon"]}>
+                        🛡️
+                      </span>
+                      <span className={CardsDesign_styles["stat-value"]}>
+                        {versusCards.enemyCard.protection}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {bodyLoader && (
         <div className={styles["loader-wrapper"]}>
           <div className={styles["loader"]}></div>
         </div>
       )}
+
       <Game_CardDesk
-        // onToggleMenu={toggleMenu}
-        // useCard={(
-        //   type: "open" | "close" | "useCard",
-        //   data?: ActionData | undefined,
-        // ) => useCard(type, data)}
-        // useCard={useCard}
-        // onActionsMenu={actionsMenu}
         activePlayerCard={activePlayerCard}
         activeEnemyCard={activeEnemyCard}
         setActivePlayerCard={setActivePlayerCard}
@@ -807,18 +944,11 @@ export const GamePage = ({ game_type, game_key }: Props) => {
         game_key={game_key}
         list={list}
         setList={setList}
-        handList={handList}
         setHandList={setHandList}
-        enemyHandList={enemyHandList}
-        // setEnemyHandList={setEnemyHandList}
-        activePlayerCard={activePlayerCard}
-        activeEnemyCard={activeEnemyCard}
-        setActivePlayerCard={setActivePlayerCard}
         loading={loading}
         setBodyLoader={setBodyLoader}
         playersInfo={playersInfo}
         setIsBlock={setIsBlock}
-        damageAnimation={damageAnimation}
       />
     </div>
   );

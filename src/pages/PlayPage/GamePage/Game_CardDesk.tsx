@@ -2,12 +2,10 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import CardDesk_styles from "./Card.Desk_styles.module.css";
-import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
+// import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 import Menus_styles from "./Card.Menu_styles.module.css";
 
 import api from "../../../api/api.ts";
-
-// import { ActionData } from "./Game_Menus.tsx";
 
 interface CardData {
   menu_id: string;
@@ -27,13 +25,7 @@ interface CardData {
 import { GameFunctions } from "./Game.tsx";
 
 interface TitleSettings {
-  // useCard: (
-  //   type: "open" | "close" | "useCard",
-  //   data?: ActionData | undefined,
-  // ) => void;
-  // onToggleMenu: () => void;
-  // onActionsMenu: () => void;
-
+  
   isCardSelectAnimationEnemy: boolean;
   setIsCardSelectAnimationEnemy: Dispatch<SetStateAction<boolean>>;
 
@@ -51,9 +43,6 @@ interface TitleSettings {
 }
 
 export const Game_CardDesk = ({
-  // onToggleMenu,
-  // onActionsMenu,
-  // useCard,
   setIsCardSelectAnimationEnemy,
   handList,
   enemyHandList,
@@ -64,12 +53,6 @@ export const Game_CardDesk = ({
 }: TitleSettings) => {
   const [isGameStart] = useState<boolean | false>(false);
   const [isFullScreen, setIsFullScreen] = useState<boolean | false>(false);
-
-  // const [damageAnimation, setDamageAnimation] = useState<string | null>(null);
-
-  // const testEnemu = () => {
-  //     setIsCardSelectAnimationEnemy(false);
-  // }
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -308,7 +291,7 @@ export const Game_CardDesk = ({
             <div className={CardDesk_styles["vs-light"]}></div>
 
             <div className={CardDesk_styles["arena-center"]}>
-              <div
+              {/* <div
                 // id={selectCard?.menu_id}
                 className={CardsDesign_styles["card-3d-wrapper"]}
               >
@@ -370,7 +353,7 @@ export const Game_CardDesk = ({
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
               {/* {isCardSelectAnimationEnemy && (
                  <motion.div
                      layoutId="shared-EnemyCard"> */}
@@ -441,20 +424,9 @@ export const Game_CardDesk = ({
               <div
                 className={`${CardDesk_styles["strike-slot"]} ${CardDesk_styles["player-strike-slot"]} ${CardDesk_styles["active"]}`}
               >
-                {/*{isCardSelectAnimationPlayer === "use-playerCard" && (*/}
-                {/*    <motion.div*/}
-                {/*        layoutId="shared-card">*/}
-                {/*        <div className={`${CardDesk_styles["strike-slot"]} ${CardDesk_styles["player-strike-slot"]}`}>*/}
-                {/*            <div className={CardDesk_styles["blind-card"]}></div>*/}
-                {/*        </div>*/}
-                {/*    </motion.div>*/}
-                {/*)}*/}
                 <AnimatePresence>
                   {activePlayerCard &&
                     (() => {
-                      // const animatingCard = handList.find(c => c.menu_id === activePlayerCard);
-                      // if (!animatingCard) return null;
-
                       return (
                         <div
                           className={`${CardDesk_styles["strike-slot"]} ${CardDesk_styles["player-strike-slot"]}`}
@@ -478,7 +450,6 @@ export const Game_CardDesk = ({
                 {handList && handList?.length > 0
                   ? handList.map((card) => {
                       const cardId = card.menu_id;
-                      // const isThisCardAnimating = activePlayerCard === cardId;
 
                       return (
                         <motion.div
@@ -545,7 +516,6 @@ export const Game_CardDesk = ({
                             id={cardId}
                             className={`${CardDesk_styles["hand-card"]} ${CardDesk_styles[`${card.rarity?.toLowerCase()}`]}`}
                             onClick={() => {
-                              // if (activeAnimationCardId || activePlayerCard !== null) return;
                               if (activePlayerCard !== null) return;
                               GameFunctions.useCard_menu("open", {
                                 cardInfo: {
@@ -593,29 +563,6 @@ export const Game_CardDesk = ({
                   : ""}
               </AnimatePresence>
             </div>
-
-            {/*{playersInfo && playersInfo.length && (*/}
-            {/*    playersInfo.map((player) => (*/}
-            {/*        <div key={player.id || player.playerInfo.name}*/}
-            {/*            className={`${CardDesk_styles["player-profile"]} ${CardDesk_styles["user-profile"]}`} style={ !isGameStart ? {cursor: 'pointer'} : {}}*/}
-            {/*            onClick={onToggleMenu}*/}
-            {/*        >*/}
-            {/*            <div className={CardDesk_styles["player-status"]}>*/}
-            {/*                <div className={CardDesk_styles["player-name"]}>Вы ({player.playerInfo.name})</div>*/}
-            {/*                <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}*/}
-            {/*                       min="0" max="100" value={player.playerInfo.health}*/}
-            {/*                ></meter>*/}
-            {/*                <meter className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["ult-bar"]}`}*/}
-            {/*                       min="0" max="100" value={player.playerInfo.ult}>*/}
-            {/*                </meter>*/}
-            {/*            </div>*/}
-            {/*            <div className={CardDesk_styles["avatar-wrapper"]}>*/}
-            {/*                <div className={CardDesk_styles["avatar-image"]}>🛡️</div>*/}
-            {/*                <div className={CardDesk_styles["player-level"]}>Lv.{player.playerInfo.lvl}</div>*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-            {/*    ))*/}
-            {/*)}*/}
 
             {playersInfo && playersInfo.playerInfo && (
               <div

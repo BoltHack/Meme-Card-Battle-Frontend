@@ -1,7 +1,5 @@
-// import { useNavigate } from "react-router-dom";
 import { Dispatch, SetStateAction } from "react";
-
-// import { Game_CardDesk } from "./Game_CardDesk.tsx";
+import Cookies from "js-cookie";
 
 import Menus_styles from "./Card.Menu_styles.module.css";
 import CardDesk_styles from "./Card.Desk_styles.module.css";
@@ -24,18 +22,6 @@ interface CardData {
 
   _id: string;
 }
-
-// interface UseCardData {
-//   id: string;
-//   lvl?: number;
-//   rarity?: string;
-//   avatar?: string;
-//   name?: string;
-//   description?: string;
-//   damage?: number;
-//   protection?: number;
-//   power_slot?: number;
-// }
 
 export interface ActionData {
   cardInfo: CardData;
@@ -62,14 +48,7 @@ interface TitleSettings {
   list: CardData[];
   setList: Dispatch<SetStateAction<CardData[]>>;
 
-  // handList: CardData[];
   setHandList: Dispatch<SetStateAction<CardData[]>>;
-
-  // enemyHandList: any;
-
-  // activePlayerCard: string | null;
-  // setActivePlayerCard: Dispatch<SetStateAction<string | null>>;
-  // activeEnemyCard: boolean | false;
 
   loading: boolean | false;
 
@@ -78,8 +57,6 @@ interface TitleSettings {
   playersInfo: any;
 
   setIsBlock: Dispatch<SetStateAction<boolean>>;
-
-  // damageAnimation: string | null;
 }
 
 import { playFunctions } from "../Play/Play.tsx";
@@ -97,78 +74,20 @@ export const Game_Menus = ({
   game_key,
   list,
   setList,
-  // handList,
   setHandList,
-  // enemyHandList,
-  // activePlayerCard,
-  // activeEnemyCard,
-  // setActivePlayerCard,
   setBodyLoader,
   loading,
   playersInfo,
   setIsBlock,
-  // damageAnimation,
 }: TitleSettings) => {
-  // const [isOpen, setIsOpen] = useState(true);
-  // const [isClosing, setIsClosing] = useState(false);
-
-  // const [isOpenCardActions, setIsOpenCardActions] = useState(false);
-
-  // const initialCardState = {
-  //   menu_id: "",
-  //   rarity: "",
-  //   avatar: "",
-  //   name: "",
-  //   description: "",
-  //   damage: 0,
-  //   protection: 0,
-  //   power_slot: 0,
-  // };
-  // const [selectCard, setSelectCard] = useState(initialCardState);
-
-  // const [isOpenLeaveMenu, setIsOpenLeaveMenu] = useState(false);
-
-  // const [activePlayerCard, setActivePlayerCard] = useState<string | null>(null);
-  // const [isCardSelectAnimationPlayer, setIsCardSelectAnimationPlayer] = useState<boolean>(false);
-  // const [isCardSelectAnimationEnemy, setIsCardSelectAnimationEnemy] = useState<
-  //   boolean | false
-  // >(false);
-  // const [activeAnimationCardId, setActiveAnimationCardId] = useState<string | null>(null);
-
-  // const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // const useCardIdRef = useRef<string | null>(null);
-  // const timeoutRef = useRef<number | null>(null);
-
-  // const closeMenu = () => {
-  //   setIsClosing(true);
-  //   timeoutRef.current = window.setTimeout(() => {
-  //     setIsOpen(false);
-  //     setIsClosing(false);
-  //   }, 200);
-  // };
-
-  // const actionsMenu = () => {
-  //   setIsOpenLeaveMenu(!isOpenLeaveMenu);
-  // };
-
   const leaveGame = () => {
     setIsBlock(false);
     playFunctions.handleChangeTab("play:main");
-    setTimeout(() => window.location.reload(), 100);
+    setTimeout(() => {
+      window.location.reload();
+      sessionStorage.setItem("screen_click", "true");
+    }, 100);
   };
-
-  // const toggleMenu = () => {
-  //   console.log("toggle menu");
-  //   if (timeoutRef.current) window.clearTimeout(timeoutRef.current as number);
-  //   setIsClosing(false);
-  //   setIsOpen(true);
-  // };
-
-  // useEffect(() => {
-  //   return () => {
-  //     if (timeoutRef.current) window.clearTimeout(timeoutRef.current as number);
-  //   };
-  // }, []);
 
   const checkBattleCard = (card_id: string, menu_id: string) => {
     const cardsList = list.map((c) => c.menu_id);
@@ -205,100 +124,8 @@ export const Game_Menus = ({
     });
   };
 
-  // const useCardIdRef = useRef<string | undefined>(undefined);
-
-  // const useCard = (
-  //   type: "open" | "close" | "useCard",
-  //   data?: ActionData | undefined,
-  // ) => {
-  //   console.log("type", type);
-  //   // if (type !== 'open' || type !== 'close' || type !== 'useCard') return;
-
-  //   if (type === "open") {
-  //     const cardInfo = data?.cardInfo;
-  //     if (!cardInfo) return;
-  //     useCardIdRef.current = cardInfo?.id;
-
-  //     console.log("useCardIdRef", useCardIdRef.current);
-
-  //     setSelectCard({
-  //       menu_id: cardInfo.id,
-  //       rarity: cardInfo.rarity,
-  //       avatar: cardInfo.avatar,
-  //       name: cardInfo.name,
-  //       description: cardInfo.description,
-  //       damage: cardInfo.damage,
-  //       protection: cardInfo.protection,
-  //       power_slot: cardInfo.power_slot,
-  //     });
-  //     // setSelectCard(cardInfo);
-
-  //     setIsOpenCardActions(true);
-  //   } else if (type === "useCard") {
-  //     const useCardId = useCardIdRef.current;
-  //     console.log("useCardId 2", useCardId);
-  //     if (activePlayerCard === useCardId || !useCardId) return;
-
-  //     console.log("useCardId", useCardId);
-
-  //     setIsOpenCardActions(false);
-
-  //     const updatedHandList = handList.filter(
-  //       (item) => item.menu_id !== useCardId,
-  //     );
-  //     setHandList(updatedHandList);
-
-  //     setActivePlayerCard(useCardId);
-
-  //     socket.emit("select_card", {
-  //       game_key: game_key,
-  //       player_id: player_id,
-  //       // enemy_name: playersInfo[0].enemyInfo.name,
-  //       enemy_id: playersInfo?.enemyInfo.id,
-  //       card_id: useCardId,
-  //     });
-  //     setSelectCard(initialCardState);
-
-  //     console.log("activePlayerCard", activePlayerCard);
-
-  //     // if (activePlayerCard !== null) return;
-  //     //
-  //     // const removeId = handList.filter(item => item.menu_id !== useCardId);
-  //     //
-  //     // setHandList(removeId);
-  //   } else if (type === "close") {
-  //     setSelectCard(initialCardState);
-  //     setIsOpenCardActions(false);
-  //   } else {
-  //     setSelectCard(initialCardState);
-  //     setIsOpenCardActions(false);
-  //   }
-  // };
-
   return (
     <>
-      {/* <Game_CardDesk
-        onToggleMenu={toggleMenu}
-        useCard={(
-          type: "open" | "close" | "useCard",
-          data?: ActionData | undefined,
-        ) => useCard(type, data)}
-        // useCard={useCard}
-        onActionsMenu={actionsMenu}
-        activePlayerCard={activePlayerCard}
-        activeEnemyCard={activeEnemyCard}
-        setActivePlayerCard={setActivePlayerCard}
-        isCardSelectAnimationEnemy={isCardSelectAnimationEnemy}
-        setIsCardSelectAnimationEnemy={setIsCardSelectAnimationEnemy}
-        handList={handList}
-        // setHandList={setHandList}
-        enemyHandList={enemyHandList}
-        // activeAnimationCardId={activeAnimationCardId}
-        // setActiveAnimationCardId={setActiveAnimationCardId}
-        playersInfo={playersInfo}
-        damageAnimation={damageAnimation}
-      /> */}
-
       {isOpenCardActionsMenu && (
         <div
           className={Menus_styles["menu-wrapper"]}
