@@ -196,7 +196,7 @@ export const ProfilePage = () => {
   if (contentError) return <ErrorPage error={contentError} />;
 
   return (
-    <div className={styles["body"]}>
+    <div className={styles["play-container"]}>
       <div className={styles["container"]}>
         <header className={styles["header-panel"]}>
           <div className={styles["user-block"]}>

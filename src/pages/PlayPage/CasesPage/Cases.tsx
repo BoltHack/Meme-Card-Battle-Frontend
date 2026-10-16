@@ -181,7 +181,7 @@ export const CasesPage = () => {
   if (contentError) return <ErrorPage error={contentError} />;
 
   return (
-    <>
+    <div className={styles["play-container"]}>
       <header className={styles["header-container"]}>
         <div className={styles["header-content"]}>
           {cases && cases.length > 0
@@ -523,6 +523,6 @@ export const CasesPage = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };

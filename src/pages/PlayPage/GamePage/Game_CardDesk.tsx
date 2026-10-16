@@ -25,7 +25,10 @@ interface CardData {
 import { GameFunctions } from "./Game.tsx";
 
 interface TitleSettings {
-  
+  isGameStarted: boolean;
+  isReady: boolean;
+  gameStartedInfo: boolean;
+
   isCardSelectAnimationEnemy: boolean;
   setIsCardSelectAnimationEnemy: Dispatch<SetStateAction<boolean>>;
 
@@ -43,6 +46,9 @@ interface TitleSettings {
 }
 
 export const Game_CardDesk = ({
+  isGameStarted,
+  isReady,
+  gameStartedInfo,
   setIsCardSelectAnimationEnemy,
   handList,
   enemyHandList,
@@ -103,6 +109,13 @@ export const Game_CardDesk = ({
 
   return (
     <>
+      {gameStartedInfo && (
+        <div
+          className={`${CardDesk_styles["start-game"]} ${CardDesk_styles["pulse-digit"]}`}
+        >
+          Игра началась!
+        </div>
+      )}
       <div className={CardDesk_styles["bg-glow"]}></div>
       <div
         className={`${CardDesk_styles["sparkle"]} ${CardDesk_styles["sp-1"]}`}
@@ -114,7 +127,9 @@ export const Game_CardDesk = ({
         className={`${CardDesk_styles["sparkle"]} ${CardDesk_styles["sp-3"]}`}
       ></div>
 
-      <div className={CardDesk_styles["game-container"]}>
+      <div
+        className={`${CardDesk_styles["game-container"]} ${CardDesk_styles[gameStartedInfo ? "shake-screen" : ""]}`}
+      >
         <div className={CardDesk_styles["game-tools-container"]}>
           <div className={CardDesk_styles["game-tools-content"]}>
             <div
@@ -252,27 +267,30 @@ export const Game_CardDesk = ({
               className={`${Menus_styles["hand-container"]} ${CardDesk_styles["enemy-hand"]}`}
             >
               <AnimatePresence>
-                {enemyHandList && enemyHandList.length > 0
-                  ? enemyHandList.map((item: number, index: number) => {
-                      return (
-                        <motion.div
-                          key={`card-back-wrapper-${item}-${index}`}
-                          layoutId={`card-back-shared-${item}-${index}`}
-                          layout
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          transition={{
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 30,
-                          }}
-                        >
-                          <div
-                            id={`card-back-${item}`}
-                            className={CardDesk_styles["card-back"]}
-                          ></div>
-                        </motion.div>
-                      );
-                    })
+                {Array.from({ length: enemyHandList }, (_, i) => i) &&
+                Array.from({ length: enemyHandList }, (_, i) => i).length > 0
+                  ? Array.from({ length: enemyHandList }, (_, i) => i).map(
+                      (item: number, index: number) => {
+                        return (
+                          <motion.div
+                            key={`card-back-wrapper-${item}-${index}`}
+                            layoutId={`card-back-shared-${item}-${index}`}
+                            layout
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 300,
+                              damping: 30,
+                            }}
+                          >
+                            <div
+                              id={`card-back-${item}`}
+                              className={CardDesk_styles["card-back"]}
+                            ></div>
+                          </motion.div>
+                        );
+                      },
+                    )
                   : null}
               </AnimatePresence>
               {/*<div className={CardDesk_styles["card-back"]}></div>*/}
@@ -516,7 +534,8 @@ export const Game_CardDesk = ({
                             id={cardId}
                             className={`${CardDesk_styles["hand-card"]} ${CardDesk_styles[`${card.rarity?.toLowerCase()}`]}`}
                             onClick={() => {
-                              if (activePlayerCard !== null) return;
+                              if (activePlayerCard !== null || !isGameStarted)
+                                return;
                               GameFunctions.useCard_menu("open", {
                                 cardInfo: {
                                   id: cardId,
@@ -571,8 +590,19 @@ export const Game_CardDesk = ({
                                  ${CardDesk_styles["user-profile"]}
                                  ${damageAnimation === "enemy_damage" ? CardDesk_styles["damage-received"] : null}
                                  `}
-                style={!isGameStart ? { cursor: "pointer" } : {}}
-                onClick={() => GameFunctions.gameCards_menu(true)}
+                style={
+                  !isGameStart
+                    ? {
+                        cursor:
+                          isGameStarted || isReady ? "default" : "pointer",
+                      }
+                    : {}
+                }
+                onClick={() =>
+                  isGameStarted || isReady
+                    ? undefined
+                    : GameFunctions.gameCards_menu(true)
+                }
               >
                 <div className={CardDesk_styles["player-status"]}>
                   <div className={CardDesk_styles["player-name"]}>

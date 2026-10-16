@@ -1,5 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
-import Cookies from "js-cookie";
+import { Dispatch, SetStateAction, useRef, WheelEvent } from "react";
 
 import Menus_styles from "./Card.Menu_styles.module.css";
 import CardDesk_styles from "./Card.Desk_styles.module.css";
@@ -28,6 +27,8 @@ export interface ActionData {
 }
 
 interface TitleSettings {
+  isGameStarted: boolean;
+
   playerCard: CardData[];
 
   selectCard: any;
@@ -63,6 +64,7 @@ import { playFunctions } from "../Play/Play.tsx";
 import { GameFunctions } from "./Game.tsx";
 
 export const Game_Menus = ({
+  isGameStarted,
   playerCard,
   selectCard,
   isOpenCardActionsMenu,
@@ -80,6 +82,8 @@ export const Game_Menus = ({
   playersInfo,
   setIsBlock,
 }: TitleSettings) => {
+  const contentContainerRef = useRef(null);
+
   const leaveGame = () => {
     setIsBlock(false);
     playFunctions.handleChangeTab("play:main");
@@ -90,6 +94,8 @@ export const Game_Menus = ({
   };
 
   const checkBattleCard = (card_id: string, menu_id: string) => {
+    if (isGameStarted) return;
+
     const cardsList = list.map((c) => c.menu_id);
 
     if ([...cardsList].includes(menu_id)) {
@@ -103,13 +109,15 @@ export const Game_Menus = ({
     socket.emit("check_battle_card", {
       game_key: game_key,
       player_id: player_id,
+      enemy_id: playersInfo?.enemyInfo.id,
       card_id: card_id,
       menu_id: menu_id,
-      enemy_id: playersInfo?.enemyInfo.id,
     });
   };
 
   const removeCard = (idToRemove: string) => {
+    if (isGameStarted) return;
+
     console.log("idToRemove", idToRemove);
     console.log("list", list);
     const removeId = list.filter((item) => item.menu_id !== idToRemove);
@@ -118,10 +126,16 @@ export const Game_Menus = ({
     setHandList(removeId);
     socket.emit("remove_battle_card", {
       game_key: game_key,
-      player_id: player_id,
+      // player_id: player_id,
       remove_id: idToRemove,
       enemy_id: playersInfo?.enemyInfo.id,
     });
+  };
+
+  const handleMouseScroll = (e: WheelEvent<HTMLDivElement>) => {
+    if (contentContainerRef.current) {
+      contentContainerRef.current.scrollLeft += e.deltaY;
+    }
   };
 
   return (
@@ -239,7 +253,11 @@ export const Game_Menus = ({
             className={`${Menus_styles["menu-card"]} ${isClosingGameCardsMenu ? Menus_styles["closing"] : ""}`}
           >
             <h2>Соберите свою колоду</h2>
-            <div className={Menus_styles["options"]}>
+            <div
+              className={Menus_styles["options"]}
+              ref={contentContainerRef}
+              onWheel={handleMouseScroll}
+            >
               <div className={`${Menus_styles["hand-container"]}`}>
                 {list && list.length > 0 ? (
                   list.map((card) => {

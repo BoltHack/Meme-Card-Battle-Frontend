@@ -93,7 +93,7 @@ export const SettingsPage = () => {
 
   return (
     <>
-      <div className={styles["settings-body"]}>
+      <div className={styles["play-container"]}>
         <aside className={styles["sidebar"]}>
           <div className={styles["profile-section"]}>
             {/* <div className={styles["avatar"]}></div> */}

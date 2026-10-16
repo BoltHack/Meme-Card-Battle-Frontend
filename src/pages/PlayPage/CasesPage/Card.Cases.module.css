@@ -36,6 +36,11 @@
   user-select: none;
 } */
 
+.play-container {
+  height: 100dvh;
+  user-select: none;
+}
+
 .header-container {
   font-family: normal;
   position: relative;

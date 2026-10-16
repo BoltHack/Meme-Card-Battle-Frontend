@@ -149,7 +149,7 @@ export const ShopPage = () => {
   if (contentError) return <ErrorPage error={contentError} />;
 
   return (
-    <div className={styles["body"]}>
+    <div className={styles["play-container"]}>
       <div className={styles["shop-container"]}>
         <header className={styles["shop-header"]}>
           <h1>Магазин</h1>

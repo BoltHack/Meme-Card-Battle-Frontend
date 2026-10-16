@@ -98,6 +98,13 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     `${api.API_BASE_URL}/play/game/${game_type}/${game_key}`,
   );
 
+  const [isReady, setIsReady] = useState<boolean | false>(false);
+  const [isGameStarted, setIsGameStarted] = useState<boolean | false>(false);
+  const [readyStateLoading, setReadyStateLoading] = useState<boolean | false>(
+    false,
+  );
+  const [gameStartedInfo, setGameStartedInfo] = useState<boolean | false>(false);
+
   const [isOpenLeaveMenu, setIsOpenLeaveMenu] = useState(false);
 
   const [isOpenGameCardsMenu, setIsOpenGameCardsMenu] = useState(true);
@@ -109,13 +116,25 @@ export const GamePage = ({ game_type, game_key }: Props) => {
   const gameKeyRef = useRef(game_key);
   const playersInfoRef = useRef(playersInfo);
 
+  const isGameStartedRef = useRef(isGameStarted);
+  const isReadyRef = useRef(isReady);
+  const gameStartedInfoRef = useRef(gameStartedInfo);
+
   useEffect(() => {
     gameKeyRef.current = game_key;
   }, [game_key]);
-
   useEffect(() => {
     playersInfoRef.current = playersInfo;
   }, [playersInfo]);
+  useEffect(() => {
+    isGameStartedRef.current = isGameStarted;
+  }, [isGameStarted]);
+  useEffect(() => {
+    isReadyRef.current = isReady;
+  }, [isReady]);
+  useEffect(() => {
+    gameStartedInfoRef.current = gameStartedInfo;
+  }, [gameStartedInfo]);
 
   const useCardIdRef = useRef<string | null>(null);
   const initialCardState = {
@@ -146,6 +165,8 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
   useEffect(() => {
     GameFunctions.gameCards_menu = (type: boolean) => {
+      if (isGameStartedRef.current || isReadyRef.current) return;
+
       if (timeoutRef.current) {
         window.clearTimeout(timeoutRef.current);
       }
@@ -175,6 +196,8 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       type: "open" | "close" | "useCard",
       data?: CardData | undefined,
     ) => {
+      if (!isGameStartedRef.current) return;
+
       if (type === "open") {
         const cardInfo = data?.cardInfo as CardData;
         if (!cardInfo) return;
@@ -235,9 +258,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
   const [list, setList] = useState<CardData[]>([]);
 
   const [handList, setHandList] = useState<CardData[]>([]);
-  const [enemyHandList, setEnemyHandList] = useState<number[]>([
-    0, 1, 2, 3, 4, 5, 6, 7,
-  ]);
+  const [enemyHandList, setEnemyHandList] = useState<number>(0);
 
   const [activePlayerCard, setActivePlayerCard] = useState<string | null>(null);
   const [activeEnemyCard, setActiveEnemyCard] = useState<boolean | false>(
@@ -265,6 +286,8 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     name: "",
     exp: 0,
   });
+
+  const versusTimerRef = useRef(null);
 
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
@@ -434,65 +457,6 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       setBodyLoader(false);
     });
 
-    // socket.on("select_battle_card_list", (data) => {
-    //     const { card } = data;
-    //
-    //     if (!card || card.length < 1) return;
-    //
-    //     console.log('Уникальные карты для рендера:', card);
-    //
-    //     setList(prevList => {
-    //         const combined = [...prevList, ...card];
-    //
-    //         return combined.filter((item, index, self) =>
-    //             index === self.findIndex((c) => c.id === item.id)
-    //         );
-    //     });
-    //     setHandList(prevList => {
-    //         const combined = [...prevList, ...card];
-    //
-    //         return combined.filter((item, index, self) =>
-    //             index === self.findIndex((c) => c.id === item.id)
-    //         );
-    //     });
-    // });
-
-    socket.on("error_handler", (message) => {
-      toast.dismiss();
-      toast.error(message);
-
-      setBodyLoader(false);
-    });
-
-    socket.on("game_error", (type) => {
-      if (type.toString() === "already_InGame") {
-        leaveGame();
-
-        toast.dismiss();
-        toast.error("Вы уже находитесь в игре.");
-        return;
-      }
-    });
-
-    socket.on("enemy_hand_list", (action: string) => {
-      if (action === "card_selected") {
-        setActiveEnemyCard(true);
-
-        setEnemyHandList((prevList) => {
-          const lastIndex = prevList.length - 1;
-
-          if (lastIndex < 0) return prevList;
-
-          const updatedList = prevList.filter(
-            (_, index) => index !== lastIndex,
-          );
-
-          return updatedList;
-        });
-        return;
-      }
-    });
-
     socket.on("game_cards_selected", (data) => {
       const { cards } = data;
 
@@ -530,13 +494,67 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       };
 
       setVersusCards(formattedCardsInfo);
-      setTimeout(() => setIsVersus(true), 500);
+
+      if (versusTimerRef.current) {
+        clearTimeout(versusTimerRef.current);
+      }
+
+      versusTimerRef.current = setTimeout(() => {
+        setIsVersus(true);
+      }, 500);
+      // setTimeout(() => setIsVersus(true), 500);
 
       console.log("formattedCardsInfo", formattedCardsInfo);
-      
 
       toast.dismiss();
       toast.success("Игроки выбрали свои карты!");
+    });
+
+    socket.on("error_handler", (message) => {
+      toast.dismiss();
+      toast.error(message);
+
+      // if (bodyLoader) {
+      setBodyLoader(false);
+      // }
+      // if (readyStateLoading) {
+      setReadyStateLoading(false);
+      // }
+    });
+
+    socket.on("game_error", (type) => {
+      if (type.toString() === "already_InGame") {
+        leaveGame();
+
+        toast.dismiss();
+        toast.error("Вы уже находитесь в игре.");
+        return;
+      }
+    });
+
+    socket.on("enemy_hand_list", (action: string) => {
+      if (action === "card_selected") {
+        setActiveEnemyCard(true);
+        setEnemyHandList((prevCount) => prevCount - 1);
+
+        // setEnemyHandList((prevList) => {
+        //   const lastIndex = prevList.length - 1;
+
+        //   if (lastIndex < 0) return prevList;
+
+        //   const updatedList = prevList.filter(
+        //     (_, index) => index !== lastIndex,
+        //   );
+
+        //   return updatedList;
+        // });
+      }
+      else if (action === "battle_card_selected") {
+        setEnemyHandList((prevCount) => prevCount + 1);
+      }
+      if (action === "battle_card_removed") {
+        setEnemyHandList((prevCount) => prevCount - 1);
+      }
     });
 
     socket.on("game_cards_selected_result", (data) => {
@@ -570,7 +588,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
             name: winner,
             exp: gameData.exp,
           });
-          setTimeout(() => handleGameOver(), 5000);
+          setTimeout(() => handleGameOver(), 7000);
         }
         if (res.status === "autowin") {
           setDamageState("player_damage");
@@ -590,6 +608,20 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       }
     });
 
+    const handleReadyState = (type: string) => {
+      if (type === "user_ready") {
+        setIsReady(true);
+      } else if (type === "game_start") {
+        setIsReady(true);
+        setIsGameStarted(true);
+        setTimeout(() => setGameStartedInfo(true), 1000);
+        setTimeout(() => setGameStartedInfo(false), 3000);
+      }
+      setReadyStateLoading(false);
+    };
+
+    socket.on("check_user_ready_state_client", handleReadyState);
+
     return () => {
       socket.off("get_user_cards");
       socket.off("select_battle_card");
@@ -601,6 +633,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       socket.off("enemy_hand_list");
       socket.off("game_cards_selected");
       socket.off("game_cards_selected_result");
+      socket.off("check_user_ready_state_client", handleReadyState);
       socket.off("connect", sendInitialData);
       // socket.disconnect();
       clearTimeout(joinTimer);
@@ -671,6 +704,19 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     }, 10000);
   };
 
+  const handleReadyForBattle = () => {
+    // try {
+
+    // } catch (error: any) {
+
+    // }
+    setReadyStateLoading(true);
+    socket.emit("check_user_ready_state_server", {
+      player_id: data?.id,
+      game_key: gameKeyRef.current,
+    });
+  };
+
   if (loading) return <LoadingPage />;
   if (error) {
     setIsBlock(false);
@@ -686,7 +732,15 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       {/* <button className={laser_styles["laser-btn"]} onClick={test}>
         ⚡ Запустить лазер
       </button> */}
-      <button className={styles["ready-btn"]}>ГОТОВ К БОЮ</button>
+      {!isReady && (
+        <button
+          className={styles["ready-btn"]}
+          onClick={handleReadyForBattle}
+          disabled={readyStateLoading}
+        >
+          {readyStateLoading ? "Загрузка..." : "К гою готов!"}
+        </button>
+      )}
 
       {activeScene && (
         <div
@@ -922,6 +976,9 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       )}
 
       <Game_CardDesk
+        isGameStarted={isGameStarted}
+        isReady={isReady}
+        gameStartedInfo={gameStartedInfo}
         activePlayerCard={activePlayerCard}
         activeEnemyCard={activeEnemyCard}
         setActivePlayerCard={setActivePlayerCard}
@@ -933,6 +990,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
         damageAnimation={damageAnimation}
       />
       <Game_Menus
+        isGameStarted={isGameStarted}
         playerCard={playerCard}
         selectCard={selectCard}
         isOpenCardActionsMenu={isOpenCardActionsMenu}
