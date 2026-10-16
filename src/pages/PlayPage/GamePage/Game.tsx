@@ -54,17 +54,17 @@ interface CardData {
   _id: string;
 }
 
-interface CardsPost {
-  id: string;
-  name: string;
-  description: string;
-  avatar: string;
-  lvl: number;
-  rarity: string;
-  damage: number;
-  protection: number;
-  power_slot: number;
-}
+// interface CardsPost {
+//   id: string;
+//   name: string;
+//   description: string;
+//   avatar: string;
+//   lvl: number;
+//   rarity: string;
+//   damage: number;
+//   protection: number;
+//   power_slot: number;
+// }
 
 interface PlayerCardsResponse {
   cards_data?: CardData | CardData[];

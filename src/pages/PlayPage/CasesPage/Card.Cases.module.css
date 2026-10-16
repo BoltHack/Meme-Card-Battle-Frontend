@@ -57,6 +57,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 8px;
 }
 
 .header-btn {
@@ -68,10 +69,12 @@
   justify-content: center;
   align-items: center;
   /* color: #ffffff; */
-  padding: 8px;
+  padding: 0 8px;
 }
 
 .case-btn-line {
+  position: absolute;
+  bottom: -8px;
   width: 100%;
   padding: 0.8px;
   background: #ff007f;
