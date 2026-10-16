@@ -250,7 +250,7 @@ export const Game_CardDesk = ({
                   <meter
                     className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}
                     min="0"
-                    max="100"
+                    max="500"
                     value={playersInfo.enemyInfo.health}
                   ></meter>
                   <meter
@@ -611,7 +611,7 @@ export const Game_CardDesk = ({
                   <meter
                     className={`${CardDesk_styles["status-bar"]} ${CardDesk_styles["hp-bar"]}`}
                     min="0"
-                    max="100"
+                    max="500"
                     value={playersInfo.playerInfo.health}
                   ></meter>
                   <meter

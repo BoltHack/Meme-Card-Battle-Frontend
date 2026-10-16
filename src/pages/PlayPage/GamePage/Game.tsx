@@ -103,7 +103,9 @@ export const GamePage = ({ game_type, game_key }: Props) => {
   const [readyStateLoading, setReadyStateLoading] = useState<boolean | false>(
     false,
   );
-  const [gameStartedInfo, setGameStartedInfo] = useState<boolean | false>(false);
+  const [gameStartedInfo, setGameStartedInfo] = useState<boolean | false>(
+    false,
+  );
 
   const [isOpenLeaveMenu, setIsOpenLeaveMenu] = useState(false);
 
@@ -506,8 +508,8 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
       console.log("formattedCardsInfo", formattedCardsInfo);
 
-      toast.dismiss();
-      toast.success("Игроки выбрали свои карты!");
+      // toast.dismiss();
+      // toast.success("Игроки выбрали свои карты!");
     });
 
     socket.on("error_handler", (message) => {
@@ -548,8 +550,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
         //   return updatedList;
         // });
-      }
-      else if (action === "battle_card_selected") {
+      } else if (action === "battle_card_selected") {
         setEnemyHandList((prevCount) => prevCount + 1);
       }
       if (action === "battle_card_removed") {
@@ -613,9 +614,15 @@ export const GamePage = ({ game_type, game_key }: Props) => {
         setIsReady(true);
       } else if (type === "game_start") {
         setIsReady(true);
-        setIsGameStarted(true);
-        setTimeout(() => setGameStartedInfo(true), 1000);
-        setTimeout(() => setGameStartedInfo(false), 3000);
+
+        setTimeout(() => {
+          setGameStartedInfo(true);
+        }, 1000);
+
+        setTimeout(() => {
+          setIsGameStarted(true);
+          setGameStartedInfo(false);
+        }, 3000);
       }
       setReadyStateLoading(false);
     };
