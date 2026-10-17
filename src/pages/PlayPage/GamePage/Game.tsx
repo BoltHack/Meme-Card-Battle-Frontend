@@ -285,7 +285,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
   const [isVersus, setIsVersus] = useState<boolean | false>(false);
 
   const [winnerInfo, setWinnerInfo] = useState({
-    name: "",
+    name: null,
     exp: 0,
   });
 
@@ -599,6 +599,13 @@ export const GamePage = ({ game_type, game_key }: Props) => {
           });
           setTimeout(() => handleGameOver(), 2000);
         }
+        if (res.status === "draw") {
+          setWinnerInfo({
+            name: null,
+            exp: 500,
+          });
+          setTimeout(() => handleGameOver(), 7000);
+        }
         return;
       }
       if (type === "clear") {
@@ -781,11 +788,15 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
             <div className={laser_styles["results-table"]}>
               <div className={laser_styles["result-stat"]}>
-                <div className={laser_styles["stat-label"]}>Победитель</div>
+                <div className={laser_styles["stat-label"]}>
+                  {winnerInfo.name !== null ? "Победитель" : "Ничья"}
+                </div>
                 <div
                   className={`${laser_styles["stat-value"]} ${laser_styles["text-pink"]}`}
                 >
-                  {winnerInfo.name}
+                  {winnerInfo.name !== null
+                    ? winnerInfo.name
+                    : "Победителей нет"}
                 </div>
               </div>
               <div className={laser_styles["stat-divider"]}></div>
@@ -794,7 +805,9 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                 <div
                   className={`${laser_styles["stat-value"]} ${laser_styles["text-white"]}`}
                 >
-                  {/* 9,850 очков */}+{winnerInfo.exp} опыта
+                  {winnerInfo.name !== null
+                    ? "+" + winnerInfo.exp + " опыта"
+                    : "..."}
                 </div>
               </div>
             </div>
@@ -851,7 +864,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                       {versusCards.playerCard.power_slot}
                     </span>
                     <span
-                      className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles["legendary"]}`}
+                      className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[versusCards.playerCard.rarity]}`}
                     >
                       {versusCards.playerCard.rarity}
                     </span>
@@ -922,7 +935,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                       {versusCards.enemyCard.power_slot}
                     </span>
                     <span
-                      className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles["legendary"]}`}
+                      className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[versusCards.enemyCard.rarity]}`}
                     >
                       {versusCards.enemyCard.rarity}
                     </span>
