@@ -191,7 +191,7 @@ export const BlogPage = ({ title }: BlogPageProps) => {
               <div className={styles["featured-image"]}>
                 {blog[0].cover.length > 0 ? (
                   <img
-                    src={`${api.API_BASE_URL}/${blog[0].cover}`}
+                    src={`${api.IMAGE_BASE_URL}/${blog[0].cover}`}
                     loading="lazy"
                     className={styles["img-placeholder"]}
                   />
@@ -239,7 +239,7 @@ export const BlogPage = ({ title }: BlogPageProps) => {
                   <div className={styles["card-image"]}>
                     {bd.cover.length > 0 ? (
                       <img
-                        src={`${api.API_BASE_URL}/${bd.cover}`}
+                        src={`${api.IMAGE_BASE_URL}/${bd.cover}`}
                         loading="lazy"
                         className={styles["img-placeholder"]}
                       />

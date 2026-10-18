@@ -241,7 +241,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
                         </div>
                         <div className={CardsDesign_styles["card-artwork"]}>
                           <img
-                            src={`${api.API_BASE_URL}/${card.avatar}`}
+                            src={`${api.IMAGE_BASE_URL}/${card.avatar}`}
                             alt="artwork"
                           />
                         </div>
@@ -383,7 +383,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
                     </div>
                     <div className={CardsDesign_styles["card-artwork"]}>
                       <img
-                        src={`${api.API_BASE_URL}/${cardDeleteMenu.avatar}`}
+                        src={`${api.IMAGE_BASE_URL}/${cardDeleteMenu.avatar}`}
                         alt="artwork"
                       />
                     </div>

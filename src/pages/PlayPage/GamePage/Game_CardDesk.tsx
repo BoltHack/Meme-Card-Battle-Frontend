@@ -233,7 +233,7 @@ export const Game_CardDesk = ({
                   {/* <div className={CardDesk_styles["avatar-image"]}>😈</div> */}
                   {playersInfo.enemyInfo.avatar ? (
                     <img
-                      src={`${api.API_BASE_URL}/${playersInfo.enemyInfo.avatar}`}
+                      src={`${api.IMAGE_BASE_URL}/${playersInfo.enemyInfo.avatar}`}
                       className={CardDesk_styles["avatar-image"]}
                     />
                   ) : (
@@ -333,7 +333,7 @@ export const Game_CardDesk = ({
                     </div>
                     <div className={CardsDesign_styles["card-artwork"]}>
                       <img
-                        // src={`${api.API_BASE_URL}/${selectCard.avatar}`}
+                        // src={`${api.IMAGE_BASE_URL}/${selectCard.avatar}`}
                         alt="artwork"
                       />
                     </div>
@@ -508,7 +508,7 @@ export const Game_CardDesk = ({
                           {/*                <span className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}>{lvlName}</span>*/}
                           {/*            </div>*/}
                           {/*            <div className={CardsDesign_styles["card-artwork"]}>*/}
-                          {/*                <img src={`${api.API_BASE_URL}/${card.avatar}`} alt="artwork" />*/}
+                          {/*                <img src={`${api.IMAGE_BASE_URL}/${card.avatar}`} alt="artwork" />*/}
                           {/*            </div>*/}
                           {/*            <div className={CardsDesign_styles["card-body"]}>*/}
                           {/*                <div className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}>{card.name}</div>*/}
@@ -561,7 +561,7 @@ export const Game_CardDesk = ({
                             </div>
                             <div className={CardDesk_styles["h-avatar"]}>
                               <img
-                                src={`${api.API_BASE_URL}/${card?.avatar}`}
+                                src={`${api.IMAGE_BASE_URL}/${card?.avatar}`}
                               />
                             </div>
                             <div className={CardDesk_styles["h-title"]}>
@@ -625,7 +625,7 @@ export const Game_CardDesk = ({
                   {/* <div className={CardDesk_styles["avatar-image"]}>🛡️</div> */}
                   {playersInfo.playerInfo.avatar ? (
                     <img
-                      src={`${api.API_BASE_URL}/${playersInfo.playerInfo.avatar}`}
+                      src={`${api.IMAGE_BASE_URL}/${playersInfo.playerInfo.avatar}`}
                       className={CardDesk_styles["avatar-image"]}
                     />
                   ) : (

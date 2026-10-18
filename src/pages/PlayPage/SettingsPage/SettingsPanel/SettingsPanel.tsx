@@ -99,7 +99,7 @@ export const SettingsPage = () => {
             {/* <div className={styles["avatar"]}></div> */}
             {userInfo.avatar !== "" ? (
               <img
-                src={`${api.API_BASE_URL}/${userInfo.avatar}`}
+                src={`${api.IMAGE_BASE_URL}/${userInfo.avatar}`}
                 className={styles["avatar"]}
               />
             ) : (
@@ -246,7 +246,7 @@ export const SettingsPage = () => {
 
           <div className={styles["avatar-upload-block"]}>
             <img
-              src={`${api.API_BASE_URL}/${userInfo.avatar}`}
+              src={`${api.IMAGE_BASE_URL}/${userInfo.avatar}`}
               className={styles["avatar-preview"]}
             />
             <div className={styles["upload-controls"]}>

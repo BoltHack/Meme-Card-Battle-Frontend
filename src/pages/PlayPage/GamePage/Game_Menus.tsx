@@ -181,7 +181,7 @@ export const Game_Menus = ({
                         </div>
                         <div className={CardsDesign_styles["card-artwork"]}>
                           <img
-                            src={`${api.API_BASE_URL}/${selectCard.avatar}`}
+                            src={`${api.IMAGE_BASE_URL}/${selectCard.avatar}`}
                             alt="artwork"
                           />
                         </div>
@@ -292,7 +292,7 @@ export const Game_Menus = ({
                             </div>
                             <div className={CardsDesign_styles["card-artwork"]}>
                               <img
-                                src={`${api.API_BASE_URL}/${card.avatar}`}
+                                src={`${api.IMAGE_BASE_URL}/${card.avatar}`}
                                 alt="artwork"
                               />
                             </div>
@@ -419,7 +419,7 @@ export const Game_Menus = ({
                             </div>
                             <div className={CardsDesign_styles["card-artwork"]}>
                               <img
-                                src={`${api.API_BASE_URL}/${card.avatar}`}
+                                src={`${api.IMAGE_BASE_URL}/${card.avatar}`}
                                 alt="artwork"
                               />
                             </div>
@@ -473,7 +473,7 @@ export const Game_Menus = ({
                     );
                   })
                 ) : (
-                  <p style={{ color: "#ffffff" }}>Загрузка...</p>
+                  <p style={{ color: "#ffffff" }}>Загрузка карт...</p>
                 )}
               </div>
             </div>

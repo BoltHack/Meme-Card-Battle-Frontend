@@ -46,7 +46,7 @@ export const Footer = ({ links }: Props) => {
                         {lk.icon && (
                           <img
                             className={styles["platform-icon"]}
-                            src={`${api.API_BASE_URL}/${lk.icon}`}
+                            src={`${api.IMAGE_BASE_URL}/${lk.icon}`}
                             alt="Platform icon"
                           />
                         )}

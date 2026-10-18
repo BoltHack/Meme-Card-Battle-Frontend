@@ -441,7 +441,7 @@ export const BlogReadPage = () => {
                   {/*<div className={styles["avatar"]}></div>*/}
                   {blog?.author?.avatar ? (
                     <img
-                      src={`${api.API_BASE_URL}/${blog?.author?.avatar}`}
+                      src={`${api.IMAGE_BASE_URL}/${blog?.author?.avatar}`}
                       className={styles["avatar"]}
                     />
                   ) : (
@@ -462,7 +462,7 @@ export const BlogReadPage = () => {
             <div className={styles["post-page-image"]}>
               {blog.cover ? (
                 <img
-                  src={`${api.API_BASE_URL}/${blog.cover}`}
+                  src={`${api.IMAGE_BASE_URL}/${blog.cover}`}
                   loading="lazy"
                   className={styles["img-placeholder"]}
                 />

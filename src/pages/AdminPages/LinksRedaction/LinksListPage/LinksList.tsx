@@ -122,7 +122,7 @@ export const LinksListPage = () => {
                             width: "100px",
                             height: "auto",
                           }}
-                          src={`${api.API_BASE_URL}/${item.icon}`}
+                          src={`${api.IMAGE_BASE_URL}/${item.icon}`}
                           alt="Platform icon"
                         />
                       </div>

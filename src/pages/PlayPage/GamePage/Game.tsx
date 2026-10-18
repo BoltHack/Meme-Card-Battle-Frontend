@@ -20,8 +20,9 @@ import usePageRender from "../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
 
-const socket: Socket = io(api.API_BASE_URL, {
+const socket: Socket = io(api.SOCKET_URL, {
   autoConnect: false,
+  transports: ["websocket"],
 });
 
 interface PlayerData {
@@ -872,7 +873,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                   <div className={CardsDesign_styles["card-artwork"]}>
                     {versusCards.playerCard.avatar ? (
                       <img
-                        src={`${api.API_BASE_URL}/${versusCards.playerCard.avatar}`}
+                        src={`${api.IMAGE_BASE_URL}/${versusCards.playerCard.avatar}`}
                         alt="artwork"
                       />
                     ) : (
@@ -943,7 +944,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                   <div className={CardsDesign_styles["card-artwork"]}>
                     {versusCards.enemyCard.avatar ? (
                       <img
-                        src={`${api.API_BASE_URL}/${versusCards.enemyCard.avatar}`}
+                        src={`${api.IMAGE_BASE_URL}/${versusCards.enemyCard.avatar}`}
                         alt="artwork"
                       />
                     ) : (

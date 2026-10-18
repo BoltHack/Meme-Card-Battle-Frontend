@@ -203,7 +203,7 @@ export const ProfilePage = () => {
             {/* <div className={styles["user-main-info"]}> */}
             {/* <div className={styles["user-profile"]}>
                 <img
-                  src={`${api.API_BASE_URL}/${contentData.renderData.avatar}`}
+                  src={`${api.IMAGE_BASE_URL}/${contentData.renderData.avatar}`}
                   className={styles["avatar"]}
                 />
                 <div className={styles["username"]}>
@@ -513,7 +513,7 @@ export const ProfilePage = () => {
                       </div>
                       <div className={CardsDesign_styles["card-artwork"]}>
                         <img
-                          src={`${api.API_BASE_URL}/${card.card_avatar}`}
+                          src={`${api.IMAGE_BASE_URL}/${card.card_avatar}`}
                           alt="artwork"
                         />
                       </div>

@@ -31,7 +31,10 @@ export default function usePageRender<T extends Record<string, any>>(
   const [trigger, setTrigger] = useState(0);
 
   const socket = useMemo(() => {
-    return io(api.API_BASE_URL, { autoConnect: false });
+    return io(api.SOCKET_URL, {
+      autoConnect: false,
+      transports: ["websocket"],
+    });
   }, []);
 
   const refetch = () => {

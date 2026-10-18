@@ -52,7 +52,7 @@ export const TeamPage = () => {
               >
                 {tm.image.length > 0 ? (
                   <img
-                    src={`${api.API_BASE_URL}/${tm.image}`}
+                    src={`${api.IMAGE_BASE_URL}/${tm.image}`}
                     className={styles["team-avatar"]}
                   />
                 ) : (

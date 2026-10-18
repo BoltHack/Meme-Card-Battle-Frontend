@@ -502,7 +502,7 @@ export const PlayPage = () => {
           <div className={invite_styles["avatar-container"]}>
             {gameInvite.avatar ? (
               <img
-                src={`${api.API_BASE_URL}/${gameInvite.avatar}`}
+                src={`${api.IMAGE_BASE_URL}/${gameInvite.avatar}`}
                 className={invite_styles["player-avatar"]}
               />
             ) : (

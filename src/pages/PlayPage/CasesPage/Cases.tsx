@@ -380,7 +380,7 @@ export const CasesPage = () => {
                         </div>
                         <div className={CardsDesign_styles["card-artwork"]}>
                           <img
-                            src={`${api.API_BASE_URL}/${cs.avatar}`}
+                            src={`${api.IMAGE_BASE_URL}/${cs.avatar}`}
                             alt="artwork"
                           />
                         </div>
@@ -472,7 +472,7 @@ export const CasesPage = () => {
                     </div>
                     <div className={CardsDesign_styles["card-artwork"]}>
                       <img
-                        src={`${api.API_BASE_URL}/${rewardCard.card_avatar}`}
+                        src={`${api.IMAGE_BASE_URL}/${rewardCard.card_avatar}`}
                         alt="artwork"
                       />
                     </div>

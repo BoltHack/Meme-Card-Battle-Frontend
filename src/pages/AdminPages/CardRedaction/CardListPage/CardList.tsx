@@ -208,7 +208,7 @@ export const CardListPage = () => {
                         </div>
                         <div className={CardsDesign_styles["card-artwork"]}>
                           <img
-                            src={`${api.API_BASE_URL}/${card.card_avatar}`}
+                            src={`${api.IMAGE_BASE_URL}/${card.card_avatar}`}
                             alt="artwork"
                           />
                         </div>
@@ -286,7 +286,7 @@ export const CardListPage = () => {
                     </div>
                     <div className={CardsDesign_styles["card-artwork"]}>
                       <img
-                        src={`${api.API_BASE_URL}/${editCardData.card_avatar}`}
+                        src={`${api.IMAGE_BASE_URL}/${editCardData.card_avatar}`}
                         alt="artwork"
                       />
                     </div>

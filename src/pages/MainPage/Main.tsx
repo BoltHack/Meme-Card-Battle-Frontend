@@ -64,7 +64,7 @@ export const MainPage = ({ title }: TitleSettings) => {
       );
     }
 
-    setMainBlog(data?.renderData.blogData);
+    setMainBlog(data?.renderData?.blogData);
   }, [data]);
 
   // useEffect(() => {
@@ -186,7 +186,8 @@ export const MainPage = ({ title }: TitleSettings) => {
                     >
                       {blog.cover.length > 0 ? (
                         <img
-                          src={`${api.API_BASE_URL}/${blog.cover}`}
+                          src={`${api.IMAGE_BASE_URL}/${blog.cover}`}
+                          crossOrigin="anonymous"
                           loading="lazy"
                           className={`${styles["news-img"]} ${styles["img-blockopolis"]}`}
                         />
@@ -229,7 +230,10 @@ export const MainPage = ({ title }: TitleSettings) => {
         </div>
       </section>
 
-      <section className={styles["info-section"]} style={{ marginTop: "200px", marginBottom: "200px" }}>
+      <section
+        className={styles["info-section"]}
+        style={{ marginTop: "200px", marginBottom: "200px" }}
+      >
         <h2 className={styles["section-title"]}>Дополнительные ссылки</h2>
 
         <div className={`${styles["info-grid"]} ${styles["grid-2"]}`}>
