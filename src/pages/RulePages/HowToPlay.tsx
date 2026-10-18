@@ -5,7 +5,6 @@ import ReactMarkdown from "react-markdown";
 
 import styles from "./Card.Rules.module.css";
 
-import api from "../../api/api.ts";
 import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../components/LoadingPage/Loading.tsx";
@@ -39,9 +38,8 @@ export const HowToPlayPage = ({ title }: TitleSettings) => {
   const [articleList, setArticleList] = useState<ArticleNavigationItem[]>([]);
   // const [articleList, setArticleList] = useState<ArticlesData | []>([]);
 
-  const { data, loading, error, socket } = usePageRender<ArticlesData>(
-    `${api.API_BASE_URL}/api/how-to-play`,
-  );
+  const { data, loading, error, socket } =
+    usePageRender<ArticlesData>(`/api/how-to-play`);
 
   useEffect(() => {
     if (!loading && data?.renderData && articleSectionsContainer.current) {

@@ -5,7 +5,6 @@ import styles from "../AdminPanel/Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
 import toast from "react-hot-toast";
 
 import useContentRender from "../../../tools/ContentRender.ts";
@@ -20,9 +19,8 @@ interface AppSettings {
 export const SettingsPage = () => {
   const [settings, setSettings] = useState<AppSettings | null>(null);
 
-  const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/admin/settings`,
-  );
+  const { contentData, contentLoading, contentError } =
+    useContentRender(`/admin/settings`);
 
   const handleToggle = async (dataToChange: keyof AppSettings) => {
     if (!settings) return;
@@ -42,16 +40,12 @@ export const SettingsPage = () => {
     dataToSend.append(dataToChange, String(newValue));
 
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/settings/change`,
-        dataToSend,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`/admin/settings/change`, dataToSend, {
+        withCredentials: true,
+      });
 
       console.log("Данные успешно добавлены:", response.data);
-      // await fetch(`${api.API_BASE_URL}/admin/settings`, {
+      // await fetch(`/admin/settings`, {
       //   method: "POST",
       //   headers: { "Content-Type": "application/json" },
       //   body: JSON.stringify(updatedSettings),

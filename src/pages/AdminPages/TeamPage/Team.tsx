@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 
 import styles from "../AdminPanel/Card.AdminPanel.module.css";
 
-import api from "../../../api/api.ts";
-
 import useContentRender from "../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../components/LoadingPage/ContentLoading.tsx";
@@ -18,9 +16,8 @@ interface TeamData {
 export const TeamPage = () => {
   const [team, setTeam] = useState<TeamData[]>([]);
 
-  const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/admin/team`,
-  );
+  const { contentData, contentLoading, contentError } =
+    useContentRender(`/admin/team`);
 
   useEffect(() => {
     if (contentData && contentData?.renderData) {
@@ -51,10 +48,7 @@ export const TeamPage = () => {
                 className={`${styles["team-card"]} ${styles["admin"]}`}
               >
                 {tm.image.length > 0 ? (
-                  <img
-                    src={`${api.IMAGE_BASE_URL}/${tm.image}`}
-                    className={styles["team-avatar"]}
-                  />
+                  <img src={`/${tm.image}`} className={styles["team-avatar"]} />
                 ) : (
                   <div className={styles["team-avatar"]}>
                     {tm.name.slice(0, 1).toUpperCase()}

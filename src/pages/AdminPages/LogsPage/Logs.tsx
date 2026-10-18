@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import styles from "../AdminPanel/Card.AdminPanel.module.css";
 
-import api from "../../../api/api";
 import useContentRender from "../../../tools/ContentRender";
 import { ContentLoading } from "../../../components/LoadingPage/ContentLoading";
 import { ErrorPage } from "../../../components/ErrorPage/Error";
@@ -18,9 +17,8 @@ export const LogsPage = () => {
   const [logsType, setLogsType] = useState<string>("all");
   const [logs, setLogs] = useState<LogsPost[]>([]);
 
-  const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/admin/logs`,
-  );
+  const { contentData, contentLoading, contentError } =
+    useContentRender(`/admin/logs`);
 
   useEffect(() => {
     if (!contentData) return;

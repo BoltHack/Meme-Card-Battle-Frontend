@@ -10,7 +10,6 @@ import styles from "../AuthPage/Card.Auth.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../api/api.ts";
 import toast from "react-hot-toast";
 import usePageRender from "../../tools/PageRender.ts";
 
@@ -28,9 +27,7 @@ export const SignInPage = ({ title }: TitleSettings) => {
 
   const [modalType, setModalType] = useState("main");
 
-  const { loading, error, socket } = usePageRender(
-    `${api.API_BASE_URL}/auth/sign-in`,
-  );
+  const { loading, error, socket } = usePageRender(`/auth/sign-in`);
 
   const toggleModal = (type: string) => {
     setModalType(type);

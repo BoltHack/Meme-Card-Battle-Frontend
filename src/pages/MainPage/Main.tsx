@@ -7,7 +7,6 @@ import styles from "./Card.Main.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../api/api.ts";
 import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../components/LoadingPage/Loading.tsx";
@@ -43,9 +42,7 @@ export const MainPage = ({ title }: TitleSettings) => {
 
   const [mainBlog, setMainBlog] = useState<BlogPost[]>([]);
 
-  const { data, loading, error, socket } = usePageRender(
-    `${api.API_BASE_URL}/api/`,
-  );
+  const { data, loading, error, socket } = usePageRender(`/api/`);
 
   const dateSettings = (date: string) => {
     return new Date(date).toLocaleString("ru-RU", {
@@ -186,7 +183,7 @@ export const MainPage = ({ title }: TitleSettings) => {
                     >
                       {blog.cover.length > 0 ? (
                         <img
-                          src={`${api.IMAGE_BASE_URL}/${blog.cover}`}
+                          src={`/${blog.cover}`}
                           crossOrigin="anonymous"
                           loading="lazy"
                           className={`${styles["news-img"]} ${styles["img-blockopolis"]}`}
@@ -215,12 +212,12 @@ export const MainPage = ({ title }: TitleSettings) => {
                             ? blog.description.slice(0, 155) + "..."
                             : blog.description}
                         </p>
-                        <a
-                          href={`/blog/${blog.id.toString()}`}
+                        <Link
+                          to={`/blog/${blog.id.toString()}`}
                           className={styles["news-href"]}
                         >
                           Читать подробнее →
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   );

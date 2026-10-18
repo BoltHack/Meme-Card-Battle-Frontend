@@ -5,8 +5,6 @@ import ReactMarkdown from "react-markdown";
 
 import styles from "./Card.Rules.module.css";
 
-import api from "../../api/api.ts";
-
 import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../components/LoadingPage/Loading.tsx";
@@ -39,9 +37,8 @@ export const PrivacyPolicy = ({ title }: TitleSettings) => {
   const articleSectionsContainer = useRef<HTMLDivElement>(null);
   const [articleList, setArticleList] = useState<ArticleNavigationItem[]>([]);
 
-  const { data, loading, error, socket } = usePageRender<ArticlesData>(
-    `${api.API_BASE_URL}/api/privacy-policy`,
-  );
+  const { data, loading, error, socket } =
+    usePageRender<ArticlesData>(`/api/privacy-policy`);
 
   useEffect(() => {
     if (!loading && data?.renderData && articleSectionsContainer.current) {

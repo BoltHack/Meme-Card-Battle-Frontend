@@ -5,7 +5,6 @@ import settings_styles from "../SettingsPanel/Card.Settings.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -23,7 +22,7 @@ export const ProfilePage = () => {
   const dir_about_me_ref = useRef<HTMLTextAreaElement>(null);
 
   const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/play/settings/profile`,
+    `/play/settings/profile`,
   );
 
   const handleChange = (
@@ -73,7 +72,7 @@ export const ProfilePage = () => {
     }
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/play/save-settings/profile`,
+        `/play/save-settings/profile`,
         dataToSend,
         {
           withCredentials: true,
@@ -113,7 +112,7 @@ export const ProfilePage = () => {
 
     setIdolFile(
       contentData?.renderData?.avatar !== "" &&
-        `${api.API_BASE_URL}/${contentData.renderData.avatar}`,
+        `/${contentData.renderData.avatar}`,
     );
   }, [contentData]);
 

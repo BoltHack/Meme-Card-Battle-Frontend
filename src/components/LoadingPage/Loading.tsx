@@ -6,7 +6,6 @@ import Cookies from "js-cookie";
 import styles from "./Card.Loading.module.css";
 
 import usePageRender from "../../tools/PageRender.ts";
-import api from "../../api/api.ts";
 
 export const LoadingPage = () => {
   const navigate = useNavigate();
@@ -15,9 +14,7 @@ export const LoadingPage = () => {
   const [isRefetch, setIsRefetch] = useState<boolean | false>(false);
   const currentUrl = useRef<string | null>(null);
 
-  const targetUrl = isRefetch
-    ? `${api.API_BASE_URL}/api${pageLocation.pathname}`
-    : null;
+  const targetUrl = isRefetch ? `/api${pageLocation.pathname}` : null;
 
   const { data, loading, url, refetch } = usePageRender(
     currentUrl.current !== null ? currentUrl.current : targetUrl!,
@@ -67,7 +64,11 @@ export const LoadingPage = () => {
     <div className={styles["body-wrapper"]}>
       <div className={styles["parallax-wrapper"]}>
         <Helmet>
-          <title>{window.location.pathname === "/play" ? "Meme Card Battle" : "Загрузка"}</title>
+          <title>
+            {window.location.pathname === "/play"
+              ? "Meme Card Battle"
+              : "Загрузка"}
+          </title>
         </Helmet>
 
         <div className={styles["smoke-glow smoke-red"]}></div>

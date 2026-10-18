@@ -5,7 +5,6 @@ import settings_styles from "../SettingsPanel/Card.Settings.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -23,7 +22,7 @@ export const SoundsPage = () => {
   });
 
   const { contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/play/settings/sounds`,
+    `/play/settings/sounds`,
   );
 
   const handleRangeChange = (e: ChangeEvent<HTMLInputElement>) => {

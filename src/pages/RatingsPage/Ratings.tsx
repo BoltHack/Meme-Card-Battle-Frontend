@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import styles from "./Card.Ratings.module.css";
 
-import api from "../../api/api.ts";
 import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../components/LoadingPage/Loading.tsx";
@@ -29,9 +28,7 @@ export const RatingsPage = ({ title }: TitleSettings) => {
 
   const [ratingCategory, setRatingCategory] = useState<string | "">("wins");
 
-  const { loading, error, socket } = usePageRender(
-    `${api.API_BASE_URL}/api/ratings`,
-  );
+  const { loading, error, socket } = usePageRender(`/api/ratings`);
 
   useEffect(() => {
     const socketDisconnect = () => {
@@ -59,9 +56,7 @@ export const RatingsPage = ({ title }: TitleSettings) => {
       <div className={styles["container"]}>
         <header className={styles["header"]}>
           <h1 className={styles["title"]}>Глобальный Топ-100</h1>
-          <p className={styles["subtitle"]}>
-            Рейтинги самых лучших игроков
-          </p>
+          <p className={styles["subtitle"]}>Рейтинги самых лучших игроков</p>
         </header>
 
         <div className={styles["tabs-container"]}>
@@ -105,7 +100,9 @@ export const RatingsPage = ({ title }: TitleSettings) => {
                     ? "Победы"
                     : ratingCategory === "balance"
                       ? "Богатства"
-                      : ratingCategory === "xp" ? "Опыт" : ""}
+                      : ratingCategory === "xp"
+                        ? "Опыт"
+                        : ""}
                 </th>
               </tr>
             </thead>

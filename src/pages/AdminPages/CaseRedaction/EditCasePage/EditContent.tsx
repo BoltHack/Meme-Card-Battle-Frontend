@@ -7,7 +7,6 @@ import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -57,7 +56,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
   const [cardDeleteMenu, setCardDeleteMenu] = useState(initialCardState);
 
   const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/admin/case/${case_id}/edit/content`,
+    `/admin/case/${case_id}/edit/content`,
   );
 
   const handleChange = (
@@ -84,7 +83,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/admin/case/${case_id}/edit/content/add`,
+        `/admin/case/${case_id}/edit/content/add`,
         dataToSend,
         {
           withCredentials: true,
@@ -121,7 +120,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/admin/case/${case_id}/edit/content/delete`,
+        `/admin/case/${case_id}/edit/content/delete`,
         dataToSend,
         {
           withCredentials: true,
@@ -240,10 +239,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
                           </span>
                         </div>
                         <div className={CardsDesign_styles["card-artwork"]}>
-                          <img
-                            src={`${api.IMAGE_BASE_URL}/${card.avatar}`}
-                            alt="artwork"
-                          />
+                          <img src={`/${card.avatar}`} alt="artwork" />
                         </div>
                         <div className={CardsDesign_styles["card-body"]}>
                           <div
@@ -382,10 +378,7 @@ export const EditContentPage = ({ case_id }: ResponseProps) => {
                       </span>
                     </div>
                     <div className={CardsDesign_styles["card-artwork"]}>
-                      <img
-                        src={`${api.IMAGE_BASE_URL}/${cardDeleteMenu.avatar}`}
-                        alt="artwork"
-                      />
+                      <img src={`/${cardDeleteMenu.avatar}`} alt="artwork" />
                     </div>
                     <div className={CardsDesign_styles["card-body"]}>
                       <div

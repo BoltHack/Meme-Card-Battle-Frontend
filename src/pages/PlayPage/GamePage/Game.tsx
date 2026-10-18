@@ -10,7 +10,6 @@ import laser_styles from "./Card.Laser_styles.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
 import toast from "react-hot-toast";
 
 import { Game_Menus } from "./Game_Menus.tsx";
@@ -20,7 +19,7 @@ import usePageRender from "../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
 
-const socket: Socket = io(api.SOCKET_URL, {
+const socket: Socket = io(api.API_SOCKET_URL, {
   autoConnect: false,
   transports: ["websocket"],
 });
@@ -96,7 +95,7 @@ export const GameFunctions = {
 
 export const GamePage = ({ game_type, game_key }: Props) => {
   const { data, loading, error } = usePageRender<PlayerData>(
-    `${api.API_BASE_URL}/play/game/${game_type}/${game_key}`,
+    `/play/game/${game_type}/${game_key}`,
   );
 
   const [isReady, setIsReady] = useState<boolean | false>(false);
@@ -873,7 +872,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                   <div className={CardsDesign_styles["card-artwork"]}>
                     {versusCards.playerCard.avatar ? (
                       <img
-                        src={`${api.IMAGE_BASE_URL}/${versusCards.playerCard.avatar}`}
+                        src={`/${versusCards.playerCard.avatar}`}
                         alt="artwork"
                       />
                     ) : (
@@ -944,7 +943,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                   <div className={CardsDesign_styles["card-artwork"]}>
                     {versusCards.enemyCard.avatar ? (
                       <img
-                        src={`${api.IMAGE_BASE_URL}/${versusCards.enemyCard.avatar}`}
+                        src={`/${versusCards.enemyCard.avatar}`}
                         alt="artwork"
                       />
                     ) : (

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 
-import api from "../api/api";
 import useContentRender from "./ContentRender";
 
 interface LinksPost {
@@ -15,7 +14,7 @@ interface LinksPost {
 export const PublicPanel = () => {
   const [links, setLinks] = useState<LinksPost[]>([]);
 
-  const { contentData } = useContentRender(`${api.API_BASE_URL}/api/getData`);
+  const { contentData } = useContentRender(`/api/getData`);
 
   useEffect(() => {
     if (!contentData || !contentData.renderData) return;

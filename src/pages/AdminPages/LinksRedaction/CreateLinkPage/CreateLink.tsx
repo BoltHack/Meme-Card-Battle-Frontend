@@ -6,7 +6,6 @@ import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -31,9 +30,8 @@ import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 export const CreateLinkPage = () => {
   // const navigate = useNavigate();
 
-  const { contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/admin/links/create`,
-  );
+  const { contentLoading, contentError } =
+    useContentRender(`/admin/links/create`);
 
   const [formData, setFormData] = useState<LinkFormat>({
     name: "",
@@ -77,13 +75,9 @@ export const CreateLinkPage = () => {
     dataToSend.append("main_priority", String(mainPriority));
 
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/links/create`,
-        dataToSend,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`/admin/links/create`, dataToSend, {
+        withCredentials: true,
+      });
 
       if (response.data.success) {
         setFormData({

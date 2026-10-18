@@ -7,8 +7,6 @@ import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
-
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -67,7 +65,7 @@ export const BlogListPage = () => {
 
   const { contentData, contentLoading, contentError } =
     useContentRender<BlogResponse>(
-      `${api.API_BASE_URL}/admin/article/${articleType}/list?page=${currentPage}`,
+      `/admin/article/${articleType}/list?page=${currentPage}`,
     );
 
   const handleRemoveBlog = async (
@@ -78,7 +76,7 @@ export const BlogListPage = () => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/admin/blog/${removeBlogData.id}/delete`,
+        `/admin/blog/${removeBlogData.id}/delete`,
         {
           withCredentials: true,
         },
@@ -226,7 +224,7 @@ export const BlogListPage = () => {
               <div className={styles["featured-image"]}>
                 {blog[0].cover.length > 0 ? (
                   <img
-                    src={`${api.IMAGE_BASE_URL}/${blog[0].cover}`}
+                    src={`/${blog[0].cover}`}
                     loading="lazy"
                     className={styles["img-placeholder"]}
                   />
@@ -307,7 +305,7 @@ export const BlogListPage = () => {
                   <div className={styles["card-image"]}>
                     {bd.cover.length > 0 ? (
                       <img
-                        src={`${api.IMAGE_BASE_URL}/${bd.cover}`}
+                        src={`/${bd.cover}`}
                         loading="lazy"
                         className={styles["img-placeholder"]}
                       />
@@ -407,7 +405,7 @@ export const BlogListPage = () => {
                 <div className={styles["card-image"]}>
                   {removeBlogData.cover.length > 0 ? (
                     <img
-                      src={`${api.IMAGE_BASE_URL}/${removeBlogData.cover}`}
+                      src={`/${removeBlogData.cover}`}
                       loading="lazy"
                       className={styles["img-placeholder"]}
                     />

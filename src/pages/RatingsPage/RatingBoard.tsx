@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import styles from "./Card.Ratings.module.css";
 
-import api from "../../api/api.ts";
 import useContentRender from "../../tools/ContentRender.ts";
 import { ContentLoading } from "../../components/LoadingPage/ContentLoading.tsx";
 
@@ -47,11 +46,13 @@ export const RatingBoard = ({ ratingCategory }: Props) => {
   return (
     <tbody>
       {contentLoading && (
-        <div className={styles["content-result"]}>
-          <span>
-            <ContentLoading />
-          </span>
-        </div>
+        <td>
+          <div className={styles["content-result"]}>
+            <span>
+              <ContentLoading />
+            </span>
+          </div>
+        </td>
       )}
       {!contentLoading && ratingData && ratingData.length > 0
         ? ratingData.map((rating: any, index: number) => {
@@ -90,9 +91,13 @@ export const RatingBoard = ({ ratingCategory }: Props) => {
             );
           })
         : !contentLoading && (
-            <div className={styles["content-result"]}>
-              <span>Данный топ пуст</span>
-            </div>
+            <tr>
+              <td colSpan={3}>
+                <div className={styles["content-result"]}>
+                  <span>Данный топ пуст</span>
+                </div>
+              </td>
+            </tr>
           )}
     </tbody>
   );

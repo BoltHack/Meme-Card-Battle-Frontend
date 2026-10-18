@@ -6,8 +6,6 @@ import styles from "./Card.CaseList.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
-
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -40,9 +38,8 @@ export const CaseListPage = () => {
 
   const [isCaseDelete, setIsCaseDelete] = useState<string | null>(null);
 
-  const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/admin/case/list`,
-  );
+  const { contentData, contentLoading, contentError } =
+    useContentRender(`/admin/case/list`);
 
   const handleRemoveCase = async (
     case_id: string,
@@ -51,12 +48,9 @@ export const CaseListPage = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/case/${case_id}/delete`,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`/admin/case/${case_id}/delete`, {
+        withCredentials: true,
+      });
 
       if (response.data.success) {
         console.log("Кейс успешно удалён:", response.data);

@@ -7,7 +7,7 @@ import styles from "./Card.Main.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-// import api from "../../../api/api.ts";
+// import  "../../../api/api.ts";
 // import useContentRender from "../../../tools/ContentRender.ts";
 // import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
 // import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
@@ -45,7 +45,7 @@ export const MainPage = ({ isGameFound }: Props) => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // const { contentLoading, contentError } = useContentRender(
-  //   `${api.API_BASE_URL}/play/`,
+  //   `/play/`,
   // );
 
   const findGame = (type: string) => {

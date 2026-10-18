@@ -7,8 +7,6 @@ import styles from "./Card.Blog.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../api/api.ts";
-
 import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../components/LoadingPage/Loading.tsx";
@@ -63,7 +61,7 @@ export const BlogPage = ({ title }: BlogPageProps) => {
   // const [isBlogState, setIsBlogState] = useState<boolean | false>(false);
 
   const { data, loading, error, socket } = usePageRender<BlogResponse>(
-    `${api.API_BASE_URL}/api/blog?page=${currentPage}`,
+    `/api/blog?page=${currentPage}`,
   );
 
   const dateSettings = (date: string) => {
@@ -191,7 +189,7 @@ export const BlogPage = ({ title }: BlogPageProps) => {
               <div className={styles["featured-image"]}>
                 {blog[0].cover.length > 0 ? (
                   <img
-                    src={`${api.IMAGE_BASE_URL}/${blog[0].cover}`}
+                    src={`/${blog[0].cover}`}
                     loading="lazy"
                     className={styles["img-placeholder"]}
                   />
@@ -239,7 +237,7 @@ export const BlogPage = ({ title }: BlogPageProps) => {
                   <div className={styles["card-image"]}>
                     {bd.cover.length > 0 ? (
                       <img
-                        src={`${api.IMAGE_BASE_URL}/${bd.cover}`}
+                        src={`/${bd.cover}`}
                         loading="lazy"
                         className={styles["img-placeholder"]}
                       />

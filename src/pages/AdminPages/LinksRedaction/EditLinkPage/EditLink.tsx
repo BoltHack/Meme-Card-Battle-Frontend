@@ -6,7 +6,6 @@ import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -36,7 +35,7 @@ export const EditLinkPage = ({ link_id }: ResponseProps) => {
   // const navigate = useNavigate();
 
   const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/admin/links/${link_id}/edit`,
+    `/admin/links/${link_id}/edit`,
   );
 
   const [formData, setFormData] = useState<LinkFormat>({
@@ -82,7 +81,7 @@ export const EditLinkPage = ({ link_id }: ResponseProps) => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/admin/links/${link_id}/edit`,
+        `/admin/links/${link_id}/edit`,
         dataToSend,
         {
           withCredentials: true,

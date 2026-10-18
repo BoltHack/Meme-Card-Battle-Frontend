@@ -7,7 +7,6 @@ import styles from "./Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
 import usePageRender from "../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
@@ -87,9 +86,7 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
 
   const [activeTab, setActiveTab] = useState<string>("ToolsPage");
 
-  const { loading, error, socket } = usePageRender(
-    `${api.API_BASE_URL}/admin/panel`,
-  );
+  const { loading, error, socket } = usePageRender(`/admin/panel`);
 
   useEffect(() => {
     adminNavigator.handleChangeTab = (tab: string) => {

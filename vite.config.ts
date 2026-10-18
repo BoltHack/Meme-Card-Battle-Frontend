@@ -69,7 +69,7 @@ export default defineConfig({
         },
       },
       "/uploads": {
-        target: api.API_BACKEND_URL,
+        target: api.API_BASE_URL,
         changeOrigin: true,
         secure: false,
         headers: {

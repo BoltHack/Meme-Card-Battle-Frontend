@@ -6,7 +6,6 @@ import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -35,9 +34,8 @@ export const CreateCasePage = () => {
     case_priority: "",
   });
 
-  const { contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/admin/case/create`,
-  );
+  const { contentLoading, contentError } =
+    useContentRender(`/admin/case/create`);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -67,13 +65,9 @@ export const CreateCasePage = () => {
     dataToSend.append("priority", formData.case_priority);
 
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/case/create`,
-        dataToSend,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`/admin/case/create`, dataToSend, {
+        withCredentials: true,
+      });
 
       console.log("Новый кейс успешно создан:", response.data);
 

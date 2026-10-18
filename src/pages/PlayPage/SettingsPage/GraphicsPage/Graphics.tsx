@@ -5,7 +5,6 @@ import settings_styles from "../SettingsPanel/Card.Settings.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -19,7 +18,7 @@ export const GraphicsPage = () => {
   });
 
   const { contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/play/settings/graphics`,
+    `/play/settings/graphics`,
   );
 
   const handleCheckBoxCheck = (e: ChangeEvent<HTMLInputElement>) => {

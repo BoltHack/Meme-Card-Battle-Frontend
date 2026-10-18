@@ -11,7 +11,6 @@ import body_styles from "../../../tools/global_stylesheets/Card.Body_styles.modu
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
 import usePageRender from "../../../tools/PageRender.ts";
 
 import { Header } from "../Header/Header.tsx";
@@ -76,9 +75,7 @@ export const PlayPage = () => {
 
   const [friendsMenu, setFriendsMenu] = useState<boolean | false>(false);
 
-  const { data, loading, error, socket } = usePageRender(
-    `${api.API_BASE_URL}/play/play`,
-  );
+  const { data, loading, error, socket } = usePageRender(`/play/play`);
 
   useEffect(() => {
     playFunctions.handleChangeTab = (tab: string) => {
@@ -153,7 +150,7 @@ export const PlayPage = () => {
       e.preventDefault();
       try {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
-        const response = await axios.post(`${api.API_BASE_URL}/auth/logout`);
+        const response = await axios.post(`/auth/logout`);
 
         const data = response.data;
 
@@ -251,7 +248,7 @@ export const PlayPage = () => {
     money: 0,
     coins: 0,
     lvl: 0,
-    xp: 0
+    xp: 0,
   });
 
   const gameFoundTimerReset = useCallback(() => {
@@ -502,7 +499,7 @@ export const PlayPage = () => {
           <div className={invite_styles["avatar-container"]}>
             {gameInvite.avatar ? (
               <img
-                src={`${api.IMAGE_BASE_URL}/${gameInvite.avatar}`}
+                src={`/${gameInvite.avatar}`}
                 className={invite_styles["player-avatar"]}
               />
             ) : (

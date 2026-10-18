@@ -5,8 +5,6 @@ import styles from "./Card.Friends.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
-import usePageRender from "../../../tools/PageRender.ts";
 import toast from "react-hot-toast";
 
 // import { ErrorPage } from "../../ErrorPage/Error.tsx";
@@ -57,14 +55,14 @@ export const FriendListMenu = ({ playerID }: Props) => {
   });
 
   const { contentData, contentLoading } = useContentRender(
-    `${api.API_BASE_URL}/play/friends/${friendsCategory}`,
+    `/play/friends/${friendsCategory}`,
   );
 
   // useEffect(() => {
   //   let isMounted = true;
 
   //   axios
-  //     .get(`${api.API_BASE_URL}/play/friends/${friendsCategory}`, {
+  //     .get(`/play/friends/${friendsCategory}`, {
   //       withCredentials: true,
   //     })
   //     .then((response) => {
@@ -96,7 +94,7 @@ export const FriendListMenu = ({ playerID }: Props) => {
     ) => {
       try {
         const response = await axios.post(
-          `${api.API_BASE_URL}/play/friend/request/${requesterID}/${action}`,
+          `/play/friend/request/${requesterID}/${action}`,
         );
 
         if (Number(response.status) === 200) {
@@ -142,9 +140,7 @@ export const FriendListMenu = ({ playerID }: Props) => {
   useEffect(() => {
     friendListTools.handleRemoveFriend = async (friendID: string) => {
       try {
-        const response = await axios.post(
-          `${api.API_BASE_URL}/play/friend/remove/${friendID}`,
-        );
+        const response = await axios.post(`/play/friend/remove/${friendID}`);
 
         if (Number(response.status) === 200) {
           setFriendsList((prevFriendsList) =>
@@ -179,7 +175,7 @@ export const FriendListMenu = ({ playerID }: Props) => {
 
       try {
         const response = await axios.post(
-          `${api.API_BASE_URL}/play/friend/cancelRequest`,
+          `/play/friend/cancelRequest`,
           dataToSend,
           {
             withCredentials: true,
@@ -236,7 +232,7 @@ export const FriendListMenu = ({ playerID }: Props) => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/play/friend/sendRequest`,
+        `/play/friend/sendRequest`,
         dataToSend,
         {
           withCredentials: true,
@@ -257,7 +253,7 @@ export const FriendListMenu = ({ playerID }: Props) => {
       }
     }
   };
-  
+
   useEffect(() => {
     if (!contentData || !Array.isArray(contentData.renderData.list)) {
       return;
@@ -269,7 +265,6 @@ export const FriendListMenu = ({ playerID }: Props) => {
     });
 
     setFriendsList(contentData.renderData.list);
-
   }, [contentData]);
 
   return (

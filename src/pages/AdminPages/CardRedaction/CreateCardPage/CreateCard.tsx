@@ -6,7 +6,6 @@ import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -32,9 +31,8 @@ import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 export const CreateCardPage = () => {
   // const navigate = useNavigate();
 
-  const { contentLoading, contentError } = useContentRender<PlayerData>(
-    `${api.API_BASE_URL}/admin/card/create`,
-  );
+  const { contentLoading, contentError } =
+    useContentRender<PlayerData>(`/admin/card/create`);
 
   const [formData, setFormData] = useState<CardsFormat>({
     card_name: "",
@@ -97,13 +95,9 @@ export const CreateCardPage = () => {
       dataToSend.append("card_avatar", file);
     }
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/card/create`,
-        dataToSend,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`/admin/card/create`, dataToSend, {
+        withCredentials: true,
+      });
 
       console.log("Карта успешно создана:", response.data);
 

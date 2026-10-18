@@ -4,7 +4,6 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import styles from "./Card.HelpCenter.module.css";
 
-import api from "../../api/api.ts";
 import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../components/LoadingPage/Loading.tsx";
@@ -51,9 +50,8 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
   // const searchSettings = JSON.parse(sessionStorage.getItem('searchSettings') || '{}');
   const searchSettings = sessionStorage.getItem("searchSettings");
 
-  const { data, loading, error, socket } = usePageRender<PlayerData>(
-    `${api.API_BASE_URL}/api/help-center`,
-  );
+  const { data, loading, error, socket } =
+    usePageRender<PlayerData>(`/api/help-center`);
 
   const handleSearchCategory = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,

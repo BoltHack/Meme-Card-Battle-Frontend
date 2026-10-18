@@ -7,7 +7,6 @@ import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesi
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
 import useContentRender from "../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
@@ -73,19 +72,15 @@ export const CasesPage = () => {
   };
   const [rewardCard, setRewardCard] = useState(initialCardState);
 
-  const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/play/cases`,
-  );
+  const { contentData, contentLoading, contentError } =
+    useContentRender(`/play/cases`);
 
   const getCaseContent = async (case_id: string) => {
     setCaseContentLoading(true);
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/play/case/${case_id}/content/get`,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`/play/case/${case_id}/content/get`, {
+        withCredentials: true,
+      });
 
       if (response.status === 200) {
         setCaseContentLoading(false);
@@ -107,12 +102,9 @@ export const CasesPage = () => {
     setLoadingBtn(true);
     if (isOpenCase !== "") return;
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/play/case/${case_id}/open`,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`/play/case/${case_id}/open`, {
+        withCredentials: true,
+      });
 
       if (response.data?.success) {
         setLoadingBtn(false);
@@ -379,10 +371,7 @@ export const CasesPage = () => {
                           </span>
                         </div>
                         <div className={CardsDesign_styles["card-artwork"]}>
-                          <img
-                            src={`${api.IMAGE_BASE_URL}/${cs.avatar}`}
-                            alt="artwork"
-                          />
+                          <img src={`/${cs.avatar}`} alt="artwork" />
                         </div>
                         <div className={CardsDesign_styles["card-body"]}>
                           <div
@@ -471,10 +460,7 @@ export const CasesPage = () => {
                       </span>
                     </div>
                     <div className={CardsDesign_styles["card-artwork"]}>
-                      <img
-                        src={`${api.IMAGE_BASE_URL}/${rewardCard.card_avatar}`}
-                        alt="artwork"
-                      />
+                      <img src={`/${rewardCard.card_avatar}`} alt="artwork" />
                     </div>
                     <div className={CardsDesign_styles["card-body"]}>
                       <div

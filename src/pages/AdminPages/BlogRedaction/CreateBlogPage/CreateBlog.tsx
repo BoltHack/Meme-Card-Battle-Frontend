@@ -7,7 +7,6 @@ import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import toast from "react-hot-toast";
 
 import useContentRender from "../../../../tools/ContentRender.ts";
@@ -35,9 +34,8 @@ export const CreateBlogPage = () => {
 
   const [symbolsMenu, setSymbolsMenu] = useState<boolean | false>(false);
 
-  const { contentLoading, contentError } = useContentRender<PlayerData>(
-    `${api.API_BASE_URL}/admin/blog/create`,
-  );
+  const { contentLoading, contentError } =
+    useContentRender<PlayerData>(`/admin/blog/create`);
 
   let cleanHTMLText = (rawHTML: string) => {
     return (
@@ -178,20 +176,14 @@ export const CreateBlogPage = () => {
     dataToSend.append("gallery_cover", file);
 
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/blog/cover/add`,
-        dataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+      const response = await axios.post(`/admin/blog/cover/add`, dataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-      );
+      });
 
       if (response?.data?.success) {
-        insertText(
-          `${type}\n${api.API_BASE_URL}/${response.data.cover}\n${type}`,
-        );
+        insertText(`${type}\n/${response.data.cover}\n${type}`);
         setGalleryCover(null);
       }
 
@@ -221,13 +213,9 @@ export const CreateBlogPage = () => {
     }
 
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/blog/create`,
-        dataToSend,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`/admin/blog/create`, dataToSend, {
+        withCredentials: true,
+      });
 
       console.log("Данные успешно добавлены:", response.data);
 

@@ -9,7 +9,6 @@ import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import toast from "react-hot-toast";
 
 import useContentRender from "../../../../tools/ContentRender.ts";
@@ -60,7 +59,7 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
 
   const { contentData, contentLoading, contentError } = useContentRender<{
     renderData: BlogPost;
-  }>(`${api.API_BASE_URL}/admin/blog/${blog_id}/edit`);
+  }>(`/admin/blog/${blog_id}/edit`);
 
   const cleanHTMLText = (rawHTML: string) => {
     return rawHTML
@@ -151,20 +150,14 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
     dataToSend.append("gallery_cover", file);
 
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/blog/cover/add`,
-        dataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+      const response = await axios.post(`/admin/blog/cover/add`, dataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-      );
+      });
 
       if (response?.data?.success) {
-        insertText(
-          `${type}\n${api.API_BASE_URL}/${response.data.cover}\n${type}`,
-        );
+        insertText(`${type}\n/${response.data.cover}\n${type}`);
         setGalleryCover(null);
       }
 
@@ -215,7 +208,7 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/admin/blog/${blog_id}/edit`,
+        `/admin/blog/${blog_id}/edit`,
         dataToSend,
         {
           withCredentials: true,

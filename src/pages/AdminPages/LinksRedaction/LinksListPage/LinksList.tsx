@@ -7,8 +7,6 @@ import styles from "../../CaseRedaction/CaseListPage/Card.CaseList.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
-
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -30,9 +28,8 @@ export const LinksListPage = () => {
 
   const [isLinkDelete, setIsListDelete] = useState<string | null>(null);
 
-  const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/admin/links/list`,
-  );
+  const { contentData, contentLoading, contentError } =
+    useContentRender(`/admin/links/list`);
 
   const handleRemoveLink = async (
     link_id: string,
@@ -41,12 +38,9 @@ export const LinksListPage = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/links/${link_id}/delete`,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`/admin/links/${link_id}/delete`, {
+        withCredentials: true,
+      });
 
       if (response.data.success) {
         console.log("Ссылка успешно удалена:", response.data);
@@ -122,7 +116,7 @@ export const LinksListPage = () => {
                             width: "100px",
                             height: "auto",
                           }}
-                          src={`${api.IMAGE_BASE_URL}/${item.icon}`}
+                          src={`/${item.icon}`}
                           alt="Platform icon"
                         />
                       </div>

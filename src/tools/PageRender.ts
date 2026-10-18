@@ -9,7 +9,7 @@ import api from "../api/api.ts";
 
 axios.defaults.withCredentials = true;
 
-// const socket: Socket = io(api.API_BASE_URL, {
+// const socket: Socket = io(api.API_BACKEND_URL, {
 //   autoConnect: false,
 // });
 
@@ -31,7 +31,7 @@ export default function usePageRender<T extends Record<string, any>>(
   const [trigger, setTrigger] = useState(0);
 
   const socket = useMemo(() => {
-    return io(api.SOCKET_URL, {
+    return io(api.API_SOCKET_URL, {
       autoConnect: false,
       transports: ["websocket"],
     });

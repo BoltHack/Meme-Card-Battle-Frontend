@@ -6,8 +6,6 @@ import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesi
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
-
 import useContentRender from "../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
@@ -63,7 +61,7 @@ export const ProfilePage = () => {
   );
 
   const { contentData, contentLoading, contentError } =
-    useContentRender<PlayerData>(`${api.API_BASE_URL}/play/profile`);
+    useContentRender<PlayerData>(`/play/profile`);
 
   // const formattedCurrency = (count: number): string => {
   //   const formattedCount = new Intl.NumberFormat("en-US", {
@@ -141,12 +139,9 @@ export const ProfilePage = () => {
 
   const handleGetCards = async (cards_category: string) => {
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/play/cards/get/${cards_category}`,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`/play/cards/get/${cards_category}`, {
+        withCredentials: true,
+      });
 
       console.log("response", response.data);
 
@@ -203,7 +198,7 @@ export const ProfilePage = () => {
             {/* <div className={styles["user-main-info"]}> */}
             {/* <div className={styles["user-profile"]}>
                 <img
-                  src={`${api.IMAGE_BASE_URL}/${contentData.renderData.avatar}`}
+                  src={`/${contentData.renderData.avatar}`}
                   className={styles["avatar"]}
                 />
                 <div className={styles["username"]}>
@@ -512,10 +507,7 @@ export const ProfilePage = () => {
                         </span>
                       </div>
                       <div className={CardsDesign_styles["card-artwork"]}>
-                        <img
-                          src={`${api.IMAGE_BASE_URL}/${card.card_avatar}`}
-                          alt="artwork"
-                        />
+                        <img src={`/${card.card_avatar}`} alt="artwork" />
                       </div>
                       <div className={CardsDesign_styles["card-body"]}>
                         <div

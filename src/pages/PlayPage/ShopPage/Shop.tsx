@@ -6,7 +6,6 @@ import styles from "./Card.Shop.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../api/api.ts";
 import useContentRender from "../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
@@ -42,9 +41,8 @@ export const ShopPage = () => {
 
   const [isCaseLoading, setIsCaseLoading] = useState<string | null>(null);
 
-  const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/play/shop`,
-  );
+  const { contentData, contentLoading, contentError } =
+    useContentRender(`/play/shop`);
 
   const buyCase = async (case_id: string, case_quantity: string) => {
     setIsCaseLoading(case_id);
@@ -55,7 +53,7 @@ export const ShopPage = () => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/play/case/${case_id}/buy`,
+        `/play/case/${case_id}/buy`,
         dataToSend,
         {
           withCredentials: true,
@@ -87,7 +85,7 @@ export const ShopPage = () => {
 
   //   try {
   //     const response = await axios.post(
-  //       `${api.API_BASE_URL}/play/case/${case_id}/content/get`,
+  //       `/play/case/${case_id}/content/get`,
   //       {
   //         withCredentials: true,
   //       },

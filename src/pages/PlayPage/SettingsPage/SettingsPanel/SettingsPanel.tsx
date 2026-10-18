@@ -5,7 +5,6 @@ import styles from "./Card.Settings.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../../../components/LoadingPage/Loading.tsx";
@@ -39,9 +38,8 @@ export const SettingsPage = () => {
     createdAt: "",
   });
 
-  const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/play/settings`,
-  );
+  const { contentData, contentLoading, contentError } =
+    useContentRender(`/play/settings`);
 
   const getRegisterDate = (date: string) => {
     return new Date(date).toLocaleString("ru-RU", {
@@ -98,10 +96,7 @@ export const SettingsPage = () => {
           <div className={styles["profile-section"]}>
             {/* <div className={styles["avatar"]}></div> */}
             {userInfo.avatar !== "" ? (
-              <img
-                src={`${api.IMAGE_BASE_URL}/${userInfo.avatar}`}
-                className={styles["avatar"]}
-              />
+              <img src={`/${userInfo.avatar}`} className={styles["avatar"]} />
             ) : (
               <div className={styles["avatar"]}></div>
             )}
@@ -246,7 +241,7 @@ export const SettingsPage = () => {
 
           <div className={styles["avatar-upload-block"]}>
             <img
-              src={`${api.IMAGE_BASE_URL}/${userInfo.avatar}`}
+              src={`/${userInfo.avatar}`}
               className={styles["avatar-preview"]}
             />
             <div className={styles["upload-controls"]}>

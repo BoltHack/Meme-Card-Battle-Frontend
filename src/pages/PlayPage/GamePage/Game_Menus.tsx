@@ -4,7 +4,6 @@ import Menus_styles from "./Card.Menu_styles.module.css";
 import CardDesk_styles from "./Card.Desk_styles.module.css";
 import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 
-import api from "../../../api/api.ts";
 import toast from "react-hot-toast";
 
 interface CardData {
@@ -180,10 +179,7 @@ export const Game_Menus = ({
                           </span>
                         </div>
                         <div className={CardsDesign_styles["card-artwork"]}>
-                          <img
-                            src={`${api.IMAGE_BASE_URL}/${selectCard.avatar}`}
-                            alt="artwork"
-                          />
+                          <img src={`/${selectCard.avatar}`} alt="artwork" />
                         </div>
                         <div className={CardsDesign_styles["card-body"]}>
                           <div
@@ -291,10 +287,7 @@ export const Game_Menus = ({
                               </span>
                             </div>
                             <div className={CardsDesign_styles["card-artwork"]}>
-                              <img
-                                src={`${api.IMAGE_BASE_URL}/${card.avatar}`}
-                                alt="artwork"
-                              />
+                              <img src={`/${card.avatar}`} alt="artwork" />
                             </div>
                             <div className={CardsDesign_styles["card-body"]}>
                               <div
@@ -418,10 +411,7 @@ export const Game_Menus = ({
                               </span>
                             </div>
                             <div className={CardsDesign_styles["card-artwork"]}>
-                              <img
-                                src={`${api.IMAGE_BASE_URL}/${card.avatar}`}
-                                alt="artwork"
-                              />
+                              <img src={`/${card.avatar}`} alt="artwork" />
                             </div>
                             <div className={CardsDesign_styles["card-body"]}>
                               <div

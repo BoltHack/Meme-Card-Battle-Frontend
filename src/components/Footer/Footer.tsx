@@ -2,8 +2,6 @@ import { Link } from "react-router-dom";
 
 import styles from "./Card.Footer.module.css";
 
-import api from "../../api/api";
-
 interface Props {
   links: any;
 }
@@ -46,7 +44,7 @@ export const Footer = ({ links }: Props) => {
                         {lk.icon && (
                           <img
                             className={styles["platform-icon"]}
-                            src={`${api.IMAGE_BASE_URL}/${lk.icon}`}
+                            src={`/${lk.icon}`}
                             alt="Platform icon"
                           />
                         )}

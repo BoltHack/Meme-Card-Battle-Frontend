@@ -6,7 +6,6 @@ import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -41,7 +40,7 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
   });
 
   const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/admin/case/${case_id}/edit/data`,
+    `/admin/case/${case_id}/edit/data`,
   );
 
   const handleChange = (
@@ -75,7 +74,7 @@ export const EditDataPage = ({ case_id }: ResponseProps) => {
 
     try {
       const response = await axios.post(
-        `${api.API_BASE_URL}/admin/case/${case_id}/edit/data`,
+        `/admin/case/${case_id}/edit/data`,
         dataToSend,
         {
           withCredentials: true,

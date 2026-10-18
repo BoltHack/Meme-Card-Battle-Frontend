@@ -7,7 +7,6 @@ import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../../../api/api.ts";
 import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
@@ -54,9 +53,7 @@ export const CardListPage = () => {
   const [cardsCategory, setCardsCategory] = useState<string | "all">("all");
 
   const { contentData, contentLoading, contentError } =
-    useContentRender<CardResponse>(
-      `${api.API_BASE_URL}/admin/card/list/${cardsCategory}`,
-    );
+    useContentRender<CardResponse>(`/admin/card/list/${cardsCategory}`);
 
   const copy = (cardId: string) => {
     navigator.clipboard
@@ -79,12 +76,9 @@ export const CardListPage = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        `${api.API_BASE_URL}/admin/card/${id}/delete`,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`/admin/card/${id}/delete`, {
+        withCredentials: true,
+      });
 
       console.log("Карта успешно удалена:", response.data);
 
@@ -207,10 +201,7 @@ export const CardListPage = () => {
                           </span>
                         </div>
                         <div className={CardsDesign_styles["card-artwork"]}>
-                          <img
-                            src={`${api.IMAGE_BASE_URL}/${card.card_avatar}`}
-                            alt="artwork"
-                          />
+                          <img src={`/${card.card_avatar}`} alt="artwork" />
                         </div>
                         <div className={CardsDesign_styles["card-body"]}>
                           <div
@@ -285,10 +276,7 @@ export const CardListPage = () => {
                       </span>
                     </div>
                     <div className={CardsDesign_styles["card-artwork"]}>
-                      <img
-                        src={`${api.IMAGE_BASE_URL}/${editCardData.card_avatar}`}
-                        alt="artwork"
-                      />
+                      <img src={`/${editCardData.card_avatar}`} alt="artwork" />
                     </div>
                     <div className={CardsDesign_styles["card-body"]}>
                       <div

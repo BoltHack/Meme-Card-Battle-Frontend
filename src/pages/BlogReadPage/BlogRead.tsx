@@ -10,8 +10,6 @@ import styles from "./Card.BlogRead.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-import api from "../../api/api.ts";
-
 import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../components/LoadingPage/Loading.tsx";
@@ -69,7 +67,7 @@ export const BlogReadPage = () => {
   const blog_state = JSON.parse(sessionStorage.getItem("blog_state") || "{}");
 
   const { data, loading, error, socket } = usePageRender<BlogResponse>(
-    `${api.API_BASE_URL}/api/blog/${blog_id}`,
+    `/api/blog/${blog_id}`,
   );
 
   useEffect(() => {
@@ -441,7 +439,7 @@ export const BlogReadPage = () => {
                   {/*<div className={styles["avatar"]}></div>*/}
                   {blog?.author?.avatar ? (
                     <img
-                      src={`${api.IMAGE_BASE_URL}/${blog?.author?.avatar}`}
+                      src={`/${blog?.author?.avatar}`}
                       className={styles["avatar"]}
                     />
                   ) : (
@@ -462,7 +460,7 @@ export const BlogReadPage = () => {
             <div className={styles["post-page-image"]}>
               {blog.cover ? (
                 <img
-                  src={`${api.IMAGE_BASE_URL}/${blog.cover}`}
+                  src={`/${blog.cover}`}
                   loading="lazy"
                   className={styles["img-placeholder"]}
                 />
