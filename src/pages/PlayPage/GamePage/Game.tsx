@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { Game_Menus } from "./Game_Menus.tsx";
 import { Game_CardDesk } from "./Game_CardDesk.tsx";
 
+import api from "../../../api/api.ts"
 import usePageRender from "../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
