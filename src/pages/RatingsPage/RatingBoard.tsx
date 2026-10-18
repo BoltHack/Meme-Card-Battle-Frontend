@@ -22,7 +22,7 @@ export const RatingBoard = ({ ratingCategory }: Props) => {
   // let categoryIcon = "";
 
   const { contentData, contentLoading, contentError } = useContentRender(
-    `${api.API_BASE_URL}/api/ratings/${ratingCategory}`,
+    `/api/ratings/${ratingCategory}`,
   );
 
   const formattedBalance = (count: number): string => {

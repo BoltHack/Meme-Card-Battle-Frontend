@@ -290,25 +290,25 @@ export const BlogCategoryPage = ({ title }: BlogPageProps) => {
                   <div style={{ display: "flex", gap: "10px" }}>
                     <Link
                       to="/category/community"
-                      className={`${styles["read-more-btn"]} ${styles["small"]}`}
+                      className={`${styles["read-more-btn"]} ${styles["small"]} ${styles[blog_category === "community" ? "selected" : ""]}`}
                     >
                       Сообщество
                     </Link>
                     <Link
                       to="/category/development"
-                      className={`${styles["read-more-btn"]} ${styles["small"]}`}
+                      className={`${styles["read-more-btn"]} ${styles["small"]} ${styles[blog_category === "development" ? "selected" : ""]}`}
                     >
                       Разработка
                     </Link>
                     <Link
                       to="/category/functions"
-                      className={`${styles["read-more-btn"]} ${styles["small"]}`}
+                      className={`${styles["read-more-btn"]} ${styles["small"]} ${styles[blog_category === "functions" ? "selected" : ""]}`}
                     >
                       Функции
                     </Link>
                     <Link
                       to="/category/safety"
-                      className={`${styles["read-more-btn"]} ${styles["small"]}`}
+                      className={`${styles["read-more-btn"]} ${styles["small"]} ${styles[blog_category === "safety" ? "selected" : ""]}`}
                     >
                       Безопасность
                     </Link>

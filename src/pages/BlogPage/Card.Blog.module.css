@@ -161,7 +161,7 @@
   border-radius: 8px;
 }
 
-.read-more-btn:hover {
+.read-more-btn:hover, .read-more-btn.selected {
   background: #fff;
   color: #0b0518;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
