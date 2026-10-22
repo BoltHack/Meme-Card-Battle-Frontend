@@ -15,9 +15,18 @@ interface TeamData {
 
 export const TeamPage = () => {
   const [team, setTeam] = useState<TeamData[]>([]);
+  const [actionsMenu, setActionsMenu] = useState<string | null>(null);
 
   const { contentData, contentLoading, contentError } =
     useContentRender(`/admin/team`);
+
+  const toggleActionsMenu = (userId: string) => {
+    if (actionsMenu === userId) {
+      setActionsMenu(null);
+      return;
+    }
+    setActionsMenu(userId);
+  };
 
   useEffect(() => {
     if (contentData && contentData?.renderData) {
@@ -67,13 +76,29 @@ export const TeamPage = () => {
                     {tm.role}
                   </span>
                 </div>
-                <button className={styles["action-btn"]} title="Настройки">
-                  <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="1" />
-                    <circle cx="19" cy="12" r="1" />
-                    <circle cx="5" cy="12" r="1" />
-                  </svg>
-                </button>
+                {tm.id !== contentData?.id && (
+                  <button
+                    className={`${styles["action-btn"]} ${styles[tm.id === actionsMenu ? "active" : ""]}`}
+                    title="Настройки"
+                    onClick={() => toggleActionsMenu(tm.id)}
+                  >
+                    <svg viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="1" />
+                      <circle cx="19" cy="12" r="1" />
+                      <circle cx="5" cy="12" r="1" />
+                    </svg>
+                  </button>
+                )}
+                {tm.id === actionsMenu && (
+                  <div className={styles["actions-menu"]}>
+                    <div className={styles["actions-content"]}>
+                      <ul>
+                        <li>test 1</li>
+                        <li>test 2</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })

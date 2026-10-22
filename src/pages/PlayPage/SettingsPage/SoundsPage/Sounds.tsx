@@ -79,7 +79,7 @@ export const SoundsPage = () => {
       <section className={settings_styles["settings-section"]}>
         <h2>Звук</h2>
 
-        <div className={settings_styles["setting-row"]}>
+        {/* <div className={settings_styles["setting-row"]}>
           <div className={settings_styles["setting-info"]}>
             <span className={settings_styles["setting-title"]}>
               Общая громкость
@@ -98,7 +98,7 @@ export const SoundsPage = () => {
               <span>({Math.round(settingsList.all_volume)}%)</span>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className={settings_styles["setting-row"]}>
           <div className={settings_styles["setting-info"]}>
