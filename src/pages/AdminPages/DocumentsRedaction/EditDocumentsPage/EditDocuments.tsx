@@ -96,7 +96,7 @@ export const EditDocumentsPage = ({ document_id }: ResponseProps) => {
       return response.data;
     } catch (error: any) {
       console.log("error", error);
-      const errorMessage = error.response.message;
+      const errorMessage = error?.response?.data.error;
       if (errorMessage) {
         toast.error(errorMessage);
       }
