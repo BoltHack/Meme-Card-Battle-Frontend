@@ -121,7 +121,8 @@ export const EditDocumentsPage = ({ document_id }: ResponseProps) => {
       path_name: data.path_name,
       title: data.title,
       summary: data.summary,
-      content: data.content.replace(/<[^>]*>/g, ""),
+      // content: data.content.replace(/<[^>]*>/g, ""),
+      content: data.content.replace(/(\r?\n){3,}/g, "\n\n"),
     });
   }, [contentData]);
 
@@ -206,11 +207,10 @@ export const EditDocumentsPage = ({ document_id }: ResponseProps) => {
             <label className={styles["form-label"]}>Содержимое</label>
             <div
               dangerouslySetInnerHTML={{
-                __html: formData?.content
-                  .replace(/<li[^>]*>/g, "- ")
-                  .replace(/<\/li>/g, "<br/>")
-                  .replace(/<[^>]*>/g, "")
-                  .replace(/^(<br\s*\/?>\s*)+/i, ""),
+                __html: formData?.content.replace(
+                  /(\r?\n\s*){2,\r?\n}/g,
+                  "\n\n",
+                ),
               }}
               ref={editorRef}
               // children={editorText}

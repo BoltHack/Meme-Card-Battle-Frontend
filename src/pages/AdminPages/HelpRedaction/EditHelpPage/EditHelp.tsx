@@ -148,7 +148,8 @@ export const EditHelpPage = ({ help_id }: ResponseProps) => {
       link_title: data.link_title,
       link_href: data.link_href,
       link_path: data.link_path,
-      content: data.content.replace(/<[^>]*>/g, ""),
+      // content: data.content.replace(/<[^>]*>/g, ""),
+      content: data.content.replace(/(\r?\n){3,}/g, "\n\n"),
     });
 
     if (contentData.renderData.link_path.length > 0) {
@@ -354,7 +355,10 @@ export const EditHelpPage = ({ help_id }: ResponseProps) => {
             <label className={styles["form-label"]}>Содержимое</label>
             <div
               dangerouslySetInnerHTML={{
-                __html: formData?.content,
+                __html: formData?.content.replace(
+                  /(\r?\n\s*){2,\r?\n}/g,
+                  "\n\n",
+                ),
               }}
               ref={editorRef}
               onInput={handleInput}

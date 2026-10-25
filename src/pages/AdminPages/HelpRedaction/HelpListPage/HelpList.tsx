@@ -110,7 +110,7 @@ export const HelpListPage = () => {
               <article key={index} className={styles["grid-card"]}>
                 <div className={styles["card-body"]}>
                   <h3>{item.title}</h3>
-                  <p>{item.id}</p>
+                  <p>ID: {item.id}</p>
                   <p>{item.summary}</p>
                   <p>Видимость: {String(item.isVisibility)}</p>
                   <ul className={styles["actions-menu"]}>

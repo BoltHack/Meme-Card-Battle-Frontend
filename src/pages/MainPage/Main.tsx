@@ -156,7 +156,7 @@ export const MainPage = ({ title }: TitleSettings) => {
               Играть в браузере
             </Link>
             <Link
-              to="/how-to-play"
+              to="/documents/how-to-play"
               className={`${styles["btn"]} ${styles["btn-secondary"]}`}
             >
               {/* Скачать для Windows */}

@@ -12,7 +12,7 @@ import { ContentLoading } from "../../../../components/LoadingPage/ContentLoadin
 
 interface ItemsPost {
   id: string;
-  pathname: string;
+  path_name: string;
   title: string;
   summary: string;
   isVisibility: string;
@@ -101,8 +101,8 @@ export const DocumentsListPage = () => {
               <article key={index} className={styles["grid-card"]}>
                 <div className={styles["card-body"]}>
                   <h3>{item.title}</h3>
-                  <p>{item.path_name}</p>
-                  <p>{item.id}</p>
+                  <p>Путь: {item.path_name}</p>
+                  <p>ID: {item.id}</p>
                   <p>{item.summary}</p>
                   <p>Видимость: {String(item.isVisibility)}</p>
                   <ul className={styles["actions-menu"]}>

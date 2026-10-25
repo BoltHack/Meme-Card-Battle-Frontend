@@ -103,8 +103,6 @@ export const adminNavigator = {
 };
 
 export const AdminPanelPage = ({ title }: titleSettings) => {
-  // const navigate = useNavigate();
-
   const [activeTab, setActiveTab] = useState<string>("ToolsPage");
 
   const { loading, error, socket } = usePageRender(`/admin/panel`);
@@ -358,7 +356,7 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
             <div
               style={{
                 display: "flex",
-                // flexDirection: "column",
+                flexDirection: "column",
                 gap: "5px",
                 position: "absolute",
                 bottom: "0",
@@ -366,11 +364,10 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
                 padding: "20px 0",
               }}
             >
-              <li style={{ marginRight: "auto" }}>
+              <li>
                 <Link
                   to="/"
                   className={styles["menu-link"]}
-                  // onClick={() => navigate("/")}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -387,31 +384,7 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
                     <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                   </svg>
-                  {/* На главную */}
-                </Link>
-              </li>
-
-              <li style={{ marginLeft: "auto" }}>
-                <Link
-                  to="/play"
-                  className={styles["menu-link"]}
-                  // onClick={() => navigate("/play")}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-play preview-icon"
-                  >
-                    <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />
-                  </svg>
-                  {/* В игру */}
+                  На главную
                 </Link>
               </li>
             </div>

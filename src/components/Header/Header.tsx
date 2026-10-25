@@ -95,7 +95,7 @@ export const Header = () => {
 
               <li className={styles["dropdown"]}>
                 <Link
-                  to="/company-information"
+                  to="/documents/company-information"
                   className={`${styles["nav-link"]} ${styles["dropdown-toggle"]}`}
                 >
                   Информация
@@ -121,10 +121,10 @@ export const Header = () => {
 
                 <ul className={styles["dropdown-menu"]}>
                   <li>
-                    <Link to="/about-us">О нас</Link>
+                    <Link to="/documents/about-us">О нас</Link>
                   </li>
                   <li>
-                    <Link to="/how-to-play">Как играть?</Link>
+                    <Link to="/documents/how-to-play">Как играть?</Link>
                   </li>
                 </ul>
               </li>
