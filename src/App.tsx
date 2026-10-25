@@ -11,11 +11,9 @@ import { PlayPage } from "./pages/PlayPage/Play/Play.tsx";
 import { MainPage } from "./pages/MainPage/Main.tsx";
 
 import { HelpCenterPage } from "./pages/HelpCenterPage/HelpCenter.tsx";
+import { HelpCenterInfoPage } from "./pages/HelpCenterPage/HelpCenterInfo.tsx";
 
-import { HowToPlayPage } from "./pages/RulePages/HowToPlay.tsx";
-import { TermsOfUsePage } from "./pages/RulePages/TermsOfUse.tsx";
-import { PrivacyPolicy } from "./pages/RulePages/PrivacyPolicy.tsx";
-import { CookiePolicy } from "./pages/RulePages/CookiePolicy.tsx";
+import { DocumentsPage } from "./pages/DocumentsPage/Documents.tsx";
 
 import { BlogPage } from "./pages/BlogPage/Blog.tsx";
 import { BlogReadPage } from "./pages/BlogReadPage/BlogRead.tsx";
@@ -28,7 +26,7 @@ import { PublicPanel } from "./tools/GetBasicData.tsx";
 const router = createBrowserRouter([
   {
     path: "/auth/sign-in",
-    element: <SignInPage title="MCB | Войдите в свою учётную запись" />,
+    element: <SignInPage title="Войдите в свою учётную запись MCB" />,
   },
   {
     path: "/admin/panel",
@@ -44,35 +42,27 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <MainPage title="MCB | Главная" />,
+        element: <MainPage title="Главная | MCB" />,
       },
       {
         path: "/help-center",
-        element: <HelpCenterPage title="MCB | Справочный центр" />,
+        element: <HelpCenterPage title="Справочный центр | MCD" />,
       },
       {
-        path: "/how-to-play",
-        element: <HowToPlayPage title="MCB | Как играть" />,
+        path: "/help-center/:help_request",
+        element: <HelpCenterInfoPage />,
       },
       {
-        path: "/terms-of-use",
-        element: <TermsOfUsePage title="MCB | Условия использования" />,
-      },
-      {
-        path: "/privacy-policy",
-        element: <PrivacyPolicy title="MCB | Политика конфиденциальности" />,
-      },
-      {
-        path: "/cookie-policy",
-        element: <CookiePolicy title="MCB | Политика Cookie файлов" />,
+        path: "/documents/:document",
+        element: <DocumentsPage />,
       },
       {
         path: "/blog",
-        element: <BlogPage title="MCB | Блог" />,
+        element: <BlogPage title="Блог | MCB" />,
       },
       {
         path: "/category/:blog_category",
-        element: <BlogCategoryPage title="MCB | Блог" />,
+        element: <BlogCategoryPage title="Блог | MCB" />,
       },
       {
         path: "/blog/:blog_id",
@@ -80,7 +70,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/ratings",
-        element: <RatingsPage title="MCB | Рейтинги" />,
+        element: <RatingsPage title="Рейтинги | MCB" />,
       },
     ],
   },

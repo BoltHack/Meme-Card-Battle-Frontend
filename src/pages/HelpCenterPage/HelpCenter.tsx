@@ -1,4 +1,4 @@
-import { useOutletContext, useNavigate } from "react-router-dom";
+import { useOutletContext, useNavigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
@@ -18,10 +18,17 @@ interface PlayerData {
 }
 
 interface CategoryData {
+  // title: string;
+  // summary: string;
+  // icon: { svg: string; color: string; filter: string };
+  // link: { title: string; href: string };
   title: string;
   summary: string;
-  icon: { svg: string; color: string; filter: string };
-  link: { title: string; href: string };
+  color: string;
+  filter: string;
+  link_title: string;
+  link_href: string;
+  link_path: string;
 }
 
 interface TitleSettings {
@@ -153,17 +160,24 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
   useEffect(() => {
     if (!loading && data?.renderData && data.renderData?.length > 0) {
       const formattedCategories = data?.renderData.map((cat: any) => ({
-        title: cat.title || "",
-        summary: cat.summary || "",
-        icon: {
-          svg: cat.icon?.svg || "",
-          color: cat.icon?.color || "",
-          filter: cat.icon?.filter || "",
-        },
-        link: {
-          title: cat.link?.title || "",
-          href: cat.link?.href || "",
-        },
+        // title: cat.title || "",
+        // summary: cat.summary || "",
+        // icon: {
+        //   svg: cat.icon?.svg || "",
+        //   color: cat.icon?.color || "",
+        //   filter: cat.icon?.filter || "",
+        // },
+        // link: {
+        //   title: cat.link?.title || "",
+        //   href: cat.link?.href || "",
+        // },
+        title: cat.title,
+        summary: cat.summary,
+        color: cat.color,
+        filter: cat.flter,
+        link_title: cat.link_title,
+        link_href: cat.link_href,
+        link_path: cat.link_path,
       }));
 
       setCategoriesList(formattedCategories);
@@ -227,7 +241,7 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
               className={styles["search-result-back"]}
               onClick={clearSearchCategory}
             >
-              Назад
+              Справочный центр
             </p>
             <div className={styles["search-result-slash"]}>
               <svg
@@ -263,7 +277,7 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
                 return (
                   <section key={index} className={styles["category-card"]}>
                     <div className={`${styles["card-icon"]}`}>
-                      <svg
+                      {/* <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         fill="none"
@@ -278,13 +292,45 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
                         dangerouslySetInnerHTML={{
                           __html: cat.icon?.svg || "",
                         }}
-                      ></svg>
+                      ></svg> */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-message-circle-question-mark preview-icon"
+                        style={{
+                          color: cat.color || "inherit",
+                          filter: cat.filter
+                            ? // ? `drop-shadow(0 0 8px rgb(from ${cat.filter} r g b / 60%))`
+                              `drop-shadow(0px 0px 8px rgb(from ${cat.filter} r g b / 60%))`
+                            : "none",
+                        }}
+                      >
+                        <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                        <path d="M12 17h.01" />
+                      </svg>
                     </div>
                     <h3>{cat?.title}</h3>
                     <p>{cat?.summary}</p>
-                    <a href={cat.link?.href} className={styles["card-link"]}>
-                      {cat.link?.title} →
-                    </a>
+                    {cat.link_path.length > 0 ? (
+                      <Link
+                        to={`/help-center/${cat.link_path}`}
+                        className={styles["card-link"]}
+                      >
+                        {cat.link_title} →
+                      </Link>
+                    ) : (
+                      <Link to={cat.link_href} className={styles["card-link"]}>
+                        {cat.link_title} →
+                      </Link>
+                    )}
                   </section>
                 );
               })
@@ -315,14 +361,14 @@ export const HelpCenterPage = ({ title }: TitleSettings) => {
           <ul className={styles["faq-list"]}>
             <li>
               <a href="#">
-                Как восстановить доступ к аккаунту, если потерял телефон?
+                Как восстановить доступ к аккаунту, если забыл пароль?
               </a>
             </li>
             <li>
-              <a href="#">Где скачать закрывающие документы для бухгалтерии?</a>
+              <a href="#">Что значит ошибка 503?</a>
             </li>
             <li>
-              <a href="#">Как изменить часовой пояс в личном кабинете?</a>
+              <a href="#">Что делать, если при нажатии на "ИГРАТЬ" игра не запускается?</a>
             </li>
           </ul>
         </section>

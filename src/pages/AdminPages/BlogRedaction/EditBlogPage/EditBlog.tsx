@@ -168,18 +168,18 @@ export const EditBlogPage = ({ blog_id }: IdProps) => {
     }
   };
 
-  async function setCoverFromUrl(url: string) {
-    try {
-      const response = await fetch(url);
-      const blob = await response.blob();
-      const file = new File([blob], "cover.jpg", { type: blob.type });
+  // async function setCoverFromUrl(url: string) {
+  //   try {
+  //     const response = await fetch(url);
+  //     const blob = await response.blob();
+  //     const file = new File([blob], "cover.jpg", { type: blob.type });
 
-      setFile(file);
-    } catch (error) {
-      console.error("Не удалось загрузить файл по ссылке", error);
-      setFile(null);
-    }
-  }
+  //     setFile(file);
+  //   } catch (error) {
+  //     console.error("Не удалось загрузить файл по ссылке", error);
+  //     setFile(null);
+  //   }
+  // }
 
   const handleFileRemove = () => {
     // setFile(null);

@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { Link, useOutletContext, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import ReactMarkdown from "react-markdown";
+import { useEffect, useRef, useState } from "react";
+import Markdown from "react-markdown";
 
-import styles from "./Card.Rules.module.css";
+// import styles from "./Card.HelpCenter.module.css";
+// import styles from "../DocumentsPage/Card.Documents.module.css";
+import styles from "./Card.HelpCenterInfo.module.css";
 
 import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../../components/ErrorPage/Error.tsx";
@@ -12,8 +14,8 @@ import { LoadingPage } from "../../components/LoadingPage/Loading.tsx";
 import { Footer } from "../../components/Footer/Footer.tsx";
 import { Header } from "../../components/Header/Header.tsx";
 
-interface ArticlesData {
-  renderData: string;
+interface Params {
+  help_request: string;
 }
 
 interface ArticleNavigationItem {
@@ -21,25 +23,24 @@ interface ArticleNavigationItem {
   article: string | null;
 }
 
-interface TitleSettings {
-  title: string;
-}
-
 interface FooterLinksContext {
   footerLinks?: any;
 }
 
-export const HowToPlayPage = ({ title }: TitleSettings) => {
+export const HelpCenterInfoPage = () => {
   const { footerLinks } = useOutletContext<FooterLinksContext>() ?? {
     footerLinks: [],
   };
+
+  const { help_request } = useParams<{ type: string }>() as Params;
 
   const articleSectionsContainer = useRef<HTMLDivElement>(null);
   const [articleList, setArticleList] = useState<ArticleNavigationItem[]>([]);
   // const [articleList, setArticleList] = useState<ArticlesData | []>([]);
 
-  const { data, loading, error, socket } =
-    usePageRender<ArticlesData>(`/api/how-to-play`);
+  const { data, loading, error, socket } = usePageRender(
+    `/api/help-center/${help_request}`,
+  );
 
   useEffect(() => {
     if (!loading && data?.renderData && articleSectionsContainer.current) {
@@ -65,6 +66,8 @@ export const HowToPlayPage = ({ title }: TitleSettings) => {
 
         setArticleList(tempArticles);
       }, 0);
+
+      console.log("data?.renderData", data?.renderData);
     }
   }, [loading, data]);
 
@@ -86,7 +89,7 @@ export const HowToPlayPage = ({ title }: TitleSettings) => {
   return (
     <div className={styles["body-wrapper"]}>
       <Helmet>
-        <title>{title}</title>
+        <title>{data?.renderData.title}</title>
       </Helmet>
 
       <Header />
@@ -94,9 +97,10 @@ export const HowToPlayPage = ({ title }: TitleSettings) => {
       {/*<div className={styles["parallax-body"]}></div>*/}
 
       <div className={styles["container"]}>
-        {/*<article className={styles["article-header"]}>*/}
-        {/*    <h1>Как играть?</h1>*/}
-        {/*</article>*/}
+        <Link to="/help-center" className={styles["back-btn"]}>Справочный центр</Link>
+        <article className={styles["article-header"]}>
+          <h1>{data?.renderData.title}</h1>
+        </article>
 
         <div className={styles["content-container"]}>
           <article
@@ -104,38 +108,33 @@ export const HowToPlayPage = ({ title }: TitleSettings) => {
             ref={articleSectionsContainer}
           >
             <header>
-              <h1>Как играть в MEME CARD BATTLE</h1>
-              <p className={styles["subtitle"]}>
-                Добро пожаловать в карточную стратегию, где исход битвы решают
-                не деньги, а ваш тактический расчет! Здесь нет слепого везения —
-                только чистый блеф, холодный расчет и синергия карт.Ниже
-                представлены базовые правила, которые помогут вам быстро
-                освоиться на поле боя.
-              </p>
+              {/* <h1>{data?.renderData.title}</h1> */}
+              <h3>{data?.renderData.summary}</h3>
+              {/* <p className={styles["subtitle"]}>{data?.renderData.summary}</p> */}
             </header>
 
-            {data?.renderData && data?.renderData.length > 0 ? (
+            {data?.renderData.content && data?.renderData.content.length > 0 ? (
               <section className={styles["article-section"]}>
-                <ReactMarkdown>{data?.renderData}</ReactMarkdown>
+                <Markdown>{data?.renderData.content}</Markdown>
               </section>
             ) : null}
           </article>
 
-          <article className={styles["article-tools"]}>
-            <header>
-              <h3>В этой статье</h3>
-            </header>
+          {articleList && articleList.length > 0 ? (
+            <article className={styles["article-tools"]}>
+              <header>
+                <h3>В этой статье</h3>
+              </header>
 
-            <br />
+              <br />
 
-            {articleList && articleList.length > 0
-              ? articleList.map((item) => (
-                  <section key={item.id}>
-                    <a href={`#${item.id}`}>{item.article}</a>
-                  </section>
-                ))
-              : null}
-          </article>
+              {articleList.map((item) => (
+                <section key={item.id}>
+                  <a href={`#${item.id}`}>{item.article}</a>
+                </section>
+              ))}
+            </article>
+          ) : null}
         </div>
       </div>
 

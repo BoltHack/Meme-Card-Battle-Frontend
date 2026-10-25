@@ -98,8 +98,8 @@ export const Footer = ({ links }: Props) => {
             </div>
 
             <div className={styles["legal-links"]}>
-              <Link to="/rules">Правила игры</Link>
-              <Link to="/how-to-play">Как играть?</Link>
+              <Link to="/documents/rules">Правила игры</Link>
+              <Link to="/documents/how-to-play">Как играть?</Link>
               <Link to="/help-center">Справочный центр</Link>
               <Link to="/support">Поддежрка</Link>
             </div>
@@ -110,14 +110,13 @@ export const Footer = ({ links }: Props) => {
           <div className={styles["social-title"]}>Другие ссылки</div>
           <div className={styles["footer-col-container"]}>
             <div className={styles["footer-col"]}>
-              <Link to="/company-information">Информация о компании</Link>
-              <Link to="/about-us">О нас</Link>
+              <Link to="/documents/company-information">Информация о компании</Link>
+              <Link to="/documents/about-us">О нас</Link>
               <Link to="/category/news">Новости</Link>
-              <Link to="/support">Поддержка</Link>
               <Link to="/blog">Блог</Link>
-              <Link to="/privacy-policy">Политика конфиденциальности</Link>
-              <Link to="/terms-of-use">Условия использования</Link>
-              <Link to="/cookie-policy">Политика Cookie файлов</Link>
+              <Link to="/documents/privacy-policy">Политика конфиденциальности</Link>
+              <Link to="/documents/terms-of-use">Условия использования</Link>
+              <Link to="/documents/cookie-policy">Политика Cookie файлов</Link>
             </div>
           </div>
         </div>

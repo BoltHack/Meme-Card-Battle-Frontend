@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 import styles from "./Card.AdminPanel.module.css";
@@ -36,6 +36,15 @@ import { LinksSettingsPage } from "../LinksRedaction/LinksSettingsPage/LinksSett
 import { CreateLinkPage } from "../LinksRedaction/CreateLinkPage/CreateLink.tsx";
 import { LinksListPage } from "../LinksRedaction/LinksListPage/LinksList.tsx";
 import { EditLinkPage } from "../LinksRedaction/EditLinkPage/EditLink.tsx";
+
+import { HelpSettingsPage } from "../HelpRedaction/HelpSettingsPage/HelpSettings.tsx";
+import { CreateHelpPage } from "../HelpRedaction/CreateHelpPage/CreateHelp.tsx";
+import { HelpListPage } from "../HelpRedaction/HelpListPage/HelpList.tsx";
+import { EditHelpPage } from "../HelpRedaction/EditHelpPage/EditHelp.tsx";
+import { DocumentsSettingsPage } from "../DocumentsRedaction/DocumentsSettingsPage/DocumentsSettings.tsx";
+import { CreateDocumentsPage } from "../DocumentsRedaction/CreateDocumentsPage/CreateDocuments.tsx";
+import { DocumentsListPage } from "../DocumentsRedaction/DocumentsListPage/DocumentsList.tsx";
+import { EditDocumentsPage } from "../DocumentsRedaction/EditDocumentsPage/EditDocuments.tsx";
 
 interface titleSettings {
   title: string;
@@ -76,13 +85,25 @@ const LinksRedaction = [
   "links:create",
   "links:edit",
 ];
+const HelpRedaction = [
+  "help:settings",
+  "help:list",
+  "help:create",
+  "help:edit",
+];
+const DocumentsRedaction = [
+  "documents:settings",
+  "documents:list",
+  "documents:create",
+  "documents:edit",
+];
 
 export const adminNavigator = {
   handleChangeTab: (tab: string) => {},
 };
 
 export const AdminPanelPage = ({ title }: titleSettings) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<string>("ToolsPage");
 
@@ -133,7 +154,7 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
 
       <aside className={styles["sidebar"]}>
         <div className={styles["logo"]}>ADMIN // PANEL</div>
-        <nav>
+        <nav className={styles["main-tools"]}>
           <ul className={styles["menu-list"]}>
             <li>
               <div
@@ -258,6 +279,54 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
             </li>
             <li>
               <div
+                className={`${styles["menu-link"]} ${HelpRedaction.includes(activeTab) && styles["active"]}`}
+                onClick={() => setActiveTab(HelpRedaction[0])}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-message-circle-question-mark preview-icon"
+                >
+                  <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <path d="M12 17h.01" />
+                </svg>
+                Помощь (Настройка)
+              </div>
+            </li>
+            <li>
+              <div
+                className={`${styles["menu-link"]} ${DocumentsRedaction.includes(activeTab) && styles["active"]}`}
+                onClick={() => setActiveTab(DocumentsRedaction[0])}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-files preview-icon"
+                >
+                  <path d="M15 2h-4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8" />
+                  <path d="M16.706 2.706A2.4 2.4 0 0 0 15 2v5a1 1 0 0 0 1 1h5a2.4 2.4 0 0 0-.706-1.706z" />
+                  <path d="M5 7a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 1.732-1" />
+                </svg>
+                Документы (Настройка)
+              </div>
+            </li>
+            <li>
+              <div
                 className={`${styles["menu-link"]} ${activeTab === "LogsPage" && styles["active"]}`}
                 onClick={() => setActiveTab("LogsPage")}
               >
@@ -282,11 +351,14 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
                 Настройки
               </div>
             </li>
-
+          </ul>
+        </nav>
+        <nav>
+          <ul className={styles["menu-list"]}>
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
+                // flexDirection: "column",
                 gap: "5px",
                 position: "absolute",
                 bottom: "0",
@@ -294,32 +366,11 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
                 padding: "20px 0",
               }}
             >
-              <li>
-                <div
+              <li style={{ marginRight: "auto" }}>
+                <Link
+                  to="/"
                   className={styles["menu-link"]}
-                  onClick={() => navigate("/play")}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-play preview-icon"
-                  >
-                    <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />
-                  </svg>
-                  В игру
-                </div>
-              </li>
-              <li>
-                <div
-                  className={styles["menu-link"]}
-                  onClick={() => navigate("/")}
+                  // onClick={() => navigate("/")}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -336,8 +387,32 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
                     <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                   </svg>
-                  На главную
-                </div>
+                  {/* На главную */}
+                </Link>
+              </li>
+
+              <li style={{ marginLeft: "auto" }}>
+                <Link
+                  to="/play"
+                  className={styles["menu-link"]}
+                  // onClick={() => navigate("/play")}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-play preview-icon"
+                  >
+                    <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />
+                  </svg>
+                  {/* В игру */}
+                </Link>
               </li>
             </div>
           </ul>
@@ -369,6 +444,18 @@ export const AdminPanelPage = ({ title }: titleSettings) => {
         {activeTab === LinksRedaction[1] && <LinksListPage />}
         {activeTab === LinksRedaction[2] && <CreateLinkPage />}
         {activeTab === LinksRedaction[3] && <EditLinkPage link_id={edit_id} />}
+
+        {activeTab === HelpRedaction[0] && <HelpSettingsPage />}
+        {activeTab === HelpRedaction[1] && <HelpListPage />}
+        {activeTab === HelpRedaction[2] && <CreateHelpPage />}
+        {activeTab === HelpRedaction[3] && <EditHelpPage help_id={edit_id} />}
+
+        {activeTab === DocumentsRedaction[0] && <DocumentsSettingsPage />}
+        {activeTab === DocumentsRedaction[1] && <DocumentsListPage />}
+        {activeTab === DocumentsRedaction[2] && <CreateDocumentsPage />}
+        {activeTab === DocumentsRedaction[3] && (
+          <EditDocumentsPage document_id={edit_id} />
+        )}
 
         {activeTab === "LogsPage" && <LogsPage />}
         {activeTab === "SettingsPage" && <SettingsPage />}

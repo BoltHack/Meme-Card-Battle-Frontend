@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import ReactMarkdown from "react-markdown";
+import { useEffect, useRef, useState } from "react";
+import Markdown from "react-markdown";
 
-import styles from "./Card.Rules.module.css";
+import styles from "./Card.Documents.module.css";
 
 import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../../components/ErrorPage/Error.tsx";
@@ -12,33 +12,36 @@ import { LoadingPage } from "../../components/LoadingPage/Loading.tsx";
 import { Footer } from "../../components/Footer/Footer.tsx";
 import { Header } from "../../components/Header/Header.tsx";
 
-interface ArticlesData {
-  renderData: string;
-}
-
-interface ArticleNavigationItem {
-  id: string;
-  article: string | null;
-}
-
-interface TitleSettings {
-  title: string;
+interface Params {
+  document: string;
 }
 
 interface FooterLinksContext {
   footerLinks?: any;
 }
 
-export const PrivacyPolicy = ({ title }: TitleSettings) => {
+export const DocumentsPage = () => {
   const { footerLinks } = useOutletContext<FooterLinksContext>() ?? {
     footerLinks: [],
   };
 
+  const { document } = useParams<{ type: string }>() as Params;
+
   const articleSectionsContainer = useRef<HTMLDivElement>(null);
   const [articleList, setArticleList] = useState<ArticleNavigationItem[]>([]);
 
-  const { data, loading, error, socket } =
-    usePageRender<ArticlesData>(`/api/privacy-policy`);
+  const { data, loading, error, socket } = usePageRender(
+    `/api/documents/${document}`,
+  );
+
+  const dateSettings = (date: string) => {
+    return new Date(date).toLocaleString("ru-RU", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour12: false,
+    });
+  };
 
   useEffect(() => {
     if (!loading && data?.renderData && articleSectionsContainer.current) {
@@ -64,6 +67,8 @@ export const PrivacyPolicy = ({ title }: TitleSettings) => {
 
         setArticleList(tempArticles);
       }, 0);
+
+      console.log("data?.renderData", data?.renderData);
     }
   }, [loading, data]);
 
@@ -85,52 +90,52 @@ export const PrivacyPolicy = ({ title }: TitleSettings) => {
   return (
     <div className={styles["body-wrapper"]}>
       <Helmet>
-        <title>{title}</title>
+        <title>{data?.renderData.title}</title>
       </Helmet>
 
       <Header />
 
-      {/*<div className={styles["parallax-body"]}></div>*/}
-
       <div className={styles["container"]}>
-        {/*<article className={styles["article-header"]}>*/}
-        {/*    <h1>Политика конфиденциальности</h1>*/}
-        {/*</article>*/}
-
+        {/* <article className={styles["article-header"]}>
+          <h1>{data?.renderData.title}</h1>
+        </article> */}
         <div className={styles["content-container"]}>
           <article
             className={styles["article-main"]}
             ref={articleSectionsContainer}
           >
             <header>
-              <h1>Политика конфиденциальности</h1>
+              <h1>{data?.renderData.title}</h1>
+              <span className={styles["subtitle"]}>
+                {data?.renderData.summary}
+              </span>
               <p className={styles["subtitle"]}>
-                Последнее обновление: 22 июня 2026 г.
+                Последнее обновление: {dateSettings(data?.renderData.date)}
               </p>
             </header>
 
-            {data?.renderData && data?.renderData.length > 0 ? (
+            {data?.renderData.content && data?.renderData.content.length > 0 ? (
               <section className={styles["article-section"]}>
-                <ReactMarkdown>{data?.renderData}</ReactMarkdown>
+                <Markdown>{data?.renderData.content}</Markdown>
               </section>
             ) : null}
           </article>
 
-          <article className={styles["article-tools"]}>
-            <header>
-              <h3>В этой статье</h3>
-            </header>
+          {articleList && articleList.length > 0 ? (
+            <article className={styles["article-tools"]}>
+              <header>
+                <h3>В этой статье</h3>
+              </header>
 
-            <br />
+              <br />
 
-            {articleList && articleList.length > 0
-              ? articleList.map((item) => (
-                  <section key={item.id}>
-                    <a href={`#${item.id}`}>{item.article}</a>
-                  </section>
-                ))
-              : null}
-          </article>
+              {articleList.map((item) => (
+                <section key={item.id}>
+                  <a href={`#${item.id}`}>{item.article}</a>
+                </section>
+              ))}
+            </article>
+          ) : null}
         </div>
       </div>
 
