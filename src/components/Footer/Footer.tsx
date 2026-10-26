@@ -16,6 +16,7 @@ export const Footer = ({ links }: Props) => {
           <div className={styles["social-grid"]}>
             {links && links.length > 0
               ? links
+                  .filter((lk) => lk.main_priority === true)
                   .sort((a, b) =>
                     a.priority.toString().localeCompare(b.priority.toString()),
                   )
@@ -110,13 +111,29 @@ export const Footer = ({ links }: Props) => {
           <div className={styles["social-title"]}>Другие ссылки</div>
           <div className={styles["footer-col-container"]}>
             <div className={styles["footer-col"]}>
-              <Link to="/documents/company-information">Информация о компании</Link>
+              {links && links.length > 0
+                ? links
+                    .filter((lk: any) => lk.main_priority === false)
+                    .sort((a, b) =>
+                      a.priority
+                        .toString()
+                        .localeCompare(b.priority.toString()),
+                    )
+                    .map((lk: any, index: number) => {
+                      return <Link key={index} to={lk.link}>{lk.name}</Link>;
+                    })
+                : null}
+              {/* <Link to="/documents/company-information">
+                Информация о компании
+              </Link>
               <Link to="/documents/about-us">О нас</Link>
               <Link to="/category/news">Новости</Link>
               <Link to="/blog">Блог</Link>
-              <Link to="/documents/privacy-policy">Политика конфиденциальности</Link>
+              <Link to="/documents/privacy-policy">
+                Политика конфиденциальности
+              </Link>
               <Link to="/documents/terms-of-use">Условия использования</Link>
-              <Link to="/documents/cookie-policy">Политика Cookie файлов</Link>
+              <Link to="/documents/cookie-policy">Политика Cookie файлов</Link> */}
             </div>
           </div>
         </div>

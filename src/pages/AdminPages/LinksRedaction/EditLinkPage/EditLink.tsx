@@ -229,20 +229,22 @@ export const EditLinkPage = ({ link_id }: ResponseProps) => {
             className={styles["editor-left-side"]}
             style={{ maxWidth: "600px" }}
           >
-            <div className={styles["form-group"]}>
-              <label className={styles["form-label"]} htmlFor="icon">
-                Иконка (svg)
-              </label>
-              <textarea
-                name="icon"
-                id="icon"
-                onInput={handleChange}
-                value={formData.icon}
-                className={styles["form-textarea"]}
-                placeholder="Заполните форму..."
-                required
-              />
-            </div>
+            {mainPriority && (
+              <div className={styles["form-group"]}>
+                <label className={styles["form-label"]} htmlFor="icon">
+                  Иконка (svg)
+                </label>
+                <textarea
+                  name="icon"
+                  id="icon"
+                  onInput={handleChange}
+                  value={formData.icon}
+                  className={styles["form-textarea"]}
+                  placeholder="Заполните форму..."
+                  required={mainPriority}
+                />
+              </div>
+            )}
             <button type="submit" className={styles["submit-btn"]}>
               Сохранить
             </button>

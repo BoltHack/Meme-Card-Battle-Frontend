@@ -24,6 +24,7 @@ interface LinksPost {
 import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 
 export const LinksListPage = () => {
+  const [linksType, setLinksType] = useState<string | "">("main");
   const [linksList, setLinksList] = useState<LinksPost[]>([]);
 
   const [isLinkDelete, setIsListDelete] = useState<string | null>(null);
@@ -97,9 +98,28 @@ export const LinksListPage = () => {
       <br />
       <br />
 
+      <div className={admin_styles["card-actions"]}>
+        <button
+          onClick={() => setLinksType("main")}
+          className={`${admin_styles["card-action-btn"]} ${linksType === "main" ? admin_styles["active"] : ""}`}
+        >
+          Основные
+        </button>
+        <button
+          onClick={() => setLinksType("other")}
+          className={`${admin_styles["card-action-btn"]} ${linksType === "other" ? admin_styles["active"] : ""}`}
+        >
+          Другие
+        </button>
+      </div>
+
       <section className={styles["posts-grid-section"]}>
         {linksList && linksList.length > 0 ? (
           linksList
+            .filter(
+              (item) =>
+                item.main_priority === (linksType === "main" ? true : false),
+            )
             .sort((a, b) =>
               a.priority.toString().localeCompare(b.priority.toString()),
             )
@@ -108,24 +128,26 @@ export const LinksListPage = () => {
                 <article key={index} className={styles["grid-card"]}>
                   <div className={links_styles["link-container"]}>
                     <div className={links_styles["link-card"]}>
-                      <div className={styles["featured-image"]}>
-                        <img
-                          loading="lazy"
-                          className={styles["img-placeholder"]}
-                          style={{
-                            width: "100px",
-                            height: "auto",
-                          }}
-                          src={`/${item.icon}`}
-                          alt="Platform icon"
-                        />
-                      </div>
+                      {item.main_priority && (
+                        <div className={styles["featured-image"]}>
+                          <img
+                            loading="lazy"
+                            className={styles["img-placeholder"]}
+                            style={{
+                              width: "100px",
+                              height: "auto",
+                            }}
+                            src={`/${item.icon}`}
+                            alt="Platform icon"
+                          />
+                        </div>
+                      )}
                       <div className={styles["card-body"]}>
                         <h3>{item.name}</h3>
                         <p>ID: {item.id}</p>
                         <p>Ссылка: {item.link}</p>
                         <p>Приоритет: {item.priority}</p>
-                        <p>Main priority: {item.main_priority}</p>
+                        <p>Main priority: {Boolean(item.main_priority)}</p>
                       </div>
                     </div>
                     <ul className={styles["actions-menu"]}>
