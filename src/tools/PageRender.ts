@@ -64,9 +64,9 @@ export default function usePageRender<T extends Record<string, any>>(
       .then((response) => {
         setData(response.data);
         setError(null);
-        if (window.location.pathname !== "/play") {
-          sessionStorage.setItem("active_tab", "play:main");
-        }
+        // if (window.location.pathname !== "/play") {
+        //   sessionStorage.setItem("active_tab", "play:main");
+        // }
         setLoading(false);
         console.log("trigger", trigger);
       })

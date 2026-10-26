@@ -28,7 +28,7 @@ import { adminNavigator } from "../../AdminPanel/AdminPanel.tsx";
 // container.innerHTML = cleanSvg;
 
 export const CreateLinkPage = () => {
-  // const navigate = useNavigate();
+  const [linkType, setLinkType] = useState<string | "">("socials");
 
   const { contentLoading, contentError } =
     useContentRender(`/admin/links/create`);
@@ -41,11 +41,26 @@ export const CreateLinkPage = () => {
   });
   const [mainPriority, setMainPriority] = useState<boolean | false>(false);
 
+  const [otherLinks, setOtherLinks] = useState({
+    email: "",
+    github: "",
+  });
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleOtherLinksChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setOtherLinks((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -91,7 +106,7 @@ export const CreateLinkPage = () => {
       }
 
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage = error?.response?.data.error;
       console.log("error", error);
       if (errorMessage) {
@@ -224,6 +239,7 @@ export const CreateLinkPage = () => {
             </button>
           </div>
         </form>
+        
       </div>
     </div>
   );

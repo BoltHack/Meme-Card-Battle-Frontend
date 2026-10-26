@@ -81,7 +81,7 @@ export const Footer = ({ links }: Props) => {
             </Link>
 
             <span className={styles["github-logo"]}>
-              <a href="https://github.com/" target="_blank">
+              <a href="https://github.com/BoltHack" target="_blank">
                 <span className={styles["brand"]}>Git</span>
                 <span className={styles["subtext"]}>Hub</span>
               </a>

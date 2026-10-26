@@ -189,10 +189,11 @@ export const Header = ({ activeTab, userInfo }: Props) => {
                     }}
                   ></div>
                 </div>
-                <span className={styles["level-badge"]}>
-                  XP {formattedCurrency(userInfo.xp)}{" "}
-                  {userInfo.lvl < 100 ? "/ " + formattedCurrency(maxXP) : ""}
-                </span>
+                <div className={styles["level-badge"]}>
+                  <span>XP</span>
+                  <span>{formattedCurrency(userInfo.xp)}{" "}
+                  {userInfo.lvl < 100 ? "/ " + formattedCurrency(maxXP) : ""}</span>
+                </div>
               </div>
             </div>
           </div>

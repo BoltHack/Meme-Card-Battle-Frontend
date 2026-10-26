@@ -157,6 +157,10 @@
 }
 
 .level-badge {
+  display: flex;
+  gap: 5px;
+}
+.level-badge span {
   font-size: 0.8rem;
   font-weight: 800;
   color: #a855f7;

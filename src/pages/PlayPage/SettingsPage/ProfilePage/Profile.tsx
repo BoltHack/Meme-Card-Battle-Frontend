@@ -199,11 +199,11 @@ export const ProfilePage = () => {
       </section>
 
       <footer className={settings_styles["content-footer"]}>
-        <button
+        {/* <button
           className={`${settings_styles["btn"]} ${settings_styles["btn-secondary"]}`}
         >
           Сбросить
-        </button>
+        </button> */}
         <button
           className={`${settings_styles["btn"]} ${settings_styles["btn-primary"]}`}
           onClick={handleSubmit}
