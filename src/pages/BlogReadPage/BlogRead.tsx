@@ -10,6 +10,7 @@ import styles from "./Card.BlogRead.module.css";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
+import api from "../../api/api.ts";
 import usePageRender from "../../tools/PageRender.ts";
 import { ErrorPage } from "../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../components/LoadingPage/Loading.tsx";
@@ -119,7 +120,8 @@ export const BlogReadPage = () => {
     content: string,
   ) => {
     const cleanText = content.replace(/<[^>]*>/g, "").trim();
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    // const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const urlRegex = /(https?:\/\/[^\s]+|\/[^\s]+)/g;
 
     const text = cleanText.replace(urlRegex, "").trim();
 
@@ -127,9 +129,13 @@ export const BlogReadPage = () => {
 
     if (!matchUrl) return text;
 
+    const isRelative = matchUrl.startsWith("/");
+
+    const imgSrc = isRelative ? `${api.API_BASE_URL}${matchUrl}` : matchUrl;
+
     return `
             <${element} class="${styles[className]}">
-                <img src="${matchUrl}" onclick="window.open('${matchUrl}', '_blank')" />
+                <img src="${imgSrc}" onclick="window.open('${imgSrc}', '_blank')" />
                 ${text ? `<${textElement}>${text}</${textElement}>` : ""}
             </${element}>
                 `;

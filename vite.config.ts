@@ -19,6 +19,16 @@ export default defineConfig({
     //   clientPort: 5173,
     // },
     proxy: {
+      "/socket.io": {
+        target: api.API_SOCKET_URL,
+        ws: true,
+        changeOrigin: true,
+        secure: false,
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          skip_zrok_interstitial: "true",
+        },
+      },
       "/auth": {
         target: api.API_BACKEND_URL,
         changeOrigin: true,
@@ -27,6 +37,7 @@ export default defineConfig({
         // cookieDomainRewrite: "localhost",
         headers: {
           "ngrok-skip-browser-warning": "true",
+          skip_zrok_interstitial: "true",
         },
         bypass: function (req, res, proxyOptions) {
           if (req.headers.accept && req.headers.accept.indexOf("html") !== -1) {
@@ -40,6 +51,7 @@ export default defineConfig({
         secure: false,
         headers: {
           "ngrok-skip-browser-warning": "true",
+          skip_zrok_interstitial: "true",
         },
       },
       "/play": {
@@ -48,6 +60,7 @@ export default defineConfig({
         secure: false,
         headers: {
           "ngrok-skip-browser-warning": "true",
+          skip_zrok_interstitial: "true",
         },
         bypass: function (req, res, proxyOptions) {
           if (req.headers.accept && req.headers.accept.indexOf("html") !== -1) {
@@ -61,6 +74,7 @@ export default defineConfig({
         secure: false,
         headers: {
           "ngrok-skip-browser-warning": "true",
+          skip_zrok_interstitial: "true",
         },
         bypass: function (req, res, proxyOptions) {
           if (req.headers.accept && req.headers.accept.indexOf("html") !== -1) {
@@ -74,6 +88,7 @@ export default defineConfig({
         secure: false,
         headers: {
           "ngrok-skip-browser-warning": "true",
+          skip_zrok_interstitial: "true",
         },
       },
     },

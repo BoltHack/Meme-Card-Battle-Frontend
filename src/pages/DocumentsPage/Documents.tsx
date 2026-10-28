@@ -90,7 +90,7 @@ export const DocumentsPage = () => {
   return (
     <div className={styles["body-wrapper"]}>
       <Helmet>
-        <title>{data?.renderData.title}</title>
+        <title>{data?.renderData.title} | MCB</title>
       </Helmet>
 
       <Header />

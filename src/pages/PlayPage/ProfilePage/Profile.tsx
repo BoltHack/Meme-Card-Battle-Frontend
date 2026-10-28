@@ -195,32 +195,6 @@ export const ProfilePage = () => {
       <div className={styles["container"]}>
         <header className={styles["header-panel"]}>
           <div className={styles["user-block"]}>
-            {/* <div className={styles["user-main-info"]}> */}
-            {/* <div className={styles["user-profile"]}>
-                <img
-                  src={`/${contentData.renderData.avatar}`}
-                  className={styles["avatar"]}
-                />
-                <div className={styles["username"]}>
-                  {contentData?.renderData.name}
-                </div>
-              </div> */}
-
-            {/* <div className={styles["user-level"]}>
-                <span className={styles["level-badge"]}>LVL {stats?.lvl}</span>
-                <div
-                  className={styles["level-bar-bg"]}
-                  title="Опыт до следующего уровня"
-                >
-                  <div className={styles["level-bar-fill"]} style={{ width: "65%" }}></div>
-                  <div
-                    className={styles["level-bar-fill"]}
-                    style={{ width: `${stats?.lvl}%` }}
-                  ></div>
-                </div>
-              </div> */}
-            {/* </div> */}
-
             <div className={styles["progress-container-row"]}>
               <div className={styles["collection-progress-box"]}>
                 <div className={styles["progress-text"]}>
@@ -246,89 +220,6 @@ export const ProfilePage = () => {
           </div>
 
           <div className={styles["balance-container"]}>
-            {/* <div className={`${styles["balance-item"]} ${styles["coins"]}`}>
-              <span className={styles["currency-icon"]}>
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://w3.org">
-                  <defs>
-                    <linearGradient
-                      id="coinGrad"
-                      x1="0%"
-                      y1="0%"
-                      x2="100%"
-                      y2="100%"
-                    >
-                      <stop offset="0%" stopColor="#fcd34d" />
-                      <stop offset="50%" stopColor="#fbbf24" />
-                      <stop offset="100%" stopColor="#b45309" />
-                    </linearGradient>
-                    <linearGradient
-                      id="symbolGrad"
-                      x1="0%"
-                      y1="0%"
-                      x2="0%"
-                      y2="100%"
-                    >
-                      <stop offset="0%" stopColor="#ffffff" />
-                      <stop offset="100%" stopColor="#f59e0b" />
-                    </linearGradient>
-                  </defs>
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="url(#coinGrad)"
-                    strokeWidth="2"
-                    fill="rgba(21, 9, 49, 0.6)"
-                  />
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="7"
-                    stroke="url(#coinGrad)"
-                    strokeWidth="1"
-                    strokeDasharray="2 1"
-                    fill="none"
-                  />
-                  <path
-                    d="M12 6L15 12L12 18L9 12L12 6Z"
-                    fill="url(#symbolGrad)"
-                  />
-                  <path
-                    d="M12 8L14 12L12 16L10 12L12 8Z"
-                    fill="#b45309"
-                    opacity="0.5"
-                  />
-                </svg>
-              </span>
-              <span className={styles["currency-amount"]}>
-                {formattedCurrency(stats?.coins)}
-              </span>
-            </div>
-
-            <div className={`${styles["balance-item"]} ${styles["money"]}`}>
-              <span className={styles["currency-icon"]}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-circle-dollar-sign-icon lucide-circle-dollar-sign"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
-                  <path d="M12 18V6" />
-                </svg>
-              </span>
-              <span className={styles["currency-amount"]}>
-                {formattedCurrency(stats?.money)}
-              </span>
-            </div> */}
-
             <div className={`${styles["balance-item"]} ${styles["power"]}`}>
               <span className={styles["currency-icon"]}>
                 <svg
@@ -447,7 +338,7 @@ export const ProfilePage = () => {
                 className={styles["search-result-back"]}
                 onClick={clearSearchState}
               >
-                Назад
+                Коллекция
               </p>
               <div className={styles["search-result-slash"]}>
                 <svg
@@ -475,7 +366,88 @@ export const ProfilePage = () => {
         )}
 
         <main className={CardsDesign_styles["cards-grid"]} id="cardsGrid">
-          {cards?.reduce((acc, card) => acc + card.card_quantity, 0) ===
+          {contentLoading && cards?.length < 1 ? (
+            <ContentLoading />
+          ) : !contentLoading && cards?.length > 0 ? (
+            cards.map((card: any) => {
+              const lvlName = card.lvl_name.toLowerCase();
+              return (
+                <section
+                  key={card.card_id}
+                  className={`${
+                    CardsDesign_styles["card-3d-wrapper"]
+                  } ${CardsDesign_styles["card-3d-wrapper-anim"]}`}
+                >
+                  <div className={CardsDesign_styles["card-inner"]}>
+                    <div
+                      className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles[lvlName.toLowerCase()]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
+                    >
+                      <div className={CardsDesign_styles["card-shine"]}></div>
+                      <div className={CardsDesign_styles["card-header"]}>
+                        <span
+                          className={CardsDesign_styles["card-cost"]}
+                          title={`Занимает ${card.power_slot} слотов силы`}
+                        >
+                          {card.power_slot}
+                        </span>
+                        <span
+                          className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
+                        >
+                          {card.lvl_name}
+                        </span>
+                      </div>
+                      <div className={CardsDesign_styles["card-artwork"]}>
+                        <img src={`/${card.card_avatar}`} alt="artwork" />
+                      </div>
+                      <div className={CardsDesign_styles["card-body"]}>
+                        <div
+                          className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
+                        >
+                          {card.card_name}
+                        </div>
+                        <div className={CardsDesign_styles["card-description"]}>
+                          {card.card_description}
+                        </div>
+                      </div>
+                      <div className={CardsDesign_styles["card-footer"]}>
+                        <div
+                          className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}
+                        >
+                          <span className={CardsDesign_styles["stat-icon"]}>
+                            ⚔️
+                          </span>
+                          <span className={CardsDesign_styles["stat-value"]}>
+                            {card.card_damage}
+                          </span>
+                        </div>
+                        <div
+                          className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
+                        >
+                          <span className={CardsDesign_styles["stat-icon"]}>
+                            🛡️
+                          </span>
+                          <span className={CardsDesign_styles["stat-value"]}>
+                            {card.card_protection}
+                          </span>
+                        </div>
+                      </div>
+                      <div className={styles["card-count"]}>
+                        x{card.card_quantity}
+                      </div>
+                    </div>
+                    <div className={CardsDesign_styles["game-card-back"]}>
+                      <div className={CardsDesign_styles["card-back-logo"]}>
+                        🔮
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              );
+            })
+          ) : (
+            <p>У вас нет карт данной категории.</p>
+          )}
+          {/* {cards?.reduce((acc, card) => acc + card.card_quantity, 0) ===
           undefined ? (
             <p>У вас нет карт данной категории.</p>
           ) : cards && cards.length > 0 ? (
@@ -556,7 +528,7 @@ export const ProfilePage = () => {
             })
           ) : (
             <ContentLoading />
-          )}
+          )} */}
         </main>
       </div>
     </div>

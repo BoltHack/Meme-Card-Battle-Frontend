@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { io, Socket } from "socket.io-client";
 import Cookies from "js-cookie";
 
-import api from "../api/api.ts";
+// import api from "../api/api.ts";
 
 axios.defaults.withCredentials = true;
 
@@ -30,10 +30,17 @@ export default function usePageRender<T extends Record<string, any>>(
 
   const [trigger, setTrigger] = useState(0);
 
+  // const socket = useMemo(() => {
+  //   return io(api.API_SOCKET_URL, {
+  //     autoConnect: false,
+  //     transports: ["websocket"],
+  //   });
+  // }, []);
+
   const socket = useMemo(() => {
-    return io(api.API_SOCKET_URL, {
+    return io("/", {
       autoConnect: false,
-      transports: ["websocket"],
+      transports: ["polling", "websocket"],
     });
   }, []);
 
