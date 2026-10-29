@@ -29,7 +29,8 @@ import { FriendListMenu } from "../FriendListMenu/Menu.tsx";
 
 import { ScreenClickPage } from "../ScreenClickPage/ScreenClick.tsx";
 
-import SoundsPlayer from "../../../tools/global_scripts/SoundsPlayer.ts";
+import { SoundsPlayer } from "../../../tools/global_scripts/SoundsPlayer";
+import { SoundFunctions } from "../../../tools/global_scripts/SoundsPlayer.tsx";
 
 let play_game_type = "";
 let play_game_key = "";
@@ -68,6 +69,7 @@ export const playFunctions = {
 };
 
 export const PlayPage = () => {
+  // SoundsPlayer();
   const screen_click = sessionStorage.getItem("screen_click");
 
   const [activeTab, setActiveTab] = useState<string>(PlayNavigation[0]);
@@ -364,6 +366,7 @@ export const PlayPage = () => {
       setTimeout(() => {
         playFunctions.foundGame("cancel");
         playFunctions.handleChangeTab("play:game");
+        SoundFunctions.stopBackgroundMusic();
       }, 1000);
       play_game_type = game_type;
       play_game_key = game_key;
@@ -389,7 +392,7 @@ export const PlayPage = () => {
           avatar: inviterData.avatar,
         });
         setInviteMenu(true);
-        SoundsPlayer.playSound("battle_invite");
+        SoundFunctions.playSound("battle_invite");
       }
 
       if (notificationTimeoutRef.current)
@@ -426,13 +429,29 @@ export const PlayPage = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   if (!screen_click) return;
+  useEffect(() => {
+    if (!screen_click) return;
 
-  //   setTimeout(() => SoundsPlayer.backgroundMusic(), 500);
+    setTimeout(() => SoundFunctions.backgroundMusic(), 500);
+
+    return () => {
+      SoundFunctions.stopBackgroundMusic();
+    };
+  }, [screen_click]);
+
+  // useEffect(() => {
+  //   const handleCheckStorage = () => {
+  //     const settings = JSON.parse(localStorage.getItem("settings") || "{}");
+  //     console.log("Громкость:", settings?.sounds?.background_music_volume);
+  //     // SoundsPlayer();
+  //   };
+
+  //   window.addEventListener("storage", handleCheckStorage);
+  //   window.addEventListener("local-storage-update", handleCheckStorage);
 
   //   return () => {
-  //     SoundsPlayer.stopBackgroundMusic();
+  //     window.removeEventListener("storage", handleCheckStorage);
+  //     window.removeEventListener("local-storage-update", handleCheckStorage);
   //   };
   // }, []);
 
@@ -450,7 +469,7 @@ export const PlayPage = () => {
         <title>Meme Card Battle</title>
       </Helmet>
 
-      {/* <Header /> */}
+      <SoundsPlayer />
 
       {isGameFound && (
         <div className={styles["game-search-container"]}>

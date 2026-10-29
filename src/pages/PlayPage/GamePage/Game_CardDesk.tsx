@@ -584,7 +584,8 @@ export const Game_CardDesk = ({
                 className={`
                                  ${CardDesk_styles["player-profile"]}
                                  ${CardDesk_styles["user-profile"]}
-                                 ${damageAnimation === "enemy_damage" ? CardDesk_styles["damage-received"] : null}
+                                 ${CardDesk_styles[!isReady ? "user-cards-menu" : ""]}
+                                 ${damageAnimation === "enemy_damage" ? CardDesk_styles["damage-received"] : ""}
                                  `}
                 style={
                   !isGameStart

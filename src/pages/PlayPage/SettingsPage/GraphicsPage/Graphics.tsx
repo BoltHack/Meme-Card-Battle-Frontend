@@ -15,6 +15,7 @@ export const GraphicsPage = () => {
   const [settingsList, setSettingsList] = useState({
     effects: true,
     particles: true,
+    fps: true,
   });
 
   const { contentLoading, contentError } = useContentRender(
@@ -50,6 +51,7 @@ export const GraphicsPage = () => {
     setSettingsList({
       effects: settings?.graphics?.effects ?? true,
       particles: settings?.graphics?.particles ?? true,
+      fps: settings?.graphics?.fps ?? true,
     });
   }, []);
 
@@ -99,6 +101,24 @@ export const GraphicsPage = () => {
               type="checkbox"
               name="particles"
               checked={settingsList.particles}
+              onChange={handleCheckBoxCheck}
+            />
+            <span className={settings_styles["slider"]}></span>
+          </label>
+        </div>
+        
+        <div className={settings_styles["setting-row"]}>
+          <div className={settings_styles["setting-info"]}>
+            <span className={settings_styles["setting-title"]}>FPS</span>
+            <span className={settings_styles["setting-desc"]}>
+              Показывать количество кадров в секунду
+            </span>
+          </div>
+          <label className={settings_styles["toggle-switch"]}>
+            <input
+              type="checkbox"
+              name="fps"
+              checked={settingsList.fps}
               onChange={handleCheckBoxCheck}
             />
             <span className={settings_styles["slider"]}></span>

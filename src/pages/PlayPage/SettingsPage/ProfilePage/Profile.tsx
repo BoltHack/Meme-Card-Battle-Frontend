@@ -143,7 +143,7 @@ export const ProfilePage = () => {
               Фото профиля
             </span>
             <span className={settings_styles["setting-desc"]}>
-              Рекомендуется SVG, PNG или JPG не менее 400x400px
+              Рекомендуется SVG, PNG или JPG не менее 100x80px
             </span>
             <div className={settings_styles["upload-buttons"]}>
               <label

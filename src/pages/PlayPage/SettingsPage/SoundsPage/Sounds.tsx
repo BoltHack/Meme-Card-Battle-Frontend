@@ -40,6 +40,7 @@ export const SoundsPage = () => {
       },
     };
     localStorage.setItem("settings", JSON.stringify(updateSettings));
+    window.dispatchEvent(new Event("local-storage-update"));
   };
 
   useEffect(() => {

@@ -282,6 +282,30 @@
   border-color: #00ccff;
   box-shadow: 0 0 20px rgba(0, 204, 255, 0.2);
 }
+.user-profile.user-cards-menu {
+  animation: pulse 1.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.35);
+  }
+  40% {
+    transform: scale(0.92);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  80% {
+    transform: scale(0.98);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 
 .enemy-profile.damage-received {
   animation: DamageAnimation 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
