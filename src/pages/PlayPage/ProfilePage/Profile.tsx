@@ -44,6 +44,8 @@ interface PlayerData {
 
 import { playFunctions } from "../Play/Play.tsx";
 
+import { SoundFunctions } from "../../../tools/global_scripts/SoundsPlayer.tsx";
+
 export const ProfilePage = () => {
   const [cards, setCards] = useState<RenderData[]>([]);
   const [cardsCount, setCardsCount] = useState<number>(0);
@@ -158,6 +160,13 @@ export const ProfilePage = () => {
     handleGetCards(cardsCategory);
   }, [cardsCategory]);
 
+  const handleSetCardsCategory = (category: string) => {
+    if (category === cardsCategory) return;
+
+    setCardsCategory(category);
+    SoundFunctions.playSound("btn_click_v2");
+  };
+
   useEffect(() => {
     if (!contentData) {
       console.log(
@@ -258,7 +267,7 @@ export const ProfilePage = () => {
             />
             <div className={styles["filter-buttons"]}>
               <button
-                onClick={() => setCardsCategory("all")}
+                onClick={() => handleSetCardsCategory("all")}
                 className={`${styles["filter-btn"]} ${cardsCategory === "all" ? styles["active"] : null}`}
               >
                 Все
@@ -272,7 +281,7 @@ export const ProfilePage = () => {
                 )}
               </button>
               <button
-                onClick={() => setCardsCategory("default")}
+                onClick={() => handleSetCardsCategory("default")}
                 className={`${styles["filter-btn"]} ${cardsCategory === "default" ? styles["active"] : null}`}
               >
                 Обычные
@@ -286,7 +295,7 @@ export const ProfilePage = () => {
                 )}
               </button>
               <button
-                onClick={() => setCardsCategory("rare")}
+                onClick={() => handleSetCardsCategory("rare")}
                 className={`${styles["filter-btn"]} ${cardsCategory === "rare" ? styles["active"] : null}`}
               >
                 Редкие
@@ -300,7 +309,7 @@ export const ProfilePage = () => {
                 )}
               </button>
               <button
-                onClick={() => setCardsCategory("epic")}
+                onClickCapture={() => handleSetCardsCategory("epic")}
                 className={`${styles["filter-btn"]} ${cardsCategory === "epic" ? styles["active"] : null}`}
               >
                 Эпические
@@ -314,7 +323,7 @@ export const ProfilePage = () => {
                 )}
               </button>
               <button
-                onClick={() => setCardsCategory("legendary")}
+                onClick={() => handleSetCardsCategory("legendary")}
                 className={`${styles["filter-btn"]} ${cardsCategory === "legendary" ? styles["active"] : null}`}
               >
                 Легендарные

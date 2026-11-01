@@ -28,6 +28,7 @@ export const settingsNavigator = {
 };
 
 import { playFunctions } from "../../Play/Play.tsx";
+import { SoundFunctions } from "../../../../tools/global_scripts/SoundsPlayer.tsx";
 
 export const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState<string>(Settings[0]);
@@ -64,6 +65,12 @@ export const SettingsPage = () => {
       settingsNavigator.handleChangeTab = () => {};
     };
   }, [activeTab]);
+
+  const handleSetActiveTab = (tab: string) => {
+    if (tab === activeTab) return;
+    SoundFunctions.playSound("btn_click");
+    setActiveTab(tab);
+  }
 
   useEffect(() => {
     // if (!data || !Array.isArray(data.renderData)) {
@@ -109,7 +116,7 @@ export const SettingsPage = () => {
           <nav className={styles["menu"]}>
             <a
               className={`${styles["menu-item"]} ${activeTab === Settings[0] && styles["active"]}`}
-              onClick={() => setActiveTab(Settings[0])}
+              onClick={() => handleSetActiveTab(Settings[0])}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -126,7 +133,7 @@ export const SettingsPage = () => {
             </a>
             <a
               className={`${styles["menu-item"]} ${activeTab === Settings[1] && styles["active"]}`}
-              onClick={() => setActiveTab(Settings[1])}
+              onClick={() => handleSetActiveTab(Settings[1])}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +171,7 @@ export const SettingsPage = () => {
             </a> */}
             <a
               className={`${styles["menu-item"]} ${activeTab === Settings[2] && styles["active"]}`}
-              onClick={() => setActiveTab(Settings[2])}
+              onClick={() => handleSetActiveTab(Settings[2])}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -181,7 +188,7 @@ export const SettingsPage = () => {
             </a>
             <a
               className={`${styles["menu-item"]} ${activeTab === Settings[3] && styles["active"]}`}
-              onClick={() => setActiveTab(Settings[3])}
+              onClick={() => handleSetActiveTab(Settings[3])}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -203,7 +210,7 @@ export const SettingsPage = () => {
             </a>
             <a
               className={`${styles["menu-item"]} ${activeTab === Settings[4] && styles["active"]}`}
-              onClick={() => setActiveTab(Settings[4])}
+              onClick={() => handleSetActiveTab(Settings[4])}
             >
               <svg
                 viewBox="0 0 24 24"

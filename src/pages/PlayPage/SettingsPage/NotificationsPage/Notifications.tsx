@@ -9,6 +9,8 @@ import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
 
+import { SoundFunctions } from "../../../../tools/global_scripts/SoundsPlayer.tsx";
+
 export const NotificationsPage = () => {
   const settings = JSON.parse(localStorage.getItem("settings") || "{}");
 
@@ -23,6 +25,9 @@ export const NotificationsPage = () => {
 
   const handleCheckBoxCheck = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
+
+    SoundFunctions.playSound("value_change");
+
     setSettingsList((prev) => ({
       ...prev,
       [name]: checked,

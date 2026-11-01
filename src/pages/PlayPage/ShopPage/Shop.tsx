@@ -24,6 +24,7 @@ interface CaseFormat {
 }
 
 import { playFunctions } from "../Play/Play.tsx";
+import { SoundFunctions } from "../../../tools/global_scripts/SoundsPlayer.tsx";
 
 export const ShopPage = () => {
   const [cases, setCases] = useState<CaseFormat[]>([]);
@@ -45,6 +46,7 @@ export const ShopPage = () => {
     useContentRender(`/play/shop`);
 
   const buyCase = async (case_id: string, case_quantity: string) => {
+    SoundFunctions.playSound("btn_click_v2");
     setIsCaseLoading(case_id);
 
     const dataToSend = new FormData();
@@ -59,7 +61,9 @@ export const ShopPage = () => {
           withCredentials: true,
         },
       );
-      if (response.data?.success) {
+      if (response.status === 200) {
+        SoundFunctions.fixedVolumeSound("play", "successful_purchase", 0.5);
+        SoundFunctions.playSound("success_notification");
         toast.success(response.data?.success);
         setIsCaseLoading(null);
         setShopData({
@@ -69,16 +73,23 @@ export const ShopPage = () => {
         playFunctions.updateUserInfo(response.data.coins);
       }
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.log("error", error);
       setIsCaseLoading(null);
       const errorMessage = error?.response?.data.error;
       if (errorMessage) {
+        SoundFunctions.fixedVolumeSound("game", "error_notification", 0.4);
         toast.error(errorMessage);
         return;
       }
     }
   };
+
+  const closeMenu = () => {
+    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.fixedVolumeSound("play", "menu_close_v2", 0.4);
+    setShopData(initialShopDataState);
+  }
 
   // const openCase = async (case_id: string) => {
   //   setIsCaseLoading(case_id);
@@ -107,6 +118,7 @@ export const ShopPage = () => {
   // };
 
   const updatePrice = (case_id: string, count: number) => {
+    SoundFunctions.playSound("value_change");
     setCases((prevState) =>
       prevState.map((cs) =>
         cs.id === case_id
@@ -348,7 +360,7 @@ export const ShopPage = () => {
             <div className={styles["shop-modal-main"]}>
               <button
                 className={styles["close-btn"]}
-                onClick={() => setShopData(initialShopDataState)}
+                onClick={closeMenu}
               >
                 &times;
               </button>
@@ -369,7 +381,7 @@ export const ShopPage = () => {
               <div className={styles["button-container"]}>
                 <button
                   className={styles["shop-action-btn"]}
-                  onClick={() => setShopData(initialShopDataState)}
+                  onClick={closeMenu}
                 >
                   {/* <span className={styles["key-hin"]}>ENTER</span> */}
                   ЗАКРЫТЬ

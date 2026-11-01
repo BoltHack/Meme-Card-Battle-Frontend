@@ -9,6 +9,8 @@ import useContentRender from "../../../../tools/ContentRender.ts";
 import { ErrorPage } from "../../../../components/ErrorPage/Error.tsx";
 import { ContentLoading } from "../../../../components/LoadingPage/ContentLoading.tsx";
 
+import { SoundFunctions } from "../../../../tools/global_scripts/SoundsPlayer.tsx";
+
 export const GraphicsPage = () => {
   const settings = JSON.parse(localStorage.getItem("settings") || "{}");
 
@@ -24,6 +26,9 @@ export const GraphicsPage = () => {
 
   const handleCheckBoxCheck = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
+
+    SoundFunctions.playSound("value_change");
+
     setSettingsList((prev) => ({
       ...prev,
       [name]: checked,
@@ -107,7 +112,7 @@ export const GraphicsPage = () => {
           </label>
         </div>
         
-        <div className={settings_styles["setting-row"]}>
+        {/* <div className={settings_styles["setting-row"]}>
           <div className={settings_styles["setting-info"]}>
             <span className={settings_styles["setting-title"]}>FPS</span>
             <span className={settings_styles["setting-desc"]}>
@@ -123,7 +128,7 @@ export const GraphicsPage = () => {
             />
             <span className={settings_styles["slider"]}></span>
           </label>
-        </div>
+        </div> */}
       </section>
 
       {/* <footer className={settings_styles["content-footer"]}>

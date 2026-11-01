@@ -11,12 +11,13 @@ import { ContentLoading } from "../../../../components/LoadingPage/ContentLoadin
 
 // import toast from "react-hot-toast";
 
+import { SoundFunctions } from "../../../../tools/global_scripts/SoundsPlayer.tsx";
+
 export const SoundsPage = () => {
   const settings = JSON.parse(localStorage.getItem("settings") || "{}");
 
   const [settingsList, setSettingsList] = useState({
-    all_volume: 100,
-    background_music_volume: 100,
+    game_background_music_volume: 100,
     game_effects_volume: 100,
     notifications_volume: 100,
   });
@@ -27,6 +28,9 @@ export const SoundsPage = () => {
 
   const handleRangeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    SoundFunctions.fixedVolumeSound("play", "volume_change", 0.1);
+
     setSettingsList((prev) => ({
       ...prev,
       [name]: Number(value),
@@ -52,15 +56,13 @@ export const SoundsPage = () => {
       return;
     }
 
-    const all = settings.sounds.all_volume;
-    const background_music = settings.sounds.background_music_volume;
+    const game_background_music = settings.sounds.game_background_music_volume;
     const game_effects = settings.sounds.game_effects_volume;
     const notifications = settings.sounds.notifications_volume;
 
     setSettingsList({
-      all_volume: all === 0 ? 0 : all * 100 || 100,
-      background_music_volume:
-        background_music === 0 ? 0 : background_music * 100 || 100,
+      game_background_music_volume:
+        game_background_music === 0 ? 0 : game_background_music * 100 || 100,
       game_effects_volume: game_effects === 0 ? 0 : game_effects * 100 || 100,
       notifications_volume:
         notifications === 0 ? 0 : notifications * 100 || 100,
@@ -80,44 +82,23 @@ export const SoundsPage = () => {
       <section className={settings_styles["settings-section"]}>
         <h2>Звук</h2>
 
-        {/* <div className={settings_styles["setting-row"]}>
-          <div className={settings_styles["setting-info"]}>
-            <span className={settings_styles["setting-title"]}>
-              Общая громкость
-            </span>
-
-            <div className={settings_styles["toggle-volume"]}>
-              <input
-                type="range"
-                name="all_volume"
-                min="0"
-                max="100"
-                step="1"
-                value={settingsList.all_volume}
-                onChange={handleRangeChange}
-              />
-              <span>({Math.round(settingsList.all_volume)}%)</span>
-            </div>
-          </div>
-        </div> */}
-
         <div className={settings_styles["setting-row"]}>
           <div className={settings_styles["setting-info"]}>
             <span className={settings_styles["setting-title"]}>
-              Громкость фоновой музыки
+              Громкость фоновой музыки в бою
             </span>
 
             <div className={settings_styles["toggle-volume"]}>
               <input
                 type="range"
-                name="background_music_volume"
+                name="game_background_music_volume"
                 min="0"
                 max="100"
                 step="1"
-                value={settingsList.background_music_volume}
+                value={settingsList.game_background_music_volume}
                 onChange={handleRangeChange}
               />
-              <span>({Math.round(settingsList.background_music_volume)}%)</span>
+              <span>({Math.round(settingsList.game_background_music_volume)}%)</span>
             </div>
           </div>
         </div>

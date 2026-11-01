@@ -15,14 +15,18 @@ import toast from "react-hot-toast";
 import { Game_Menus } from "./Game_Menus.tsx";
 import { Game_CardDesk } from "./Game_CardDesk.tsx";
 
-import api from "../../../api/api.ts"
 import usePageRender from "../../../tools/PageRender.ts";
 import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
 
-const socket: Socket = io(api.API_SOCKET_URL, {
+// const socket: Socket = io(api.API_SOCKET_URL, {
+//   autoConnect: false,
+//   transports: ["websocket"],
+// });
+
+const socket = io("/", {
   autoConnect: false,
-  transports: ["websocket"],
+  transports: ["polling", "websocket"],
 });
 
 interface PlayerData {
@@ -77,6 +81,9 @@ interface Props {
 }
 
 import { playFunctions } from "../Play/Play.tsx";
+
+import { SoundsPlayer } from "../../../tools/global_scripts/SoundsPlayer";
+import { SoundFunctions } from "../../../tools/global_scripts/SoundsPlayer.tsx";
 
 export const GameFunctions = {
   leaveGame_menu: (type: boolean) => {
@@ -516,6 +523,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     socket.on("error_handler", (message) => {
       toast.dismiss();
       toast.error(message);
+      SoundFunctions.fixedVolumeSound("game", "error_notification", 0.4);
 
       // if (bodyLoader) {
       setBodyLoader(false);
@@ -563,6 +571,9 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       const { type, gameData } = data;
 
       if (type === "timer") {
+        if (gameData.timer === 5) {
+          SoundFunctions.playGameSound("versus_zoom");
+        }
         if (gameData.timer === 0) {
           setVersusCards(null);
           setIsVersus(false);
@@ -624,9 +635,11 @@ export const GamePage = ({ game_type, game_key }: Props) => {
         setIsReady(true);
 
         setTimeout(() => {
+          SoundFunctions.fixedVolumeSound("game", "game_start", 0.5);
+        }, 750);
+        setTimeout(() => {
           setGameStartedInfo(true);
         }, 1000);
-
         setTimeout(() => {
           setIsGameStarted(true);
           setGameStartedInfo(false);
@@ -665,6 +678,16 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       socket.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (!isGameStarted) return;
+    
+    setTimeout(() => SoundFunctions.GameBackgroundMusic(), 500);
+
+    return () => {
+      SoundFunctions.StopGameBackgroundMusic();
+    };
+  }, [isGameStarted]);
 
   (function () {
     const fpsDiv = document.createElement("div");
@@ -743,6 +766,8 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       <Helmet>
         <title>{title}</title>
       </Helmet>
+
+      <SoundsPlayer />
 
       {/* <button className={laser_styles["laser-btn"]} onClick={test}>
         ⚡ Запустить лазер

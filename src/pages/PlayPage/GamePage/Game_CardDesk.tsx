@@ -21,6 +21,7 @@ interface CardData {
 }
 
 import { GameFunctions } from "./Game.tsx";
+import { SoundFunctions } from "../../../tools/global_scripts/SoundsPlayer.tsx";
 
 interface TitleSettings {
   isGameStarted: boolean;
@@ -479,58 +480,12 @@ export const Game_CardDesk = ({
                             damping: 30,
                           }}
                         >
-                          {/*<div*/}
-                          {/*    key={cardId} id={cardId} className={`${CardsDesign_styles["card-3d-wrapper"]} ${CardsDesign_styles["hand_card"]}`}*/}
-                          {/*    onClick={() => {*/}
-                          {/*        // if (activeAnimationCardId || activePlayerCard !== null) return;*/}
-                          {/*        if (activePlayerCard !== null) return;*/}
-                          {/*        useCard('open', {*/}
-                          {/*            cardInfo: {*/}
-                          {/*                id: cardId,*/}
-                          {/*                lvl: card?.lvl,*/}
-                          {/*                rarity: card?.rarity,*/}
-                          {/*                avatar: card?.avatar,*/}
-                          {/*                name: card?.name,*/}
-                          {/*                description: card?.description,*/}
-                          {/*                damage: card?.damage,*/}
-                          {/*                protection: card?.protection,*/}
-                          {/*            }*/}
-                          {/*        } as ActionData);*/}
-                          {/*    }}*/}
-                          {/*>*/}
-                          {/*    <div className={CardsDesign_styles["card-inner"]}>*/}
-                          {/*        <div className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles[lvlName.toLowerCase()]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}>*/}
-                          {/*            <div className={CardsDesign_styles["card-shine"]}></div>*/}
-                          {/*            <div className={CardsDesign_styles["card-header"]}>*/}
-                          {/*                <span className={CardsDesign_styles["card-cost"]} title="Занимает 15 слотов силы">{card.power_slot}</span>*/}
-                          {/*                <span className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}>{lvlName}</span>*/}
-                          {/*            </div>*/}
-                          {/*            <div className={CardsDesign_styles["card-artwork"]}>*/}
-                          {/*                <img src={`/${card.avatar}`} alt="artwork" />*/}
-                          {/*            </div>*/}
-                          {/*            <div className={CardsDesign_styles["card-body"]}>*/}
-                          {/*                <div className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}>{card.name}</div>*/}
-                          {/*                <div className={CardsDesign_styles["card-description"]}>*/}
-                          {/*                    {card.description}*/}
-                          {/*                </div>*/}
-                          {/*            </div>*/}
-                          {/*            /!*<div className={CardsDesign_styles["card-footer"]}>*!/*/}
-                          {/*            /!*    <div className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}>*!/*/}
-                          {/*            /!*        <span className={CardsDesign_styles["stat-icon"]}>⚔️</span>*!/*/}
-                          {/*            /!*        <span className={CardsDesign_styles["stat-value"]}>{card.damage}</span>*!/*/}
-                          {/*            /!*    </div>*!/*/}
-                          {/*            /!*    <div className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}>*!/*/}
-                          {/*            /!*        <span className={CardsDesign_styles["stat-icon"]}>🛡️</span>*!/*/}
-                          {/*            /!*        <span className={CardsDesign_styles["stat-value"]}>{card.protection}</span>*!/*/}
-                          {/*            /!*    </div>*!/*/}
-                          {/*            /!*</div>*!/*/}
-                          {/*        </div>*/}
-                          {/*    </div>*/}
-                          {/*</div>*/}
-
                           <div
                             id={cardId}
                             className={`${CardDesk_styles["hand-card"]} ${CardDesk_styles[`${card.rarity?.toLowerCase()}`]}`}
+                            onMouseEnter={() =>
+                              SoundFunctions.fixedVolumeSound("game", "card_selection", 0.2)
+                            }
                             onClick={() => {
                               if (activePlayerCard !== null || !isGameStarted)
                                 return;

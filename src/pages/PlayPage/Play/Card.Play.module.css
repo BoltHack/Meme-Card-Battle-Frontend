@@ -15,6 +15,62 @@
   z-index: 1000;
 
   user-select: none;
+
+  opacity: 0;
+  transform: translateX(120%);
+  will-change: transform, opacity;
+}
+
+/* КЛАСС ДЛЯ ПОЯВЛЕНИЯ (0.75s под ваш звук) */
+.game-search-container.is-open {
+  animation: slideInGamingPerfect 0.75s cubic-bezier(0.05, 0.9, 0.1, 1) forwards;
+}
+
+/* КЛАСС ДЛЯ УДАЛЕНИЯ (Быстрый зеркальный вылет за 0.3s) */
+.game-search-container.is-closing {
+  /* ease-in заставляет анимацию ускоряться к концу, как при резком рывке */
+  animation: slideOutGaming 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/* Ключевые кадры: Появление */
+@keyframes slideInGamingPerfect {
+  0% {
+    opacity: 0;
+    transform: translateX(120%) skewX(-10deg);
+    box-shadow: 0 10px 20px rgba(94, 23, 235, 0);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(-10px) skewX(3deg);
+  }
+  30% {
+    transform: translateX(4px) skewX(-1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) skewX(0deg);
+    box-shadow: 0 10px 30px rgba(94, 23, 235, 0.6);
+  }
+}
+
+/* Ключевые кадры: Удаление */
+@keyframes slideOutGaming {
+  0% {
+    opacity: 1;
+    transform: translateX(0) skewX(0deg);
+    box-shadow: 0 10px 30px rgba(94, 23, 235, 0.6);
+  }
+  30% {
+    /* Небольшой замах влево перед рывком вправо */
+    transform: translateX(-15px) skewX(-2deg);
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    /* Улетает дальше, сжимаясь по оси X для эффекта гиперпрыжка */
+    transform: translateX(120%) scaleX(0.7) skewX(15deg);
+    box-shadow: 0 10px 20px rgba(94, 23, 235, 0);
+  }
 }
 
 .game-search-container::before {

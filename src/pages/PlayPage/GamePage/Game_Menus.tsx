@@ -61,6 +61,7 @@ interface TitleSettings {
 
 import { playFunctions } from "../Play/Play.tsx";
 import { GameFunctions } from "./Game.tsx";
+import { SoundFunctions } from "../../../tools/global_scripts/SoundsPlayer.tsx";
 
 export const Game_Menus = ({
   isGameStarted,
@@ -100,6 +101,7 @@ export const Game_Menus = ({
     if ([...cardsList].includes(menu_id)) {
       toast.dismiss();
       toast.error("Вы уже выбрали эту карту.");
+      SoundFunctions.fixedVolumeSound("game", "error_notification", 0.4);
       return;
     }
 
@@ -112,13 +114,14 @@ export const Game_Menus = ({
       card_id: card_id,
       menu_id: menu_id,
     });
+    SoundFunctions.playGameSound("card_select_v4");
   };
 
   const removeCard = (idToRemove: string) => {
     if (isGameStarted) return;
 
-    console.log("idToRemove", idToRemove);
-    console.log("list", list);
+    SoundFunctions.playGameSound("card_remove");
+
     const removeId = list.filter((item) => item.menu_id !== idToRemove);
     if (!removeId) return;
     setList(removeId);

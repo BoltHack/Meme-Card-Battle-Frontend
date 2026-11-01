@@ -11,6 +11,8 @@ import { ContentLoading } from "../../../../components/LoadingPage/ContentLoadin
 
 import toast from "react-hot-toast";
 
+import { SoundFunctions } from "../../../../tools/global_scripts/SoundsPlayer.tsx";
+
 export const ProfilePage = () => {
   const [formData, setFormData] = useState({
     aboutMe: "",
@@ -88,6 +90,7 @@ export const ProfilePage = () => {
 
         setFile(null);
 
+        SoundFunctions.playSound("success_notification");
         toast.success(response.data.success);
       }
 

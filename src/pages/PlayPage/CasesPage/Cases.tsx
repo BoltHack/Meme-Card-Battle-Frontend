@@ -37,6 +37,8 @@ interface CardsPost {
 
 import { playFunctions } from "../Play/Play.tsx";
 
+import { SoundFunctions } from "../../../tools/global_scripts/SoundsPlayer.tsx";
+
 export const CasesPage = () => {
   const [caseContent, setCaseContent] = useState<ContentPost[]>([]);
   const [caseContentLoading, setCaseContentLoading] = useState<boolean | false>(
@@ -75,8 +77,16 @@ export const CasesPage = () => {
   const { contentData, contentLoading, contentError } =
     useContentRender(`/play/cases`);
 
+  const handleSetCurrentCase = (caseId: string) => {
+    if (caseId === currentCase) return;
+
+    setCurrentCase(caseId);
+    SoundFunctions.playSound("btn_click_v2");
+  };
+
   const getCaseContent = async (case_id: string) => {
-    setCaseContentLoading(true);
+    SoundFunctions.playSound("btn_click_v2");
+    setTimeout(() => setCaseContentLoading(true), 100);
     try {
       const response = await axios.post(`/play/case/${case_id}/content/get`, {
         withCredentials: true,
@@ -84,6 +94,7 @@ export const CasesPage = () => {
 
       if (response.status === 200) {
         setCaseContentLoading(false);
+        SoundFunctions.fixedVolumeSound("play", "menu_open", 0.2);
         setCaseContent(response.data.content);
       }
 
@@ -96,6 +107,12 @@ export const CasesPage = () => {
         return;
       }
     }
+  };
+
+  const closeContentMenu = () => {
+    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.fixedVolumeSound("play", "menu_close_v2", 0.4);
+    setCaseContent([]);
   };
 
   const openCase = async (case_id: string) => {
@@ -144,12 +161,17 @@ export const CasesPage = () => {
   };
 
   const openContainer = (case_id: string) => {
+    SoundFunctions.playSound("open_case");
     setIsOpenCase(case_id);
     setMenuType("open");
-    setTimeout(() => setReward(true), 1000);
+    setTimeout(() => {
+      setReward(true);
+      SoundFunctions.playSound("open_case_result");
+    }, 1000);
   };
 
   const handleClaim = () => {
+    SoundFunctions.playSound("btn_click_v2");
     setMenuType("close");
     setIsOpenCase("");
     setTimeout(() => setReward(false), 1000);
@@ -182,7 +204,10 @@ export const CasesPage = () => {
                   <div
                     key={index}
                     className={styles["header-btn"]}
-                    onClick={() => setCurrentCase(cs.rarity.toLowerCase())}
+                    // onClick={() => setCurrentCase(cs.rarity.toLowerCase())}
+                    onClick={() =>
+                      handleSetCurrentCase(cs.rarity.toLowerCase())
+                    }
                   >
                     <div className={styles["case-btn-info"]}>
                       <span
@@ -316,7 +341,8 @@ export const CasesPage = () => {
         <div className={styles["modal-overlay"]}>
           <button
             className={styles["modal-close"]}
-            onClick={() => setCaseContent([])}
+            // onClick={() => setCaseContent([])}
+            onClick={closeContentMenu}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

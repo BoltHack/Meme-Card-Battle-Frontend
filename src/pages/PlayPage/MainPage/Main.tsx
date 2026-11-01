@@ -27,6 +27,7 @@ interface Props {
 }
 
 import { playFunctions } from "../Play/Play.tsx";
+import { SoundFunctions } from "../../../tools/global_scripts/SoundsPlayer.tsx";
 
 export const MainPage = ({ isGameFound }: Props) => {
   const settings = JSON.parse(localStorage.getItem("settings") || "{}");
@@ -49,20 +50,25 @@ export const MainPage = ({ isGameFound }: Props) => {
   // );
 
   const findGame = (type: string) => {
+    SoundFunctions.playSound("btn_click_v2");
     playFunctions.foundGame(type);
     setIsOpen(false);
   };
 
   const toggleMenu = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.fixedVolumeSound("play", "menu_open", 0.2);
+    // SoundFunctions.fixedVolumeSound("play", "btn_click_v4", 0.5);
     setIsClosing(false);
     setIsOpen(true);
   };
   const closeMenu = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.fixedVolumeSound("play", "menu_close_v2", 0.4);
 
     setIsClosing(true);
-
     timeoutRef.current = window.setTimeout(() => {
       setIsOpen(false);
       setIsClosing(false);

@@ -8,6 +8,7 @@ axios.defaults.withCredentials = true;
 import toast from "react-hot-toast";
 
 import { playFunctions } from "../../Play/Play";
+import { SoundFunctions } from "../../../../tools/global_scripts/SoundsPlayer";
 
 export const AccountPage = () => {
   const [formData, setFormData] = useState({
@@ -22,8 +23,17 @@ export const AccountPage = () => {
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const handleSetMenuType = (menu: string) => {
+    setMenuType(menu);
+    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.fixedVolumeSound("play", "menu_open", 0.2);
+  };
+
   const closeMenu = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.fixedVolumeSound("play", "menu_close_v2", 0.4);
 
     setIsClosing(true);
 
@@ -44,6 +54,8 @@ export const AccountPage = () => {
 
   const handleSubmit = async (e: ChangeEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    SoundFunctions.playSound("btn_click_v2");
     setIsLoading(true);
 
     const dataToSend = new FormData();
@@ -58,9 +70,15 @@ export const AccountPage = () => {
       });
 
       if (response.status === 200) {
+        SoundFunctions.playSound("success_notification");
         toast.success(response.data.success);
         setMenuType(null);
         setIsLoading(false);
+        setFormData({
+          old_password: "",
+          new_password: "",
+          confirm_password: "",
+        });
       }
 
       return response.data;
@@ -69,15 +87,18 @@ export const AccountPage = () => {
       console.log("error", error);
       const errorMessage = error.response.data.error;
       if (errorMessage) {
+        SoundFunctions.fixedVolumeSound("game", "error_notification", 0.4);
         toast.error(errorMessage);
       }
     }
   };
-  
+
   const handleSubmit_LeaveAllAccounts = async (
     e: ChangeEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
+
+    SoundFunctions.playSound("btn_click_v2");
     setIsLoading(true);
     try {
       const response = await axios.post("/auth/logout-all-accounts", {
@@ -85,6 +106,7 @@ export const AccountPage = () => {
       });
 
       if (response.status === 200) {
+        SoundFunctions.playSound("success_notification");
         toast.success(response.data.success);
         setMenuType(null);
         setIsLoading(false);
@@ -97,6 +119,7 @@ export const AccountPage = () => {
       console.log("error", error);
       const errorMessage = error.response.data.error;
       if (errorMessage) {
+        SoundFunctions.fixedVolumeSound("game", "error_notification", 0.4);
         toast.error(errorMessage);
       }
     }
@@ -126,7 +149,7 @@ export const AccountPage = () => {
           </div>
           <button
             className={`${settings_styles["btn"]} ${settings_styles["btn-secondary"]}`}
-            onClick={() => setMenuType("changepassword")}
+            onClick={() => handleSetMenuType("changepassword")}
           >
             Изменить
           </button>
@@ -146,7 +169,7 @@ export const AccountPage = () => {
           </div>
           <button
             className={`${settings_styles["btn"]} ${settings_styles["btn-secondary"]}`}
-            onClick={() => setMenuType("logoutallaccounts")}
+            onClick={() => handleSetMenuType("logoutallaccounts")}
           >
             Выйти
           </button>
@@ -204,7 +227,7 @@ export const AccountPage = () => {
           </div>
           <button
             className={`${settings_styles["btn"]} ${settings_styles["btn-danger"]}`}
-            onClick={() => setMenuType("deleteaccount")}
+            onClick={() => handleSetMenuType("deleteaccount")}
           >
             Удалить аккаунт
           </button>
@@ -305,7 +328,7 @@ export const AccountPage = () => {
               <div
                 className={settings_styles["menu-btn"]}
                 style={{ background: "rgb(41, 22, 86)" }}
-                onClick={() => setMenuType(null)}
+                onClick={closeMenu}
               >
                 <span>Отмена</span>
               </div>
@@ -381,7 +404,7 @@ export const AccountPage = () => {
               <div
                 className={settings_styles["menu-btn"]}
                 style={{ background: "rgb(41, 22, 86)" }}
-                onClick={() => setMenuType(null)}
+                onClick={closeMenu}
               >
                 <span>Отмена</span>
               </div>
@@ -474,7 +497,7 @@ export const AccountPage = () => {
               <div
                 className={settings_styles["menu-btn"]}
                 style={{ background: "rgb(41, 22, 86)" }}
-                onClick={() => setMenuType(null)}
+                onClick={closeMenu}
               >
                 <span>Отмена</span>
               </div>

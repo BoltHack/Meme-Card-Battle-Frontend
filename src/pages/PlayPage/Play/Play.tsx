@@ -69,7 +69,6 @@ export const playFunctions = {
 };
 
 export const PlayPage = () => {
-  // SoundsPlayer();
   const screen_click = sessionStorage.getItem("screen_click");
 
   const [activeTab, setActiveTab] = useState<string>(PlayNavigation[0]);
@@ -88,6 +87,9 @@ export const PlayPage = () => {
       setActiveTab((prevTab) => {
         console.log("Предыдущая вкладка:", prevTab);
         console.log("Новая вкладка:", tab);
+
+        SoundFunctions.fixedVolumeSound("play", "btn_click_v3", 0.02);
+        SoundFunctions.fixedVolumeSound("play", "btn_click_v4", 0.5);
 
         sessionStorage.setItem("active_tab", tab);
         return tab;
@@ -112,6 +114,7 @@ export const PlayPage = () => {
   }, []);
 
   useEffect(() => {
+    let timer: any;
     playFunctions.foundGame = (type: string) => {
       if (!data?.id) {
         navigate("/auth/sign-in");
@@ -119,21 +122,42 @@ export const PlayPage = () => {
       }
       if (type === "search") {
         setIsGameFound(true);
-        console.log("search game...", data?.id);
+        setIsGameSearchMenu(true);
+
+        // setTimeout(() => {
+        //   socket.emit("search_game", {
+        //     type: true,
+        //     player_id: data?.id,
+        //   });
+        // }, 5000);
         socket.emit("search_game", {
           type: true,
           player_id: data?.id,
         });
+
+        SoundFunctions.playSound("game_searching_menu_open");
         gameFoundTimerStart();
       } else if (type === "cancel") {
-        setIsGameFound(false);
+        setIsGameSearchMenu(false);
+
+        timer = setTimeout(() => {
+          setIsGameFound(false);
+        }, 500);
+
         gameFoundTimerReset();
         socket.emit("search_game", {
           type: false,
           player_id: data?.id,
         });
+
+        SoundFunctions.playSound("game_searching_menu_close");
       } else {
-        setIsGameFound(false);
+        setIsGameSearchMenu(false);
+
+        timer = setTimeout(() => {
+          setIsGameFound(false);
+        }, 500);
+
         gameFoundTimerReset();
         socket.emit("search_game", {
           type: false,
@@ -143,6 +167,7 @@ export const PlayPage = () => {
     };
 
     return () => {
+      clearTimeout(timer);
       playFunctions.foundGame = () => {};
     };
   }, [data]);
@@ -158,6 +183,7 @@ export const PlayPage = () => {
 
         console.log("Успешный logout!");
         toast.dismiss();
+        SoundFunctions.playSound("success_notification");
         toast.success(data.success || "Вы вышли из системы");
 
         localStorage.removeItem("token");
@@ -195,6 +221,12 @@ export const PlayPage = () => {
   useEffect(() => {
     playFunctions.toggleFriendsMenu = (type: boolean) => {
       // handleChangeFriendsCategory("list");
+      SoundFunctions.playSound("btn_click_v2");
+      if (type) {
+        SoundFunctions.fixedVolumeSound("play", "menu_open", 0.2);
+      } else {
+        SoundFunctions.fixedVolumeSound("play", "menu_close_v2", 0.4);
+      }
       setFriendsMenu(type);
     };
 
@@ -223,6 +255,8 @@ export const PlayPage = () => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [isGameFound, setIsGameFound] = useState<boolean>(false);
+  const [isGameSearchMenu, setIsGameSearchMenu] = useState<boolean>(false);
+
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -363,11 +397,11 @@ export const PlayPage = () => {
       toast.dismiss();
       toast.success("Противник найден! Удачной игры!");
 
+      playFunctions.foundGame("cancel");
+
       setTimeout(() => {
-        playFunctions.foundGame("cancel");
         playFunctions.handleChangeTab("play:game");
-        SoundFunctions.stopBackgroundMusic();
-      }, 1000);
+      }, 2000);
       play_game_type = game_type;
       play_game_key = game_key;
     });
@@ -429,31 +463,15 @@ export const PlayPage = () => {
     });
   }, []);
 
-  useEffect(() => {
-    if (!screen_click) return;
-
-    setTimeout(() => SoundFunctions.backgroundMusic(), 500);
-
-    return () => {
-      SoundFunctions.stopBackgroundMusic();
-    };
-  }, [screen_click]);
-
   // useEffect(() => {
-  //   const handleCheckStorage = () => {
-  //     const settings = JSON.parse(localStorage.getItem("settings") || "{}");
-  //     console.log("Громкость:", settings?.sounds?.background_music_volume);
-  //     // SoundsPlayer();
-  //   };
+  //   if (!screen_click) return;
 
-  //   window.addEventListener("storage", handleCheckStorage);
-  //   window.addEventListener("local-storage-update", handleCheckStorage);
+  //   setTimeout(() => SoundFunctions.backgroundMusic(), 500);
 
   //   return () => {
-  //     window.removeEventListener("storage", handleCheckStorage);
-  //     window.removeEventListener("local-storage-update", handleCheckStorage);
+  //     SoundFunctions.stopBackgroundMusic();
   //   };
-  // }, []);
+  // }, [screen_click]);
 
   if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;
@@ -472,7 +490,9 @@ export const PlayPage = () => {
       <SoundsPlayer />
 
       {isGameFound && (
-        <div className={styles["game-search-container"]}>
+        <div
+          className={`${styles["game-search-container"]} ${styles[isGameSearchMenu ? "is-open" : "is-closing"]}`}
+        >
           <div className={styles["game-search-content"]}>
             <div className={styles["game-search-info"]}>
               <div className={styles["game-search-info-content"]}>

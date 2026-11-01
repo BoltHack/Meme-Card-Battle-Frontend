@@ -40,7 +40,10 @@ export const friendListTools = {
 import { playFunctions } from "../Play/Play.tsx";
 import { IsOnlineList } from "./IsOnlineList.tsx";
 import { RequestsFromMeList } from "./RequestsFromMeList.tsx";
+
 import useContentRender from "../../../tools/ContentRender.ts";
+
+import { SoundFunctions } from "../../../tools/global_scripts/SoundsPlayer.tsx";
 
 export const FriendListMenu = ({ playerID }: Props) => {
   // const [data, setData] = useState([]);
@@ -214,6 +217,7 @@ export const FriendListMenu = ({ playerID }: Props) => {
   };
 
   const handleChangeFriendsCategory = async (category: string) => {
+    SoundFunctions.playSound("btn_click_v2");
     setFriendsCategory(category);
   };
 

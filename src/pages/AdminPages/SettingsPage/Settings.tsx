@@ -50,6 +50,7 @@ export const SettingsPage = () => {
       //   headers: { "Content-Type": "application/json" },
       //   body: JSON.stringify(updatedSettings),
       // });
+      SoundFunctions.playSound("success_notification");
       toast.success(response.data.success || "Настройки обновлены");
 
       return response.data;
