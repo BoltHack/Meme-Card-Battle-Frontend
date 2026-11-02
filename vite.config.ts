@@ -25,6 +25,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         headers: {
+          "api-access": "true",
           "ngrok-skip-browser-warning": "true",
           skip_zrok_interstitial: "true",
         },
@@ -36,6 +37,7 @@ export default defineConfig({
         // autoRewrite: true,
         // cookieDomainRewrite: "localhost",
         headers: {
+          "api-access": "true",
           "ngrok-skip-browser-warning": "true",
           skip_zrok_interstitial: "true",
         },
@@ -50,6 +52,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         headers: {
+          "api-access": "true",
           "ngrok-skip-browser-warning": "true",
           skip_zrok_interstitial: "true",
         },
@@ -59,6 +62,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         headers: {
+          "api-access": "true",
           "ngrok-skip-browser-warning": "true",
           skip_zrok_interstitial: "true",
         },
@@ -73,6 +77,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         headers: {
+          "api-access": "true",
           "ngrok-skip-browser-warning": "true",
           skip_zrok_interstitial: "true",
         },
@@ -87,6 +92,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         headers: {
+          "api-access": "true",
           "ngrok-skip-browser-warning": "true",
           skip_zrok_interstitial: "true",
         },

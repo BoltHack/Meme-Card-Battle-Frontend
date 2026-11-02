@@ -14,11 +14,11 @@ interface LogsPost {
 }
 
 export const LogsPage = () => {
-  const [logsType, setLogsType] = useState<string>("all");
+  const [logsType, setLogsType] = useState<string>("info");
   const [logs, setLogs] = useState<LogsPost[]>([]);
 
   const { contentData, contentLoading, contentError } =
-    useContentRender(`/admin/logs`);
+    useContentRender(`/admin/logs/${logsType}`);
 
   useEffect(() => {
     if (!contentData) return;
@@ -63,12 +63,12 @@ export const LogsPage = () => {
       </header>
 
       <div className={styles["card-actions"]}>
-        <button
+        {/* <button
           onClick={() => setLogsType("all")}
           className={`${styles["card-action-btn"]} ${logsType === "all" ? styles["active"] : ""}`}
         >
           Все
-        </button>
+        </button> */}
         <button
           onClick={() => setLogsType("info")}
           className={`${styles["card-action-btn"]} ${logsType === "info" ? styles["active"] : ""}`}

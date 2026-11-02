@@ -14,12 +14,12 @@ import { playFunctions } from "../Play/Play";
 import { friendListTools } from "./Menu";
 
 export const IsOnlineList = ({ friendList, contentLoading }: Props) => {
-  const [toChallenge, setToChallenge] = useState<boolean | false>(false);
+  const [toChallenge, setToChallenge] = useState<string | null>(null);
 
   const handleToChallenge = (friendID: string) => {
     playFunctions.inviteGame(friendID);
-    setToChallenge(true);
-    setTimeout(() => setToChallenge(false), 1000);
+    setToChallenge(friendID);
+    setTimeout(() => setToChallenge(null), 1000);
   };
 
   return (
@@ -53,7 +53,7 @@ export const IsOnlineList = ({ friendList, contentLoading }: Props) => {
                     onClick={() => handleToChallenge(fr.id)}
                     // onClick={() => playFunctions.inviteGame(fr.id)}
                   >
-                    {toChallenge ? "Запрос отправлен" : "Бросить вызов"}
+                    {toChallenge === fr.id ? "Запрос отправлен" : "Бросить вызов"}
                   </button>
                   <button
                     className={`${styles["btn"]} ${styles["btn-remove"]}`}

@@ -124,12 +124,6 @@ export const PlayPage = () => {
         setIsGameFound(true);
         setIsGameSearchMenu(true);
 
-        // setTimeout(() => {
-        //   socket.emit("search_game", {
-        //     type: true,
-        //     player_id: data?.id,
-        //   });
-        // }, 5000);
         socket.emit("search_game", {
           type: true,
           player_id: data?.id,
