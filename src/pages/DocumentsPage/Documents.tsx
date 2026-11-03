@@ -106,12 +106,14 @@ export const DocumentsPage = () => {
           >
             <header>
               <h1>{data?.renderData.title}</h1>
-              <span className={styles["subtitle"]}>
-                {data?.renderData.summary}
-              </span>
-              <p className={styles["subtitle"]}>
-                Последнее обновление: {dateSettings(data?.renderData.date)}
-              </p>
+              <div className={styles["subtitle-container"]}>
+                <span className={styles["subtitle"]}>
+                  {data?.renderData.summary}
+                </span>
+                <p className={styles["subtitle-date"]}>
+                  Последнее обновление: {dateSettings(data?.renderData.date)}
+                </p>
+              </div>
             </header>
 
             {data?.renderData.content && data?.renderData.content.length > 0 ? (

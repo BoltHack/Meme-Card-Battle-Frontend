@@ -24,7 +24,7 @@ export const SoundFunctions = {
 };
 
 export const SoundsPlayer = () => {
-  const BG_MUSIC_KEY = getGameAudioPath("game_background_music");
+  // const BG_MUSIC_KEY = getGameAudioPath("game_background_music");
 
   // useEffect(() => {
   //   if (!audioCache[BG_MUSIC_KEY]) {
@@ -153,39 +153,41 @@ export const SoundsPlayer = () => {
     };
   }, []);
 
-  useEffect(() => {
-    SoundFunctions.GameBackgroundMusic = () => {
-      const audio = audioCache[BG_MUSIC_KEY];
+  // useEffect(() => {
+  //   SoundFunctions.GameBackgroundMusic = () => {
+  //     const audio = audioCache[BG_MUSIC_KEY];
 
-      if (audio && audio.paused) {
-        // const settings = JSON.parse(localStorage.getItem("settings") || "{}");
-        // audio.volume = settings?.sounds?.game_background_music_volume ?? 1;
-        audio.volume = 0.4;
+  //     console.log("audio", audio);
 
-        audio.play().catch((err) => {
-          console.error("error", err);
-        });
-      }
-    };
+  //     if (audio && audio.paused) {
+  //       // const settings = JSON.parse(localStorage.getItem("settings") || "{}");
+  //       // audio.volume = settings?.sounds?.game_background_music_volume ?? 1;
+  //       audio.volume = 0.2;
 
-    return () => {
-      SoundFunctions.GameBackgroundMusic = () => {};
-    };
-  }, []);
+  //       audio.play().catch((err) => {
+  //         console.error("error", err);
+  //       });
+  //     }
+  //   };
 
-  useEffect(() => {
-    SoundFunctions.StopGameBackgroundMusic = () => {
-      const audio = audioCache[BG_MUSIC_KEY];
-      if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    };
+  //   return () => {
+  //     SoundFunctions.GameBackgroundMusic = () => {};
+  //   };
+  // }, [BG_MUSIC_KEY]);
 
-    return () => {
-      SoundFunctions.StopGameBackgroundMusic = () => {};
-    };
-  }, []);
+  // useEffect(() => {
+  //   SoundFunctions.StopGameBackgroundMusic = () => {
+  //     const audio = audioCache[BG_MUSIC_KEY];
+  //     if (audio) {
+  //       audio.pause();
+  //       audio.currentTime = 0;
+  //     }
+  //   };
+
+  //   return () => {
+  //     SoundFunctions.StopGameBackgroundMusic = () => {};
+  //   };
+  // }, [BG_MUSIC_KEY]);
 
   return null;
 };

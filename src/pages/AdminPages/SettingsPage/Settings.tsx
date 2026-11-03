@@ -14,6 +14,7 @@ import { ContentLoading } from "../../../components/LoadingPage/ContentLoading.t
 interface AppSettings {
   maintenanceMode: boolean;
   configLogger: boolean;
+  emailConfirmation: boolean;
 }
 
 export const SettingsPage = () => {
@@ -44,14 +45,10 @@ export const SettingsPage = () => {
         withCredentials: true,
       });
 
-      console.log("Данные успешно добавлены:", response.data);
-      // await fetch(`/admin/settings`, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(updatedSettings),
-      // });
-      SoundFunctions.playSound("success_notification");
-      toast.success(response.data.success || "Настройки обновлены");
+      if (response.status === 200) {
+        console.log("Данные успешно добавлены:", response.data);
+        toast.success(response.data.success || "Настройки обновлены");
+      }
 
       return response.data;
     } catch (error) {
@@ -63,7 +60,6 @@ export const SettingsPage = () => {
   useEffect(() => {
     if (contentData && contentData?.renderData) {
       setSettings(contentData?.renderData);
-      console.log("contentData", contentData?.renderData);
     }
   }, [contentData]);
 
@@ -91,6 +87,7 @@ export const SettingsPage = () => {
             <span className={styles["slider"]}></span>
           </label>
         </div>
+
         <div className={styles["settings-row"]}>
           <div className={styles["settings-text"]}>
             <h3>Логи системы (Logger mode)</h3>
@@ -101,6 +98,23 @@ export const SettingsPage = () => {
               type="checkbox"
               checked={settings?.configLogger ? true : false}
               onChange={() => handleToggle("configLogger")}
+            />
+            <span className={styles["slider"]}></span>
+          </label>
+        </div>
+
+        <div className={styles["settings-row"]}>
+          <div className={styles["settings-text"]}>
+            <h3>Режим подтверждения (Confirmation mode)</h3>
+            <p>
+              Требовать от пользователей подтверждения почты для регистрации.
+            </p>
+          </div>
+          <label className={styles["switch-toggle"]}>
+            <input
+              type="checkbox"
+              checked={settings?.emailConfirmation ? true : false}
+              onChange={() => handleToggle("emailConfirmation")}
             />
             <span className={styles["slider"]}></span>
           </label>

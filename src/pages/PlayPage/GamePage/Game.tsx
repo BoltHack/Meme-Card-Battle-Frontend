@@ -182,9 +182,11 @@ export const GamePage = ({ game_type, game_key }: Props) => {
       }
 
       if (type) {
+        SoundFunctions.fixedVolumeSound("play", "menu_open", 0.2);
         setIsClosingGameCardsMenu(false);
         setIsOpenGameCardsMenu(true);
       } else {
+        SoundFunctions.fixedVolumeSound("play", "menu_close_v2", 0.4);
         setIsClosingGameCardsMenu(true);
         timeoutRef.current = window.setTimeout(() => {
           setIsOpenGameCardsMenu(false);
@@ -630,6 +632,8 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
     const handleReadyState = (type: string) => {
       if (type === "user_ready") {
+        SoundFunctions.playSound("success_notification");
+        toast.success("К гою готов!");
         setIsReady(true);
       } else if (type === "game_start") {
         setIsReady(true);
@@ -679,15 +683,15 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (!isGameStarted) return;
-    
-    setTimeout(() => SoundFunctions.GameBackgroundMusic(), 500);
+  // useEffect(() => {
+  //   if (!isGameStarted) return;
 
-    return () => {
-      SoundFunctions.StopGameBackgroundMusic();
-    };
-  }, [isGameStarted]);
+  //   setTimeout(() => SoundFunctions.GameBackgroundMusic(), 500);
+
+  //   return () => {
+  //     SoundFunctions.StopGameBackgroundMusic();
+  //   };
+  // }, [isGameStarted]);
 
   (function () {
     const fpsDiv = document.createElement("div");
@@ -743,11 +747,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
   };
 
   const handleReadyForBattle = () => {
-    // try {
-
-    // } catch (error: any) {
-
-    // }
+    SoundFunctions.playGameSound("ready_btn_click");
     setReadyStateLoading(true);
     socket.emit("check_user_ready_state_server", {
       player_id: data?.id,
