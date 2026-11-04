@@ -298,7 +298,7 @@ export const CasesPage = () => {
                           (Number(cs.keys) > 0 ? (
                             <button
                               className={styles["open-case-btn"]}
-                              disabled={isOpenCase ? true : false}
+                              disabled={loadingBtn ? true : false}
                               onClick={() => openCase(cs?.id)}
                             >
                               {loadingBtn ? "Загрузка..." : "Открыть кейс"}
