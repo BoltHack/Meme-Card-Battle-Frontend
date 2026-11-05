@@ -201,7 +201,12 @@ export const CardListPage = () => {
                           </span>
                         </div>
                         <div className={CardsDesign_styles["card-artwork"]}>
-                          <img src={`/${card.card_avatar}`} alt="artwork" />
+                          <div
+                            className={CardsDesign_styles["card-artwork-img"]}
+                            style={{
+                              backgroundImage: `url("/${card.card_avatar}")`,
+                            }}
+                          ></div>
                         </div>
                         <div className={CardsDesign_styles["card-body"]}>
                           <div
@@ -276,7 +281,12 @@ export const CardListPage = () => {
                       </span>
                     </div>
                     <div className={CardsDesign_styles["card-artwork"]}>
-                      <img src={`/${editCardData.card_avatar}`} alt="artwork" />
+                      <div
+                        className={CardsDesign_styles["card-artwork-img"]}
+                        style={{
+                          backgroundImage: `url("/${editCardData.card_avatar}")`,
+                        }}
+                      ></div>
                     </div>
                     <div className={CardsDesign_styles["card-body"]}>
                       <div

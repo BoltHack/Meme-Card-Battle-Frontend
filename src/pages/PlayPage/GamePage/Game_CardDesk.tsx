@@ -489,7 +489,11 @@ export const Game_CardDesk = ({
                             id={cardId}
                             className={`${CardDesk_styles["hand-card"]} ${CardDesk_styles[`${card.rarity?.toLowerCase()}`]}`}
                             onMouseEnter={() =>
-                              SoundFunctions.fixedVolumeSound("game", "card_selection", 0.2)
+                              SoundFunctions.fixedVolumeSound(
+                                "game",
+                                "card_selection",
+                                0.2,
+                              )
                             }
                             onClick={() => {
                               if (activePlayerCard !== null || !isGameStarted)
@@ -517,8 +521,16 @@ export const Game_CardDesk = ({
                             >
                               {card?.rarity.slice(0, 3)}
                             </div>
-                            <div className={CardDesk_styles["h-avatar"]}>
+                            {/* <div className={CardDesk_styles["h-avatar"]}>
                               <img src={`/${card?.avatar}`} />
+                            </div> */}
+                            <div className={CardDesk_styles["h-avatar"]}>
+                              <div
+                                className={CardDesk_styles["h-avatar-img"]}
+                                style={{
+                                  backgroundImage: `url("/${card?.avatar}")`,
+                                }}
+                              ></div>
                             </div>
                             <div className={CardDesk_styles["h-title"]}>
                               {card?.name}

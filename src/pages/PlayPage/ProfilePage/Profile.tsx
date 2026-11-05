@@ -406,7 +406,15 @@ export const ProfilePage = () => {
                         </span>
                       </div>
                       <div className={CardsDesign_styles["card-artwork"]}>
-                        <img src={`/${card.card_avatar}`} alt="artwork" />
+                        {/* <img src={`/${card.card_avatar}`} alt="artwork" /> */}
+                        <div className={CardsDesign_styles["card-artwork"]}>
+                          <div
+                            className={CardsDesign_styles["card-artwork-img"]}
+                            style={{
+                              backgroundImage: `url("/${card.card_avatar}")`,
+                            }}
+                          ></div>
+                        </div>
                       </div>
                       <div className={CardsDesign_styles["card-body"]}>
                         <div
@@ -456,88 +464,6 @@ export const ProfilePage = () => {
           ) : (
             <p>У вас нет карт данной категории.</p>
           )}
-          {/* {cards?.reduce((acc, card) => acc + card.card_quantity, 0) ===
-          undefined ? (
-            <p>У вас нет карт данной категории.</p>
-          ) : cards && cards.length > 0 ? (
-            cards.map((card) => {
-              const lvlName = card.lvl_name.toLowerCase();
-              return (
-                <section
-                  key={card.card_id}
-                  className={`${
-                    CardsDesign_styles["card-3d-wrapper"]
-                  } ${CardsDesign_styles["card-3d-wrapper-anim"]}`}
-                >
-                  <div className={CardsDesign_styles["card-inner"]}>
-                    <div
-                      className={`${CardsDesign_styles["game-card"]} ${CardsDesign_styles[lvlName.toLowerCase()]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
-                    >
-                      <div className={CardsDesign_styles["card-shine"]}></div>
-                      <div className={CardsDesign_styles["card-header"]}>
-                        <span
-                          className={CardsDesign_styles["card-cost"]}
-                          title={`Занимает ${card.power_slot} слотов силы`}
-                        >
-                          {card.power_slot}
-                        </span>
-                        <span
-                          className={`${CardsDesign_styles["card-rarity"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
-                        >
-                          {card.lvl_name}
-                        </span>
-                      </div>
-                      <div className={CardsDesign_styles["card-artwork"]}>
-                        <img src={`/${card.card_avatar}`} alt="artwork" />
-                      </div>
-                      <div className={CardsDesign_styles["card-body"]}>
-                        <div
-                          className={`${CardsDesign_styles["card-title"]} ${CardsDesign_styles[lvlName.toLowerCase()]}`}
-                        >
-                          {card.card_name}
-                        </div>
-                        <div className={CardsDesign_styles["card-description"]}>
-                          {card.card_description}
-                        </div>
-                      </div>
-                      <div className={CardsDesign_styles["card-footer"]}>
-                        <div
-                          className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["attack-badge"]}`}
-                        >
-                          <span className={CardsDesign_styles["stat-icon"]}>
-                            ⚔️
-                          </span>
-                          <span className={CardsDesign_styles["stat-value"]}>
-                            {card.card_damage}
-                          </span>
-                        </div>
-                        <div
-                          className={`${CardsDesign_styles["stat-badge"]} ${CardsDesign_styles["protection-badge"]}`}
-                        >
-                          <span className={CardsDesign_styles["stat-icon"]}>
-                            🛡️
-                          </span>
-                          <span className={CardsDesign_styles["stat-value"]}>
-                            {card.card_protection}
-                          </span>
-                        </div>
-                      </div>
-                      <div className={styles["card-count"]}>
-                        x{card.card_quantity}
-                      </div>
-                    </div>
-                    <div className={CardsDesign_styles["game-card-back"]}>
-                      <div className={CardsDesign_styles["card-back-logo"]}>
-                        🔮
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              );
-            })
-          ) : (
-            <ContentLoading />
-          )} */}
         </main>
       </div>
     </div>

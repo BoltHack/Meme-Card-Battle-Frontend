@@ -895,7 +895,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                       {versusCards.playerCard.rarity}
                     </span>
                   </div>
-                  <div className={CardsDesign_styles["card-artwork"]}>
+                  {/* <div className={CardsDesign_styles["card-artwork"]}>
                     {versusCards.playerCard.avatar ? (
                       <img
                         src={`/${versusCards.playerCard.avatar}`}
@@ -904,6 +904,14 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                     ) : (
                       <div className={CardsDesign_styles["card-artwork"]}></div>
                     )}
+                  </div> */}
+                  <div className={CardsDesign_styles["card-artwork"]}>
+                    <div
+                      className={CardsDesign_styles["card-artwork-img"]}
+                      style={{
+                        backgroundImage: `url("/${versusCards.playerCard.avatar}")`,
+                      }}
+                    ></div>
                   </div>
                   <div className={CardsDesign_styles["card-body"]}>
                     <div
@@ -966,7 +974,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                       {versusCards.enemyCard.rarity}
                     </span>
                   </div>
-                  <div className={CardsDesign_styles["card-artwork"]}>
+                  {/* <div className={CardsDesign_styles["card-artwork"]}>
                     {versusCards.enemyCard.avatar ? (
                       <img
                         src={`/${versusCards.enemyCard.avatar}`}
@@ -975,6 +983,14 @@ export const GamePage = ({ game_type, game_key }: Props) => {
                     ) : (
                       <div className={CardsDesign_styles["card-artwork"]}></div>
                     )}
+                  </div> */}
+                  <div className={CardsDesign_styles["card-artwork"]}>
+                    <div
+                      className={CardsDesign_styles["card-artwork-img"]}
+                      style={{
+                        backgroundImage: `url("/${versusCards.enemyCard.avatar}")`,
+                      }}
+                    ></div>
                   </div>
                   <div className={CardsDesign_styles["card-body"]}>
                     <div

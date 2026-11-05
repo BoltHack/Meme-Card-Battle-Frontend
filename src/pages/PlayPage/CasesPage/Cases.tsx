@@ -397,7 +397,11 @@ export const CasesPage = () => {
                           </span>
                         </div>
                         <div className={CardsDesign_styles["card-artwork"]}>
-                          <img src={`/${cs.avatar}`} alt="artwork" />
+                          <div
+                            className={CardsDesign_styles["card-artwork-img"]}
+                            style={{ backgroundImage: `url("/${cs.avatar}")` }}
+                          ></div>
+                          {/* <img src={`/${cs.avatar}`} alt="artwork" /> */}
                         </div>
                         <div className={CardsDesign_styles["card-body"]}>
                           <div
@@ -486,7 +490,12 @@ export const CasesPage = () => {
                       </span>
                     </div>
                     <div className={CardsDesign_styles["card-artwork"]}>
-                      <img src={`/${rewardCard.card_avatar}`} alt="artwork" />
+                      <div
+                        className={CardsDesign_styles["card-artwork-img"]}
+                        style={{
+                          backgroundImage: `url("/${rewardCard.card_avatar}")`,
+                        }}
+                      ></div>
                     </div>
                     <div className={CardsDesign_styles["card-body"]}>
                       <div

@@ -187,7 +187,12 @@ export const Game_Menus = ({
                           </span>
                         </div>
                         <div className={CardsDesign_styles["card-artwork"]}>
-                          <img src={`/${selectCard.avatar}`} alt="artwork" />
+                          <div
+                            className={CardsDesign_styles["card-artwork-img"]}
+                            style={{
+                              backgroundImage: `url("/${selectCard.avatar}")`,
+                            }}
+                          ></div>
                         </div>
                         <div className={CardsDesign_styles["card-body"]}>
                           <div
@@ -295,7 +300,14 @@ export const Game_Menus = ({
                               </span>
                             </div>
                             <div className={CardsDesign_styles["card-artwork"]}>
-                              <img src={`/${card.avatar}`} alt="artwork" />
+                              <div
+                                className={
+                                  CardsDesign_styles["card-artwork-img"]
+                                }
+                                style={{
+                                  backgroundImage: `url("/${card.avatar}")`,
+                                }}
+                              ></div>
                             </div>
                             <div className={CardsDesign_styles["card-body"]}>
                               <div
@@ -420,7 +432,14 @@ export const Game_Menus = ({
                               </span>
                             </div>
                             <div className={CardsDesign_styles["card-artwork"]}>
-                              <img src={`/${card.avatar}`} alt="artwork" />
+                              <div
+                                className={
+                                  CardsDesign_styles["card-artwork-img"]
+                                }
+                                style={{
+                                  backgroundImage: `url("/${card.avatar}")`,
+                                }}
+                              ></div>
                             </div>
                             <div className={CardsDesign_styles["card-body"]}>
                               <div
