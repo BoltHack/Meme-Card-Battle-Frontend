@@ -38,7 +38,6 @@ export const RatingBoard = ({ ratingCategory }: Props) => {
 
     setRatingData(contentData.renderData);
 
-    // categoryIcon = ratingCategory === "wins" ? "🏆" : ratingCategory === "balance" ? "💰" : ratingCategory === "xp" ? "⭐" : "";
   }, [contentData]);
 
   if (contentError) return <p>{contentError.message}</p>;
@@ -46,13 +45,15 @@ export const RatingBoard = ({ ratingCategory }: Props) => {
   return (
     <tbody>
       {contentLoading && (
-        <td>
-          <div className={styles["content-result"]}>
-            <span>
-              <ContentLoading />
-            </span>
-          </div>
-        </td>
+        <tr>
+          <td colSpan={3}>
+            <div className={styles["content-result"]}>
+              <span>
+                <ContentLoading />
+              </span>
+            </div>
+          </td>
+        </tr>
       )}
       {!contentLoading && ratingData && ratingData.length > 0
         ? ratingData.map((rating: any, index: number) => {
@@ -73,13 +74,18 @@ export const RatingBoard = ({ ratingCategory }: Props) => {
                 </td>
                 <td className={styles["col-title"]}>
                   <div className={styles["game-info"]}>
-                    <span className={styles["game-name"]}>{rating.name}</span>
+                    <a
+                      href={`/profile/${rating.name}`}
+                      target="_blank"
+                      className={styles["game-name"]}
+                    >
+                      {rating.name}
+                    </a>
                     <span className={styles["game-meta"]}>
                       Уровень {rating.lvl}
                     </span>
                   </div>
                 </td>
-                {/* <td className={styles["col-clan"]}>${rating.clan}</td> */}
                 <td className={styles["col-stat"]}>
                   <span
                     className={`${styles["stat-value"]} ${styles[ratingCategory]}`}

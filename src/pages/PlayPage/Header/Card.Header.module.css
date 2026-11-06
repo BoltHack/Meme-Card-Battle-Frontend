@@ -93,6 +93,11 @@
   color: #fef08a;
   text-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
 }
+.balance-item.money {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #6ab9db;
+  border-color: rgba(255, 255, 255, 0.4);
+}
 .currency-icon {
   display: flex;
   align-items: center;

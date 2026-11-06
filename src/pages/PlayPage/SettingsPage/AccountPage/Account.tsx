@@ -85,7 +85,7 @@ export const AccountPage = () => {
     } catch (error: any) {
       setIsLoading(false);
       console.log("error", error);
-      const errorMessage = error.response.data.error;
+      const errorMessage = error?.response?.data.error;
       if (errorMessage) {
         SoundFunctions.fixedVolumeSound("game", "error_notification", 0.4);
         toast.error(errorMessage);
@@ -117,7 +117,7 @@ export const AccountPage = () => {
     } catch (error: any) {
       setIsLoading(false);
       console.log("error", error);
-      const errorMessage = error.response.data.error;
+      const errorMessage = error?.response?.data.error;
       if (errorMessage) {
         SoundFunctions.fixedVolumeSound("game", "error_notification", 0.4);
         toast.error(errorMessage);

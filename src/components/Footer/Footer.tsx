@@ -12,50 +12,46 @@ export const Footer = ({ links }: Props) => {
       <div className={styles["footer-wrapper"]}>
         <div className={styles["footer-container"]}>
           <div className={styles["social-title"]}>Следи за новостями игры</div>
+          {links && links.length > 0 ? (
+            <div className={styles["social-grid"]}>
+              {links
+                .filter((lk) => lk.main_priority === true)
+                .sort((a, b) =>
+                  a.priority.toString().localeCompare(b.priority.toString()),
+                )
+                .map((lk: any, index: number) => {
+                  return (
+                    <a
+                      key={index}
+                      href={lk.link}
+                      target="_blank"
+                      className={styles["social-card"]}
+                    >
+                      <svg className={styles["arrow-icon"]} viewBox="0 0 24 24">
+                        <path
+                          fill="none"
+                          d="M5 19L19 5M19 5H10M19 5V14"
+                          stroke="#fff"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
 
-          <div className={styles["social-grid"]}>
-            {links && links.length > 0
-              ? links
-                  .filter((lk) => lk.main_priority === true)
-                  .sort((a, b) =>
-                    a.priority.toString().localeCompare(b.priority.toString()),
-                  )
-                  .map((lk: any, index: number) => {
-                    return (
-                      <a
-                        key={index}
-                        href={lk.link}
-                        target="_blank"
-                        className={styles["social-card"]}
-                      >
-                        <svg
-                          className={styles["arrow-icon"]}
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            fill="none"
-                            d="M5 19L19 5M19 5H10M19 5V14"
-                            stroke="#fff"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
+                      {lk.icon && (
+                        <img
+                          className={styles["platform-icon"]}
+                          src={`/${lk.icon}`}
+                          alt="Platform icon"
+                        />
+                      )}
 
-                        {lk.icon && (
-                          <img
-                            className={styles["platform-icon"]}
-                            src={`/${lk.icon}`}
-                            alt="Platform icon"
-                          />
-                        )}
-
-                        <span>{lk.name}</span>
-                      </a>
-                    );
-                  })
-              : null}
-          </div>
+                      <span>{lk.name}</span>
+                    </a>
+                  );
+                })}
+            </div>
+          ) : null}
 
           <div className={styles["footer-middle-bar"]}>
             <div className={styles["support-info"]}>
@@ -108,11 +104,12 @@ export const Footer = ({ links }: Props) => {
             <div className={styles["age-rating"]}>0+</div>
           </div>
           <br />
-          <div className={styles["social-title"]}>Другие ссылки</div>
-          <div className={styles["footer-col-container"]}>
-            <div className={styles["footer-col"]}>
-              {links && links.length > 0
-                ? links
+          {links && links.length > 0 ? (
+            <>
+              <div className={styles["social-title"]}>Другие ссылки</div>
+              <div className={styles["footer-col-container"]}>
+                <div className={styles["footer-col"]}>
+                  {links
                     .filter((lk: any) => lk.main_priority === false)
                     .sort((a, b) =>
                       a.priority
@@ -120,22 +117,16 @@ export const Footer = ({ links }: Props) => {
                         .localeCompare(b.priority.toString()),
                     )
                     .map((lk: any, index: number) => {
-                      return <Link key={index} to={lk.link}>{lk.name}</Link>;
-                    })
-                : null}
-              {/* <Link to="/documents/company-information">
-                Информация о компании
-              </Link>
-              <Link to="/documents/about-us">О нас</Link>
-              <Link to="/category/news">Новости</Link>
-              <Link to="/blog">Блог</Link>
-              <Link to="/documents/privacy-policy">
-                Политика конфиденциальности
-              </Link>
-              <Link to="/documents/terms-of-use">Условия использования</Link>
-              <Link to="/documents/cookie-policy">Политика Cookie файлов</Link> */}
-            </div>
-          </div>
+                      return (
+                        <Link key={index} to={lk.link}>
+                          {lk.name}
+                        </Link>
+                      );
+                    })}
+                </div>
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
     </footer>

@@ -22,6 +22,7 @@ import { BlogCategoryPage } from "./pages/BlogPage/BlogCategory.tsx";
 import { RatingsPage } from "./pages/RatingsPage/Ratings.tsx";
 
 import { PublicPanel } from "./tools/GetBasicData.tsx";
+import { ProfilePage } from "./pages/ProfilePage/Profile.tsx";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
       {
         path: "/ratings",
         element: <RatingsPage title="Рейтинги | MCB" />,
+      },
+      {
+        path: "/profile/:user_name",
+        element: <ProfilePage />,
       },
     ],
   },

@@ -18,7 +18,7 @@ import { Header } from "../Header/Header.tsx";
 import { ErrorPage } from "../../../components/ErrorPage/Error.tsx";
 import { LoadingPage } from "../../../components/LoadingPage/Loading.tsx";
 
-import { ProfilePage } from "../ProfilePage/Profile.tsx";
+import { CollectionPage } from "../CollectionPage/Collection.tsx";
 import { MainPage } from "../MainPage/Main.tsx";
 import { CasesPage } from "../CasesPage/Cases.tsx";
 import { ShopPage } from "../ShopPage/Shop.tsx";
@@ -578,7 +578,7 @@ export const PlayPage = () => {
         {activeTab === PlayNavigation[0] && (
           <MainPage isGameFound={isGameFound} />
         )}
-        {activeTab === PlayNavigation[1] && <ProfilePage />}
+        {activeTab === PlayNavigation[1] && <CollectionPage />}
         {activeTab === PlayNavigation[2] && <CasesPage />}
         {activeTab === PlayNavigation[3] && <ShopPage />}
         {activeTab === PlayNavigation[4] && <SettingsPage />}

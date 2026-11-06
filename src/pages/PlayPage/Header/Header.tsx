@@ -191,8 +191,10 @@ export const Header = ({ activeTab, userInfo }: Props) => {
                 </div>
                 <div className={styles["level-badge"]}>
                   <span>XP</span>
-                  <span>{formattedCurrency(userInfo.xp)}{" "}
-                  {userInfo.lvl < 100 ? "/ " + formattedCurrency(maxXP) : ""}</span>
+                  <span>
+                    {formattedCurrency(userInfo.xp)}{" "}
+                    {userInfo.lvl < 100 ? "/ " + formattedCurrency(maxXP) : ""}
+                  </span>
                 </div>
               </div>
             </div>
@@ -204,7 +206,49 @@ export const Header = ({ activeTab, userInfo }: Props) => {
                 style={{ marginBottom: "auto" }}
               >
                 <span className={styles["currency-icon"]}>
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://w3.org">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="28"
+                    height="28"
+                    fill="none"
+                    xmlns="http://w3.org"
+                    style={{ filter: "drop-shadow(0 0 6px #ff9900)" }}
+                  >
+                    <defs>
+                      <linearGradient
+                        id="coin-grad"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
+                        <stop offset="0%" stopColor="#fcd34d" />
+                        <stop offset="100%" stopColor="#fbbf24" />
+                      </linearGradient>
+                    </defs>
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="url(#coin-grad)"
+                      strokeWidth="2"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="6"
+                      stroke="url(#coin-grad)"
+                      strokeWidth="1.5"
+                      strokeDasharray="3 2"
+                    />
+                    <path
+                      d="M12 9V15M10 10.5H13.5C14 10.5 14.5 11 14.5 11.5C14.5 12 14 12.5 13.5 12.5H10.5C10 12.5 9.5 13 9.5 13.5C9.5 14 10 14.5 10.5 14.5H14"
+                      stroke="url(#coin-grad)"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  {/* <svg viewBox="0 0 24 24" fill="none" xmlns="http://w3.org">
                     <defs>
                       <linearGradient
                         id="coinGrad"
@@ -254,7 +298,7 @@ export const Header = ({ activeTab, userInfo }: Props) => {
                       fill="#b45309"
                       opacity="0.5"
                     />
-                  </svg>
+                  </svg> */}
                 </span>
                 <span className={styles["currency-amount"]}>
                   {formattedCurrency(userInfo.coins)}
@@ -266,7 +310,7 @@ export const Header = ({ activeTab, userInfo }: Props) => {
                 style={{ marginTop: "auto" }}
               >
                 <span className={styles["currency-icon"]}>
-                  <svg
+                  {/* <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
@@ -281,6 +325,47 @@ export const Header = ({ activeTab, userInfo }: Props) => {
                     <circle cx="12" cy="12" r="10" />
                     <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
                     <path d="M12 18V6" />
+                  </svg> */}
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="28"
+                    height="28"
+                    fill="none"
+                    xmlns="http://w3.org"
+                    // style={{ filter: "drop-shadow(0 0 6px #ffcc00)" }}
+                    style={{ filter: "drop-shadow(0 0 6px #ffffff)" }}
+                  >
+                    <defs>
+                      <linearGradient
+                        id="gem-grad"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
+                        {/* <stop offset="0%" stopColor="#fff066" /> */}
+                        <stop offset="0%" stopColor="#ffffff" />
+                        {/* <stop offset="100%" stopColor="#ff9900" /> */}
+                        <stop offset="100%" stopColor="#6ab9db" />
+                      </linearGradient>
+                    </defs>
+                    <path
+                      d="M12 2L3 9L12 22L21 9L12 2Z"
+                      stroke="url(#gem-grad)"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3 9H21"
+                      stroke="url(#gem-grad)"
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M12 2L7 9L12 22L17 9L12 2Z"
+                      stroke="url(#gem-grad)"
+                      strokeWidth="1.5"
+                    />
                   </svg>
                 </span>
                 <span className={styles["currency-amount"]}>

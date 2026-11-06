@@ -89,7 +89,7 @@ export const ShopPage = () => {
     SoundFunctions.playSound("btn_click_v2");
     SoundFunctions.fixedVolumeSound("play", "menu_close_v2", 0.4);
     setShopData(initialShopDataState);
-  }
+  };
 
   // const openCase = async (case_id: string) => {
   //   setIsCaseLoading(case_id);
@@ -118,7 +118,7 @@ export const ShopPage = () => {
   // };
 
   const updatePrice = (case_id: string, count: number) => {
-    SoundFunctions.playSound("value_change");
+    SoundFunctions.fixedVolumeSound("play", "value_change", 0.5);
     setCases((prevState) =>
       prevState.map((cs) =>
         cs.id === case_id
@@ -358,10 +358,7 @@ export const ShopPage = () => {
             </div>
 
             <div className={styles["shop-modal-main"]}>
-              <button
-                className={styles["close-btn"]}
-                onClick={closeMenu}
-              >
+              <button className={styles["close-btn"]} onClick={closeMenu}>
                 &times;
               </button>
 

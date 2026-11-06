@@ -1,6 +1,6 @@
 import { ChangeEvent, useRef, useEffect, useState } from "react";
 
-import styles from "./Card.Profile.module.css";
+import styles from "./Card.Collection.module.css";
 import CardsDesign_styles from "../../../tools/global_stylesheets/Card.CardsDesign_styles.module.css";
 
 import axios from "axios";
@@ -46,7 +46,7 @@ import { playFunctions } from "../Play/Play.tsx";
 
 import { SoundFunctions } from "../../../tools/global_scripts/SoundsPlayer.tsx";
 
-export const ProfilePage = () => {
+export const CollectionPage = () => {
   const [cards, setCards] = useState<RenderData[]>([]);
   const [cardsCount, setCardsCount] = useState<number>(0);
 
@@ -63,7 +63,7 @@ export const ProfilePage = () => {
   );
 
   const { contentData, contentLoading, contentError } =
-    useContentRender<PlayerData>(`/play/profile`);
+    useContentRender<PlayerData>(`/play/collection`);
 
   // const formattedCurrency = (count: number): string => {
   //   const formattedCount = new Intl.NumberFormat("en-US", {

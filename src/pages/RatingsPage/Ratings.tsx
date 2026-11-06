@@ -1,6 +1,6 @@
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import styles from "./Card.Ratings.module.css";
 
@@ -12,6 +12,8 @@ import { Footer } from "../../components/Footer/Footer.tsx";
 import { Header } from "../../components/Header/Header.tsx";
 
 import { RatingBoard } from "./RatingBoard.tsx";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 interface TitleSettings {
   title: string;
@@ -22,13 +24,59 @@ interface FooterLinksContext {
 }
 
 export const RatingsPage = ({ title }: TitleSettings) => {
+  const navigate = useNavigate();
+
   const { footerLinks } = useOutletContext<FooterLinksContext>() ?? {
     footerLinks: [],
   };
 
   const [ratingCategory, setRatingCategory] = useState<string | "">("wins");
 
+  const [formData, setFormData] = useState({
+    search_name: "",
+  });
+
   const { loading, error, socket } = usePageRender(`/api/ratings`);
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSearch = async (e: ChangeEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const dataToSend = new FormData();
+
+    dataToSend.append("search_name", formData.search_name);
+
+    try {
+      const response = await axios.post(`/api/rating/search`, dataToSend, {
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        // toast.success(response.data.success);
+        navigate(`/profile/${response.data.userName}`);
+      }
+
+      return response.data;
+    } catch (error: any) {
+      console.log("error", error);
+      setFormData({
+        search_name: "",
+      });
+      const errorMessage = error?.response?.data.error;
+      if (errorMessage) {
+        toast.error(errorMessage);
+      }
+    }
+  };
 
   useEffect(() => {
     const socketDisconnect = () => {
@@ -80,12 +128,16 @@ export const RatingsPage = ({ title }: TitleSettings) => {
           </button>
         </div>
 
-        <div className={styles["search-container"]}>
+        <div className={styles["search-box"]}>
           <input
             type="text"
+            name="search_name"
+            onChange={handleChange}
+            value={formData.search_name}
             className={styles["search-input"]}
             placeholder="Поиск игрока по нику..."
           />
+          <button onClick={handleSearch}>Поиск</button>
         </div>
 
         <div className={styles["table-wrapper"]}>
