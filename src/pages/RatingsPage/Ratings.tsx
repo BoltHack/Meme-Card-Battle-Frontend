@@ -51,6 +51,8 @@ export const RatingsPage = ({ title }: TitleSettings) => {
   const handleSearch = async (e: ChangeEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
+    if (!formData.search_name) return;
+
     const dataToSend = new FormData();
 
     dataToSend.append("search_name", formData.search_name);
