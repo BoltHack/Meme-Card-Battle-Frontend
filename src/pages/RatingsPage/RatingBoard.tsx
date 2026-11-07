@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import styles from "./Card.Ratings.module.css";
 
@@ -37,7 +38,6 @@ export const RatingBoard = ({ ratingCategory }: Props) => {
     if (!contentData || !Array.isArray(contentData.renderData)) return;
 
     setRatingData(contentData.renderData);
-
   }, [contentData]);
 
   if (contentError) return <p>{contentError.message}</p>;
@@ -74,13 +74,12 @@ export const RatingBoard = ({ ratingCategory }: Props) => {
                 </td>
                 <td className={styles["col-title"]}>
                   <div className={styles["game-info"]}>
-                    <a
-                      href={`/profile/${rating.name}`}
-                      target="_blank"
+                    <Link
+                      to={`/profile/${rating.name}`}
                       className={styles["game-name"]}
                     >
                       {rating.name}
-                    </a>
+                    </Link>
                     <span className={styles["game-meta"]}>
                       Уровень {rating.lvl}
                     </span>

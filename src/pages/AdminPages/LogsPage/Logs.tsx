@@ -17,8 +17,9 @@ export const LogsPage = () => {
   const [logsType, setLogsType] = useState<string>("info");
   const [logs, setLogs] = useState<LogsPost[]>([]);
 
-  const { contentData, contentLoading, contentError } =
-    useContentRender(`/admin/logs/${logsType}`);
+  const { contentData, contentLoading, contentError } = useContentRender(
+    `/admin/logs/${logsType}`,
+  );
 
   useEffect(() => {
     if (!contentData) return;
@@ -53,7 +54,9 @@ export const LogsPage = () => {
   }, [contentData]);
 
   if (contentLoading) return <ContentLoading />;
-  if (contentError) return <ErrorPage error={contentError} />;
+  if (contentError && contentError.code !== 404) {
+    return <ErrorPage error={contentError} />;
+  }
 
   return (
     <div id="logs-page" className={`${styles["page"]} ${styles["active"]}`}>
@@ -90,7 +93,7 @@ export const LogsPage = () => {
       </div>
 
       <div className={styles["table-container"]}>
-        {logs && logs.length > 0 ? (
+        {!contentError && logs && logs.length > 0 ? (
           <table className={styles["admin-table"]}>
             <thead>
               <tr>
@@ -147,61 +150,18 @@ export const LogsPage = () => {
                 })}
             </tbody>
           </table>
+        ) : contentError && contentError.code === 404 ? (
+          <p
+            style={{
+              padding: "5px",
+              textAlign: "center",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {contentError.message}
+          </p>
         ) : null}
-        {/* <table className={styles["admin-table"]}>
-          <thead>
-            <tr>
-              <th>Время</th>
-              <th>Тип</th>
-              <th>Сообщение</th>
-              <th>Статус</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>22:45:12</td>
-              <td className={styles["type-error"]}>ERROR</td>
-              <td className={styles["status-message"]}>
-                Failed to connect to Database node_02 (Timeout)
-              </td>
-              <td>
-                <span
-                  className={`${styles["status-badge"]} ${styles["status-critical"]}`}
-                >
-                  Критическая
-                </span>
-              </td>
-            </tr>
-            <tr>
-              <td>22:42:05</td>
-              <td className={styles["type-warning"]}>WARN</td>
-              <td className={styles["status-message"]}>
-                API Request from IP 192.168.1.45 exceeded rate limit
-              </td>
-              <td>
-                <span
-                  className={`${styles["status-badge"]} ${styles["status-warning"]}`}
-                >
-                  Внимание
-                </span>
-              </td>
-            </tr>
-            <tr>
-              <td>22:38:19</td>
-              <td className={styles["type-info"]}>INFO</td>
-              <td className={styles["status-message"]}>
-                User Alex_Creator successfully logged in
-              </td>
-              <td>
-                <span
-                  className={`${styles["status-badge"]} ${styles["status-ok"]}`}
-                >
-                  Ок
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table> */}
       </div>
     </div>
   );
