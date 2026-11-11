@@ -147,7 +147,6 @@ export const LinksListPage = () => {
                         <p>ID: {item.id}</p>
                         <p>Ссылка: {item.link}</p>
                         <p>Приоритет: {item.priority}</p>
-                        <p>Main priority: {Boolean(item.main_priority)}</p>
                       </div>
                     </div>
                     <ul className={styles["actions-menu"]}>

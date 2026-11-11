@@ -164,7 +164,7 @@ export const CollectionPage = () => {
     if (category === cardsCategory) return;
 
     setCardsCategory(category);
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
   };
 
   useEffect(() => {

@@ -129,7 +129,7 @@ export const PlayPage = () => {
           player_id: data?.id,
         });
 
-        SoundFunctions.playSound("game_searching_menu_open");
+        SoundFunctions.PlaySound_Play("game_searching_menu_open");
         gameFoundTimerStart();
       } else if (type === "cancel") {
         setIsGameSearchMenu(false);
@@ -144,7 +144,7 @@ export const PlayPage = () => {
           player_id: data?.id,
         });
 
-        SoundFunctions.playSound("game_searching_menu_close");
+        SoundFunctions.PlaySound_Play("game_searching_menu_close");
       } else {
         setIsGameSearchMenu(false);
 
@@ -177,7 +177,7 @@ export const PlayPage = () => {
 
         console.log("Успешный logout!");
         toast.dismiss();
-        SoundFunctions.playSound("success_notification");
+        SoundFunctions.PlaySound_Play("success_notification");
         toast.success(data.success || "Вы вышли из системы");
 
         localStorage.removeItem("token");
@@ -215,7 +215,7 @@ export const PlayPage = () => {
   useEffect(() => {
     playFunctions.toggleFriendsMenu = (type: boolean) => {
       // handleChangeFriendsCategory("list");
-      SoundFunctions.playSound("btn_click_v2");
+      SoundFunctions.PlaySound_Play("btn_click_v2");
       if (type) {
         SoundFunctions.fixedVolumeSound("play", "menu_open", 0.2);
       } else {
@@ -420,7 +420,7 @@ export const PlayPage = () => {
           avatar: inviterData.avatar,
         });
         setInviteMenu(true);
-        SoundFunctions.playSound("battle_invite");
+        SoundFunctions.PlaySound_Play("battle_invite");
       }
 
       if (notificationTimeoutRef.current)

@@ -114,13 +114,13 @@ export const Game_Menus = ({
       card_id: card_id,
       menu_id: menu_id,
     });
-    SoundFunctions.playGameSound("card_select_v4");
+    SoundFunctions.PlaySound_Game("card_select_v4");
   };
 
   const removeCard = (idToRemove: string) => {
     if (isGameStarted) return;
 
-    SoundFunctions.playGameSound("card_remove");
+    SoundFunctions.PlaySound_Game("card_remove");
 
     const removeId = list.filter((item) => item.menu_id !== idToRemove);
     if (!removeId) return;
@@ -141,9 +141,9 @@ export const Game_Menus = ({
   };
 
   const handleCloseCardsMenu = () => {
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     GameFunctions.gameCards_menu(false);
-  }
+  };
 
   return (
     <>

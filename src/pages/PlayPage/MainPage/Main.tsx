@@ -50,14 +50,14 @@ export const MainPage = ({ isGameFound }: Props) => {
   // );
 
   const findGame = (type: string) => {
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     playFunctions.foundGame(type);
     setIsOpen(false);
   };
 
   const toggleMenu = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     SoundFunctions.fixedVolumeSound("play", "menu_open", 0.2);
     // SoundFunctions.fixedVolumeSound("play", "btn_click_v4", 0.5);
     setIsClosing(false);
@@ -65,7 +65,7 @@ export const MainPage = ({ isGameFound }: Props) => {
   };
   const closeMenu = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     SoundFunctions.fixedVolumeSound("play", "menu_close_v2", 0.4);
 
     setIsClosing(true);
@@ -148,16 +148,11 @@ export const MainPage = ({ isGameFound }: Props) => {
       </div>
 
       <div className={styles["buttons-container"]}>
-        {/* <div className={styles["epic-title"]}> */}
-        {/* <h1>MEME CARD BATTLE</h1> */}
-        {/*<p>Meme card battle</p>*/}
-        {/* </div> */}
-
         <br />
-
         <div
           className={`${styles["btn"]} ${styles["play-btn"]} ${styles[isGameFound ? "btn-disable" : ""]}`}
           onClick={isGameFound ? undefined : toggleMenu}
+          onMouseEnter={() => SoundFunctions.PlaySound_Play("element_move")}
         >
           <div className={styles["play-card-mini-container"]}>
             <div className={styles["play-parallax-body"]}></div>
@@ -180,41 +175,16 @@ export const MainPage = ({ isGameFound }: Props) => {
                 className={styles["play-magic-shard"]}
                 style={{ top: "65%", right: "20%" }}
               ></div>
-
-              {/* <svg
-                className={`${styles["play-lightning"]} ${styles["play-lightning-right"]}`}
-                viewBox="0 0 24 24"
-              >
-                <path d="M19 9h-6l3-7L5 13h6l-3 9z" />
-              </svg> */}
             </div>
           </div>
-          {/* <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-play-icon lucide-play"
-            >
-              <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />
-            </svg> */}
-
-          {/* <span>Играть</span> */}
           <span>Играть</span>
         </div>
 
         <div
           className={styles["btn"]}
           onClick={() => playFunctions.handleChangeTab("play:profile")}
+          onMouseEnter={() => SoundFunctions.PlaySound_Play("element_move")}
         >
-          {/*<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-layout-grid-icon lucide-layout-grid">*/}
-          {/*    <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>*/}
-          {/*</svg>*/}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -231,12 +201,14 @@ export const MainPage = ({ isGameFound }: Props) => {
             <path d="M18 7.777V4a2 2 0 00-2-2h-6a2 2 0 00-2 2v10a2 2 0 001.137 1.805" />
             <path d="m8 4.389-4.364.809a2 2 0 00-1.602 2.33l1.822 9.833a2 2 0 002.331 1.602l2.542-.47" />
           </svg>
-          <span>Коллекция</span>
+          {/* <span>Коллекция</span> */}
+          <span>Мастерская</span>
         </div>
 
         <div
           className={styles["btn"]}
           onClick={() => playFunctions.handleChangeTab("play:cases")}
+          onMouseEnter={() => SoundFunctions.PlaySound_Play("element_move")}
         >
           <svg
             xmlns="http://w3.org"
@@ -260,6 +232,7 @@ export const MainPage = ({ isGameFound }: Props) => {
         <div
           className={styles["btn"]}
           onClick={() => playFunctions.handleChangeTab("play:shop")}
+          onMouseEnter={() => SoundFunctions.PlaySound_Play("element_move")}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -284,7 +257,7 @@ export const MainPage = ({ isGameFound }: Props) => {
         <div
           className={styles["btn"]}
           onClick={() => playFunctions.handleChangeTab("play:settings")}
-          // onClick={() => SoundPlayer("btn_move")}
+          onMouseEnter={() => SoundFunctions.PlaySound_Play("element_move")}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

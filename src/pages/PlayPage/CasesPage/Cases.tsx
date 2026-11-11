@@ -81,11 +81,11 @@ export const CasesPage = () => {
     if (caseId === currentCase) return;
 
     setCurrentCase(caseId);
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
   };
 
   const getCaseContent = async (case_id: string) => {
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     setTimeout(() => setCaseContentLoading(true), 100);
     try {
       const response = await axios.post(`/play/case/${case_id}/content/get`, {
@@ -110,7 +110,7 @@ export const CasesPage = () => {
   };
 
   const closeContentMenu = () => {
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     SoundFunctions.fixedVolumeSound("play", "menu_close_v2", 0.4);
     setCaseContent([]);
   };
@@ -161,17 +161,17 @@ export const CasesPage = () => {
   };
 
   const openContainer = (case_id: string) => {
-    SoundFunctions.playSound("open_case");
+    SoundFunctions.PlaySound_Play("open_case");
     setIsOpenCase(case_id);
     setMenuType("open");
     setTimeout(() => {
       setReward(true);
-      SoundFunctions.playSound("open_case_result");
+      SoundFunctions.PlaySound_Play("open_case_result");
     }, 1000);
   };
 
   const handleClaim = () => {
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     setMenuType("close");
     setIsOpenCase("");
     setTimeout(() => setReward(false), 1000);

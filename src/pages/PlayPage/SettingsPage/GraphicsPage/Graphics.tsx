@@ -27,7 +27,7 @@ export const GraphicsPage = () => {
   const handleCheckBoxCheck = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
 
-    SoundFunctions.playSound("value_change");
+    SoundFunctions.PlaySound_Play("value_change");
 
     setSettingsList((prev) => ({
       ...prev,
@@ -111,7 +111,7 @@ export const GraphicsPage = () => {
             <span className={settings_styles["slider"]}></span>
           </label>
         </div>
-        
+
         {/* <div className={settings_styles["setting-row"]}>
           <div className={settings_styles["setting-info"]}>
             <span className={settings_styles["setting-title"]}>FPS</span>

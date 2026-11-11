@@ -46,7 +46,7 @@ export const ShopPage = () => {
     useContentRender(`/play/shop`);
 
   const buyCase = async (case_id: string, case_quantity: string) => {
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     setIsCaseLoading(case_id);
 
     const dataToSend = new FormData();
@@ -63,7 +63,7 @@ export const ShopPage = () => {
       );
       if (response.status === 200) {
         SoundFunctions.fixedVolumeSound("play", "successful_purchase", 0.5);
-        SoundFunctions.playSound("success_notification");
+        SoundFunctions.PlaySound_Play("success_notification");
         toast.success(response.data?.success);
         setIsCaseLoading(null);
         setShopData({
@@ -86,7 +86,7 @@ export const ShopPage = () => {
   };
 
   const closeMenu = () => {
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     SoundFunctions.fixedVolumeSound("play", "menu_close_v2", 0.4);
     setShopData(initialShopDataState);
   };

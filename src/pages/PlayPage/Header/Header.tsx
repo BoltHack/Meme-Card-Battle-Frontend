@@ -17,6 +17,8 @@ interface Props {
 
 import { playFunctions } from "../Play/Play";
 
+import { SoundFunctions } from "../../../tools/global_scripts/SoundsPlayer";
+
 export const Header = ({ activeTab, userInfo }: Props) => {
   const [isFullScreen, setIsFullScreen] = useState<boolean | false>(false);
 
@@ -54,6 +56,8 @@ export const Header = ({ activeTab, userInfo }: Props) => {
   }, []);
 
   const toggleFullscreen = () => {
+    SoundFunctions.PlaySound_Play("btn_click_v2");
+    SoundFunctions.fixedVolumeSound("play", "toggle_screen", 0.5);
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch((err) => {
         console.error(
@@ -92,6 +96,7 @@ export const Header = ({ activeTab, userInfo }: Props) => {
                   ? playFunctions.handleChangeTab("play:shop")
                   : playFunctions.handleChangeTab("play:main")
               }
+              onMouseEnter={() => SoundFunctions.PlaySound_Play("element_move")}
             >
               {activeTab === "play:main" ? (
                 <svg
@@ -132,6 +137,7 @@ export const Header = ({ activeTab, userInfo }: Props) => {
             <div
               className={`${styles["header-btn"]} ${styles["btn-right-border"]}`}
               onClick={() => playFunctions.toggleFriendsMenu(true)}
+              onMouseEnter={() => SoundFunctions.PlaySound_Play("element_move")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -376,6 +382,7 @@ export const Header = ({ activeTab, userInfo }: Props) => {
             <div
               className={`${styles["header-btn"]} ${styles["btn-left-border"]}`}
               onClick={toggleFullscreen}
+              onMouseEnter={() => SoundFunctions.PlaySound_Play("element_move")}
             >
               <span className={styles["keydown-help"]}>F11</span>
               {isFullScreen ? (
@@ -423,6 +430,7 @@ export const Header = ({ activeTab, userInfo }: Props) => {
                   ? playFunctions.logout
                   : () => playFunctions.handleChangeTab("play:main")
               }
+              onMouseEnter={() => SoundFunctions.PlaySound_Play("element_move")}
             >
               {activeTab === "play:main" ? (
                 <svg

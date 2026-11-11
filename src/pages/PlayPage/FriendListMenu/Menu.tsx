@@ -217,7 +217,7 @@ export const FriendListMenu = ({ playerID }: Props) => {
   };
 
   const handleChangeFriendsCategory = async (category: string) => {
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     setFriendsCategory(category);
   };
 

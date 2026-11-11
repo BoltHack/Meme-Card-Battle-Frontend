@@ -25,14 +25,14 @@ export const AccountPage = () => {
 
   const handleSetMenuType = (menu: string) => {
     setMenuType(menu);
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     SoundFunctions.fixedVolumeSound("play", "menu_open", 0.2);
   };
 
   const closeMenu = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     SoundFunctions.fixedVolumeSound("play", "menu_close_v2", 0.4);
 
     setIsClosing(true);
@@ -55,7 +55,7 @@ export const AccountPage = () => {
   const handleSubmit = async (e: ChangeEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     setIsLoading(true);
 
     const dataToSend = new FormData();
@@ -70,7 +70,7 @@ export const AccountPage = () => {
       });
 
       if (response.status === 200) {
-        SoundFunctions.playSound("success_notification");
+        SoundFunctions.PlaySound_Play("success_notification");
         toast.success(response.data.success);
         setMenuType(null);
         setIsLoading(false);
@@ -98,7 +98,7 @@ export const AccountPage = () => {
   ) => {
     e.preventDefault();
 
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     setIsLoading(true);
     try {
       const response = await axios.post("/auth/logout-all-accounts", {
@@ -106,7 +106,7 @@ export const AccountPage = () => {
       });
 
       if (response.status === 200) {
-        SoundFunctions.playSound("success_notification");
+        SoundFunctions.PlaySound_Play("success_notification");
         toast.success(response.data.success);
         setMenuType(null);
         setIsLoading(false);

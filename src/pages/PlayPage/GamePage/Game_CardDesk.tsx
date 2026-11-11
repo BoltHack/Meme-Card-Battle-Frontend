@@ -107,9 +107,9 @@ export const Game_CardDesk = ({
   };
 
   const handleOpenCardsMenu = () => {
-    SoundFunctions.playSound("btn_click_v2");
+    SoundFunctions.PlaySound_Play("btn_click_v2");
     GameFunctions.gameCards_menu(true);
-  }
+  };
 
   return (
     <>
@@ -570,8 +570,8 @@ export const Game_CardDesk = ({
                 onClick={() =>
                   isGameStarted || isReady
                     ? undefined
-                    // : GameFunctions.gameCards_menu(true)
-                    : handleOpenCardsMenu()
+                    : // : GameFunctions.gameCards_menu(true)
+                      handleOpenCardsMenu()
                 }
               >
                 <div className={CardDesk_styles["player-status"]}>

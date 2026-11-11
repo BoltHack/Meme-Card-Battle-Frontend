@@ -41,13 +41,30 @@
   /*padding: 0 2rem;*/
 }
 
-.blog-articles {
+.articles-tools {
   display: flex;
-  gap: 10px;
-  padding: 10px 0 50px 0;
+  margin-bottom: 60px;
 }
 
-.blog-article-btn {
+.article-side {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.a-left-side {
+  margin-right: auto;
+}
+.a-right-side {
+  margin-left: auto;
+}
+
+.article-btn {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   background: transparent;
   color: #fff;
@@ -59,12 +76,35 @@
   border: 2px solid rgba(255, 255, 255, 0.1);
   text-align: center;
 }
-.blog-article-btn:hover {
+.article-btn:hover {
   background: #7d2cd3;
-  /*opacity: 0.8;*/
 }
-.blog-article-btn.active {
+.article-btn.active {
   background: #7d2cd3;
+}
+
+.article-checkbox {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background: transparent;
+  color: #fff;
+  /* padding: 18px; */
+  padding: 10px;
+  /* padding: 0.2rem 1rem; */
+  border-radius: 5px;
+  transition: all 0.1s;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+.article-checkbox.active {
+  background: #7d2cd3;
+}
+.article-checkbox svg {
+  width: 15px;
+  height: 15px;
+  position: absolute;
 }
 
 .img-placeholder {
@@ -282,6 +322,10 @@
 .grid-card:hover .arrow-link {
   transform: translateX(5px);
   color: #ff007f;
+}
+
+.grid-hidden {
+  position: absolute;
 }
 
 .category-not-found {

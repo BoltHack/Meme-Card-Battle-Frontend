@@ -90,7 +90,7 @@ export const ProfilePage = () => {
 
         setFile(null);
 
-        SoundFunctions.playSound("success_notification");
+        SoundFunctions.PlaySound_Play("success_notification");
         toast.success(response.data.success);
       }
 
@@ -169,20 +169,7 @@ export const ProfilePage = () => {
           </div>
         </div>
 
-        <div className={settings_styles["grid-form"]}>
-          {/* <span>Дата регистрации</span> */}
-          {/* <div className={settings_styles["input-group"]}>
-            <label>Имя пользователя</label>
-            <input type="text" placeholder="@username" />
-          </div>
-          <div className={settings_styles["input-group"]}>
-            <label>Email</label>
-            <input type="email" placeholder="email@domain.com" />
-          </div>
-          <div className={settings_styles["input-group"]}>
-            <label>Номер телефона</label>
-            <input type="tel" placeholder="+7..." />
-          </div> */}
+        {/* <div className={settings_styles["grid-form"]}>
           <div
             className={`${settings_styles["input-group"]} ${settings_styles["full-width"]}`}
           >
@@ -198,7 +185,7 @@ export const ProfilePage = () => {
             ></textarea>
             <span>{dir_about_me_ref.current?.value.length}/200</span>
           </div>
-        </div>
+        </div> */}
       </section>
 
       <footer className={settings_styles["content-footer"]}>
