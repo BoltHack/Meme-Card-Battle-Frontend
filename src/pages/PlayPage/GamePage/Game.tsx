@@ -574,7 +574,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
       if (type === "timer") {
         if (gameData.timer === 5) {
-          SoundFunctions.playGameSound("versus_zoom");
+          SoundFunctions.PlaySound_Game("versus_zoom");
         }
         if (gameData.timer === 0) {
           setVersusCards(null);
@@ -613,7 +613,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
           });
           setTimeout(() => handleGameOver(), 2000);
         }
-        if (res.status === "draw") {
+        if (res.status === "draw-end") {
           setWinnerInfo({
             name: null,
             exp: 500,
@@ -632,7 +632,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
 
     const handleReadyState = (type: string) => {
       if (type === "user_ready") {
-        SoundFunctions.playSound("success_notification");
+        SoundFunctions.PlaySound_Play("success_notification");
         toast.success("К гою готов!");
         setIsReady(true);
       } else if (type === "game_start") {
@@ -683,15 +683,19 @@ export const GamePage = ({ game_type, game_key }: Props) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (!isGameStarted) return;
+  useEffect(() => {
+    if (!isGameStarted) return;
 
-  //   setTimeout(() => SoundFunctions.GameBackgroundMusic(), 500);
+    setTimeout(
+      () =>
+        SoundFunctions.BackgroundMusic_Start_Game("game_background_music_v2"),
+      500,
+    );
 
-  //   return () => {
-  //     SoundFunctions.StopGameBackgroundMusic();
-  //   };
-  // }, [isGameStarted]);
+    return () => {
+      SoundFunctions.BackgroundMusic_Stop_Game("game_background_music_v2");
+    };
+  }, [isGameStarted]);
 
   (function () {
     const fpsDiv = document.createElement("div");
@@ -747,7 +751,7 @@ export const GamePage = ({ game_type, game_key }: Props) => {
   };
 
   const handleReadyForBattle = () => {
-    SoundFunctions.playGameSound("ready_btn_click");
+    SoundFunctions.PlaySound_Game("ready_btn_click");
     setReadyStateLoading(true);
     socket.emit("check_user_ready_state_server", {
       player_id: data?.id,

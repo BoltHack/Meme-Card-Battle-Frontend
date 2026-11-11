@@ -90,7 +90,7 @@ export const ProfilePage = () => {
 
         setFile(null);
 
-        SoundFunctions.playSound("success_notification");
+        SoundFunctions.PlaySound_Play("success_notification");
         toast.success(response.data.success);
       }
 

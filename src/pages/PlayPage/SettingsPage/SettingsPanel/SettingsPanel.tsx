@@ -68,9 +68,9 @@ export const SettingsPage = () => {
 
   const handleSetActiveTab = (tab: string) => {
     if (tab === activeTab) return;
-    SoundFunctions.playSound("btn_click");
+    SoundFunctions.PlaySound_Play("btn_click");
     setActiveTab(tab);
-  }
+  };
 
   useEffect(() => {
     // if (!data || !Array.isArray(data.renderData)) {

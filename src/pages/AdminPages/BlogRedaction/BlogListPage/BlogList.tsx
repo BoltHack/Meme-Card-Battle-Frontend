@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import styles from "./Card.BlogList.module.css";
 import admin_styles from "../../AdminPanel/Card.AdminPanel.module.css";
@@ -22,6 +22,7 @@ interface BlogPost {
   cover: string;
   category: string;
   date: string;
+  isVisibility: string;
   id: string;
 }
 
@@ -41,6 +42,7 @@ export const BlogListPage = () => {
   const bodyWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const [articleType, setArticleType] = useState<string | "">("blog");
+  const [isVisibility, setIsVisibility] = useState<boolean | true>(true);
 
   const [blog, setBlog] = useState<BlogPost[]>([]);
 
@@ -59,13 +61,14 @@ export const BlogListPage = () => {
     cover: "",
     category: "",
     date: "",
+    isVisibility: "",
     id: "",
   };
   const [removeBlogData, setRemoveBlogData] = useState(initialBlogState);
 
   const { contentData, contentLoading, contentError } =
     useContentRender<BlogResponse>(
-      `/admin/article/${articleType}/list?page=${currentPage}`,
+      `/admin/article/${articleType}/${isVisibility}/list?page=${currentPage}`,
     );
 
   const handleRemoveBlog = async (
@@ -130,8 +133,16 @@ export const BlogListPage = () => {
   };
 
   const handleChangeArticleType = (article: string) => {
+    if (article === articleType) return;
+
     navigate("?page=1");
     setArticleType(article);
+  };
+  const handleChangeVisibilityType = async (type: boolean) => {
+    if (type === isVisibility) return;
+
+    navigate("?page=1");
+    setIsVisibility(type);
   };
 
   const handleScrollToTop = () => {
@@ -204,19 +215,48 @@ export const BlogListPage = () => {
       </a>
 
       <main className={styles["discord-blog-container"]}>
-        <div className={styles["blog-articles"]}>
-          <button
-            onClick={() => handleChangeArticleType("blog")}
-            className={`${styles["blog-article-btn"]} ${articleType === "blog" ? styles["active"] : ""}`}
+        <div className={styles["articles-tools"]}>
+          <div className={`${styles["article-side"]} ${styles["a-left-side"]}`}>
+            <button
+              onClick={() => handleChangeArticleType("blog")}
+              className={`${styles["article-btn"]} ${articleType === "blog" ? styles["active"] : ""}`}
+            >
+              Блог
+            </button>
+            <button
+              onClick={() => handleChangeArticleType("news")}
+              className={`${styles["article-btn"]} ${articleType === "news" ? styles["active"] : ""}`}
+            >
+              Новости
+            </button>
+          </div>
+          <div
+            className={`${styles["article-side"]} ${styles["a-right-side"]}`}
           >
-            Блог
-          </button>
-          <button
-            onClick={() => handleChangeArticleType("news")}
-            className={`${styles["blog-article-btn"]} ${articleType === "news" ? styles["active"] : ""}`}
-          >
-            Новости
-          </button>
+            Только скрытые статьи
+            <button
+              onClick={() =>
+                handleChangeVisibilityType(isVisibility ? false : true)
+              }
+              className={`${styles["article-checkbox"]} ${!isVisibility ? styles["active"] : ""}`}
+            >
+              {!isVisibility && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
         <section className={styles["featured-section"]}>
           {blog && blog.length > 0 ? (
@@ -284,6 +324,7 @@ export const BlogListPage = () => {
                           category: blog[0].category,
                           title: blog[0].title.slice(0, 50),
                           description: blog[0].description.slice(0, 50),
+                          isVisibility: blog[0].isVisibility,
                           date: dateSettings(blog[0].date),
                         })
                       }
@@ -293,6 +334,31 @@ export const BlogListPage = () => {
                   </li>
                 </ul>
               </div>
+              {!blog[0].isVisibility && (
+                <div
+                  className={styles["grid-hidden"]}
+                  style={{ top: "5%", right: "2%" }}
+                  title="Эта публикация скрыта"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-eye-off preview-icon"
+                  >
+                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+                    <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+                    <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
+                    <path d="m2 2 20 20" />
+                  </svg>
+                </div>
+              )}
             </article>
           ) : null}
         </section>
@@ -365,6 +431,7 @@ export const BlogListPage = () => {
                               category: bd.category,
                               title: bd.title.slice(0, 50),
                               description: bd.description.slice(0, 50),
+                              isVisibility: bd.isVisibility,
                               date: dateSettings(bd.date),
                             })
                           }
@@ -373,6 +440,31 @@ export const BlogListPage = () => {
                         </button>
                       </li>
                     </ul>
+                    {!bd.isVisibility && (
+                      <div
+                        className={styles["grid-hidden"]}
+                        style={{ right: "5%" }}
+                        title="Эта публикация скрыта"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="lucide lucide-eye-off preview-icon"
+                        >
+                          <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+                          <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+                          <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
+                          <path d="m2 2 20 20" />
+                        </svg>
+                      </div>
+                    )}
                   </div>
                 </article>
               );

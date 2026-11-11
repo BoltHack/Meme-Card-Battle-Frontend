@@ -26,7 +26,7 @@ export const NotificationsPage = () => {
   const handleCheckBoxCheck = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
 
-    SoundFunctions.playSound("value_change");
+    SoundFunctions.PlaySound_Play("value_change");
 
     setSettingsList((prev) => ({
       ...prev,
