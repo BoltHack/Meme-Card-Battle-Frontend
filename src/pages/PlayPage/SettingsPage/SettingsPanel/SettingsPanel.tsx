@@ -68,10 +68,7 @@ export const SettingsPage = () => {
 
   const handleSetActiveTab = (tab: string) => {
     if (tab === activeTab) return;
-<<<<<<< HEAD
     SoundFunctions.fixedVolumeSound("play", "value_change", 0.2);
-=======
->>>>>>> 996dd570801d7fd2bf77e32b23521e67dd0877f7
     SoundFunctions.PlaySound_Play("btn_click");
     setActiveTab(tab);
   };
