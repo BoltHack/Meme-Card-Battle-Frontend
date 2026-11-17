@@ -150,7 +150,11 @@ export const SoundsPlayer = () => {
       audio.currentTime = 0;
       const finalVolume = Math.max(
         0,
+<<<<<<< HEAD
         Math.min(1, 0.4 * volume_ref.current.game_background_music_volume),
+=======
+        Math.min(1, 0.5 * volume_ref.current.game_background_music_volume),
+>>>>>>> 996dd570801d7fd2bf77e32b23521e67dd0877f7
       );
       audio.volume = finalVolume;
 
