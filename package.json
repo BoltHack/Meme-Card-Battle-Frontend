@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
-    "@tauri-apps/cli": "^2.12.6",
     "@types/axios": "^0.14.4",
     "@types/dompurify": "^3.2.0",
     "@types/js-cookie": "^3.0.6",
