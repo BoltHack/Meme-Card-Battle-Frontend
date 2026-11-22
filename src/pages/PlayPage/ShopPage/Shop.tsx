@@ -46,7 +46,8 @@ export const ShopPage = () => {
     useContentRender(`/play/shop`);
 
   const buyCase = async (case_id: string, case_quantity: string) => {
-    SoundFunctions.PlaySound_Play("btn_click_v2");
+    SoundFunctions.fixedVolumeSound("play", "btn_click_v5", 0.2);
+    SoundFunctions.PlaySound_Play("btn_click_v6");
     setIsCaseLoading(case_id);
 
     const dataToSend = new FormData();

@@ -16,6 +16,11 @@ interface Params {
   document: string;
 }
 
+interface ArticleNavigationItem {
+  id: string;
+  article: string | null;
+}
+
 interface FooterLinksContext {
   footerLinks?: any;
 }
@@ -43,6 +48,25 @@ export const DocumentsPage = () => {
     });
   };
 
+  const handleMarkArticle = (articleId: string) => {
+    const article = articleList.find(
+      (al) => al.id.toString() === articleId.toString(),
+    );
+    if (article) {
+      const getElement = articleSectionsContainer.current?.querySelector(
+        `#${CSS.escape(articleId)}`
+      );
+      
+      setTimeout(() => {
+        getElement?.classList.add(styles["article-marker"]);
+      }, 500);
+      
+      setTimeout(() => {
+        getElement?.classList.remove(styles["article-marker"]);
+      }, 3000);
+    }
+  };
+
   useEffect(() => {
     if (!loading && data?.renderData && articleSectionsContainer.current) {
       setTimeout(() => {
@@ -58,6 +82,9 @@ export const DocumentsPage = () => {
           const sectionId = (index + 1).toString();
 
           h2.id = sectionId;
+          // h2.onclick = () => {
+          //   handleMarkArticle(h2.id);
+          // };
 
           tempArticles.push({
             id: sectionId,
@@ -67,10 +94,15 @@ export const DocumentsPage = () => {
 
         setArticleList(tempArticles);
       }, 0);
-
-      console.log("data?.renderData", data?.renderData);
     }
   }, [loading, data]);
+
+  // useEffect(() => {
+  //   if (articleList.length < 1) return;
+
+  //   console.log("articleList", articleList);
+
+  // }, [articleList]);
 
   useEffect(() => {
     const socketDisconnect = () => {
@@ -133,7 +165,12 @@ export const DocumentsPage = () => {
 
               {articleList.map((item) => (
                 <section key={item.id}>
-                  <a href={`#${item.id}`}>{item.article}</a>
+                  <a
+                    href={`#${item.id}`}
+                    onClick={() => handleMarkArticle(item.id)}
+                  >
+                    {item.article}
+                  </a>
                 </section>
               ))}
             </article>

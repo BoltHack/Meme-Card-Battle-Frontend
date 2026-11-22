@@ -57,7 +57,8 @@ export const MainPage = ({ isGameFound }: Props) => {
 
   const toggleMenu = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    SoundFunctions.PlaySound_Play("btn_click_v2");
+    SoundFunctions.fixedVolumeSound("play", "btn_click_v5", 0.2);
+    SoundFunctions.PlaySound_Play("btn_click_v6");
     SoundFunctions.fixedVolumeSound("play", "menu_open", 0.2);
     // SoundFunctions.fixedVolumeSound("play", "btn_click_v4", 0.5);
     setIsClosing(false);

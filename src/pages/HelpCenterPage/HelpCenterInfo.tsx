@@ -42,6 +42,25 @@ export const HelpCenterInfoPage = () => {
     `/api/help-center/${help_request}`,
   );
 
+  const handleMarkArticle = (articleId: string) => {
+    const article = articleList.find(
+      (al) => al.id.toString() === articleId.toString(),
+    );
+    if (article) {
+      const getElement = articleSectionsContainer.current?.querySelector(
+        `#${CSS.escape(articleId)}`,
+      );
+
+      setTimeout(() => {
+        getElement?.classList.add(styles["article-marker"]);
+      }, 500);
+
+      setTimeout(() => {
+        getElement?.classList.remove(styles["article-marker"]);
+      }, 3000);
+    }
+  };
+
   useEffect(() => {
     if (!loading && data?.renderData && articleSectionsContainer.current) {
       setTimeout(() => {
@@ -97,7 +116,9 @@ export const HelpCenterInfoPage = () => {
       {/*<div className={styles["parallax-body"]}></div>*/}
 
       <div className={styles["container"]}>
-        <Link to="/help-center" className={styles["back-btn"]}>Справочный центр</Link>
+        <Link to="/help-center" className={styles["back-btn"]}>
+          Справочный центр
+        </Link>
         <article className={styles["article-header"]}>
           <h1>{data?.renderData.title}</h1>
         </article>
@@ -130,7 +151,12 @@ export const HelpCenterInfoPage = () => {
 
               {articleList.map((item) => (
                 <section key={item.id}>
-                  <a href={`#${item.id}`}>{item.article}</a>
+                  <a
+                    href={`#${item.id}`}
+                    onClick={() => handleMarkArticle(item.id)}
+                  >
+                    {item.article}
+                  </a>
                 </section>
               ))}
             </article>

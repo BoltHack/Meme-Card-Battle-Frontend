@@ -25,7 +25,8 @@ export const AccountPage = () => {
 
   const handleSetMenuType = (menu: string) => {
     setMenuType(menu);
-    SoundFunctions.PlaySound_Play("btn_click_v2");
+    SoundFunctions.fixedVolumeSound("play", "btn_click_v5", 0.2);
+    SoundFunctions.PlaySound_Play("btn_click_v6");
     SoundFunctions.fixedVolumeSound("play", "menu_open", 0.2);
   };
 

@@ -85,7 +85,8 @@ export const CasesPage = () => {
   };
 
   const getCaseContent = async (case_id: string) => {
-    SoundFunctions.PlaySound_Play("btn_click_v2");
+    SoundFunctions.fixedVolumeSound("play", "btn_click_v5", 0.2);
+    SoundFunctions.PlaySound_Play("btn_click_v6");
     setTimeout(() => setCaseContentLoading(true), 100);
     try {
       const response = await axios.post(`/play/case/${case_id}/content/get`, {

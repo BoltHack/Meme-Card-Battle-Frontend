@@ -231,7 +231,8 @@ body::after {
 }
 
 .container h2 {
-  scroll-margin-top: 30px;
+  /* scroll-margin-top: 30px; */
+  scroll-margin-top: 100px;
   font-size: 22px;
   color: #f472b6;
   /* margin-top: 36px; */
@@ -239,6 +240,29 @@ body::after {
   font-weight: 600;
   letter-spacing: -0.01em;
 }
+
+.article-marker {
+  --highlight-color: rgba(119, 152, 123, 0.35);
+
+  /* padding: 4px 10px; */
+  padding: 0 10px;
+  margin-left: -10px;
+  border-radius: 6px;
+  animation: marker-highlight 2.5s ease-out forwards;
+}
+
+@keyframes marker-highlight {
+  0% {
+    background-color: transparent;
+  }
+  15%, 45% {
+    background-color: var(--highlight-color);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
 
 .container p {
   font-size: 16px;

@@ -24,6 +24,8 @@ const SOUNDS_MAP_PLAY = {
   btn_click_v2: getAudioPath_Play("btn_click_v2"),
   btn_click_v3: getAudioPath_Play("btn_click_v3"),
   btn_click_v4: getAudioPath_Play("btn_click_v4"),
+  btn_click_v5: getAudioPath_Play("btn_click_v5"),
+  btn_click_v6: getAudioPath_Play("btn_click_v6"),
 
   menu_open: getAudioPath_Play("menu_open"),
   menu_close_v2: getAudioPath_Play("menu_close_v2"),
