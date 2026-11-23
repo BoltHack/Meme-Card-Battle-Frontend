@@ -97,6 +97,16 @@ export default defineConfig({
           skip_zrok_interstitial: "true",
         },
       },
+      "/download": {
+        target: api.API_BASE_URL,
+        changeOrigin: true,
+        secure: false,
+        headers: {
+          "api-access": "true",
+          "ngrok-skip-browser-warning": "true",
+          skip_zrok_interstitial: "true",
+        },
+      },
     },
   },
 });

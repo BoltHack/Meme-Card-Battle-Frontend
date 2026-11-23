@@ -155,13 +155,20 @@ export const MainPage = ({ title }: TitleSettings) => {
             >
               Играть в браузере
             </Link>
-            <Link
+            {/* <Link
               to="/documents/how-to-play"
               className={`${styles["btn"]} ${styles["btn-secondary"]}`}
             >
-              {/* Скачать для Windows */}
               Как играть?
-            </Link>
+            </Link> */}
+            <a
+              href="http://localhost:3000/download/windows"
+              target="_blank"
+              download
+              className={`${styles["btn"]} ${styles["btn-secondary"]}`}
+            >
+              Скачать для Windows
+            </a>
           </div>
         </div>
       </section>
