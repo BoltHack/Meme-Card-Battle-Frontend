@@ -170,11 +170,11 @@ export const SignInPage = ({ title }: TitleSettings) => {
 
             <p className={styles["terms"]}>
               Продолжая, вы принимаете{" "}
-              <a href="/terms-of-use" target="_blank">
+              <a href="/documents/terms-of-use" target="_blank">
                 Условия использования
               </a>{" "}
               игры. Прочитайте нашу{" "}
-              <a href="/privacy-policy" target="_blank">
+              <a href="/documents/privacy-policy" target="_blank">
                 Политику конфиденциальности
               </a>
               .
@@ -212,14 +212,14 @@ export const SignInPage = ({ title }: TitleSettings) => {
           <div className={styles["footer-content"]}>
             <div className={styles["footer-item"]}>
               <span>
-                <a href="/privacy-policy" target="_blank">
+                <a href="/documents/privacy-policy" target="_blank">
                   Политика конфиденциальности
                 </a>
               </span>
             </div>
             <div className={styles["footer-item"]}>
               <span>
-                <a href="/terms-of-use" target="_blank">
+                <a href="/documents/terms-of-use" target="_blank">
                   Условия использования
                 </a>
               </span>

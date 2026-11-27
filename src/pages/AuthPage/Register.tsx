@@ -208,11 +208,11 @@ export const RegisterPage = ({
 
           <p className={styles["terms"]}>
             Регистрируясь, вы принимаете{" "}
-            <a href="/terms-of-use" target="_blank">
+            <a href="/documents/terms-of-use" target="_blank">
               Условия использования
             </a>{" "}
             игры. Прочитайте нашу{" "}
-            <a href="/privacy-policy" target="_blank">
+            <a href="/documents/privacy-policy" target="_blank">
               Политику конфиденциальности
             </a>
             .

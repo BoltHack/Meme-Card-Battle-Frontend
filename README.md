@@ -1,50 +1,65 @@
-# React + TypeScript + Vite
+# 🃏 Meme Card Battle — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Клиентская часть многопользовательской карточной онлайн-игры **Meme Card Battle**. Игроки собирают колоды из мемных карт, сражаются друг с другом в реальном времени, прокачивают уровень и открывают кейсы.
 
-Currently, two official plugins are available:
+> 🔗 **Бэкенд-репозиторий:** [Meme-Card-Battle-Backend](https://github.com/BoltHack/Meme-Card-Battle-Backend)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🎮 Механика и правила игры
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Основной игровой процесс доступен по маршруту `/play`.
 
-- Configure the top-level `parserOptions` property like this:
+### ⚔️ Боевая система
+* **Расчет урона:** В каждом раунде сравниваются показатели атаки (`Damage`) и защиты (`Protection`) двух карт.
+  * Если урон первой карты выше урона и защиты второй карты, первая карта наносит урон по формуле: `cardDamage1 / cardProtection2`.
+  * Если урон первой карты выше, чем у второй, но у второй карты выше показатель защиты, ответный удар в меньшем объеме наносит вторая карта.
+* **Ульта (Ultimate):** Нанося урон противнику, игрок накапливает шкалу ульты. При достижении **100%** следующая атака наносит **двойной урон**.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### 💰 Экономика и прогрессия
+* **Валюты:**
+  * **Коины (Coins):** Основная валюта, за которую в магазине можно покупать кейсы и выбивать новые карты.
+  * **Кристаллы (Crystals):** Премиальная валюта *(в разработке: планируется для прокачки карт и покупки расходников)*.
+* **Уровни и опыт:** Максимальный уровень игрока — **100**, при этом опыт можно копить бесконечно. Чем больше опыта у игрока, тем выше награда за победу в матче.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### 👥 Социальные функции и настройки
+* **Система друзей:** Поиск игроков по никнейму, отправка заявок в друзья и приглашение в приватный бой.
+* **Настройки аккаунта и клиента:** Управление громкостью звуков и интерфейса, отключение отдельных графических элементов для повышения производительности, смена пароля и удаление аккаунта.
+* **Дополнительные разделы:** Информационные страницы с правилами (`/rules`), блогом (`/blog`), справочным центром (`/help-center`), новостями и таблицей рейтингов.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+---
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## 🛠 Стек технологий
+
+* **Core:** React, TypeScript
+* **Сборщик:** Vite
+* **Стилизация и инструменты:** ESLint, CSS/SCSS
+
+---
+
+## 🚀 Запуск проекта локально
+
+1. **Клонируйте репозиторий:**
+   ```bash
+   git clone https://github.com
+   cd Meme-Card-Battle-Frontend
+   ```
+
+2. **Установите зависимости:**
+   ```bash
+   npm install
+   ```
+
+3. **Настройте переменные окружения (при необходимости):**
+   Создайте файл `.env` в корне проекта и укажите адрес вашего запущенного бэкенд-сервера (например, `VITE_API_URL=http://localhost:3000`).
+
+4. **Запустите сервер для разработки:**
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 🗺 Планы по развитию (Roadmap)
+* [ ] Расширение боевых механик и добавление новых типов эффектов карт.
+* [ ] Внедрение функционала для кристаллов (прокачка карт и покупка расходников).
